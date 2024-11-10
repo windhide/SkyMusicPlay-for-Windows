@@ -9,7 +9,8 @@ export function getData(url){
   .catch(error => console.error(error));
 }
 
-export function setData(url, data) {
+export function sendData(url, data) {
+  console.log("data",data)
   return fetch(baseUrl + url, {
     method: 'POST', 
     headers: {

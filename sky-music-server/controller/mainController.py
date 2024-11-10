@@ -3,8 +3,9 @@ import uvicorn
 # 配置文件
 import logging
 
-from utils.RobotUtils import is_active_ok
-from utils.listUtils import  getTypeMusicList
+from utils import RobotUtils
+from utils.listUtils import getTypeMusicList
+from elevate import elevate
 
 app = FastAPI()
 
@@ -29,13 +30,31 @@ def translateMusic():
 # 获取当前是否有激活窗口
 @app.get("/getWindowState")
 def getWindowState():
-    return is_active_ok()
+    return RobotUtils.is_window_exist()
+
+@app.post("/start")
+def start(request: dict):
+    print(request)
+    RobotUtils.playMusic(request["fileName"],request["type"])
+@app.get("/pause")
+def pause():
+    RobotUtils.pause()
+
+@app.get("/stop")
+def stop():
+    RobotUtils.stop()
+
+@app.get("/resume")
+def resume():
+    RobotUtils.resume()
 
 if __name__ == '__main__':
     logging.basicConfig(filename='log.log', encoding='utf-8', level=logging.INFO, format='%(asctime)s %(message)s')
     logging.info("Now start service")
 
     try:
-        uvicorn.run("testController:app", host="localhost", port=9899, log_level="info")
+        uvicorn.run("mainController:app", host="localhost", port=9899, log_level="info")
     except Exception as e:
         logging.error(e)
+
+    elevate()

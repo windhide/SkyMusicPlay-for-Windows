@@ -218,3 +218,150 @@ ConnectionResetError: [WinError 10054] 远程主机强迫关闭了一个现有�
 2024-11-10 01:25:55,174 Now start service
 2024-11-10 01:30:01,460 Now start service
 2024-11-10 01:30:41,643 Now start service
+2024-11-10 12:40:31,964 Now start service
+2024-11-10 12:42:24,163 Now start service
+2024-11-10 15:58:18,649 Now start service
+2024-11-10 16:20:40,065 Now start service
+2024-11-10 16:39:33,310 Now start service
+2024-11-10 17:21:06,567 Now start service
+2024-11-10 17:21:53,085 Now start service
+2024-11-10 17:26:54,147 Now start service
+2024-11-10 17:29:53,616 Now start service
+2024-11-10 17:37:45,933 Now start service
+2024-11-10 17:38:26,974 Now start service
+2024-11-10 17:39:16,642 Now start service
+2024-11-10 17:39:43,266 Now start service
+2024-11-10 17:40:02,049 Now start service
+2024-11-10 17:42:37,903 Now start service
+2024-11-10 17:43:10,906 Now start service
+2024-11-10 17:44:21,761 Now start service
+2024-11-10 17:45:03,765 Now start service
+2024-11-10 18:06:15,696 Now start service
+2024-11-10 18:07:21,522 Now start service
+2024-11-10 18:07:43,894 Now start service
+2024-11-10 18:08:09,140 Now start service
+2024-11-10 18:10:24,220 Now start service
+2024-11-10 18:14:27,399 Now start service
+2024-11-10 18:15:31,125 Now start service
+2024-11-10 18:17:28,080 Now start service
+2024-11-10 18:18:18,288 Now start service
+2024-11-10 18:20:29,005 Now start service
+2024-11-10 19:14:56,347 Now start service
+2024-11-10 19:16:29,069 Now start service
+2024-11-10 19:17:53,549 Now start service
+2024-11-10 19:17:57,737 Now start service
+2024-11-10 19:21:21,429 Now start service
+2024-11-10 19:23:00,822 Now start service
+2024-11-10 19:24:44,859 Now start service
+2024-11-10 19:29:19,969 Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<Server.serve() done, defined at E:\codeSetting\Python\version312\Lib\site-packages\uvicorn\server.py:67> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "E:\codeSetting\Python\version312\Lib\site-packages\uvicorn\main.py", line 579, in run
+    server.run()
+  File "E:\codeSetting\Python\version312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\softWare\PyCharm 2024.2.3\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 138, in run
+    return loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\softWare\PyCharm 2024.2.3\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 234, in run_until_complete
+    self._run_once()
+  File "D:\softWare\PyCharm 2024.2.3\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 286, in _run_once
+    handle._run()
+  File "E:\codeSetting\Python\version312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "E:\codeSetting\Python\version312\Lib\asyncio\tasks.py", line 396, in __wakeup
+    self.__step()
+  File "D:\softWare\PyCharm 2024.2.3\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 394, in step
+    step_orig(task, exc)
+  File "E:\codeSetting\Python\version312\Lib\asyncio\tasks.py", line 303, in __step
+    self.__step_run_and_handle_result(exc)
+  File "E:\codeSetting\Python\version312\Lib\asyncio\tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "E:\codeSetting\Python\version312\Lib\site-packages\uvicorn\server.py", line 68, in serve
+    with self.capture_signals():
+  File "E:\codeSetting\Python\version312\Lib\contextlib.py", line 144, in __exit__
+    next(self.gen)
+  File "E:\codeSetting\Python\version312\Lib\site-packages\uvicorn\server.py", line 332, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+2024-11-10 19:29:29,866 Now start service
+2024-11-10 19:30:18,825 Now start service
+2024-11-10 19:34:23,814 Now start service
+2024-11-10 19:36:08,794 Now start service
+2024-11-10 19:38:37,134 Now start service
+2024-11-10 19:39:55,398 Now start service
+2024-11-10 19:43:15,185 Now start service
+2024-11-10 19:44:04,339 Now start service
+2024-11-10 19:48:18,635 Now start service
+2024-11-10 19:48:46,510 Now start service
+2024-11-10 19:50:30,097 Now start service
+2024-11-10 19:50:57,271 Now start service
+2024-11-10 19:53:05,563 Now start service
+2024-11-10 19:57:03,191 Now start service
+2024-11-10 19:58:14,313 Now start service
+2024-11-10 20:08:33,952 Now start service
+2024-11-10 20:18:07,858 Now start service
+2024-11-10 20:19:24,008 Now start service
+2024-11-10 20:21:45,297 Now start service
+2024-11-10 20:37:34,651 Now start service
+2024-11-10 20:43:40,230 Now start service
+2024-11-10 20:46:48,859 Now start service
+2024-11-10 20:49:09,491 Now start service
+2024-11-10 20:51:28,833 Now start service
+2024-11-10 20:53:18,600 Now start service
+2024-11-10 20:54:51,384 Now start service
+2024-11-10 20:55:51,221 Now start service
+2024-11-10 20:57:28,054 Now start service
+2024-11-10 20:58:10,214 Now start service
+2024-11-10 21:00:47,660 Now start service
+2024-11-10 21:07:45,046 Now start service
+2024-11-10 21:07:50,388 Now start service
+2024-11-10 21:08:49,935 Now start service
+2024-11-10 21:13:40,092 Now start service
+2024-11-10 21:14:57,368 Now start service
+2024-11-10 21:15:52,110 Now start service
+2024-11-10 21:17:49,457 Now start service
+2024-11-10 21:29:44,134 Now start service
+2024-11-10 21:30:46,631 Now start service
+2024-11-10 21:34:02,074 Now start service
+2024-11-10 22:24:30,767 Now start service
+2024-11-10 22:27:25,127 Now start service
+2024-11-10 22:28:06,223 Now start service
+2024-11-10 22:29:38,498 Now start service
+2024-11-10 22:31:09,014 Now start service
+2024-11-10 22:37:26,352 Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<Server.serve() done, defined at E:\codeSetting\Python\version312\Lib\site-packages\uvicorn\server.py:67> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "E:\codeSetting\Python\version312\Lib\site-packages\uvicorn\main.py", line 579, in run
+    server.run()
+  File "E:\codeSetting\Python\version312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\softWare\PyCharm 2024.2.3\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 138, in run
+    return loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\softWare\PyCharm 2024.2.3\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 234, in run_until_complete
+    self._run_once()
+  File "D:\softWare\PyCharm 2024.2.3\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 286, in _run_once
+    handle._run()
+  File "E:\codeSetting\Python\version312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "E:\codeSetting\Python\version312\Lib\asyncio\tasks.py", line 396, in __wakeup
+    self.__step()
+  File "D:\softWare\PyCharm 2024.2.3\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 394, in step
+    step_orig(task, exc)
+  File "E:\codeSetting\Python\version312\Lib\asyncio\tasks.py", line 303, in __step
+    self.__step_run_and_handle_result(exc)
+  File "E:\codeSetting\Python\version312\Lib\asyncio\tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "E:\codeSetting\Python\version312\Lib\site-packages\uvicorn\server.py", line 68, in serve
+    with self.capture_signals():
+  File "E:\codeSetting\Python\version312\Lib\contextlib.py", line 144, in __exit__
+    next(self.gen)
+  File "E:\codeSetting\Python\version312\Lib\site-packages\uvicorn\server.py", line 332, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+2024-11-10 22:37:50,002 Now start service
