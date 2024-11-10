@@ -1,0 +1,220 @@
+2024-10-24 11:10:44,684 Now start service
+2024-10-24 11:11:33,262 Now start service
+2024-10-24 11:11:57,303 Now start service
+2024-10-24 11:27:31,771 Now start service
+2024-10-24 11:28:35,318 Now start service
+2024-10-24 11:39:37,015 Now start service
+2024-10-24 11:40:12,540 Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<Server.serve() done, defined at D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\server.py:67> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\main.py", line 579, in run
+    server.run()
+  File "D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\SoftWare\PyCharm 2023.3.5\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 135, in run
+    return loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\SoftWare\PyCharm 2023.3.5\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 229, in run_until_complete
+    self._run_once()
+  File "D:\Code\SoftWare\PyCharm 2023.3.5\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 281, in _run_once
+    handle._run()
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\tasks.py", line 396, in __wakeup
+    self.__step()
+  File "D:\Code\SoftWare\PyCharm 2023.3.5\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 390, in step
+    step_orig(task, exc)
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\tasks.py", line 303, in __step
+    self.__step_run_and_handle_result(exc)
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\server.py", line 68, in serve
+    with self.capture_signals():
+  File "D:\Code\SoftWare\Python3.12.2\Lib\contextlib.py", line 144, in __exit__
+    next(self.gen)
+  File "D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\server.py", line 332, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+2024-10-24 11:40:19,042 Now start service
+2024-10-24 11:41:13,600 Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<Server.serve() done, defined at D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\server.py:67> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\main.py", line 579, in run
+    server.run()
+  File "D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\SoftWare\PyCharm 2023.3.5\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 135, in run
+    return loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\SoftWare\PyCharm 2023.3.5\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 229, in run_until_complete
+    self._run_once()
+  File "D:\Code\SoftWare\PyCharm 2023.3.5\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 281, in _run_once
+    handle._run()
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\tasks.py", line 396, in __wakeup
+    self.__step()
+  File "D:\Code\SoftWare\PyCharm 2023.3.5\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 390, in step
+    step_orig(task, exc)
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\tasks.py", line 303, in __step
+    self.__step_run_and_handle_result(exc)
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\server.py", line 68, in serve
+    with self.capture_signals():
+  File "D:\Code\SoftWare\Python3.12.2\Lib\contextlib.py", line 144, in __exit__
+    next(self.gen)
+  File "D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\server.py", line 332, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+2024-10-24 11:41:19,935 Now start service
+2024-10-24 11:42:01,648 Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<Server.serve() done, defined at D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\server.py:67> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\main.py", line 579, in run
+    server.run()
+  File "D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\SoftWare\PyCharm 2023.3.5\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 135, in run
+    return loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\SoftWare\PyCharm 2023.3.5\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 229, in run_until_complete
+    self._run_once()
+  File "D:\Code\SoftWare\PyCharm 2023.3.5\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 281, in _run_once
+    handle._run()
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\tasks.py", line 396, in __wakeup
+    self.__step()
+  File "D:\Code\SoftWare\PyCharm 2023.3.5\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 390, in step
+    step_orig(task, exc)
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\tasks.py", line 303, in __step
+    self.__step_run_and_handle_result(exc)
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\server.py", line 68, in serve
+    with self.capture_signals():
+  File "D:\Code\SoftWare\Python3.12.2\Lib\contextlib.py", line 144, in __exit__
+    next(self.gen)
+  File "D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\server.py", line 332, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+2024-10-24 11:42:08,072 Now start service
+2024-10-24 11:43:51,880 Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<Server.serve() done, defined at D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\server.py:67> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\main.py", line 579, in run
+    server.run()
+  File "D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\SoftWare\PyCharm 2023.3.5\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 135, in run
+    return loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\SoftWare\PyCharm 2023.3.5\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 229, in run_until_complete
+    self._run_once()
+  File "D:\Code\SoftWare\PyCharm 2023.3.5\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 281, in _run_once
+    handle._run()
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\tasks.py", line 396, in __wakeup
+    self.__step()
+  File "D:\Code\SoftWare\PyCharm 2023.3.5\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 390, in step
+    step_orig(task, exc)
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\tasks.py", line 303, in __step
+    self.__step_run_and_handle_result(exc)
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\server.py", line 68, in serve
+    with self.capture_signals():
+  File "D:\Code\SoftWare\Python3.12.2\Lib\contextlib.py", line 144, in __exit__
+    next(self.gen)
+  File "D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\server.py", line 332, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+2024-10-24 11:43:58,618 Now start service
+2024-10-24 11:45:46,735 Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<Server.serve() done, defined at D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\server.py:67> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\main.py", line 579, in run
+    server.run()
+  File "D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\SoftWare\PyCharm 2023.3.5\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 135, in run
+    return loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Code\SoftWare\PyCharm 2023.3.5\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 229, in run_until_complete
+    self._run_once()
+  File "D:\Code\SoftWare\PyCharm 2023.3.5\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 281, in _run_once
+    handle._run()
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\tasks.py", line 396, in __wakeup
+    self.__step()
+  File "D:\Code\SoftWare\PyCharm 2023.3.5\plugins\python\helpers-pro\pydevd_asyncio\pydevd_nest_asyncio.py", line 390, in step
+    step_orig(task, exc)
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\tasks.py", line 303, in __step
+    self.__step_run_and_handle_result(exc)
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\server.py", line 68, in serve
+    with self.capture_signals():
+  File "D:\Code\SoftWare\Python3.12.2\Lib\contextlib.py", line 144, in __exit__
+    next(self.gen)
+  File "D:\Desktop\skyMusic\sky-music-server\.venv\Lib\site-packages\uvicorn\server.py", line 332, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+2024-10-24 11:45:53,231 Now start service
+2024-10-24 16:53:54,528 Now start service
+2024-10-24 17:10:20,272 Now start service
+2024-10-24 17:18:26,870 Now start service
+2024-10-24 17:18:40,150 Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] 远程主机强迫关闭了一个现有的连接。
+2024-10-24 17:19:30,756 Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] 远程主机强迫关闭了一个现有的连接。
+2024-10-24 17:20:20,806 Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] 远程主机强迫关闭了一个现有的连接。
+2024-10-24 17:20:33,557 Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "D:\Code\SoftWare\Python3.12.2\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] 远程主机强迫关闭了一个现有的连接。
+2024-10-24 17:26:36,599 Now start service
+2024-10-24 18:17:19,668 Now start service
+2024-10-28 10:56:27,173 Now start service
+2024-11-10 00:04:38,729 Now start service
+2024-11-10 00:30:15,495 Now start service
+2024-11-10 01:15:54,427 Now start service
+2024-11-10 01:25:55,174 Now start service
+2024-11-10 01:30:01,460 Now start service
+2024-11-10 01:30:41,643 Now start service

@@ -1,0 +1,4 @@
+FastAPI~=0.115.4
+uvicorn~=0.32.0
+pygetwindow~=0.0.9
+PyAutoGUI~=0.9.54

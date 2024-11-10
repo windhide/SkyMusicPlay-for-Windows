@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "electron-builder": "^25.1.8",
+    "naive-ui": "^2.40.1",
+    "vfonts": "^0.0.3"
+  }
+}
