@@ -7,7 +7,7 @@
     <n-progress
       style="max-width: 50%"
       type="line"
-      :percentage="percentage"
+      :percentage="progress"
       indicator-placement="inside"
       processing
     />
@@ -117,7 +117,7 @@ let musicColumns = [
   },
 ]; // 音乐列
 
-let percentage = ref(0); // 播放进度条
+let progress = ref(0.0); // 播放进度条
 let playSpeed = ref(1); // 播放速度
 let delaySpeed = ref([50, 70]); // 延迟设置
 
@@ -146,6 +146,8 @@ const myTranslateMusicSelect = (row: RowData) => {
   };
 };
 
+let progressInterval = 0
+
 const playSelect = (value: string) => {
   console.log(value)
   switch (value) {
@@ -155,20 +157,29 @@ const playSelect = (value: string) => {
         type:nowType
       });
       message.success("开始")
+      progressInterval = setInterval(getProgress,1000)
       break;
     case "pause":
       getData("pause");
+      clearInterval(progressInterval)
 
       break;
     case "stop":
       getData("stop");
       message.error("中止")
- 
+      clearInterval(progressInterval)
       break;
     case "resume":
       getData("resume")
+      progressInterval = setInterval(getProgress,1000)
   }
 };
+
+function getProgress(){
+  getData("getProgress").then(res => {
+    progress.value = res
+  });
+}
 
 getData("").then((res: { systemMusic: any; myImport: any; myTranslate: any }) => {
   music.musicData.push(...res.systemMusic);

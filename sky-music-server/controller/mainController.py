@@ -1,9 +1,11 @@
+import math
+
 from fastapi import FastAPI
 import uvicorn
 # 配置文件
 import logging
 
-from utils import RobotUtils
+from utils import RobotUtils, global_state
 from utils.listUtils import getTypeMusicList
 from elevate import elevate
 
@@ -47,6 +49,11 @@ def stop():
 @app.get("/resume")
 def resume():
     RobotUtils.resume()
+
+
+@app.get("/getProgress")
+def getProgress():
+    return f"{global_state.now_progress:.1f}"
 
 if __name__ == '__main__':
     logging.basicConfig(filename='log.log', encoding='utf-8', level=logging.INFO, format='%(asctime)s %(message)s')

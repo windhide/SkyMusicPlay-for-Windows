@@ -63,12 +63,7 @@ const menuOptions = [
     label: "音乐扒谱",
     key: "kube",
     icon: renderIcon(CubeSharp),
-  },
-  {
-    label: "按键设置",
-    key: "setting",
-    icon: renderIcon(Cog),
-  },
+  }
 ];
 
 const clickMenu = (key: string, item: MenuOption) => {

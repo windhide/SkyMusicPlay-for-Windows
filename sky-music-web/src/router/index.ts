@@ -15,11 +15,6 @@ const routes: Array<RouteRecordRaw> = [
     path: '/kube',
     name: 'kube',
     component: () => import(/* webpackChunkName: "about" */ '../views/kube.vue')
-  },
-  {
-    path: '/setting',
-    name: 'setting',
-    component: () => import(/* webpackChunkName: "about" */ '../views/setting.vue')
   }
 ]
 
