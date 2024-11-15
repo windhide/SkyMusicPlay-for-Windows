@@ -1,7 +1,7 @@
 import threading
 import time
 
-from utils import global_state, RobotUtils
+from ._global import global_state
 
 
 class ControlledThread:

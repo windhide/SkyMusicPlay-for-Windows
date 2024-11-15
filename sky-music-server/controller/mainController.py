@@ -1,13 +1,10 @@
-import math
-
 from fastapi import FastAPI
 import uvicorn
 # 配置文件
 import logging
 
-from utils import RobotUtils, global_state
+from utils._global import global_state
 from utils.listUtils import getTypeMusicList
-from elevate import elevate
 
 app = FastAPI()
 
@@ -63,5 +60,3 @@ if __name__ == '__main__':
         uvicorn.run("mainController:app", host="localhost", port=9899, log_level="info")
     except Exception as e:
         logging.error(e)
-
-    elevate()

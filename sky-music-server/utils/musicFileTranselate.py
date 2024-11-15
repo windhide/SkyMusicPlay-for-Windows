@@ -1,7 +1,5 @@
-import json
-import os
 import chardet
-from utils import global_state
+from utils._global import global_state
 from utils.pathUtils import getResourcesPath
 
 keyMap = {
@@ -39,8 +37,8 @@ def convert_notes_to_delayed_format(fileName, type):
     import os
     import json
 
-    with open(os.path.join(getResourcesPath(), type, fileName + ".txt"), 'r',
-              encoding=detect_encoding(os.path.join(getResourcesPath(), type, fileName + ".txt"))) as file:
+    with open(os.path.join(getResourcesPath(None), type, fileName + ".txt"), 'r',
+              encoding=detect_encoding(os.path.join(getResourcesPath(None), type, fileName + ".txt"))) as file:
         data = json.load(file)
 
     song_notes = data[0].get("songNotes", [])
@@ -86,5 +84,4 @@ def detect_encoding(file_path):
         raw_data = file.read(32000)  # 读取32KB数据
         result = chardet.detect(raw_data)
         encoding = result['encoding']
-        confidence = result['confidence']
         return encoding

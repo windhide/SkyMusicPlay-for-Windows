@@ -1,7 +1,5 @@
-import pyautogui
 import pygetwindow as gw
-import time
-from utils import global_state
+from utils._global import global_state
 from utils.musicFileTranselate import convert_notes_to_delayed_format
 from utils.playThread import ControlledThread
 import keyboard

@@ -1,4 +1,9 @@
-FastAPI~=0.115.4
+PyGetWindow~=0.0.9
+keyboard~=0.13.5
+librosa~=0.10.2.post1
+numpy~=2.0.2
+torch~=2.5.1
+tqdm~=4.67.0
+chardet~=5.2.0
 uvicorn~=0.32.0
-pygetwindow~=0.0.9
-PyAutoGUI~=0.9.54
+fastapi~=0.115.5
