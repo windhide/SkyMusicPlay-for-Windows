@@ -5,8 +5,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "electron:dev": "electron ."
+    "electron": "electron .",
+    "build": "vue-cli-service build"
   },
   "dependencies": {
     "@vicons/ionicons5": "^0.12.0",
