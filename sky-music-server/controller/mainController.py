@@ -5,6 +5,7 @@ import logging
 
 from utils._global import global_state
 from utils.listUtils import getTypeMusicList
+from utils.robot import robotUtils
 
 app = FastAPI()
 
@@ -29,23 +30,23 @@ def translateMusic():
 # 获取当前是否有激活窗口
 @app.get("/getWindowState")
 def getWindowState():
-    return RobotUtils.is_window_exist()
+    return robotUtils.is_window_exist()
 
 @app.post("/start")
 def start(request: dict):
     print(request)
-    RobotUtils.playMusic(request["fileName"],request["type"])
+    robotUtils.playMusic(request["fileName"],request["type"])
 @app.get("/pause")
 def pause():
-    RobotUtils.pause()
+    robotUtils.pause()
 
 @app.get("/stop")
 def stop():
-    RobotUtils.stop()
+    robotUtils.stop()
 
 @app.get("/resume")
 def resume():
-    RobotUtils.resume()
+    robotUtils.resume()
 
 
 @app.get("/getProgress")
