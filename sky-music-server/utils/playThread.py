@@ -2,6 +2,7 @@ import threading
 import time
 
 from ._global import global_state
+from .robot import robotUtils
 
 
 class ControlledThread:
@@ -29,9 +30,9 @@ class ControlledThread:
                 global_state.now_progress = index / allLength * 100
                 # 批量发送按键，减少对函数的调用频率
                 if len(keys) == 1:
-                    RobotUtils.send_single_key_to_window(keys, delay)
+                    robotUtils.send_single_key_to_window(keys, delay)
                 else:
-                    RobotUtils.send_multiple_key_to_window(keys, delay)
+                    robotUtils.send_multiple_key_to_window(keys, delay)
                 time.sleep(delay/1000)
 
                 # 避免过多的 `time.sleep` 调用，提高效率

@@ -45,7 +45,7 @@
           :data="music.musicData"
           :bordered="false"
           :max-height="330"
-          virtual-scroll
+          :scroll-x="100"
           :row-props="systemMusicSelect"
         />
       </n-tab-pane>
@@ -55,8 +55,7 @@
           :data="music.importData"
           :bordered="false"
           :max-height="300"
-          :scroll-x="1800"
-          virtual-scroll
+          :scroll-x="100"
           :row-props="myImportMusicSelect"
         />
       </n-tab-pane>
@@ -66,8 +65,7 @@
           :data="music.translateData"
           :bordered="false"
           :max-height="250"
-          :scroll-x="1800"
-          virtual-scroll
+          :scroll-x="100"
           :row-props="myTranslateMusicSelect"
         />
       </n-tab-pane>
@@ -177,7 +175,7 @@ const playSelect = (value: string) => {
 
 function getProgress(){
   getData("getProgress").then(res => {
-    progress.value = res
+    progress.value = res.now_progress
   });
 }
 
