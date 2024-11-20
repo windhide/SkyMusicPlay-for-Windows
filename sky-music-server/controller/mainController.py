@@ -65,7 +65,7 @@ async def create_upload_files(file: UploadFile):
 
 @app.post("/translate")
 def translate(request: dict):
-    process_directory_with_progress(use_gpu=True if request["processor"] == 'cpu' else False)
+    process_directory_with_progress(use_gpu=False if request["processor"] == 'cpu' else True)
     return "ok"
 
 
