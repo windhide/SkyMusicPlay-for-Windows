@@ -68,19 +68,4 @@ const menuOptions = [
 const clickMenu = (key: string, item: MenuOption) => {
   router.push({ name: key });
 };
-
-let interval = setInterval(function () {
-  windowsActive();
-}, 1000);
-
-function windowsActive() {
-  getData("getWindowState").then((res) => {
-    if (res) {
-      document.title = "星星弹琴 - 游戏已运行 - haveFun!";
-      clearInterval(interval);
-    } else {
-      document.title = "星星弹琴 - 当前未检测到游戏运行，请运行游戏！";
-    }
-  });
-}
 </script>

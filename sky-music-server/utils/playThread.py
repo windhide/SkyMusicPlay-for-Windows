@@ -33,9 +33,9 @@ class ControlledThread:
                 global_state.now_progress = index / allLength * 100
                 # 批量发送按键，减少对函数的调用频率
                 if len(keys) == 1:
-                    robotUtils.send_single_key_to_window(keys, hwnd)
+                    robotUtils.send_single_key_to_window(keys)
                 else:
-                    robotUtils.send_multiple_key_to_window(keys, hwnd)
+                    robotUtils.send_multiple_key_to_window(keys)
                 time.sleep(delay/1000)
 
                 # 避免过多的 `time.sleep` 调用，提高效率

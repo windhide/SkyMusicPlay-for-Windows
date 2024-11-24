@@ -22,11 +22,6 @@ def root():
         "translateOriginalMusic": getTypeMusicList("translateOriginalMusic")
         }
 
-# 获取当前是否有激活窗口
-@app.get("/getWindowState")
-def getWindowState():
-    return robotUtils.is_window_exist()
-
 @app.post("/start")
 def start(request: dict):
     robotUtils.playMusic(request["fileName"],request["type"])
