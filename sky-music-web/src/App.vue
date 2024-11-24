@@ -47,7 +47,6 @@ function renderIcon(icon: Component) {
   return () => h(NIcon, null, { default: () => h(icon) });
 }
 
-
 const menuOptions = [
   {
     label: "介绍",

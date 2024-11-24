@@ -60,7 +60,7 @@ def get_advanced_key_mapping(pitch_value):
 def process_audio_with_progress(file_path, use_gpu=False, output_dir=getResourcesPath("myTranslate")):
     if '_ok' in os.path.splitext(os.path.basename(file_path))[0]:
         print(f"跳过文件 {file_path}，因为它已带有 '_ok' 标记")
-        return 0
+        # return 0
 
     os.makedirs(output_dir, exist_ok=True)
     device = select_device(use_gpu)
