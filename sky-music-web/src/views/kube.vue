@@ -17,7 +17,10 @@
     <n-gradient-text type="warning" :size="15"> gpu </n-gradient-text>
 
     <n-divider />
-    <n-gradient-text type="info" :size="18"> 当前任务 {{ now_translate_text.process + " " + now_translate_text.text }}
+    <n-gradient-text type="info" :size="18"> 当前任务 
+    {{ 
+      now_translate_text.process == undefined && now_translate_text.text == undefined ? "已完成" : now_translate_text.process + " " + now_translate_text.text
+    }}
     </n-gradient-text>
     <div style="width: 100%;">
       <n-gradient-text type="info"> 总体进度 </n-gradient-text>
@@ -25,8 +28,8 @@
         indicator-placement="inside" processing />
     </div>
     <div style="width: 100%;">
-      <n-gradient-text type="info"> 当前歌曲处理进度 </n-gradient-text>
-      <n-progress style="max-width: 50%" type="line" :percentage="progress.translate_progress"
+      <n-gradient-text type="info"> 当前歌曲MID转换 </n-gradient-text>
+      <n-progress style="max-width: 50%" type="line" :percentage="progress.tran_mid_progress"
         indicator-placement="inside" processing />
     </div>
   </n-flex>
@@ -82,13 +85,15 @@ function handleFinish({ file, event }) {
 let progressInterval: any
 function getProgress() {
   getData("getProgress").then(res => {
-    progress.translate_progress = res.translate_progress
+    progress.tran_mid_progress = res.tran_mid_progress
     progress.overall_progress = res.overall_progress
     now_translate_text.text = res.now_translate_text[0]
     now_translate_text.process = res.now_translate_text[1]
   });
 
-  if (progress.translate_progress == 100 && progress.overall_progress == 100) {
+  if (progress.tran_mid_progress == 100 &&
+  progress.overall_progress == 100 
+) {
     clearInterval(progressInterval)
   }
 }

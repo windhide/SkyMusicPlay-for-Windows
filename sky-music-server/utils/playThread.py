@@ -1,8 +1,6 @@
 import threading
 import time
 
-import win32gui
-
 from ._global import global_state
 from .robot import robotUtils
 
@@ -24,7 +22,6 @@ class ControlledThread:
 
             # 遍历 local_music_sheet，减少多次访问全局变量的开销
             allLength = len(local_music_sheet)
-            hwnd = win32gui.FindWindow(None, global_state.windows_name)
             for index, sheet in enumerate(local_music_sheet):
                 self._pause_event.wait()  # 如果被暂停，将阻塞在这里
                 if not self._running: return

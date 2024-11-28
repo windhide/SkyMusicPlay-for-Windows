@@ -5,6 +5,8 @@ play_state = 'play' # play pause stop
 thread = None
 music_sheet = [] #乐谱
 now_progress  = 0 #进度条
-translate_progress = 0
-overall_progress = 0
+# 音乐转换进度条
+overall_progress = 0 #总体进度
+tran_mid_progress = 0 # 转MID进度
+# MID转TXT进度
 now_translate_text = []
