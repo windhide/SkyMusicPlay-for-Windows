@@ -114,12 +114,12 @@ def process_directory_with_progress(use_gpu=False, output_dir=getResourcesPath("
 
         global_state.now_translate_text = [str(idx + 1) + "/"+str(len(files_to_process)), file]
         global_state.tran_mid_progress = 0 # 进度条清空
-        fileNameNoEnd = file.replace(".mp3", ".mid").replace(".mp4", ".mid").replace(".flac", ".flac").replace(".ape", ".ape")
+        fileNameNoEnd = file.replace(".mp3", "").replace(".mp4", "").replace(".flac", "").replace(".ape", "")
         midFilePath =os.path.join(getResourcesPath("translateMID"), fileNameNoEnd)
         musicFilePath = os.path.join(getResourcesPath("translateOriginalMusic"), file)
         inference(
             input_path=musicFilePath,
-            output_mid_path=midFilePath,
+            output_mid_path=midFilePath+".mid",
             _cuda=use_gpu,
             checkpoint_path=os.path.join(getResourcesPath("modelData"),modelName))
         file_progress = process_midi_to_txt(midFilePath,output_dir + "\\" + fileNameNoEnd + ".txt")

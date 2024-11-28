@@ -35,13 +35,13 @@
   </n-flex>
 
   <n-card style="margin-top: 20px">
-    <n-tabs type="line" animated>
+    <n-tabs type="line" animated @update:value="handleUpdateValue">
       <n-tab-pane name="translateOriginalMusic" tab="未转换歌曲">
         <n-data-table :columns="musicColumns" :data="music.translateOriginalMusic" :bordered="false" :max-height="330"
           :scroll-x="100" />
       </n-tab-pane>
-      <n-tab-pane name="translateData" tab="已转换歌曲">
-        <n-data-table :columns="musicColumns" :data="music.translateData" :bordered="false" :max-height="300"
+      <n-tab-pane name="myTranslate" tab="已转换歌曲">
+        <n-data-table :columns="musicColumns" :data="music.myTranslate" :bordered="false" :max-height="300"
           :scroll-x="100" />
       </n-tab-pane>
     </n-tabs>
@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts" setup>
-import { getData, sendData } from '@/utils/fetchUtils'
+import { getData, sendData, getList } from '@/utils/fetchUtils'
 import { reactive, ref, watch } from 'vue';
 import { useMessage } from 'naive-ui'
 const message = useMessage()
@@ -59,7 +59,7 @@ const processFlag = ref(false)
 
 let music: any = reactive({ // 音乐列表
   translateOriginalMusic: [], // 导入的音乐
-  translateData: [] // 扒谱的音乐
+  myTranslate: [] // 扒谱的音乐
 })
 let progress: any = reactive({
   translate_progress: 0,
@@ -115,12 +115,18 @@ function handleStartTranslate() {
 
 
 function reloadTable() {
-  getData("").then((res: { translateOriginalMusic: any; myTranslate: any; }) => {
-    music.translateData = res.myTranslate
-    music.translateOriginalMusic = res.translateOriginalMusic
-  })
+  handleUpdateValue("myTranslate")
+  handleUpdateValue("translateOriginalMusic")
 }
 
 reloadTable()
 watch(progress.overall_progress.value, () => reloadTable())
+
+function handleUpdateValue(value: string){
+  getList(value).then(res=>{
+    eval("music."+value+"=res")
+  })
+}
+
+
 </script>

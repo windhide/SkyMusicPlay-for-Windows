@@ -38,31 +38,31 @@
   </n-flex>
 
   <n-card style="margin-top: 20px">
-    <n-tabs type="line" animated>
-      <n-tab-pane name="musicData" tab="自带歌曲">
+    <n-tabs type="line" animated  @update:value="handleUpdateValue">
+      <n-tab-pane name="systemMusic" tab="自带歌曲">
         <n-data-table
           :columns="musicColumns"
-          :data="music.musicData"
+          :data="music.systemMusic"
           :bordered="false"
           :max-height="330"
           :scroll-x="100"
           :row-props="systemMusicSelect"
         />
       </n-tab-pane>
-      <n-tab-pane name="importMusic" tab="导入的歌曲">
+      <n-tab-pane name="myImport" tab="导入的歌曲">
         <n-data-table
           :columns="musicColumns"
-          :data="music.importData"
+          :data="music.myImport"
           :bordered="false"
           :max-height="300"
           :scroll-x="100"
           :row-props="myImportMusicSelect"
         />
       </n-tab-pane>
-      <n-tab-pane name="transforMusic" tab="转换的歌曲">
+      <n-tab-pane name="myTranslate" tab="转换的歌曲">
         <n-data-table
           :columns="musicColumns"
-          :data="music.translateData"
+          :data="music.myTranslate"
           :bordered="false"
           :max-height="250"
           :scroll-x="100"
@@ -74,7 +74,7 @@
 </template>
 
 <script lang="ts" setup>
-import { getData, sendData } from "@/utils/fetchUtils";
+import { getData, sendData, getList } from "@/utils/fetchUtils";
 import { RowData } from "naive-ui/es/data-table/src/interface";
 import { reactive, ref, watch } from "vue";
 import { useMessage } from 'naive-ui'
@@ -83,9 +83,9 @@ const message = useMessage()
 
 let music: any = reactive({
   // 音乐列表
-  musicData: [], // 原版音乐
-  importData: [], // 导入的音乐
-  translateData: [], // 扒谱的音乐
+  systemMusic: [], // 原版音乐
+  myImport: [], // 导入的音乐
+  myTranslate: [], // 扒谱的音乐
 });
 let nowPlayMusic = ref("没有歌曲"); // 当前选中歌曲
 let nowType = ""
@@ -179,9 +179,12 @@ function getProgress(){
   });
 }
 
-getData("").then((res: { systemMusic: any; myImport: any; myTranslate: any }) => {
-  music.musicData.push(...res.systemMusic);
-  music.importData.push(...res.myImport);
-  music.translateData.push(...res.myTranslate);
-});
+
+handleUpdateValue("systemMusic")
+
+function handleUpdateValue(value: string){
+  getList(value).then(res=>{
+    eval("music."+value+"=res")
+  })
+}
 </script>

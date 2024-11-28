@@ -11,16 +11,9 @@ from utils.pathUtils import getResourcesPath
 from utils.robot import robotUtils
 
 app = FastAPI()
-
-
 @app.get("/")
-def root():
-    return {
-        "systemMusic": getTypeMusicList("systemMusic"),
-        "myImport": getTypeMusicList("myImport"),
-        "myTranslate": getTypeMusicList("myTranslate"),
-        "translateOriginalMusic": getTypeMusicList("translateOriginalMusic")
-        }
+async def getList(listName: str):
+    return  getTypeMusicList(listName)
 
 @app.post("/start")
 def start(request: dict):
