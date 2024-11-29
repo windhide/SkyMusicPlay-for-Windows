@@ -2,72 +2,49 @@
   <n-flex align="center">
     <n-gradient-text :size="24" type="success" style="width: 100%">
       {{ "当前: " + nowPlayMusic + "" }}
-    </n-gradient-text>
-    <n-space vertical> </n-space>
-    <n-progress
-      style="max-width: 50%"
-      type="line"
-      :percentage="progress"
-      indicator-placement="inside"
-      processing
-    />
-    <n-radio-group
-      v-model:value="nowState"
-      name="radiobuttongroup1"
-      @update:value="playSelect"
-    >
-      <n-radio-button
-        v-for="status in statusColumns"
-        :key="status.value"
-        :value="status.value"
-        :label="status.label"
-      />
-    </n-radio-group>
-
-    <n-gradient-text :size="20" type="success" style="width: 110px">
+      <br>
       {{ "状态: " + nowState }}
     </n-gradient-text>
-    <n-space vertical>
-      延迟设置
-      <n-slider v-model:value="delaySpeed" range :step="1" />
-      <n-space>
-        <n-input-number v-model:value="delaySpeed[0]" size="small" />
-        <n-input-number v-model:value="delaySpeed[1]" size="small" />
-      </n-space>
-    </n-space>
+    <n-space vertical> </n-space>
+    <n-progress style="max-width: 50%" type="line" :percentage="progress" indicator-placement="inside" processing />
+    <n-radio-group v-model:value="nowState" name="radiobuttongroup1" @update:value="playSelect">
+      <n-radio-button v-for="status in statusColumns" :key="status.value" :value="status.value" :label="status.label" />
+    </n-radio-group>
+    <n-row gutter="12">
+      <n-col :span="15">
+        <n-gradient-text type="info" :size="13">
+          选择延迟&nbsp;&nbsp;&nbsp;
+        </n-gradient-text>
+        <n-radio-group v-model:value="delayStatus" name="radiogroup" @update:value="delaySelect">
+          <n-space>
+            <n-radio v-for="status in delayColumns" :key="status.value" :value="status.value">
+              {{ status.label }}
+            </n-radio>
+          </n-space>
+        </n-radio-group>
+      </n-col>
+      <n-col :span="9" style="margin-left: -50px;" v-show="delayStatus == 'custom'">
+        延迟设置
+        <n-space vertical style="width: 150px; float: right; margin-top: 2px;">
+          <n-slider v-model:value="delaySpeed" range :step="1" />
+        </n-space>
+      </n-col>
+    </n-row>
   </n-flex>
 
   <n-card style="margin-top: 20px">
-    <n-tabs type="line" animated  @update:value="handleUpdateValue">
+    <n-tabs type="line" animated @update:value="handleUpdateValue">
       <n-tab-pane name="systemMusic" tab="自带歌曲">
-        <n-data-table
-          :columns="musicColumns"
-          :data="music.systemMusic"
-          :bordered="false"
-          :max-height="330"
-          :scroll-x="100"
-          :row-props="systemMusicSelect"
-        />
+        <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :max-height="330"
+          :scroll-x="100" :row-props="systemMusicSelect" />
       </n-tab-pane>
       <n-tab-pane name="myImport" tab="导入的歌曲">
-        <n-data-table
-          :columns="musicColumns"
-          :data="music.myImport"
-          :bordered="false"
-          :max-height="300"
-          :scroll-x="100"
-          :row-props="myImportMusicSelect"
-        />
+        <n-data-table :columns="musicColumns" :data="music.myImport" :bordered="false" :max-height="300" :scroll-x="100"
+          :row-props="myImportMusicSelect" />
       </n-tab-pane>
       <n-tab-pane name="myTranslate" tab="转换的歌曲">
-        <n-data-table
-          :columns="musicColumns"
-          :data="music.myTranslate"
-          :bordered="false"
-          :max-height="250"
-          :scroll-x="100"
-          :row-props="myTranslateMusicSelect"
-        />
+        <n-data-table :columns="musicColumns" :data="music.myTranslate" :bordered="false" :max-height="250"
+          :scroll-x="100" :row-props="myTranslateMusicSelect" />
       </n-tab-pane>
       <template #suffix>
         <n-input round placeholder="搜索" v-model:value="searchText" style="margin-bottom: 3px;">
@@ -99,6 +76,7 @@ let nowPlayMusic = ref("没有歌曲"); // 当前选中歌曲
 let nowType = ""
 let searchText = ref("")
 let nowState = ref("stop"); // 当前播放状态
+let delayStatus = ref("system")
 let statusColumns = [
   {
     value: "start",
@@ -116,6 +94,20 @@ let statusColumns = [
     value: "stop",
     label: "停止",
   },
+]; // 播放按钮
+let delayColumns = [
+  {
+    value: "system",
+    label: "系统自带",
+  },
+  {
+    value: "random",
+    label: "随机",
+  },
+  {
+    value: "custom",
+    label: "自定义",
+  }
 ]; // 播放按钮
 let musicColumns = [
   {
@@ -159,12 +151,12 @@ const playSelect = (value: string) => {
   console.log(value)
   switch (value) {
     case "start":
-      sendData("start",{
-        fileName:nowPlayMusic.value,
-        type:nowType
+      sendData("start", {
+        fileName: nowPlayMusic.value,
+        type: nowType
       });
       message.success("开始")
-      progressInterval = setInterval(getProgress,1000)
+      progressInterval = setInterval(getProgress, 1000)
       break;
     case "pause":
       getData("pause");
@@ -177,11 +169,20 @@ const playSelect = (value: string) => {
       break;
     case "resume":
       getData("resume")
-      progressInterval = setInterval(getProgress,1000)
+      progressInterval = setInterval(getProgress, 1000)
   }
 };
 
-function getProgress(){
+const delaySelect = (value: string) => {
+  switch (value) {
+    case "system":
+      break;
+    case "random":
+      break;
+  }
+};
+
+function getProgress() {
   getData("getProgress").then(res => {
     progress.value = res.now_progress
   });
@@ -190,22 +191,22 @@ function getProgress(){
 
 handleUpdateValue("systemMusic")
 
-function handleUpdateValue(value: string){
+function handleUpdateValue(value: string) {
   searchText.value = ""
-  getList(value).then(res=>{
-    eval("music."+value+"=res")
+  getList(value).then(res => {
+    eval("music." + value + "=res")
   })
 }
 
-watch(searchText,()=>{
-  if(searchText.value === "" || searchText.value === undefined || searchText.value === null){
+watch(searchText, () => {
+  if (searchText.value === "" || searchText.value === undefined || searchText.value === null) {
     handleUpdateValue("systemMusic")
     handleUpdateValue("myImport")
     handleUpdateValue("myTranslate")
     return
   }
-  music.systemMusic = music.systemMusic.filter((res)=>{return res.name.includes(searchText.value)})
-  music.myImport = music.myImport.filter((res)=>{return res.name.includes(searchText.value)})
-  music.myTranslate = music.myTranslate.filter((res)=>{return res.name.includes(searchText.value)})
+  music.systemMusic = music.systemMusic.filter((res) => { return res.name.includes(searchText.value) })
+  music.myImport = music.myImport.filter((res) => { return res.name.includes(searchText.value) })
+  music.myTranslate = music.myTranslate.filter((res) => { return res.name.includes(searchText.value) })
 })
 </script>
