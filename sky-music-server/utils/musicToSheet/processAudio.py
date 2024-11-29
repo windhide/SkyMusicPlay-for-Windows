@@ -1,3 +1,4 @@
+import json
 import os
 import mido
 
@@ -18,6 +19,27 @@ def get_bpm_from_midi(midi_file_path):
                 bpm = 60000000 / msg.tempo
                 return bpm
     return 120  # 如果没有找到BPM，则返回默认BPM 120
+
+
+def generate_combination_keys(key, note_to_key, min_note, max_note):
+    """
+    根据音符的值生成可能的组合键。
+    如果音符不在直接映射表中，则通过组合来生成。
+    """
+    combination_keys = []
+
+    # 检查音符是否在映射表中
+    if key in note_to_key:
+        return [note_to_key[key]]
+
+    # 如果音符在映射表中不存在，则通过组合其他音符来生成
+    for i in range(min_note, max_note):
+        if (key - i) in note_to_key:  # 检查两个音符的差值
+            combination_keys.append(note_to_key[i])
+            combination_keys.append(note_to_key[key - i])
+            break  # 假设每个音符只会有一种组合方式
+
+    return combination_keys
 
 
 def process_midi_to_txt(input_path, output_path, min_note=60, max_note=84):
@@ -57,7 +79,7 @@ def process_midi_to_txt(input_path, output_path, min_note=60, max_note=84):
     # 按时间分类音符
     time_dict = {}
 
-    for index,note in enumerate(notes):
+    for index, note in enumerate(notes):
         time = note['time']
         key = note['note']
 
@@ -77,30 +99,40 @@ def process_midi_to_txt(input_path, output_path, min_note=60, max_note=84):
         if key in note_to_key:
             time_dict[time].append(note_to_key[key])
         else:
-            print(f"音符 {key} 超出范围，无法映射")
+            # 动态生成组合键
+            combination_keys = generate_combination_keys(key, note_to_key, min_note, max_note)
+            time_dict[time].extend(combination_keys)  # 将组合键添加到时间点的音符列表中
 
     # 处理同时按键的情况
     result = []
-    for index,time in enumerate(sorted(time_dict.keys())):
-        for idx, key in enumerate(time_dict[time]):
-            result.append(f"{{\"time\": {time}, \"key\": \"{len(time_dict[time])}Key{idx}\"}}")
+    for time in sorted(time_dict.keys()):
+        keys = time_dict[time]
+        # 按时间点顺序，为每个按键添加前缀
+        for idx, key in enumerate(keys):
+            result.append({
+                "time": time,
+                "key": f"{len(keys)}{key[1:]}"  # 替换"1Key"前缀并根据按键数添加前缀
+            })
 
     # 构建输出字典
-    output = {
-        "name": os.path.basename(input_path),  # 获取文件名
-        "bpm": bpm,  # 从MIDI中提取BPM
-        "bitsPerPage": 15,
-        "pitchLevel": 0,
-        "isComposed": False,
-        "songNotes": result
-    }
-
+    output = [
+        {
+            "name": os.path.basename(input_path),  # 获取文件名
+            "author": "skyMusic-WindHide",
+            "transcribedBy": "WindHide'System",
+            "bpm": bpm,  # 从MIDI中提取BPM
+            "bitsPerPage": 15,
+            "pitchLevel": 0,
+            "isComposed": True,
+            "songNotes": result,
+            "isEncrypted": False,
+        }
+    ]
     # 将结果写入txt文件
     with open(output_path, 'w') as f:
-        f.write(str(output))
+        f.write(json.dumps(output, indent=4))  # 生成美化后的 JSON 格式
 
     return 100
-
 
 def process_directory_with_progress(use_gpu=False, output_dir=getResourcesPath("myTranslate"), modelName=""):
     os.makedirs(output_dir, exist_ok=True)
@@ -122,10 +154,10 @@ def process_directory_with_progress(use_gpu=False, output_dir=getResourcesPath("
             output_mid_path=midFilePath+".mid",
             _cuda=use_gpu,
             checkpoint_path=os.path.join(getResourcesPath("modelData"),modelName))
-        file_progress = process_midi_to_txt(midFilePath,output_dir + "\\" + fileNameNoEnd + ".txt")
+        file_progress = process_midi_to_txt(midFilePath+".mid",output_dir + "\\" + fileNameNoEnd + ".txt")
 
         # 完成的重命名 避免继续计算浪费资源
-        new_file_path = os.path.join(musicFilePath,
+        new_file_path = os.path.join(midFilePath+".mid",
                                      os.path.splitext(musicFilePath)[0] + "_ok" +
                                      os.path.splitext(musicFilePath)[1])
         os.rename(musicFilePath, new_file_path)
