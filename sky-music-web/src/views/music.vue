@@ -4,9 +4,9 @@
       {{ "当前: " + nowPlayMusic + "" }}
       <br>
       {{ "状态: " + nowState }}
+      <n-progress style="max-width: 60%; display: inline-block" type="line" :percentage="progress"
+        indicator-placement="inside" processing :color="{ stops: ['white', 'blue'] }" @click="progressClick" />
     </n-gradient-text>
-    <n-space vertical> </n-space>
-    <n-progress style="max-width: 50%" type="line" :percentage="progress" indicator-placement="inside" processing />
     <n-radio-group v-model:value="nowState" name="radiobuttongroup1" @update:value="playSelect">
       <n-radio-button v-for="status in statusColumns" :key="status.value" :value="status.value" :label="status.label" />
     </n-radio-group>
@@ -119,6 +119,7 @@ let musicColumns = [
 let progress = ref(0.0); // 播放进度条
 let playSpeed = ref(1); // 播放速度
 let delaySpeed = ref([50, 70]); // 延迟设置
+let isPause = false;
 
 const systemMusicSelect = (row: RowData) => {
   return {
@@ -157,15 +158,16 @@ const playSelect = (value: string) => {
       });
       message.success("开始")
       progressInterval = setInterval(getProgress, 1000)
+      isPause = false;
       break;
     case "pause":
       getData("pause");
       clearInterval(progressInterval)
+      progressInterval = 0
       break;
     case "stop":
       getData("stop");
-      message.error("中止")
-      clearInterval(progressInterval)
+      clearPlayInfo()
       break;
     case "resume":
       getData("resume")
@@ -181,6 +183,17 @@ const delaySelect = (value: string) => {
       break;
   }
 };
+
+function progressClick(event) {
+  // 获取点击事件对象
+  const rect = event.currentTarget.getBoundingClientRect(); // 获取组件的边界框
+  const clickPosition = event.clientX - rect.left; // 计算点击位置（相对于组件左边）
+  const componentWidth = rect.width; // 获取组件的总宽度
+  // 计算百分比
+  const percentage = (clickPosition / componentWidth) * 100;
+  // 更新进度条
+  progress.value = parseFloat(Math.min(Math.max(percentage, 0), 100).toFixed(1)) // 限制在0-100之间
+}
 
 function getProgress() {
   getData("getProgress").then(res => {
@@ -209,4 +222,11 @@ watch(searchText, () => {
   music.myImport = music.myImport.filter((res) => { return res.name.includes(searchText.value) })
   music.myTranslate = music.myTranslate.filter((res) => { return res.name.includes(searchText.value) })
 })
+
+function clearPlayInfo() {
+  nowPlayMusic.value = "没有歌曲"
+  nowState.value = "stop"
+  progress.value = 0
+  clearInterval(progressInterval)
+}
 </script>
