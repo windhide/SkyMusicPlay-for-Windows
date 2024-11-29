@@ -69,6 +69,13 @@
           :row-props="myTranslateMusicSelect"
         />
       </n-tab-pane>
+      <template #suffix>
+        <n-input round placeholder="搜索" v-model:value="searchText" style="margin-bottom: 3px;">
+          <template #suffix>
+            <n-icon :component="Search" />
+          </template>
+        </n-input>
+      </template>
     </n-tabs>
   </n-card>
 </template>
@@ -78,6 +85,7 @@ import { getData, sendData, getList } from "@/utils/fetchUtils";
 import { RowData } from "naive-ui/es/data-table/src/interface";
 import { reactive, ref, watch } from "vue";
 import { useMessage } from 'naive-ui'
+import { Search } from '@vicons/ionicons5'
 const message = useMessage()
 
 
@@ -89,6 +97,7 @@ let music: any = reactive({
 });
 let nowPlayMusic = ref("没有歌曲"); // 当前选中歌曲
 let nowType = ""
+let searchText = ref("")
 let nowState = ref("stop"); // 当前播放状态
 let statusColumns = [
   {
@@ -160,7 +169,6 @@ const playSelect = (value: string) => {
     case "pause":
       getData("pause");
       clearInterval(progressInterval)
-
       break;
     case "stop":
       getData("stop");
@@ -183,8 +191,21 @@ function getProgress(){
 handleUpdateValue("systemMusic")
 
 function handleUpdateValue(value: string){
+  searchText.value = ""
   getList(value).then(res=>{
     eval("music."+value+"=res")
   })
 }
+
+watch(searchText,()=>{
+  if(searchText.value === "" || searchText.value === undefined || searchText.value === null){
+    handleUpdateValue("systemMusic")
+    handleUpdateValue("myImport")
+    handleUpdateValue("myTranslate")
+    return
+  }
+  music.systemMusic = music.systemMusic.filter((res)=>{return res.name.includes(searchText.value)})
+  music.myImport = music.myImport.filter((res)=>{return res.name.includes(searchText.value)})
+  music.myTranslate = music.myTranslate.filter((res)=>{return res.name.includes(searchText.value)})
+})
 </script>
