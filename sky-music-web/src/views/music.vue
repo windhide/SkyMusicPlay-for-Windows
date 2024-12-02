@@ -3,7 +3,6 @@
     <n-gradient-text :size="24" type="success" style="width: 100%">
       {{ "当前: " + nowPlayMusic + "" }}
       <br>
-      {{ "状态: " + nowState }}
       <n-progress style="max-width: 60%; display: inline-block" type="line" :percentage="progress"
         indicator-placement="inside" processing :color="{ stops: ['white', 'blue'] }" @click="progressClick" />
     </n-gradient-text>
