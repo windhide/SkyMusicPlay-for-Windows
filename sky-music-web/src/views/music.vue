@@ -8,7 +8,8 @@
         indicator-placement="inside" processing :color="{ stops: ['white', 'blue'] }" @click="progressClick" />
     </n-gradient-text>
     <n-radio-group v-model:value="nowState" name="radiobuttongroup1" @update:value="playSelect">
-      <n-radio-button v-for="status in statusColumns" :key="status.value" :value="status.value" :label="status.label" v-show="status.show" />
+      <n-radio-button v-for="status in statusColumns" :key="status.value" :value="status.value" :label="status.label"
+        v-show="status.show" />
     </n-radio-group>
     <n-row gutter="12">
       <n-col :span="15">
@@ -26,7 +27,7 @@
       <n-col :span="9" style="margin-left: -50px;" v-show="delayStatus == 'custom'">
         延迟设置
         <n-space vertical style="width: 150px; float: right; margin-top: 2px;">
-          <n-slider v-model:value="delaySpeed" range :step="1" />
+          <n-slider v-model:value="delaySpeed" :step="1" :min="21" :max="200"/>
         </n-space>
       </n-col>
     </n-row>
@@ -58,7 +59,7 @@
 </template>
 
 <script lang="ts" setup>
-import { getData, sendData, getList } from "@/utils/fetchUtils";
+import { getData, sendData, getList, setConfig } from "@/utils/fetchUtils";
 import { RowData } from "naive-ui/es/data-table/src/interface";
 import { reactive, ref, watch } from "vue";
 import { useMessage } from 'naive-ui'
@@ -81,22 +82,22 @@ let statusColumns = [
   {
     value: "start",
     label: "开始",
-    show:true
+    show: true
   },
   {
     value: "resume",
     label: "继续",
-    show:false
+    show: false
   },
   {
     value: "pause",
     label: "暂停",
-    show:false
+    show: false
   },
   {
     value: "stop",
     label: "停止",
-    show:true
+    show: true
   },
 ]; // 播放按钮
 let delayColumns = [
@@ -122,7 +123,7 @@ let musicColumns = [
 
 let progress = ref(0.0); // 播放进度条
 let playSpeed = ref(1); // 播放速度
-let delaySpeed = ref([50, 70]); // 延迟设置
+let delaySpeed = ref(21); // 延迟设置
 
 const systemMusicSelect = (row: RowData) => {
   return {
@@ -155,7 +156,7 @@ const playSelect = (value: string) => {
   console.log(value)
   switch (value) {
     case "start":
-      if (nowPlayMusic.value === "没有歌曲"){
+      if (nowPlayMusic.value === "没有歌曲") {
         message.error("选个歌再播放吧靓仔")
         nowState.value = 'stop'
         return;
@@ -196,7 +197,7 @@ const delaySelect = (value: string) => {
 };
 
 function progressClick(event) {
-  if(nowState.value === 'stop'){
+  if (nowState.value === 'stop') {
     message.error("没有歌曲在播放，请播放歌曲后继续操作")
     return
   }
@@ -236,6 +237,29 @@ watch(searchText, () => {
   music.systemMusic = music.systemMusic.filter((res) => { return res.name.includes(searchText.value) })
   music.myImport = music.myImport.filter((res) => { return res.name.includes(searchText.value) })
   music.myTranslate = music.myTranslate.filter((res) => { return res.name.includes(searchText.value) })
+})
+
+let randomInterval:any = null
+watch(delayStatus, () => {
+  switch (delayStatus.value) {
+    case "system":
+      setConfig("delay_interval","0.002")
+      clearInterval(randomInterval)
+      break;
+    case "random":
+        randomInterval = setInterval(()=>{
+          setConfig("delay_interval",(Math.random() * (0.020 - 0.002) + 0.002).toFixed(3))
+        },1000)
+      break
+    case "custom":
+        setConfig("delay_interval",delaySpeed.value / 10000)
+        clearInterval(randomInterval)
+      break
+  }
+})
+
+watch(delaySpeed, () => {
+  setConfig("delay_interval",delaySpeed.value / 10000)
 })
 
 function clearPlayInfo() {

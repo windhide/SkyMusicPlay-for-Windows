@@ -4,7 +4,8 @@ from fastapi import FastAPI, UploadFile, File
 import uvicorn
 # 配置文件
 import logging
-import utils._global
+
+from utils._global import global_state
 from utils.listUtils import getTypeMusicList
 from utils.musicToSheet.processAudio import process_directory_with_progress
 from utils.pathUtils import getResourcesPath
@@ -34,10 +35,10 @@ def resume():
 @app.get("/getProgress")
 def getProgress():
     return {
-        "overall_progress": f"{utils._global.global_state.overall_progress:.1f}",
-        "tran_mid_progress": f"{utils._global.global_state.tran_mid_progress:.1f}",
-        "now_progress": f"{utils._global.global_state.now_progress:.1f}",
-        "now_translate_text": utils._global.global_state.now_translate_text
+        "overall_progress": f"{global_state.overall_progress:.1f}",
+        "tran_mid_progress": f"{global_state.tran_mid_progress:.1f}",
+        "now_progress": f"{global_state.now_progress:.1f}",
+        "now_translate_text": global_state.now_translate_text
     }
 
 @app.post("/fileUpload")
@@ -54,6 +55,11 @@ async def create_upload_files(file: UploadFile):
 @app.post("/translate")
 def translate(request: dict):
     process_directory_with_progress(use_gpu=False if request["processor"] == 'cpu' else True,modelName="note_F1=0.9677_pedal_F1=0.9186.pth")
+    return "ok"
+
+@app.post("/setConfig")
+def translate(request: dict):
+    global_state.delay_interval = float(request["value"])
     return "ok"
 
 

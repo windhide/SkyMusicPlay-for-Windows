@@ -8,7 +8,7 @@ import keyboard
 def send_single_key_to_window(key):
     """发送单个按键，减少延迟"""
     keyboard.press_and_release(key)
-    time.sleep(0.002)
+    time.sleep(global_state.delay_interval)
     print("keyDown ->", key)
 
 def send_multiple_key_to_window(keys):
