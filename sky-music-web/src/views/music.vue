@@ -155,6 +155,11 @@ const playSelect = (value: string) => {
   console.log(value)
   switch (value) {
     case "start":
+      if (nowPlayMusic.value === "没有歌曲"){
+        message.error("选个歌再播放吧靓仔")
+        nowState.value = 'stop'
+        return;
+      }
       sendData("start", {
         fileName: nowPlayMusic.value,
         type: nowType
