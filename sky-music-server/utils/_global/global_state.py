@@ -12,3 +12,4 @@ tran_mid_progress = 0 # 转MID进度
 now_translate_text = []
 # 延迟毫秒
 delay_interval = 0.002
+sustain_time = 0

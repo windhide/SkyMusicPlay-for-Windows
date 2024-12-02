@@ -29,13 +29,16 @@ export function sendData(url, data) {
   .then(data =>{return data})
   .catch(error => console.error(error));}
 
-  export function setPlayConfig(data){
-    return fetch(baseUrl + "setPlayConfig", {
+  export function setConfig(name,value){
+    return fetch(baseUrl + "setConfig", {
       method: 'POST', 
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data), 
+      body: JSON.stringify({
+        "name":name,
+        "value":value
+      }), 
     })
     .then(response => response.json())
     .then(data =>{return data})

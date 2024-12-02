@@ -59,7 +59,10 @@ def translate(request: dict):
 
 @app.post("/setConfig")
 def translate(request: dict):
-    global_state.delay_interval = float(request["value"])
+    if request["name"] == 'delay_interval':
+        global_state.delay_interval = float(request["value"])
+    if request["name"] == 'sustain_time':
+        global_state.sustain_time = float(request["value"])
     return "ok"
 
 

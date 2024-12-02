@@ -18,9 +18,9 @@
         </n-gradient-text>
         <n-radio-group v-model:value="delayStatus" name="radiogroup" @update:value="delaySelect">
           <n-space>
-            <n-radio v-for="status in delayColumns" :key="status.value" :value="status.value">
-              {{ status.label }}
-            </n-radio>
+            <n-radio key="system" value="system">系统自带</n-radio>
+            <n-radio key="random" value="random">随机</n-radio>
+            <n-radio key="custom" value="custom">自定义</n-radio>
           </n-space>
         </n-radio-group>
       </n-col>
@@ -28,6 +28,26 @@
         延迟设置
         <n-space vertical style="width: 150px; float: right; margin-top: 2px;">
           <n-slider v-model:value="delaySpeed" :step="1" :min="21" :max="200"/>
+        </n-space>
+      </n-col>
+    </n-row>
+    <n-row gutter="12">
+      <n-col :span="15">
+        <n-gradient-text type="info" :size="13">
+          延音设置&nbsp;&nbsp;&nbsp;
+        </n-gradient-text>
+        <n-radio-group v-model:value="sustainStatus" name="radiogroup" @update:value="delaySelect">
+          <n-space>
+            <n-radio key="system" value="system">系统自带</n-radio>
+            <n-radio key="random" value="random">随机</n-radio>
+            <n-radio key="custom" value="custom">自定义</n-radio>
+          </n-space>
+        </n-radio-group>
+      </n-col>
+      <n-col :span="9" style="margin-left: -50px;" v-show="sustainStatus == 'custom'">
+        延音设置
+        <n-space vertical style="width: 150px; float: right; margin-top: 2px;">
+          <n-slider v-model:value="sustainSpeed" :step="1" :min="21" :max="200"/>
         </n-space>
       </n-col>
     </n-row>
@@ -78,6 +98,7 @@ let nowType = ""
 let searchText = ref("")
 let nowState = ref("stop"); // 当前播放状态
 let delayStatus = ref("system")
+let sustainStatus = ref("system")
 let statusColumns = [
   {
     value: "start",
@@ -100,20 +121,6 @@ let statusColumns = [
     show: true
   },
 ]; // 播放按钮
-let delayColumns = [
-  {
-    value: "system",
-    label: "系统自带",
-  },
-  {
-    value: "random",
-    label: "随机",
-  },
-  {
-    value: "custom",
-    label: "自定义",
-  }
-]; // 播放按钮
 let musicColumns = [
   {
     title: "歌名",
@@ -124,6 +131,7 @@ let musicColumns = [
 let progress = ref(0.0); // 播放进度条
 let playSpeed = ref(1); // 播放速度
 let delaySpeed = ref(21); // 延迟设置
+let sustainSpeed = ref(21); // 延音设置
 
 const systemMusicSelect = (row: RowData) => {
   return {
@@ -258,8 +266,30 @@ watch(delayStatus, () => {
   }
 })
 
+let sustainInterval:any = null
+watch(sustainStatus, () => {
+  switch (sustainStatus.value) {
+    case "system":
+      setConfig("sustain_time","0")
+      clearInterval(sustainInterval)
+      break;
+    case "random":
+    sustainInterval = setInterval(()=>{
+          setConfig("sustain_time",(Math.random() * (0.020 - 0.002) + 0.002).toFixed(3))
+        },1000)
+      break
+    case "custom":
+        setConfig("sustain_time",sustainSpeed.value / 10000)
+        clearInterval(sustainInterval)
+      break
+  }
+})
+
 watch(delaySpeed, () => {
   setConfig("delay_interval",delaySpeed.value / 10000)
+})
+watch(sustainSpeed, () => {
+  setConfig("delay_interval",sustainSpeed.value / 10000)
 })
 
 function clearPlayInfo() {
