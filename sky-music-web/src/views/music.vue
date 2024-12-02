@@ -289,7 +289,7 @@ watch(delaySpeed, () => {
   setConfig("delay_interval",delaySpeed.value / 10000)
 })
 watch(sustainSpeed, () => {
-  setConfig("delay_interval",sustainSpeed.value / 10000)
+  setConfig("sustain_time",sustainSpeed.value / 10000)
 })
 
 function clearPlayInfo() {
