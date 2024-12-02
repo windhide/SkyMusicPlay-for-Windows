@@ -31,6 +31,10 @@ def stop():
 def resume():
     robotUtils.resume()
 
+@app.post("/setProgress")
+def translate(request: dict):
+
+    return "ok"
 
 @app.get("/getProgress")
 def getProgress():
@@ -63,6 +67,8 @@ def translate(request: dict):
         global_state.delay_interval = float(request["value"])
     if request["name"] == 'sustain_time':
         global_state.sustain_time = float(request["value"])
+    if request["name"] == 'set_progress':
+        global_state.set_progress = float(request["value"])
     return "ok"
 
 

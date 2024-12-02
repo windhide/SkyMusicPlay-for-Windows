@@ -1,3 +1,4 @@
+import math
 import threading
 import time
 
@@ -16,27 +17,30 @@ class ControlledThread:
             if not global_state.music_sheet:  # 使用更简洁的检查
                 self.stop()
                 return
-
             # 将全局变量缓存到本地变量以提高访问速度
             local_music_sheet = global_state.music_sheet[:]
-
             # 遍历 local_music_sheet，减少多次访问全局变量的开销
-            allLength = len(local_music_sheet)
-            for index, sheet in enumerate(local_music_sheet):
+            allLength = len(local_music_sheet) - 1
+            index = 0  # 初始下标
+            while index < len(local_music_sheet):
                 self._pause_event.wait()  # 如果被暂停，将阻塞在这里
-                if not self._running: return
+                if global_state.set_progress != -0.01:
+                    index = math.floor(allLength * global_state.set_progress)
+                    global_state.set_progress = -0.01
+                    continue  # 跳过当前迭代，重新从修改后的 index 位置开始
+                if not self._running:
+                    return
+                sheet = local_music_sheet[index]
                 keys = sheet["key"]
                 delay = sheet["delay"]
                 global_state.now_progress = index / allLength * 100
-                # 批量发送按键，减少对函数的调用频率
+                # 批量发送按键
                 if len(keys) == 1:
                     robotUtils.send_single_key_to_window(keys)
                 else:
                     robotUtils.send_multiple_key_to_window(keys)
-                time.sleep(delay/1000)
-
-                # 避免过多的 `time.sleep` 调用，提高效率
-                # 若有延时需求，这里可以考虑适当的合并或条件控制
+                time.sleep(delay / 1000)
+                index += 1
 
     def start(self):
         self._running = True  # 确保线程运行标志正确

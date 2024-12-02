@@ -217,6 +217,7 @@ function progressClick(event) {
   const percentage = (clickPosition / componentWidth) * 100;
   // 更新进度条
   progress.value = parseFloat(Math.min(Math.max(percentage, 0), 100).toFixed(1)) // 限制在0-100之间
+  setConfig("set_progress",progress.value/100)
 }
 
 function getProgress() {
