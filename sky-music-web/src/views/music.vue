@@ -8,7 +8,7 @@
         indicator-placement="inside" processing :color="{ stops: ['white', 'blue'] }" @click="progressClick" />
     </n-gradient-text>
     <n-radio-group v-model:value="nowState" name="radiobuttongroup1" @update:value="playSelect">
-      <n-radio-button v-for="status in statusColumns" :key="status.value" :value="status.value" :label="status.label" />
+      <n-radio-button v-for="status in statusColumns" :key="status.value" :value="status.value" :label="status.label" v-show="status.show" />
     </n-radio-group>
     <n-row gutter="12">
       <n-col :span="15">
@@ -81,18 +81,22 @@ let statusColumns = [
   {
     value: "start",
     label: "开始",
+    show:true
   },
   {
     value: "resume",
     label: "继续",
+    show:false
   },
   {
     value: "pause",
     label: "暂停",
+    show:false
   },
   {
     value: "stop",
     label: "停止",
+    show:true
   },
 ]; // 播放按钮
 let delayColumns = [
@@ -119,7 +123,6 @@ let musicColumns = [
 let progress = ref(0.0); // 播放进度条
 let playSpeed = ref(1); // 播放速度
 let delaySpeed = ref([50, 70]); // 延迟设置
-let isPause = false;
 
 const systemMusicSelect = (row: RowData) => {
   return {
@@ -158,7 +161,10 @@ const playSelect = (value: string) => {
       });
       message.success("开始")
       progressInterval = setInterval(getProgress, 1000)
-      isPause = false;
+      statusColumns[0].show = false;
+      statusColumns[1].show = true;
+      statusColumns[2].show = true;
+      statusColumns[3].show = true;
       break;
     case "pause":
       getData("pause");
@@ -185,6 +191,10 @@ const delaySelect = (value: string) => {
 };
 
 function progressClick(event) {
+  if(nowState.value === 'stop'){
+    message.error("没有歌曲在播放，请播放歌曲后继续操作")
+    return
+  }
   // 获取点击事件对象
   const rect = event.currentTarget.getBoundingClientRect(); // 获取组件的边界框
   const clickPosition = event.clientX - rect.left; // 计算点击位置（相对于组件左边）
@@ -228,5 +238,9 @@ function clearPlayInfo() {
   nowState.value = "stop"
   progress.value = 0
   clearInterval(progressInterval)
+  statusColumns[0].show = true;
+  statusColumns[1].show = false;
+  statusColumns[2].show = false;
+  statusColumns[3].show = true;
 }
 </script>
