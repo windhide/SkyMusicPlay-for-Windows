@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu } = require('electron')
+const { app, BrowserWindow  } = require('electron')
 // const path = require("path")
 
 const createWindow = () => {
@@ -18,7 +18,7 @@ const createWindow = () => {
   // 3004 改为你 Vue 项目的端口号
   mainWindow.loadURL("http://localhost:8080/");
 }
-Menu.setApplicationMenu(null) //取消菜单栏
+// Menu.setApplicationMenu(null) //取消菜单栏
 app.whenReady().then(() => {
   createWindow()
 })
