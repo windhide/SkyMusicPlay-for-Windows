@@ -15,6 +15,16 @@ const routes: Array<RouteRecordRaw> = [
     path: '/kube',
     name: 'kube',
     component: () => import(/* webpackChunkName: "about" */ '../views/kube.vue')
+  },
+  {
+    path: '/tutorial',
+    name: 'tutorial',
+    component: () => import(/* webpackChunkName: "about" */ '../views/tutorial.vue')
+  },
+  {
+    path: '/keyboard',
+    name: 'keyboard',
+    component: () => import(/* webpackChunkName: "about" */ '../views/tutorial_keyboard.vue'),
   }
 ]
 

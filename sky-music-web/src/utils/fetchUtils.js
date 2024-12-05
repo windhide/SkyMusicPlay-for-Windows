@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-let baseUrl = "http://localhost:9899/"
+let baseUrl = "http://127.0.0.1:9899/"
 
 export function getList(listName){
   return fetch(baseUrl+"?listName="+listName)

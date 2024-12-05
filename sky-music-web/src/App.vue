@@ -11,7 +11,8 @@
               :collapsed-width="64"
               :width="150"
               :native-scrollbar="false"
-              style="max-height: 739px; height: 739px"
+              style="max-height: 739px; height: 740px"
+              v-show="$route.fullPath.indexOf('keyboard') == -1"
             >
               <n-menu
                 :collapsed-width="64"
@@ -32,14 +33,13 @@
 
 <script lang="ts" setup>
 import type { Component } from "vue";
-import { defineComponent, h, ref } from "vue";
+import { h } from "vue";
 import { MenuOption, NIcon, darkTheme, NMessageProvider } from "naive-ui";
-import { getData } from "@/utils/fetchUtils";
 import {
-  CubeSharp as CubeSharp,
-  Home as Home,
-  MusicalNotes as MusicalNotes,
-  Cog as Cog,
+  CubeSharp,
+  Home,
+  MusicalNotes,
+  GameController
 } from "@vicons/ionicons5";
 import router from "@/router";
 
@@ -59,10 +59,15 @@ const menuOptions = [
     icon: renderIcon(MusicalNotes),
   },
   {
+    label: "跟弹",
+    key: "tutorial",
+    icon: renderIcon(GameController),
+  },
+  {
     label: "音乐扒谱",
     key: "kube",
     icon: renderIcon(CubeSharp),
-  }
+  },
 ];
 
 const clickMenu = (key: string, item: MenuOption) => {

@@ -1,6 +1,6 @@
 <template>
   <n-flex align="center">
-    <n-gradient-text :size="24" type="success" style="width: 100%">
+    <n-gradient-text :size="20" type="success" style="width: 100%">
       {{ "当前: " + nowPlayMusic + "" }}
       <br>
       <n-progress style="max-width: 60%; display: inline-block" type="line" :percentage="progress"
@@ -72,7 +72,7 @@
   <n-card style="margin-top: 20px">
     <n-tabs type="line" animated @update:value="handleUpdateValue">
       <n-tab-pane name="systemMusic" tab="自带歌曲">
-        <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :max-height="330"
+        <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :max-height="301"
           :scroll-x="100" :row-props="systemMusicSelect" />
       </n-tab-pane>
       <n-tab-pane name="myImport" tab="导入的歌曲">
