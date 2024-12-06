@@ -38,7 +38,6 @@ import { RowData } from "naive-ui/es/data-table/src/interface";
 import { reactive, ref, watch } from "vue";
 import { useMessage } from 'naive-ui'
 import { Search } from '@vicons/ionicons5'
-import router from "@/router";
 const message = useMessage()
 
 
@@ -112,8 +111,7 @@ function followTutorial() {
       fileName: nowPlayMusic.value,
       type: nowType
     }).then(() => {
-      const targetRoute = router.resolve({ name: "keyboard" });
-      window.open(targetRoute.href+"?musicName=" + nowPlayMusic.value,  "_blank", "toolbar=yes, location=yes, directories=no, status=no, menubar=yes, scrollbars=yes, resizable=no, copyhistory=yes, width=600, height=400");
+      window.open("app://./index.html?musicName=" + nowPlayMusic.value,  "_blank", "toolbar=yes, location=yes, directories=no, status=no, menubar=yes, scrollbars=yes, resizable=no, copyhistory=yes, width=600, height=400");
     })
   }
 }

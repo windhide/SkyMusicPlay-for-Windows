@@ -18,7 +18,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8080"],  # 允许的源，可根据需求设置特定地址或使用 ["*"] 允许所有
+    allow_origins=["*"],  # 允许的源，可根据需求设置特定地址或使用 ["*"] 允许所有
     allow_credentials=True,  # 允许携带认证信息（如 Cookies）
     allow_methods=["*"],     # 允许的 HTTP 方法（如 GET、POST）
     allow_headers=["*"],     # 允许的 HTTP 请求头

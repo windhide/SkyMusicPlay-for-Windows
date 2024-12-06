@@ -1,7 +1,7 @@
 <template>
 	<div id="father">
 		<n-divider>
-				<img src="https://s1.imagehub.cc/images/2024/12/02/751628702b15b19942a74f79c58117c2.png" id="avatar">
+			<img src="https://s1.imagehub.cc/images/2024/12/02/751628702b15b19942a74f79c58117c2.png" id="avatar">
 		</n-divider>
 		<n-highlight :text="text" :patterns="patterns" :highlight-style="{
 			padding: '0 6px',
@@ -18,7 +18,8 @@
 		</n-divider>
 		<n-tooltip trigger="hover" placement="bottom">
 			<template #trigger>
-				<n-float-button position="relative" @click="blankClick('https://github.com/windhide/SkyMusicPlay-for-Windows/pulls')" >
+				<n-float-button position="relative"
+					@click="blankClick('https://github.com/windhide/SkyMusicPlay-for-Windows/pulls')">
 					<n-icon>
 						<GitPullRequest />
 					</n-icon>
@@ -28,7 +29,8 @@
 		</n-tooltip>
 		<n-tooltip trigger="hover" placement="bottom">
 			<template #trigger>
-				<n-float-button position="relative" style="margin: 0 30px;"  @click="blankClick('https://github.com/windhide/SkyMusicPlay-for-Windows')" >
+				<n-float-button position="relative" style="margin: 0 30px;"
+					@click="blankClick('https://github.com/windhide/SkyMusicPlay-for-Windows')">
 					<n-icon>
 						<LogoGithub />
 					</n-icon>
@@ -38,7 +40,8 @@
 		</n-tooltip>
 		<n-tooltip trigger="hover" placement="bottom">
 			<template #trigger>
-				<n-float-button position="relative" @click="blankClick('https://github.com/windhide/SkyMusicPlay-for-Windows/issues/new')">
+				<n-float-button position="relative"
+					@click="blankClick('https://github.com/windhide/SkyMusicPlay-for-Windows/issues/new')">
 					<n-icon>
 						<Build />
 					</n-icon>
@@ -52,15 +55,28 @@
 <script setup lang="ts">
 import { useMessage, useThemeVars } from 'naive-ui'
 import { GitPullRequest, LogoGithub, Build } from '@vicons/ionicons5'
+import router from '@/router';
 const message = useMessage()
 
 const themeVars = useThemeVars()
 let text = '欢迎使用本软件，本软件完全免费，如果您是买的本软件就是被骗了'
 let patterns = ['完全免费', '被骗了']
-function blankClick(url){
+function blankClick(url) {
 	navigator.clipboard.writeText(url); // 使用Clipboard API复制内容
 	message.success("请复制到浏览器打开啦~！")
 }
+
+function jump() {
+	const urlParams = new URLSearchParams(window.location.search);
+	const musicName = urlParams.get('musicName');
+	if(musicName != null){
+		router.push({
+		name: "keyboard",
+		query: { musicName: musicName }
+	});
+	}
+}
+jump()
 </script>
 
 <style scoped>
