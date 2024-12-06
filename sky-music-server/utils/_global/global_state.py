@@ -1,7 +1,3 @@
-windows_name = ""
-window_activated = False
-target_window = None
-play_state = 'play' # play pause stop
 thread = None
 music_sheet = [] #乐谱
 now_progress  = 0 #进度条
@@ -14,3 +10,6 @@ now_translate_text = []
 # 延迟毫秒
 delay_interval = 0.002
 sustain_time = 0
+# 跟弹歌名
+follow_music = ""
+follow_sheet = []

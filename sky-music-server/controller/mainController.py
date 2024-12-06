@@ -1,4 +1,5 @@
 import os
+import threading
 from typing import List
 from fastapi import FastAPI, UploadFile, File
 import uvicorn
@@ -7,11 +8,23 @@ import logging
 
 from utils._global import global_state
 from utils.listUtils import getTypeMusicList
+from utils.musicFileTranselate import convert_notes_to_delayed_format
 from utils.musicToSheet.processAudio import process_directory_with_progress
 from utils.pathUtils import getResourcesPath
 from utils.robot import robotUtils
+from utils.websocket_hook import startWebsocket
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:8080"],  # 允许的源，可根据需求设置特定地址或使用 ["*"] 允许所有
+    allow_credentials=True,  # 允许携带认证信息（如 Cookies）
+    allow_methods=["*"],     # 允许的 HTTP 方法（如 GET、POST）
+    allow_headers=["*"],     # 允许的 HTTP 请求头
+)
+
 @app.get("/")
 async def getList(listName: str):
     return  getTypeMusicList(listName)
@@ -72,8 +85,26 @@ def translate(request: dict):
     return "ok"
 
 
+@app.post("/followSheet")
+def setFollowSheet(request: dict):
+    convert_notes_to_delayed_format(request["fileName"],request["type"])
+    global_state.follow_sheet = list(map(lambda item: item['key'], global_state.music_sheet))
+    global_state.music_sheet = []
+    global_state.follow_music = request["fileName"]
+
+@app.post("/nextSheet")
+def nextSheet(request: dict):
+    if request["type"] == "ok":
+        sheet = global_state.follow_sheet[0]
+        global_state.follow_sheet = global_state.follow_sheet[1:]
+        return sheet
+    else:
+        return global_state.follow_sheet[0]
+
 if __name__ == '__main__':
-    logging.info("Now start service")
+    websocket_thread = threading.Thread(target=startWebsocket)
+    websocket_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
+    websocket_thread.start()
     try:
         # uvicorn.run("mainController:app", host="localhost", port=9899, log_level="info")
         uvicorn.run("mainController:app", host="localhost", port=9899, log_level="error")

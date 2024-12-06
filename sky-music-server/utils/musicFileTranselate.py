@@ -79,9 +79,6 @@ def convert_notes_to_delayed_format(fileName, type):
     global_state.music_sheet = result
 
 
-
-
-
 def detect_encoding(file_path):
     with open(file_path, 'rb') as file:
         # 读取文件的一部分进行编码检测
