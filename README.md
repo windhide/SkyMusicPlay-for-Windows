@@ -2,7 +2,12 @@
 
 python: 3.12.6
 
-node: 22.11.0
+node: 16.20.2
+
+``` shell
+yarn install
+yarn run electron:serve
+```
 
 Thanks for the following open source project
 [MID转换思路][1].

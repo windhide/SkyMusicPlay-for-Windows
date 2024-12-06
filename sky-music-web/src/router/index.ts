@@ -2,29 +2,29 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/home',
+    path: '/',
     name: 'home',
-    component: () => import(/* webpackChunkName: "about" */ '../views/home.vue')
+    component: () => import('../views/home.vue')
   },
   {
     path: '/music',
     name: 'music',
-    component: () => import(/* webpackChunkName: "about" */ '../views/music.vue')
+    component: () => import('../views/music.vue')
   },
   {
     path: '/kube',
     name: 'kube',
-    component: () => import(/* webpackChunkName: "about" */ '../views/kube.vue')
+    component: () => import('../views/kube.vue')
   },
   {
     path: '/tutorial',
     name: 'tutorial',
-    component: () => import(/* webpackChunkName: "about" */ '../views/tutorial.vue')
+    component: () => import('../views/tutorial.vue')
   },
   {
     path: '/keyboard',
     name: 'keyboard',
-    component: () => import(/* webpackChunkName: "about" */ '../views/tutorial_keyboard.vue'),
+    component: () => import('../views/tutorial_keyboard.vue'),
   }
 ]
 

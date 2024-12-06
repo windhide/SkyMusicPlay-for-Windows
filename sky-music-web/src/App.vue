@@ -73,4 +73,6 @@ const menuOptions = [
 const clickMenu = (key: string, item: MenuOption) => {
   router.push({ name: key });
 };
+
+router.push({ name: 'home' });
 </script>

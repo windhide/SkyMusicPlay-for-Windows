@@ -1,6 +1,5 @@
 import os
 import threading
-from typing import List
 from fastapi import FastAPI, UploadFile, File
 import uvicorn
 # 配置文件
@@ -94,6 +93,8 @@ def setFollowSheet(request: dict):
 
 @app.post("/nextSheet")
 def nextSheet(request: dict):
+    if len(global_state.follow_sheet) == 0:
+        return ""
     if request["type"] == "ok":
         sheet = global_state.follow_sheet[0]
         global_state.follow_sheet = global_state.follow_sheet[1:]
@@ -107,6 +108,6 @@ if __name__ == '__main__':
     websocket_thread.start()
     try:
         # uvicorn.run("mainController:app", host="localhost", port=9899, log_level="info")
-        uvicorn.run("mainController:app", host="localhost", port=9899, log_level="error")
+        uvicorn.run(app, host="localhost", port=9899, log_level="error")
     except Exception as e:
         logging.error(e)
