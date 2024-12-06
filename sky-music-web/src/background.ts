@@ -47,10 +47,8 @@ async function createWindow() {
 app.on('window-all-closed', () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
     app.quit()
     cmd.run(`taskkill /F /im sky_windows_music.exe`)
-  }
 })
 
 app.on('activate', () => {
@@ -71,8 +69,8 @@ app.on('ready', async () => {
       console.error('Vue Devtools failed to install:', e)
     }
   }
-  console.log("now start service")
-  console.log(`${currentPath}/backend_dist/sky_windows_music/sky_windows_music.exe`)
+  // console.log("now start service")
+  // console.log(`${currentPath}/backend_dist/sky_windows_music/sky_windows_music.exe`)
   // 启动服务器exe
   cmd.run(`${currentPath}/backend_dist/sky_windows_music/sky_windows_music.exe`,function(err, data, stderr){
     console.log(data)

@@ -50,15 +50,16 @@
 </template>
 
 <script setup lang="ts">
-import { useThemeVars } from 'naive-ui'
+import { useMessage, useThemeVars } from 'naive-ui'
 import { GitPullRequest, LogoGithub, Build } from '@vicons/ionicons5'
-// var {shell}=require('electron')
+const message = useMessage()
 
 const themeVars = useThemeVars()
 let text = '欢迎使用本软件，本软件完全免费，如果您是买的本软件就是被骗了'
 let patterns = ['完全免费', '被骗了']
 function blankClick(url){
-	// shell.openExternal(url);
+	navigator.clipboard.writeText(url); // 使用Clipboard API复制内容
+	message.success("请复制到浏览器打开啦~！")
 }
 </script>
 

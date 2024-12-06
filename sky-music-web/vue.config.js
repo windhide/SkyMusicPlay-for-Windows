@@ -10,6 +10,13 @@ module.exports = defineConfig({
       directories: {
         output: 'dist_electron',
       },
+      extraResources: [
+        {
+          from: 'resources/', // 确保此文件夹存在且包含要打包的资源
+          to: 'resources/', 
+          filter: ['**/*']
+        }
+      ],
       // 将 icon 配置移到这里
       build: {
         win: {
