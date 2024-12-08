@@ -83,6 +83,10 @@ def translate(request: dict):
         global_state.set_progress = float(request["value"])
     return "ok"
 
+@app.post("/getConfig")
+def getConfig(request: dict):
+    returnData = eval("global_state."+request["name"])
+    return returnData
 
 @app.post("/followSheet")
 def setFollowSheet(request: dict):
@@ -95,19 +99,22 @@ def setFollowSheet(request: dict):
 def nextSheet(request: dict):
     if len(global_state.follow_sheet) == 0:
         return ""
-    if request["type"] == "ok":
-        sheet = global_state.follow_sheet[0]
-        global_state.follow_sheet = global_state.follow_sheet[1:]
-        return sheet
-    else:
-        return global_state.follow_sheet[0]
+    try:
+        if request["type"] == "ok":
+            sheet = global_state.follow_sheet[0]
+            global_state.follow_sheet = global_state.follow_sheet[1:]
+            return sheet
+        else:
+            return global_state.follow_sheet[0]
+    except IndexError:
+        print("空数组")
+        return ""
 
 if __name__ == '__main__':
     websocket_thread = threading.Thread(target=startWebsocket)
     websocket_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
     websocket_thread.start()
     try:
-        # uvicorn.run("mainController:app", host="localhost", port=9899, log_level="info")
         uvicorn.run(app, host="localhost", port=9899, log_level="error")
     except Exception as e:
         logging.error(e)

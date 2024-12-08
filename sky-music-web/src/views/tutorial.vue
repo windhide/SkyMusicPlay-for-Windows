@@ -38,6 +38,7 @@ import { RowData } from "naive-ui/es/data-table/src/interface";
 import { reactive, ref, watch } from "vue";
 import { useMessage } from 'naive-ui'
 import { Search } from '@vicons/ionicons5'
+
 const message = useMessage()
 
 
@@ -111,7 +112,7 @@ function followTutorial() {
       fileName: nowPlayMusic.value,
       type: nowType
     }).then(() => {
-      window.open("app://./index.html?musicName=" + nowPlayMusic.value,  "_blank", "toolbar=yes, location=yes, directories=no, status=no, menubar=yes, scrollbars=yes, resizable=no, copyhistory=yes, width=600, height=400");
+      window.open("app://./index.html" ,"_blank", "toolbar=yes, location=yes, directories=no, status=no, menubar=yes, scrollbars=yes, resizable=no, copyhistory=yes, width=600, height=400");
     })
   }
 }

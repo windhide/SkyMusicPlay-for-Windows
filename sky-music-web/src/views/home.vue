@@ -55,6 +55,7 @@
 <script setup lang="ts">
 import { useMessage, useThemeVars } from 'naive-ui'
 import { GitPullRequest, LogoGithub, Build } from '@vicons/ionicons5'
+import { sendData } from '@/utils/fetchUtils'
 import router from '@/router';
 const message = useMessage()
 
@@ -67,14 +68,11 @@ function blankClick(url) {
 }
 
 function jump() {
-	const urlParams = new URLSearchParams(window.location.search);
-	const musicName = urlParams.get('musicName');
-	if(musicName != null){
-		router.push({
-		name: "keyboard",
-		query: { musicName: musicName }
-	});
-	}
+	if (window.innerWidth > 700 ) return;
+	sendData("nextSheet", {type: '不ok'}).then(res => {
+		if (res.length != 0)
+			router.push({name: "keyboard"})
+	})
 }
 jump()
 </script>
