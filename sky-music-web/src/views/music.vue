@@ -8,8 +8,14 @@
     </n-gradient-text>
     <n-radio-group v-model:value="nowState" name="radiobuttongroup1" @update:value="playSelect">
       <n-radio-button v-for="status in statusColumns" :key="status.value" :value="status.value" :label="status.label"
-        v-show="status.show" />
+        v-show="status.show" /> 
     </n-radio-group>
+    <n-upload action="http://localhost:9899/userMusicUpload" multiple style="width: 100px; height: 34px"
+      accept=".mp3,.mp4,.flac" :show-file-list="false" @finish="handleFinish">
+      <n-button type="info" ghost>
+        上传我的文件
+      </n-button>
+    </n-upload>     
     <n-row gutter="12">
       <n-col :span="15">
         <n-gradient-text type="info" :size="13">
@@ -72,16 +78,15 @@
   <n-card style="margin-top: 20px">
     <n-tabs type="line" animated @update:value="handleUpdateValue">
       <n-tab-pane name="systemMusic" tab="自带歌曲">
-        <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :max-height="301"
+        <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :max-height="301" virtual-scroll :min-row-height="18"
           :scroll-x="100" :row-props="systemMusicSelect" />
       </n-tab-pane>
       <n-tab-pane name="myImport" tab="导入的歌曲">
-        <n-data-table :columns="musicColumns" :data="music.myImport" :bordered="false" :max-height="300" :scroll-x="100"
+        <n-data-table :columns="musicColumns" :data="music.myImport" :bordered="false" :max-height="300" :min-row-height="18"
           :row-props="myImportMusicSelect" />
       </n-tab-pane>
       <n-tab-pane name="myTranslate" tab="转换的歌曲">
-        <n-data-table :columns="musicColumns" :data="music.myTranslate" :bordered="false" :max-height="250"
-          :scroll-x="100" :row-props="myTranslateMusicSelect" />
+        <n-data-table :columns="musicColumns" :data="music.myTranslate" :bordered="false" :max-height="250" :row-props="myTranslateMusicSelect" />
       </n-tab-pane>
       <template #suffix>
         <n-input round placeholder="搜索" v-model:value="searchText" style="margin-bottom: 3px;">
@@ -176,7 +181,7 @@ const myTranslateMusicSelect = (row: RowData) => {
   };
 };
 
-let progressInterval = 0
+let progressInterval:any = 0
 
 const playSelect = (value: string) => {
   console.log(value)
@@ -328,5 +333,11 @@ function clearPlayInfo() {
   statusColumns[1].show = false;
   statusColumns[2].show = false;
   statusColumns[3].show = true;
+}
+
+
+function handleFinish({ file, event }) {
+  handleUpdateValue("myImport")
+  message.success("OK~")
 }
 </script>

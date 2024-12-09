@@ -1,6 +1,6 @@
 import os
 import threading
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile
 import uvicorn
 # 配置文件
 import logging
@@ -25,7 +25,7 @@ app.add_middleware(
 )
 
 @app.get("/")
-async def getList(listName: str):
+async def get_list(listName: str):
     return  getTypeMusicList(listName)
 
 @app.post("/start")
@@ -43,13 +43,8 @@ def stop():
 def resume():
     robotUtils.resume()
 
-@app.post("/setProgress")
-def translate(request: dict):
-
-    return "ok"
-
 @app.get("/getProgress")
-def getProgress():
+def get_progress():
     return {
         "overall_progress": f"{global_state.overall_progress:.1f}",
         "tran_mid_progress": f"{global_state.tran_mid_progress:.1f}",
@@ -62,6 +57,17 @@ async def create_upload_files(file: UploadFile):
     print(file.filename)
     # 将上传的文件保存到服务本地
     path = os.path.join(getResourcesPath("translateOriginalMusic"), f'{file.filename}')
+    with open(path, 'wb') as f:
+        # 一次读取1024字节，循环读取写入
+        for chunk in iter(lambda: file.file.read(1024), b''):
+            f.write(chunk)
+    return "ok"
+
+@app.post("/userMusicUpload")
+async def create_upload_files(file: UploadFile):
+    print(file.filename)
+    # 将上传的文件保存到服务本地
+    path = os.path.join(getResourcesPath("myImport"), f'{file.filename}')
     with open(path, 'wb') as f:
         # 一次读取1024字节，循环读取写入
         for chunk in iter(lambda: file.file.read(1024), b''):
@@ -84,19 +90,19 @@ def translate(request: dict):
     return "ok"
 
 @app.post("/getConfig")
-def getConfig(request: dict):
+def get_config(request: dict):
     returnData = eval("global_state."+request["name"])
     return returnData
 
 @app.post("/followSheet")
-def setFollowSheet(request: dict):
+def set_follow_sheet(request: dict):
     convert_notes_to_delayed_format(request["fileName"],request["type"])
     global_state.follow_sheet = list(map(lambda item: item['key'], global_state.music_sheet))
     global_state.music_sheet = []
     global_state.follow_music = request["fileName"]
 
 @app.post("/nextSheet")
-def nextSheet(request: dict):
+def next_sheet(request: dict):
     if len(global_state.follow_sheet) == 0:
         return ""
     try:
