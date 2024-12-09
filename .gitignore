@@ -1,4 +1,40 @@
+.DS_Store
+node_modules
+/dist
+
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+#Electron-builder output
+/dist_electron
+*.pyc
+
 sky-music-server/.idea/
 sky-music-server/node_modules/
 sky-music-web/node_modules/
 sky-music-web/.idea/
+sky-music-server/build/
+sky-music-web/web2/
+sky-music-web/dist_electron/
+web2/
+sky-music-server/utils/__pycache__/
+sky-music-server/utils/_global/__pycache__/
+sky-music-server/utils/musicToSheet/__pycache__/
+sky-music-server/utils/robot/__pycache__/
