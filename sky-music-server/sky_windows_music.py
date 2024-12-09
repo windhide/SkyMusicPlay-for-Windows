@@ -116,6 +116,11 @@ def next_sheet(request: dict):
         print("空数组")
         return ""
 
+@app.get("/check")
+def check():
+    return 'True'
+
+
 if __name__ == '__main__':
     websocket_thread = threading.Thread(target=startWebsocket)
     websocket_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
