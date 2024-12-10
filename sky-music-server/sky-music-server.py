@@ -148,12 +148,11 @@ if __name__ == '__main__':
     websocket_thread = threading.Thread(target=startWebsocket)
     websocket_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
     websocket_thread.start()
-    #
-    # # 创建监听目标进程的线程
-    # target_process = "sky-music-web.exe"
-    # process_monitor_thread = threading.Thread(target=monitor_process, args=(target_process,))
-    # process_monitor_thread.daemon = True
-    # process_monitor_thread.start()
+    # 创建监听目标进程的线程
+    target_process = "sky-music-web.exe"
+    process_monitor_thread = threading.Thread(target=monitor_process, args=(target_process,))
+    process_monitor_thread.daemon = True
+    process_monitor_thread.start()
 
     # 启动 FastAPI 服务
     try:
