@@ -1,5 +1,4 @@
 import time
-from concurrent.futures import ThreadPoolExecutor
 
 from utils._global import global_state
 from utils.musicFileTranselate import convert_notes_to_delayed_format
