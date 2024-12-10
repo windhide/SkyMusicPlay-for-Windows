@@ -12,7 +12,7 @@
               :collapsed-width="64"
               :width="150"
               :native-scrollbar="false"
-              style="max-height: 739px; height: 740px"
+              style="height: 100vh"
               v-show="$route.fullPath.indexOf('keyboard') == -1"
             >
               <n-menu
