@@ -32,6 +32,7 @@ async function createWindow() {
   win.webContents.openDevTools()
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
+    // Menu.setApplicationMenu(null) //取消菜单栏
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string)
     if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
@@ -70,11 +71,11 @@ app.on('ready', async () => {
   // console.log("now start service")
   // console.log(`${currentPath}/backend_dist/sky-music-server/sky-music-server.exe`)
   // 启动服务器exe
-  cmd.run(`${currentPath}/backend_dist/sky-music-server/sky-music-server.exe`,function(err, data, stderr){
-    console.log(data)
-    console.log(err)
-    console.log(stderr)
-  });
+  // cmd.run(`${currentPath}/backend_dist/sky-music-server/sky-music-server.exe`,function(err, data, stderr){
+  //   console.log(data)
+  //   console.log(err)
+  //   console.log(stderr)
+  // });
 
   createWindow()
 })
