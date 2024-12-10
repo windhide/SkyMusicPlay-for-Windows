@@ -31,7 +31,7 @@
       </n-col>
       <n-col :span="9" style="margin-left: -50px;" v-show="delayStatus == 'custom'">
         <n-space vertical style="width: 150px; float: right; margin-top: 2px;">
-          <n-slider v-model:value="delaySpeed" :step="1" :min="21" :max="200"/>
+          <n-slider v-model:value="delaySpeed" :step="1" :min="100" :max="500"/>
         </n-space>
       </n-col>
     </n-row>
@@ -50,7 +50,7 @@
       </n-col>
       <n-col :span="9" style="margin-left: -50px;" v-show="sustainStatus == 'custom'">
         <n-space vertical style="width: 150px; float: right; margin-top: 2px;">
-          <n-slider v-model:value="sustainSpeed" :step="1" :min="21" :max="200"/>
+          <n-slider v-model:value="sustainSpeed" :step="1" :min="200" :max="2000"/>
         </n-space>
       </n-col>
     </n-row>
@@ -152,8 +152,8 @@ let musicColumns = [
 
 let progress = ref(0.0); // 播放进度条
 let playSpeed = ref(1); // 播放速度
-let delaySpeed = ref(21); // 延迟设置
-let sustainSpeed = ref(21); // 延音设置
+let delaySpeed = ref(100); // 延迟设置
+let sustainSpeed = ref(200); // 延音设置
 let playDelay = ref(0) // 播放延迟
 
 const systemMusicSelect = (row: RowData) => {
@@ -277,7 +277,7 @@ let randomInterval:any = null
 watch(delayStatus, () => {
   switch (delayStatus.value) {
     case "system":
-      setConfig("delay_interval","0.002")
+      setConfig("delay_interval","0.01")
       clearInterval(randomInterval)
       break;
     case "random":
@@ -296,7 +296,7 @@ let sustainInterval:any = null
 watch(sustainStatus, () => {
   switch (sustainStatus.value) {
     case "system":
-      setConfig("sustain_time","0")
+      setConfig("sustain_time","0.002")
       clearInterval(sustainInterval)
       break;
     case "random":

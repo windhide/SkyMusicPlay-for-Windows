@@ -1,4 +1,5 @@
 import time
+from concurrent.futures import ThreadPoolExecutor
 
 from utils._global import global_state
 from utils.musicFileTranselate import convert_notes_to_delayed_format
@@ -14,9 +15,12 @@ def send_single_key_to_window(key):
     print("keyDown ->", key)
 
 def send_multiple_key_to_window(keys):
-    for key in keys:
-            if key in keys:
-                send_single_key_to_window(key)
+    """并发发送多个按键"""
+    with ThreadPoolExecutor() as executor:
+        futures = [executor.submit(send_single_key_to_window, key) for key in keys]
+        # 等待所有任务完成
+        for future in futures:
+            future.result()
 
 
 def playMusic(fileName, type):
