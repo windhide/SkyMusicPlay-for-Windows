@@ -113,6 +113,7 @@ function followTutorial() {
       type: nowType
     }).then(() => {
       window.open("app://./index.html" ,"_blank", "toolbar=yes, location=yes, directories=no, status=no, menubar=yes, scrollbars=yes, resizable=no, copyhistory=yes, width=600, height=400");
+      // window.open("http://localhost:8080/" ,"_blank", "toolbar=yes, location=yes, directories=no, status=no, menubar=yes, scrollbars=yes, resizable=no, copyhistory=yes, width=600, height=400");
     })
   }
 }

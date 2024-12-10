@@ -26,8 +26,9 @@
 
 <style scoped>
 #father {
+  /* 带menu 289 不带315 */
   /* height: 289px; */
-  height: 400px;
+  height: 315px;
   display: flex;
   justify-content: center;
   align-content: center;
