@@ -277,7 +277,7 @@ let randomInterval:any = null
 watch(delayStatus, () => {
   switch (delayStatus.value) {
     case "system":
-      setConfig("delay_interval","0.01")
+      setConfig("delay_interval",0.01)
       clearInterval(randomInterval)
       break;
     case "random":
@@ -296,7 +296,7 @@ let sustainInterval:any = null
 watch(sustainStatus, () => {
   switch (sustainStatus.value) {
     case "system":
-      setConfig("sustain_time","0.002")
+      setConfig("sustain_time",0.02)
       clearInterval(sustainInterval)
       break;
     case "random":

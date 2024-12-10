@@ -9,7 +9,7 @@ tran_mid_progress = 0 # 转MID进度
 now_translate_text = []
 # 延迟毫秒
 delay_interval = 0.01
-sustain_time = 0.002
+sustain_time = 0.02
 # 跟弹歌名
 follow_music = ""
 follow_sheet = []
