@@ -47,7 +47,7 @@ app.on('window-all-closed', () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
     app.quit()
-    cmd.run(`taskkill /F /im sky_windows_music.exe`)
+    cmd.run(`runas /user:Administrator "taskkill /F /im sky-music-server.exe"`)
 })
 
 app.on('activate', () => {
@@ -69,9 +69,9 @@ app.on('ready', async () => {
     }
   }
   // console.log("now start service")
-  // console.log(`${currentPath}/backend_dist/sky_windows_music/sky_windows_music.exe`)
+  // console.log(`${currentPath}/backend_dist/sky-music-server/sky-music-server.exe`)
   // 启动服务器exe
-  cmd.run(`${currentPath}/backend_dist/sky_windows_music/sky_windows_music.exe`,function(err, data, stderr){
+  cmd.run(`${currentPath}/backend_dist/sky-music-server/sky-music-server.exe`,function(err, data, stderr){
     console.log(data)
     console.log(err)
     console.log(stderr)
@@ -82,7 +82,7 @@ app.on('ready', async () => {
 
 app.on('before-quit', () => {
   // 退出前执行的操作，如关闭后端
-  cmd.run(`taskkill /F /im sky_windows_music.exe`)
+  cmd.run(`runas /user:Administrator "taskkill /F /im sky-music-server.exe"`)
 });
 
 // Exit cleanly on request from parent process in development mode.
@@ -92,13 +92,13 @@ if (isDevelopment) {
       if (data === 'graceful-exit') {
         app.quit()
         // 关闭服务器exe
-        cmd.run(`taskkill /F /im sky_windows_music.exe`)
+        cmd.run(`runas /user:Administrator "taskkill /F /im sky-music-server.exe"`)
       }
     })
   } else {
     process.on('SIGTERM', () => {
       app.quit()
-      cmd.run(`taskkill /F /im sky_windows_music.exe`)
+      cmd.run(`runas /user:Administrator "taskkill /F /im sky-music-server.exe"`)
     })
   }
 }

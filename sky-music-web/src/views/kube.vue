@@ -17,10 +17,11 @@
     <n-gradient-text type="warning" :size="15"> gpu </n-gradient-text>
 
     <n-divider />
-    <n-gradient-text type="info" :size="18"> 当前任务 
-    {{ 
-      now_translate_text.process == undefined && now_translate_text.text == undefined ? "已完成" : now_translate_text.process + " " + now_translate_text.text
-    }}
+    <n-gradient-text type="info" :size="18"> 当前任务
+      {{
+        now_translate_text.process == undefined && now_translate_text.text == undefined ? "已完成" :
+          now_translate_text.process + " " + now_translate_text.text
+      }}
     </n-gradient-text>
     <div style="width: 100%;">
       <n-gradient-text type="info"> 总体进度 </n-gradient-text>
@@ -92,8 +93,8 @@ function getProgress() {
   });
 
   if (progress.tran_mid_progress == 100 &&
-  progress.overall_progress == 100 
-) {
+    progress.overall_progress == 100
+  ) {
     clearInterval(progressInterval)
   }
 }
@@ -122,9 +123,9 @@ function reloadTable() {
 reloadTable()
 watch(progress.overall_progress.value, () => reloadTable())
 
-function handleUpdateValue(value: string){
-  getList(value).then(res=>{
-    eval("music."+value+"=res")
+function handleUpdateValue(value: string) {
+  getList(value).then(res => {
+    eval("music." + value + "=res")
   })
 }
 

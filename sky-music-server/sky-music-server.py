@@ -14,6 +14,11 @@ from utils.robot import robotUtils
 from utils.websocket_hook import startWebsocket
 from fastapi.middleware.cors import CORSMiddleware
 
+# 打包放行这里的代码
+# import sys, os
+# # 关闭print的输出
+# sys.stdout = open(os.devnull, 'w')
+
 app = FastAPI()
 
 app.add_middleware(
@@ -126,6 +131,6 @@ if __name__ == '__main__':
     websocket_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
     websocket_thread.start()
     try:
-        uvicorn.run(app, host="localhost", port=9899, log_level="error")
+        uvicorn.run(app, host="localhost", port=9899, log_level="info")
     except Exception as e:
         logging.error(e)

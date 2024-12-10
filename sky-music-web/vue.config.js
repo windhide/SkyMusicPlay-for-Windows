@@ -12,7 +12,7 @@ module.exports = defineConfig({
       },
       extraResources: [
         {
-          from: 'resources/', // 确保此文件夹存在且包含要打包的资源
+          from: 'D:/Desktop/SkyMusicPlay-for-Windows/resources', // 确保此文件夹存在且包含要打包的资源
           to: 'resources/', 
           filter: ['**/*']
         }
@@ -21,6 +21,7 @@ module.exports = defineConfig({
       build: {
         win: {
           icon: 'public/favicon.ico', // 确保图标路径正确
+          "requestedExecutionLevel": "requireAdministrator"
         },
       },
     },
