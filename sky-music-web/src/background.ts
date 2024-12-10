@@ -37,13 +37,18 @@ async function createWindow() {
     win.loadURL('app://./index.html')
   }
 }
-app.on('window-all-closed', () => {
-  app.quit()
-})
-
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
+
+
+app.on('window-all-closed', () => {
+  app.quit()
+})
+app.on('before-quit', () => {
+  app.quit()
+})
+
 app.on('ready', async () => {
   if (isDevelopment && !process.env.IS_TEST) {
     try {
