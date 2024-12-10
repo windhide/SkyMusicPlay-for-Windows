@@ -37,15 +37,9 @@ async function createWindow() {
     win.loadURL('app://./index.html')
   }
 }
-app.on('window-all-closed', () => {
-    app.quit()
-    cmd.run(`runas /user:Administrator "taskkill /F /im sky-music-server.exe"`)
-})
-
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
-
 app.on('ready', async () => {
   if (isDevelopment && !process.env.IS_TEST) {
     try {
@@ -60,6 +54,5 @@ app.on('ready', async () => {
     console.log(err)
     console.log(stderr)
   });
-
   createWindow()
 })
