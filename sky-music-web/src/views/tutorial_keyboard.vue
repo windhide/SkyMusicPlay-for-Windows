@@ -26,8 +26,8 @@
 
 <style scoped>
 #father {
-  height: 289px;
-  /* height: 400px; */
+  /* height: 289px; */
+  height: 400px;
   display: flex;
   justify-content: center;
   align-content: center;

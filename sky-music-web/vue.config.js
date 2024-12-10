@@ -2,7 +2,6 @@ const { defineConfig } = require('@vue/cli-service');
 
 module.exports = defineConfig({
   transpileDependencies: true,
-
   pluginOptions: {
     electronBuilder: {
       appId: 'com.windhide.sky',
@@ -20,7 +19,7 @@ module.exports = defineConfig({
       // 将 icon 配置移到这里
       build: {
         win: {
-          icon: 'public/favicon.ico', // 确保图标路径正确
+          icon: 'D:/Desktop/SkyMusicPlay-for-Windows/sky-music-web/public/favicon.ico', // 确保图标路径正确
           "requestedExecutionLevel": "requireAdministrator"
         },
       },

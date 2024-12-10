@@ -3,7 +3,7 @@ import os
 def getResourcesPath(file):
     nowPath = os.path.dirname(os.path.abspath(__file__))
     resources_path = os.path.dirname(os.path.dirname(nowPath))
-    target_subpath = os.path.join("backend_dist", "sky_windows_music")
+    target_subpath = os.path.join("backend_dist", "sky-music-server")
     if target_subpath in resources_path:
         resources_path = os.path.abspath(os.path.join(resources_path, "..", ".."))
 

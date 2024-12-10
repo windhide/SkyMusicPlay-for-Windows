@@ -3,6 +3,12 @@ import urllib
 from pynput import keyboard
 from websocket_server import WebsocketServer
 from utils._global import global_state
+
+# 打包放行
+import builtins
+# 重定向 print 到空函数
+builtins.print = lambda *args, **kwargs: None
+
 # WebSocket 服务端实例
 server = WebsocketServer("127.0.0.1",11451)
 # 键盘按键事件处理

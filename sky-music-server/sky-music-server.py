@@ -1,9 +1,13 @@
 import os
 import threading
+import time
+
+import psutil  # 新增，用于检查进程状态
 from fastapi import FastAPI, UploadFile
 import uvicorn
 # 配置文件
 import logging
+import sys, os
 
 from utils._global import global_state
 from utils.listUtils import getTypeMusicList
@@ -14,11 +18,8 @@ from utils.robot import robotUtils
 from utils.websocket_hook import startWebsocket
 from fastapi.middleware.cors import CORSMiddleware
 
-# 打包放行这里的代码
-# import sys, os
-# # 关闭print的输出
-# sys.stdout = open(os.devnull, 'w')
-
+# 关闭print的输出
+sys.stdout = open(os.devnull, 'w')
 app = FastAPI()
 
 app.add_middleware(
@@ -31,11 +32,12 @@ app.add_middleware(
 
 @app.get("/")
 async def get_list(listName: str):
-    return  getTypeMusicList(listName)
+    return getTypeMusicList(listName)
 
 @app.post("/start")
 def start(request: dict):
-    robotUtils.playMusic(request["fileName"],request["type"])
+    robotUtils.playMusic(request["fileName"], request["type"])
+
 @app.get("/pause")
 def pause():
     robotUtils.pause()
@@ -63,7 +65,6 @@ async def create_upload_files(file: UploadFile):
     # 将上传的文件保存到服务本地
     path = os.path.join(getResourcesPath("translateOriginalMusic"), f'{file.filename}')
     with open(path, 'wb') as f:
-        # 一次读取1024字节，循环读取写入
         for chunk in iter(lambda: file.file.read(1024), b''):
             f.write(chunk)
     return "ok"
@@ -74,14 +75,16 @@ async def create_upload_files(file: UploadFile):
     # 将上传的文件保存到服务本地
     path = os.path.join(getResourcesPath("myImport"), f'{file.filename}')
     with open(path, 'wb') as f:
-        # 一次读取1024字节，循环读取写入
         for chunk in iter(lambda: file.file.read(1024), b''):
             f.write(chunk)
     return "ok"
 
 @app.post("/translate")
 def translate(request: dict):
-    process_directory_with_progress(use_gpu=False if request["processor"] == 'cpu' else True,modelName="note_F1=0.9677_pedal_F1=0.9186.pth")
+    process_directory_with_progress(
+        use_gpu=False if request["processor"] == 'cpu' else True,
+        modelName="note_F1=0.9677_pedal_F1=0.9186.pth"
+    )
     return "ok"
 
 @app.post("/setConfig")
@@ -96,12 +99,12 @@ def translate(request: dict):
 
 @app.post("/getConfig")
 def get_config(request: dict):
-    returnData = eval("global_state."+request["name"])
+    returnData = eval("global_state." + request["name"])
     return returnData
 
 @app.post("/followSheet")
 def set_follow_sheet(request: dict):
-    convert_notes_to_delayed_format(request["fileName"],request["type"])
+    convert_notes_to_delayed_format(request["fileName"], request["type"])
     global_state.follow_sheet = list(map(lambda item: item['key'], global_state.music_sheet))
     global_state.music_sheet = []
     global_state.follow_music = request["fileName"]
@@ -125,11 +128,34 @@ def next_sheet(request: dict):
 def check():
     return 'True'
 
+def is_process_running(process_name):
+    """检查目标进程是否运行"""
+    for process in psutil.process_iter(['name']):
+        if process.info['name'] == process_name:
+            return True
+    return False
+
+def monitor_process(process_name):
+    """监听目标进程的状态，如果退出则结束主程序"""
+    print(f"监听进程: {process_name}")
+    while is_process_running(process_name):
+        time.sleep(1)  # 每秒检查一次
+    print(f"{process_name} 已退出，关闭主程序。")
+    os._exit(0)  # 强制退出主进程
 
 if __name__ == '__main__':
+    # 创建监听 WebSocket 的线程
     websocket_thread = threading.Thread(target=startWebsocket)
     websocket_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
     websocket_thread.start()
+
+    # 创建监听目标进程的线程
+    target_process = "sky-music-web.exe"
+    process_monitor_thread = threading.Thread(target=monitor_process, args=(target_process,))
+    process_monitor_thread.daemon = True
+    process_monitor_thread.start()
+
+    # 启动 FastAPI 服务
     try:
         uvicorn.run(app, host="localhost", port=9899, log_level="info")
     except Exception as e:

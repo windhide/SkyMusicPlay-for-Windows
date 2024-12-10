@@ -9,8 +9,6 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 var cmd=require('node-cmd');
 var currentPath = require("path").dirname(require('electron').app.getPath("exe"));
 
-// Menu.setApplicationMenu(null) //取消菜单栏
-
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
@@ -37,6 +35,7 @@ async function createWindow() {
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string)
     if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
+    Menu.setApplicationMenu(null) //取消菜单栏
     createProtocol('app')
     // Load the index.html when not in development
     win.loadURL('app://./index.html')

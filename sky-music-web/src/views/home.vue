@@ -1,14 +1,24 @@
 <template>
 	<div id="father">
 		<n-divider>
-			<img src="https://s1.imagehub.cc/images/2024/12/02/751628702b15b19942a74f79c58117c2.png" id="avatar">
+			<img src="https://s1.imagehub.cc/images/2024/12/10/3a2621aff049cdd9a933496dbf93d930.png" id="avatar">
 		</n-divider>
-		<n-highlight :text="text" :patterns="patterns" :highlight-style="{
+		<n-highlight style="margin-bottom: 5px;" :text="headText" :patterns="patterns" :highlight-style="{
 			padding: '0 6px',
+			margin: '0 6px',
 			borderRadius: themeVars.borderRadius,
 			display: 'inline-block',
-			color: themeVars.baseColor,
-			background: themeVars.primaryColor,
+			color: 'black',
+			background: 'Pink',
+			transition: `all .3s ${themeVars.cubicBezierEaseInOut}`,
+		}" />
+		<n-highlight :text="text" :patterns="patterns" :highlight-style="{
+			padding: '0 6px',
+			margin: '0 6px',
+			borderRadius: themeVars.borderRadius,
+			display: 'inline-block',
+			color: 'black',
+			background: 'Pink',
 			transition: `all .3s ${themeVars.cubicBezierEaseInOut}`,
 		}" />
 		<n-divider>
@@ -60,8 +70,9 @@ import router from '@/router';
 const message = useMessage()
 
 const themeVars = useThemeVars()
+let headText = '如果您觉得好用可以赏我一杯咖啡☕'
 let text = '欢迎使用本软件，本软件完全免费，如果您是买的本软件就是被骗了'
-let patterns = ['完全免费', '被骗了']
+let patterns = ['完全免费', '被骗了','咖啡☕']
 function blankClick(url) {
 	navigator.clipboard.writeText(url); // 使用Clipboard API复制内容
 	message.success("请复制到浏览器打开啦~！")
@@ -86,7 +97,7 @@ jump()
 }
 
 #avatar {
-	height: 150px;
-	width: 150px;
+	height: 250px;
+	width: 250px;
 }
 </style>
