@@ -6,6 +6,11 @@ const path = require('path')
 const windowIconPath = path.join(__dirname,'icon.ico');
 
 
+// 打包用的
+var cmd=require('node-cmd');
+var currentPath = require("path").dirname(require('electron').app.getPath("exe"));
+
+// Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
@@ -25,8 +30,6 @@ async function createWindow() {
     }
   })
   if (process.env.WEBPACK_DEV_SERVER_URL) {
-    // Load the url of the dev server if in development mode
-    // Menu.setApplicationMenu(null) //取消菜单栏
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string)
     if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
@@ -38,6 +41,15 @@ async function createWindow() {
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
+
+
+app.on('window-all-closed', () => {
+  app.quit()
+})
+app.on('before-quit', () => {
+  app.quit()
+})
+
 app.on('ready', async () => {
   if (isDevelopment && !process.env.IS_TEST) {
     try {
@@ -46,5 +58,11 @@ app.on('ready', async () => {
       console.error('Vue Devtools failed to install:', e)
     }
   }
+  // 启动服务器exe
+  cmd.run(`${currentPath}/backend_dist/sky-music-server/sky-music-server.exe`,function(err, data, stderr){
+    console.log(data)
+    console.log(err)
+    console.log(stderr)
+  });
   createWindow()
 })
