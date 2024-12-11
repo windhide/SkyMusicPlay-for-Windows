@@ -25,7 +25,6 @@ pnpm-debug.log*
 #Electron-builder output
 /dist_electron
 *.pyc
-
 sky-music-server/.idea/
 sky-music-server/node_modules/
 sky-music-web/node_modules/
@@ -34,7 +33,7 @@ sky-music-server/build/
 sky-music-web/web2/
 sky-music-web/dist_electron/
 web2/
-sky-music-server/utils/__pycache__/
-sky-music-server/utils/_global/__pycache__/
-sky-music-server/utils/musicToSheet/__pycache__/
-sky-music-server/utils/robot/__pycache__/
+**/__pycache__/**
+template-resources/
+resources/
+*.spec

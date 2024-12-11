@@ -15,8 +15,13 @@ def send_single_key_to_window(key):
 
 def send_multiple_key_to_window(keys):
     for key in keys:
-            if key in keys:
-                send_single_key_to_window(key)
+        keyboard.press(key)
+        time.sleep(0.01)
+    time.sleep(global_state.sustain_time)
+    for key in keys:
+        keyboard.release(key)
+        time.sleep(0.01)
+    time.sleep(global_state.delay_interval)
 
 def playMusic(fileName, type):
     """优化音乐播放逻辑"""

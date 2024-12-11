@@ -6,22 +6,29 @@ module.exports = defineConfig({
     electronBuilder: {
       appId: 'com.windhide.sky',
       productName: 'Sky_Music',
+      author: "WindHide <WindHide520@gmail.com>",
       directories: {
-        output: 'dist_electron',
+        output: 'dist_electron', // 输出目录
       },
       extraResources: [
         {
-          from: 'D:/Desktop/SkyMusicPlay-for-Windows/resources', // 确保此文件夹存在且包含要打包的资源
-          to: 'resources/', 
-          filter: ['**/*']
-        }
-      ],
-      // 将 icon 配置移到这里
-      build: {
-        win: {
-          icon: 'D:/Desktop/SkyMusicPlay-for-Windows/sky-music-web/public/favicon.ico', // 确保图标路径正确
-          "requestedExecutionLevel": "requireAdministrator"
+          from: 'public/icon.ico', // 指定 public 文件夹
+          to: 'public/icon.ico'
         },
+      ],
+      builderOptions: {
+        appId: 'com.windhide.sky',
+        productName: 'Sky_Music',
+        directories: {
+          output: 'dist_electron',
+        },
+        win: {
+          icon: 'public/icon.ico', // 指定 Windows 的图标
+          requestedExecutionLevel: 'requireAdministrator', // 需要管理员权限
+        }
+      },
+      chainWebpackMainProcess: (config) => {
+        config.output.filename('background.js'); // 修改主进程输出文件名
       },
     },
   },

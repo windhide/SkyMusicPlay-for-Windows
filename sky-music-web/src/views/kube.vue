@@ -12,10 +12,6 @@
     <n-button type="primary" ghost @click="handleStartTranslate" :loading="processFlag">
       开始转换
     </n-button>
-    <n-gradient-text type="success" style="margin-left: 20px;" :size="15"> cpu </n-gradient-text>
-    <n-switch size="large" v-model:value="processorSwitch" />
-    <n-gradient-text type="warning" :size="15"> gpu </n-gradient-text>
-
     <n-divider />
     <n-gradient-text type="info" :size="18"> 当前任务
       {{
@@ -55,7 +51,6 @@ import { getData, sendData, getList } from '@/utils/fetchUtils'
 import { reactive, ref, watch } from 'vue';
 import { useMessage } from 'naive-ui'
 const message = useMessage()
-let processorSwitch = ref(false)
 const processFlag = ref(false)
 
 let music: any = reactive({ // 音乐列表
@@ -105,7 +100,7 @@ function handleStartTranslate() {
   processFlag.value = true
   message.success("开始转换")
   sendData("translate", {
-    "processor": processorSwitch.value ? 'gpu' : 'cpu'
+    "processor": 'cpu'
   }).then(() => {
     reloadTable()
     message.success("转换完成")
