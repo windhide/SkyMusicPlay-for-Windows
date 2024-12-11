@@ -28,7 +28,7 @@
 #father {
   /* 带menu 289 不带315 */
   /* height: 289px; */
-  height: 315px;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-content: center;
