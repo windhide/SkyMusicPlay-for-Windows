@@ -1,0 +1,343 @@
+[
+	{
+		"name": "[] Song of Storms []",
+		"bpm": 200,
+		"bitsPerPage": 16,
+		"pitchLevel": 0,
+		"isComposed": false,
+		"songNotes": [
+			{
+				"time": 349,
+				"key": "1Key2"
+			},
+			{
+				"time": 363,
+				"key": "1Key5"
+			},
+			{
+				"time": 399,
+				"key": "1Key0"
+			},
+			{
+				"time": 698,
+				"key": "1Key7"
+			},
+			{
+				"time": 914,
+				"key": "1Key12"
+			},
+			{
+				"time": 2237,
+				"key": "1Key5"
+			},
+			{
+				"time": 2253,
+				"key": "1Key3"
+			},
+			{
+				"time": 2259,
+				"key": "1Key1"
+			},
+			{
+				"time": 2576,
+				"key": "1Key7"
+			},
+			{
+				"time": 2811,
+				"key": "1Key12"
+			},
+			{
+				"time": 4254,
+				"key": "1Key13"
+			},
+			{
+				"time": 4278,
+				"key": "1Key4"
+			},
+			{
+				"time": 4285,
+				"key": "1Key9"
+			},
+			{
+				"time": 5164,
+				"key": "1Key14"
+			},
+			{
+				"time": 5370,
+				"key": "1Key13"
+			},
+			{
+				"time": 5537,
+				"key": "1Key14"
+			},
+			{
+				"time": 5931,
+				"key": "1Key7"
+			},
+			{
+				"time": 6018,
+				"key": "1Key9"
+			},
+			{
+				"time": 6033,
+				"key": "1Key13"
+			},
+			{
+				"time": 6199,
+				"key": "1Key11"
+			},
+			{
+				"time": 6482,
+				"key": "1Key9"
+			},
+			{
+				"time": 7571,
+				"key": "1Key9"
+			},
+			{
+				"time": 7581,
+				"key": "1Key5"
+			},
+			{
+				"time": 7591,
+				"key": "1Key1"
+			},
+			{
+				"time": 7599,
+				"key": "1Key3"
+			},
+			{
+				"time": 8078,
+				"key": "1Key5"
+			},
+			{
+				"time": 8542,
+				"key": "1Key7"
+			},
+			{
+				"time": 8995,
+				"key": "1Key8"
+			},
+			{
+				"time": 9513,
+				"key": "1Key9"
+			},
+			{
+				"time": 9529,
+				"key": "1Key4"
+			},
+			{
+				"time": 9539,
+				"key": "1Key6"
+			},
+			{
+				"time": 9551,
+				"key": "1Key3"
+			},
+			{
+				"time": 11652,
+				"key": "1Key3"
+			},
+			{
+				"time": 11684,
+				"key": "1Key9"
+			},
+			{
+				"time": 11695,
+				"key": "1Key7"
+			},
+			{
+				"time": 11703,
+				"key": "1Key1"
+			},
+			{
+				"time": 12132,
+				"key": "1Key5"
+			},
+			{
+				"time": 12565,
+				"key": "1Key7"
+			},
+			{
+				"time": 13004,
+				"key": "1Key8"
+			},
+			{
+				"time": 13487,
+				"key": "1Key4"
+			},
+			{
+				"time": 13522,
+				"key": "1Key6"
+			},
+			{
+				"time": 13534,
+				"key": "1Key2"
+			},
+			{
+				"time": 15322,
+				"key": "1Key5"
+			},
+			{
+				"time": 15340,
+				"key": "1Key0"
+			},
+			{
+				"time": 15351,
+				"key": "1Key2"
+			},
+			{
+				"time": 15546,
+				"key": "1Key7"
+			},
+			{
+				"time": 15763,
+				"key": "1Key12"
+			},
+			{
+				"time": 17032,
+				"key": "1Key1"
+			},
+			{
+				"time": 17049,
+				"key": "1Key5"
+			},
+			{
+				"time": 17062,
+				"key": "1Key3"
+			},
+			{
+				"time": 17385,
+				"key": "1Key7"
+			},
+			{
+				"time": 17577,
+				"key": "1Key12"
+			},
+			{
+				"time": 18906,
+				"key": "1Key4"
+			},
+			{
+				"time": 18924,
+				"key": "1Key9"
+			},
+			{
+				"time": 18936,
+				"key": "1Key13"
+			},
+			{
+				"time": 18954,
+				"key": "1Key6"
+			},
+			{
+				"time": 19627,
+				"key": "1Key14"
+			},
+			{
+				"time": 19840,
+				"key": "1Key13"
+			},
+			{
+				"time": 20026,
+				"key": "1Key14"
+			},
+			{
+				"time": 20410,
+				"key": "1Key7"
+			},
+			{
+				"time": 20459,
+				"key": "1Key13"
+			},
+			{
+				"time": 20486,
+				"key": "1Key4"
+			},
+			{
+				"time": 20491,
+				"key": "1Key9"
+			},
+			{
+				"time": 20670,
+				"key": "1Key11"
+			},
+			{
+				"time": 20922,
+				"key": "1Key9"
+			},
+			{
+				"time": 21974,
+				"key": "1Key5"
+			},
+			{
+				"time": 21986,
+				"key": "1Key1"
+			},
+			{
+				"time": 22002,
+				"key": "1Key3"
+			},
+			{
+				"time": 22014,
+				"key": "1Key9"
+			},
+			{
+				"time": 22570,
+				"key": "1Key5"
+			},
+			{
+				"time": 23022,
+				"key": "1Key7"
+			},
+			{
+				"time": 23494,
+				"key": "1Key8"
+			},
+			{
+				"time": 23913,
+				"key": "1Key4"
+			},
+			{
+				"time": 23984,
+				"key": "1Key6"
+			},
+			{
+				"time": 24030,
+				"key": "1Key2"
+			},
+			{
+				"time": 25111,
+				"key": "1Key7"
+			},
+			{
+				"time": 25313,
+				"key": "1Key6"
+			},
+			{
+				"time": 25590,
+				"key": "1Key0"
+			},
+			{
+				"time": 25606,
+				"key": "1Key2"
+			},
+			{
+				"time": 25849,
+				"key": "1Key7"
+			},
+			{
+				"time": 25857,
+				"key": "1Key5"
+			},
+			{
+				"time": 26096,
+				"key": "1Key9"
+			},
+			{
+				"time": 26114,
+				"key": "1Key12"
+			}
+		]
+	}
+]

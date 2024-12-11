@@ -34,6 +34,5 @@ sky-music-web/web2/
 sky-music-web/dist_electron/
 web2/
 **/__pycache__/**
-template-resources/
 resources/
 *.spec
