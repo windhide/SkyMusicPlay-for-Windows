@@ -3,7 +3,8 @@ setlocal enabledelayedexpansion
 
 :: 显示当前目录
 echo %~dp0
-
+:: 显示当前目录
+rmdir /S /Q "%~dp0sky-music-web\dist_electron"
 :: 构建 Electron 应用
 cd %~dp0sky-music-web
 call npm run electron:build
