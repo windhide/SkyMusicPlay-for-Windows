@@ -26,6 +26,8 @@ echo Current script directory: %script_dir%
 
 :: 删除旧的 Electron 构建目录
 rmdir /S /Q "%script_dir%sky-music-web\dist_electron"
+:: 删除python的构建目录
+rmdir /S /Q "%script_dir%sky-music-server\build"
 
 :: 构建 Electron 应用
 cd "%script_dir%sky-music-web"
