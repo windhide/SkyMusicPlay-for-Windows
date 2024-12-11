@@ -2,6 +2,7 @@
   <n-config-provider :theme="darkTheme">
 	  <n-spin :show="show" :size="90" style="background-color: black;">
     <n-message-provider>
+    <n-dialog-provider>
       <n-space vertical>
         <n-layout>
           <n-layout has-sider>
@@ -28,6 +29,7 @@
           </n-layout>
         </n-layout>
       </n-space>
+    </n-dialog-provider>
     </n-message-provider>
       <template #description>
         🍉应用加载中，请稍等~

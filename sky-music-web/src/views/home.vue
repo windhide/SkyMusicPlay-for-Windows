@@ -63,26 +63,41 @@
 </template>
 
 <script setup lang="ts">
-import { useMessage, useThemeVars } from 'naive-ui'
+import { useThemeVars } from 'naive-ui'
 import { GitPullRequest, LogoGithub, Build } from '@vicons/ionicons5'
-import { sendData } from '@/utils/fetchUtils'
+import { sendData, getData, getWWWData } from '@/utils/fetchUtils'
 import router from '@/router';
-const message = useMessage()
+import { useDialog  } from 'naive-ui'
 
 const themeVars = useThemeVars()
 let headText = '如果您觉得好用可以赏我一杯咖啡☕'
 let text = '欢迎使用本软件，本软件完全免费，如果您是买的本软件就是被骗了'
-let patterns = ['完全免费', '被骗了','咖啡☕']
+let patterns = ['完全免费', '被骗了', '咖啡☕']
+const dialog = useDialog()
+
 function blankClick(url) {
-	navigator.clipboard.writeText(url); // 使用Clipboard API复制内容
-	message.success("请复制到浏览器打开啦~！")
+	getData("openBrowser?url=" + url)
 }
 
 function jump() {
-	if (window.innerWidth > 700 ) return;
-	sendData("nextSheet", {type: '不ok'}).then(res => {
+	if (window.innerWidth > 700) {
+		// 更新检测
+		getWWWData("https://cdn.jsdelivr.net/gh/windhide/SkyMusicPlay-for-Windows/.version").then(res => {
+			if (res > require('./../../package.json').version) {
+				dialog.success({
+					title: '更新啦🔈',
+					content: '新版本v'+res+"请到github或者QQ群1007672060里获取最新版",
+					positiveText: '好哒❤',
+					maskClosable: false
+				})
+			}
+
+		})
+		return
+	}
+	sendData("nextSheet", { type: '不ok' }).then(res => {
 		if (res.length != 0)
-			router.push({name: "keyboard"})
+			router.push({ name: "keyboard" })
 	})
 }
 jump()
