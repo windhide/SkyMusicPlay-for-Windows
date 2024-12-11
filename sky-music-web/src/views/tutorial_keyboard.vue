@@ -28,7 +28,7 @@
 #father {
   /* 带menu 289 不带315 */
   /* height: 289px; */
-  height: 100vh;
+  height: calc(100vh - 25px);
   display: flex;
   justify-content: center;
   align-content: center;
@@ -36,8 +36,8 @@
 }
 
 .buttonStyle {
-  height: 60px;
-  width: 60px;
+  height: 75px;
+  width: 75px;
 }
 </style>
 
