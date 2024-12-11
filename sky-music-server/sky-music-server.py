@@ -1,6 +1,6 @@
-import os
 import threading
 import time
+import webbrowser
 
 import psutil  # 新增，用于检查进程状态
 from fastapi import FastAPI, UploadFile
@@ -142,6 +142,11 @@ def monitor_process(process_name):
         time.sleep(1)  # 每秒检查一次
     print(f"{process_name} 已退出，关闭主程序。")
     os._exit(0)  # 强制退出主进程
+
+@app.get("/openBrowser")
+def open_browser(url: str):
+    webbrowser.open(url)
+    return 'ok'
 
 if __name__ == '__main__':
     # 创建监听 WebSocket 的线程
