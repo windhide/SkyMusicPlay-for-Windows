@@ -1,9 +1,10 @@
-'use strict'
-
-import { app, protocol, BrowserWindow, Menu } from 'electron'
+import { app, protocol, BrowserWindow, Menu, Tray } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
+const path = require('path')
+const windowIconPath = path.join(__dirname,'icon.ico');
+
 
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
@@ -14,7 +15,7 @@ async function createWindow() {
     width: 800,
     height: 774,
     resizable: false,  // 禁止调整窗口
-    icon: `${__dirname}/public/favicon.ico`, // 添加这一行来设置应用图标
+    icon: windowIconPath, // 设置ico
     webPreferences: {
       webSecurity: false,
       nodeIntegration: (process.env
