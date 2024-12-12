@@ -7,21 +7,21 @@ from utils.musicToSheet.transferMID import inference
 from utils.pathUtils import getResourcesPath
 # 15个音符与键盘按键的映射
 note_to_key = {
-    60: '1Key1',  # Do
-    62: '1Key2',  # Re
-    64: '1Key3',  # Mi
-    65: '1Key4',  # Fa
-    67: '1Key5',  # So
-    69: '1Key6',  # La
-    71: '1Key7',  # Xi
-    72: '1Key8',  # Do (高音)
-    74: '1Key9',  # Re (高音)
-    76: '1Key10',  # Mi (高音)
-    77: '1Key11',  # Fa (高音)
-    79: '1Key12',  # So (高音)
-    81: '1Key13',  # La (高音)
-    83: '1Key14',  # Xi (高音)
-    84: '1Key15'  # 高高音Do
+    60: '1Key0',  # Do
+    62: '1Key1',  # Re
+    64: '1Key2',  # Mi
+    65: '1Key3',  # Fa
+    67: '1Key4',  # So
+    69: '1Key5',  # La
+    71: '1Key6',  # Xi
+    72: '1Key7',  # Do (高音)
+    74: '1Key8',  # Re (高音)
+    76: '1Key9',  # Mi (高音)
+    77: '1Key10',  # Fa (高音)
+    79: '1Key11',  # So (高音)
+    81: '1Key12',  # La (高音)
+    83: '1Key13',  # Xi (高音)
+    84: '1Key14'  # 高高音Do
 }
 allowed_notes = note_to_key.keys()
 

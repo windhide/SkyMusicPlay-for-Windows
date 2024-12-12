@@ -41,8 +41,8 @@ def convert_notes_to_delayed_format(fileName, type):
     import os
     import json
 
-    with open(os.path.join(getResourcesPath(None), type, fileName + ".txt"), 'r',
-              encoding=detect_encoding(os.path.join(getResourcesPath(None), type, fileName + ".txt"))) as file:
+    with open(os.path.join(getResourcesPath(type) , fileName + ".txt"), 'r',
+              encoding=detect_encoding(os.path.join(getResourcesPath(type) , fileName + ".txt"))) as file:
         data = json.load(file)
 
     song_notes = data[0].get("songNotes", [])
@@ -56,7 +56,6 @@ def convert_notes_to_delayed_format(fileName, type):
     for i, note in enumerate(song_notes):
         current_time = note["time"]
         key = note["key"]
-
         # 如果是新的时间点
         if current_time != combined_time:
             # 如果之前有累积的相同时间按键，先保存到结果中
