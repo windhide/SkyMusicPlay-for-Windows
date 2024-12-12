@@ -8,7 +8,7 @@
     </n-button>
   </n-flex>
   <n-card style="margin-top: 20px">
-    <n-tabs type="line" animated @update:value="handleUpdateValue">
+    <n-tabs type="bar" animated @update:value="handleUpdateValue" size="small">
       <n-tab-pane name="systemMusic" tab="自带歌曲">
         <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :max-height="301"
           :scroll-x="100" :row-props="systemMusicSelect" />
@@ -21,8 +21,12 @@
         <n-data-table :columns="musicColumns" :data="music.myTranslate" :bordered="false" :max-height="250"
           :scroll-x="100" :row-props="myTranslateMusicSelect" />
       </n-tab-pane>
+      <n-tab-pane name="myFavorite" tab="收藏">
+        <n-data-table :columns="musicColumns" :data="music.myFavorite" :bordered="false" :max-height="250"
+          :row-props="myFavoriteMusicSelect" />
+      </n-tab-pane>
       <template #suffix>
-        <n-input round placeholder="搜索" v-model:value="searchText" style="margin-bottom: 3px;">
+        <n-input round placeholder="搜索" v-model:value="searchText" style="margin-bottom: 5px; width: 25vh;">
           <template #suffix>
             <n-icon :component="Search" />
           </template>
@@ -58,7 +62,6 @@ let musicColumns = [
   },
 ]; // 音乐列
 
-let progress = ref(0.0); // 播放进度条
 const systemMusicSelect = (row: RowData) => {
   return {
     onClick: () => {
@@ -90,17 +93,27 @@ function handleUpdateValue(value: string) {
     eval("music." + value + "=res")
   })
 }
+const myFavoriteMusicSelect = (row: RowData) => {
+  return {
+    onClick: () => {
+      nowPlayMusic.value = row.name;
+      nowType = "myFavorite"
+    },
+  };
+};
 
 watch(searchText, () => {
   if (searchText.value === "" || searchText.value === undefined || searchText.value === null) {
     handleUpdateValue("systemMusic")
     handleUpdateValue("myImport")
     handleUpdateValue("myTranslate")
+    handleUpdateValue("myFavorite")
     return
   }
   music.systemMusic = music.systemMusic.filter((res) => { return res.name.includes(searchText.value) })
   music.myImport = music.myImport.filter((res) => { return res.name.includes(searchText.value) })
   music.myTranslate = music.myTranslate.filter((res) => { return res.name.includes(searchText.value) })
+  music.myFavorite = music.myFavorite.filter((res) => { return res.name.includes(searchText.value) })
 })
 
 function followTutorial() {

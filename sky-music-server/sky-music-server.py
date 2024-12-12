@@ -1,3 +1,4 @@
+import shutil
 import threading
 import time
 import webbrowser
@@ -147,20 +148,33 @@ def monitor_process(process_name):
 def open_browser(url: str):
     webbrowser.open(url)
     return 'ok'
+@app.post("/getConvertSheet")
+def get_convert_sheet(request: dict):
+    convert_notes_to_delayed_format(request["fileName"], request["type"])
+    convert_sheet = list(map(lambda item: item['key'], global_state.music_sheet))
+    global_state.music_sheet = []
+    return convert_sheet
+
+@app.post('/setFavoriteMusic')
+def set_favorite_music(request: dict):
+    src = os.path.join(getResourcesPath(request['type']),request['fileName'] + ".txt")
+    dst = os.path.join(getResourcesPath('myFavorite'),request['fileName'] + ".txt")
+    shutil.copy(src, dst)
+
 
 if __name__ == '__main__':
     # 创建监听 WebSocket 的线程
     websocket_thread = threading.Thread(target=startWebsocket)
     websocket_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
     websocket_thread.start()
-    # 创建监听目标进程的线程
-    target_process = "Sky_Music.exe"
-    process_monitor_thread = threading.Thread(target=monitor_process, args=(target_process,))
-    process_monitor_thread.daemon = True
-    process_monitor_thread.start()
+    # # 创建监听目标进程的线程
+    # target_process = "Sky_Music.exe"
+    # process_monitor_thread = threading.Thread(target=monitor_process, args=(target_process,))
+    # process_monitor_thread.daemon = True
+    # process_monitor_thread.start()
 
     # 启动 FastAPI 服务
     try:
-        uvicorn.run(app, host="localhost", port=9899, log_level="info")
+        uvicorn.run(app, host="localhost", port=9899, log_level="error")
     except Exception as e:
         logging.error(e)

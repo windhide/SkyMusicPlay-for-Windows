@@ -1,21 +1,21 @@
 <template>
   <n-flex align="center">
     <n-gradient-text :size="20" type="success" style="width: 100%">
-      {{ "当前: " + nowPlayMusic + "" }}
+      {{ "当前播放: " + nowPlayMusic + "" }}
       <br>
       <n-progress style="max-width: 60%; display: inline-block" type="line" :percentage="progress"
         indicator-placement="inside" processing :color="{ stops: ['white', 'blue'] }" @click="progressClick" />
     </n-gradient-text>
     <n-radio-group v-model:value="nowState" name="radiobuttongroup1" @update:value="playSelect">
       <n-radio-button v-for="status in statusColumns" :key="status.value" :value="status.value" :label="status.label"
-        v-show="status.show" /> 
+        v-show="status.show" />
     </n-radio-group>
     <n-upload action="http://localhost:9899/userMusicUpload" multiple style="width: 100px; height: 34px"
       accept=".mp3,.mp4,.flac" :show-file-list="false" @finish="handleFinish">
       <n-button type="info" ghost>
         上传我的文件
       </n-button>
-    </n-upload>     
+    </n-upload>
     <n-row gutter="12">
       <n-col :span="15">
         <n-gradient-text type="info" :size="13">
@@ -31,7 +31,7 @@
       </n-col>
       <n-col :span="9" style="margin-left: -50px;" v-show="delayStatus == 'custom'">
         <n-space vertical style="width: 150px; float: right; margin-top: 2px;">
-          <n-slider v-model:value="delaySpeed" :step="1" :min="30" :max="500"/>
+          <n-slider v-model:value="delaySpeed" :step="1" :min="30" :max="500" />
         </n-space>
       </n-col>
     </n-row>
@@ -50,7 +50,7 @@
       </n-col>
       <n-col :span="9" style="margin-left: -50px;" v-show="sustainStatus == 'custom'">
         <n-space vertical style="width: 150px; float: right; margin-top: 2px;">
-          <n-slider v-model:value="sustainSpeed" :step="1" :min="30" :max="2000"/>
+          <n-slider v-model:value="sustainSpeed" :step="1" :min="30" :max="2000" />
         </n-space>
       </n-col>
     </n-row>
@@ -69,27 +69,39 @@
       </n-col>
       <n-col :span="9" style="margin-left: -50px;" v-show="playDelayStatus == 'custom'">
         <n-space vertical style="width: 150px; float: right; margin-top: 2px;">
-          <n-slider v-model:value="playDelay" :step="1" :min="1" :max="10"/>
+          <n-slider v-model:value="playDelay" :step="1" :min="1" :max="10" />
         </n-space>
       </n-col>
     </n-row>
   </n-flex>
 
   <n-card style="margin-top: 20px">
-    <n-tabs type="line" animated @update:value="handleUpdateValue">
+    <n-tabs type="bar" animated @update:value="handleUpdateValue" size="small">
       <n-tab-pane name="systemMusic" tab="自带歌曲">
-        <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :max-height="301" virtual-scroll :min-row-height="18"
-          :scroll-x="100" :row-props="systemMusicSelect" />
+        <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :max-height="301"
+          virtual-scroll :min-row-height="18" :scroll-x="100" :row-props="systemMusicSelect" />
       </n-tab-pane>
-      <n-tab-pane name="myImport" tab="导入的歌曲">
-        <n-data-table :columns="musicColumns" :data="music.myImport" :bordered="false" :max-height="300" :min-row-height="18"
-          :row-props="myImportMusicSelect" />
+      <n-tab-pane name="myImport" tab="导入歌曲">
+        <n-data-table :columns="musicColumns" :data="music.myImport" :bordered="false" :max-height="300"
+          :min-row-height="18" :row-props="myImportMusicSelect" />
       </n-tab-pane>
-      <n-tab-pane name="myTranslate" tab="转换的歌曲">
-        <n-data-table :columns="musicColumns" :data="music.myTranslate" :bordered="false" :max-height="250" :row-props="myTranslateMusicSelect" />
+      <n-tab-pane name="myTranslate" tab="转换歌曲">
+        <n-data-table :columns="musicColumns" :data="music.myTranslate" :bordered="false" :max-height="250"
+          :row-props="myTranslateMusicSelect" />
+      </n-tab-pane>
+      <n-tab-pane name="myFavorite" tab="收藏">
+        <n-data-table :columns="musicColumns" :data="music.myFavorite" :bordered="false" :max-height="250"
+          :row-props="myFavoriteMusicSelect" />
       </n-tab-pane>
       <template #suffix>
-        <n-input round placeholder="搜索" v-model:value="searchText" style="margin-bottom: 3px;">
+        <n-button circle type="error" ghost style="margin-bottom: 1px;" @click="heartClick">
+          <template #icon>
+            <n-icon>
+              <HeartOutline />
+            </n-icon>
+          </template>
+        </n-button>
+        <n-input round placeholder="搜索" v-model:value="searchText" style="margin-bottom: 1px; width: 25vh; margin-left: 5px;">
           <template #suffix>
             <n-icon :component="Search" />
           </template>
@@ -104,7 +116,7 @@ import { getData, sendData, getList, setConfig } from "@/utils/fetchUtils";
 import { RowData } from "naive-ui/es/data-table/src/interface";
 import { reactive, ref, watch } from "vue";
 import { useMessage } from 'naive-ui'
-import { Search } from '@vicons/ionicons5'
+import { Search,HeartOutline } from '@vicons/ionicons5'
 const message = useMessage()
 
 
@@ -113,6 +125,7 @@ let music: any = reactive({
   systemMusic: [], // 原版音乐
   myImport: [], // 导入的音乐
   myTranslate: [], // 扒谱的音乐
+  myFavorite: [] // 我的最爱
 });
 let nowPlayMusic = ref("没有歌曲"); // 当前选中歌曲
 let nowType = ""
@@ -180,8 +193,16 @@ const myTranslateMusicSelect = (row: RowData) => {
     },
   };
 };
+const myFavoriteMusicSelect = (row: RowData) => {
+  return {
+    onClick: () => {
+      nowPlayMusic.value = row.name;
+      nowType = "myFavorite"
+    },
+  };
+};
 
-let progressInterval:any = 0
+let progressInterval: any = 0
 
 const playSelect = (value: string) => {
   console.log(value)
@@ -192,8 +213,8 @@ const playSelect = (value: string) => {
         nowState.value = 'stop'
         return;
       }
-        setTimeout(()=>{
-          sendData("start", {
+      setTimeout(() => {
+        sendData("start", {
           fileName: nowPlayMusic.value,
           type: nowType
         });
@@ -203,7 +224,7 @@ const playSelect = (value: string) => {
         statusColumns[1].show = true;
         statusColumns[2].show = true;
         statusColumns[3].show = true;
-      },playDelay.value * 1000)
+      }, playDelay.value * 1000)
       break;
     case "pause":
       getData("pause");
@@ -242,7 +263,7 @@ function progressClick(event) {
   const percentage = (clickPosition / componentWidth) * 100;
   // 更新进度条
   progress.value = parseFloat(Math.min(Math.max(percentage, 0), 100).toFixed(1)) // 限制在0-100之间
-  setConfig("set_progress",progress.value/100)
+  setConfig("set_progress", progress.value / 100)
 }
 
 function getProgress() {
@@ -266,62 +287,64 @@ watch(searchText, () => {
     handleUpdateValue("systemMusic")
     handleUpdateValue("myImport")
     handleUpdateValue("myTranslate")
+    handleUpdateValue("myFavorite")
     return
   }
   music.systemMusic = music.systemMusic.filter((res) => { return res.name.includes(searchText.value) })
   music.myImport = music.myImport.filter((res) => { return res.name.includes(searchText.value) })
   music.myTranslate = music.myTranslate.filter((res) => { return res.name.includes(searchText.value) })
+  music.myFavorite = music.myFavorite.filter((res) => { return res.name.includes(searchText.value) })
 })
 
-let randomInterval:any = null
+let randomInterval: any = null
 watch(delayStatus, () => {
   switch (delayStatus.value) {
     case "system":
-      setConfig("delay_interval",0.01)
+      setConfig("delay_interval", 0.01)
       clearInterval(randomInterval)
       break;
     case "random":
-        randomInterval = setInterval(()=>{
-          setConfig("delay_interval",(Math.random() * (0.020 - 0.002) + 0.002).toFixed(3))
-        },1000)
+      randomInterval = setInterval(() => {
+        setConfig("delay_interval", (Math.random() * (0.020 - 0.002) + 0.002).toFixed(3))
+      }, 1000)
       break
     case "custom":
-        setConfig("delay_interval",delaySpeed.value / 10000)
-        clearInterval(randomInterval)
+      setConfig("delay_interval", delaySpeed.value / 10000)
+      clearInterval(randomInterval)
       break
   }
 })
 
-let sustainInterval:any = null
+let sustainInterval: any = null
 watch(sustainStatus, () => {
   switch (sustainStatus.value) {
     case "system":
-      setConfig("sustain_time",0.02)
+      setConfig("sustain_time", 0.02)
       clearInterval(sustainInterval)
       break;
     case "random":
-    sustainInterval = setInterval(()=>{
-          setConfig("sustain_time",(Math.random() * (0.020 - 0.002) + 0.002).toFixed(3))
-        },1000)
+      sustainInterval = setInterval(() => {
+        setConfig("sustain_time", (Math.random() * (0.020 - 0.002) + 0.002).toFixed(3))
+      }, 1000)
       break
     case "custom":
-        setConfig("sustain_time",sustainSpeed.value / 10000)
-        clearInterval(sustainInterval)
+      setConfig("sustain_time", sustainSpeed.value / 10000)
+      clearInterval(sustainInterval)
       break
   }
 })
 
 watch(playDelayStatus, () => {
-  if(playDelayStatus.value == 'system'){
+  if (playDelayStatus.value == 'system') {
     playDelay.value = 0
   }
 })
 
 watch(delaySpeed, () => {
-  setConfig("delay_interval",delaySpeed.value / 10000)
+  setConfig("delay_interval", delaySpeed.value / 10000)
 })
 watch(sustainSpeed, () => {
-  setConfig("sustain_time",sustainSpeed.value / 10000)
+  setConfig("sustain_time", sustainSpeed.value / 10000)
 })
 
 function clearPlayInfo() {
@@ -333,6 +356,20 @@ function clearPlayInfo() {
   statusColumns[1].show = false;
   statusColumns[2].show = false;
   statusColumns[3].show = true;
+}
+
+//  收藏点击
+function heartClick(){
+  if (nowPlayMusic.value === "没有歌曲") {
+        message.error("选个歌吧靓仔")
+        return;
+  }
+  sendData("setFavoriteMusic",{
+      fileName: nowPlayMusic.value,
+      type: nowType
+  }).then(()=>{
+    message.success("收藏成功")
+  })
 }
 
 
