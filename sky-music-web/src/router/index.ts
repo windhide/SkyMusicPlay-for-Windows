@@ -25,6 +25,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/keyboard',
     name: 'keyboard',
     component: () => import('../views/tutorial_keyboard.vue'),
+  },
+  {
+    path: '/sheetPdf',
+    name: 'sheetPdf',
+    component: () => import('../views/sheetToPDF.vue'),
   }
 ]
 

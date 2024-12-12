@@ -47,7 +47,8 @@ import {
   CubeSharp,
   Home,
   MusicalNotes,
-  GameController
+  GameController,
+  Library
 } from "@vicons/ionicons5";
 import router from "@/router";
 
@@ -77,6 +78,11 @@ const menuOptions = [
     label: "音乐扒谱",
     key: "kube",
     icon: renderIcon(CubeSharp),
+  },
+  {
+    label: "生成乐谱",
+    key: "sheetPdf",
+    icon: renderIcon(Library),
   },
 ];
 

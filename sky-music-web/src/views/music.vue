@@ -101,7 +101,7 @@
             </n-icon>
           </template>
         </n-button>
-        <n-input round placeholder="搜索" v-model:value="searchText" style="margin-bottom: 1px; width: 25vh; margin-left: 5px;">
+        <n-input round placeholder="搜索" v-model:value="searchText" style="margin-bottom: 5px; width: 25vh;">
           <template #suffix>
             <n-icon :component="Search" />
           </template>

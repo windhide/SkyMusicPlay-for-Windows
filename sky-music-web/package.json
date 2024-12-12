@@ -14,6 +14,8 @@
   "dependencies": {
     "@vicons/ionicons5": "^0.12.0",
     "core-js": "^3.8.3",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.2",
     "naive-ui": "^2.40.1",
     "node-cmd": "^5.0.0",
     "vfonts": "^0.0.3",
