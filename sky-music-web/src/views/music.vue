@@ -11,7 +11,7 @@
         v-show="status.show" />
     </n-radio-group>
     <n-upload action="http://localhost:9899/userMusicUpload" multiple style="width: 100px; height: 34px"
-      accept=".mp3,.mp4,.flac" :show-file-list="false" @finish="handleFinish">
+      accept=".txt" :show-file-list="false" @finish="handleFinish">
       <n-button type="info" ghost>
         上传我的文件
       </n-button>
@@ -114,8 +114,8 @@
 <script lang="ts" setup>
 import { getData, sendData, getList, setConfig } from "@/utils/fetchUtils";
 import { RowData } from "naive-ui/es/data-table/src/interface";
-import { reactive, ref, watch } from "vue";
-import { useMessage } from 'naive-ui'
+import { h, reactive, ref, watch } from "vue";
+import { NButton, useMessage } from 'naive-ui'
 import { Search,HeartOutline } from '@vicons/ionicons5'
 const message = useMessage()
 
@@ -160,7 +160,23 @@ let musicColumns = [
   {
     title: "歌名",
     key: "name",
-  },
+    resizable: true,
+  },{
+      title: 'Action',
+      key: 'actions',
+      width: 100,
+      render(row) {
+        return h(
+          NButton,
+          {
+            strong: true,
+            size: 'small',
+            onClick: () => {}
+          },
+          { default: () => '❤' }
+        )
+      }
+    }
 ]; // 音乐列
 
 let progress = ref(0.0); // 播放进度条
