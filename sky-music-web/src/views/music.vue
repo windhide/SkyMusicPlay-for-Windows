@@ -19,7 +19,7 @@
     <n-row gutter="12">
       <n-col :span="15">
         <n-gradient-text type="info" :size="13">
-          选择延迟ms&nbsp;&nbsp;&nbsp;
+          间隔延迟s&nbsp;&nbsp;&nbsp;
         </n-gradient-text>
         <n-radio-group v-model:value="delayStatus" name="radiogroup" @update:value="delaySelect">
           <n-space>
@@ -31,14 +31,14 @@
       </n-col>
       <n-col :span="9" style="margin-left: -50px;" v-show="delayStatus == 'custom'">
         <n-space vertical style="width: 150px; float: right; margin-top: 2px;">
-          <n-slider v-model:value="delaySpeed" :step="1" :min="30" :max="500" />
+          <n-slider v-model:value="delaySpeed" :step="0.1" :min="0.01" :max="2" />
         </n-space>
       </n-col>
     </n-row>
     <n-row gutter="12">
       <n-col :span="15">
         <n-gradient-text type="info" :size="13">
-          延音设置ms&nbsp;&nbsp;&nbsp;
+          延音设置s&nbsp;&nbsp;&nbsp;
         </n-gradient-text>
         <n-radio-group v-model:value="sustainStatus" name="radiogroup" @update:value="delaySelect">
           <n-space>
@@ -50,19 +50,19 @@
       </n-col>
       <n-col :span="9" style="margin-left: -50px;" v-show="sustainStatus == 'custom'">
         <n-space vertical style="width: 150px; float: right; margin-top: 2px;">
-          <n-slider v-model:value="sustainSpeed" :step="1" :min="30" :max="2000" />
+          <n-slider v-model:value="sustainSpeed" :step="0.1" :min="0.02" :max="1.5" />
         </n-space>
       </n-col>
     </n-row>
     <n-row gutter="12">
       <n-col :span="15">
         <n-gradient-text type="info" :size="13">
-          播放延迟s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          播放延迟s&nbsp;&nbsp;&nbsp;
         </n-gradient-text>
         <n-radio-group v-model:value="playDelayStatus" name="radiogroup" @update:value="delaySelect">
           <n-space>
             <n-radio key="system" value="system">无</n-radio>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <n-radio key="custom" value="custom">自定义</n-radio>
           </n-space>
         </n-radio-group>
@@ -101,7 +101,7 @@
             </n-icon>
           </template>
         </n-button>
-        <n-input round placeholder="搜索" v-model:value="searchText" style="margin-bottom: 5px; width: 25vh;">
+        <n-input round placeholder="搜索" v-model:value="searchText" style="margin-bottom: 5px; width: 25vh; margin-left: 5px;">
           <template #suffix>
             <n-icon :component="Search" />
           </template>
@@ -165,8 +165,8 @@ let musicColumns = [
 
 let progress = ref(0.0); // 播放进度条
 let playSpeed = ref(1); // 播放速度
-let delaySpeed = ref(30); // 延迟设置
-let sustainSpeed = ref(30); // 延音设置
+let delaySpeed = ref(0.01); // 延迟设置
+let sustainSpeed = ref(0.02); // 延音设置
 let playDelay = ref(0) // 播放延迟
 
 const systemMusicSelect = (row: RowData) => {
@@ -305,11 +305,11 @@ watch(delayStatus, () => {
       break;
     case "random":
       randomInterval = setInterval(() => {
-        setConfig("delay_interval", (Math.random() * (0.020 - 0.002) + 0.002).toFixed(3))
+        setConfig("delay_interval", (Math.random() * (0.06 - 0.01) + 0.01).toFixed(3))
       }, 1000)
       break
     case "custom":
-      setConfig("delay_interval", delaySpeed.value / 10000)
+      setConfig("delay_interval", delaySpeed.value)
       clearInterval(randomInterval)
       break
   }
@@ -324,11 +324,11 @@ watch(sustainStatus, () => {
       break;
     case "random":
       sustainInterval = setInterval(() => {
-        setConfig("sustain_time", (Math.random() * (0.020 - 0.002) + 0.002).toFixed(3))
+        setConfig("sustain_time", (Math.random() * (0.6 - 0.02) + 0.02).toFixed(3))
       }, 1000)
       break
     case "custom":
-      setConfig("sustain_time", sustainSpeed.value / 10000)
+      setConfig("sustain_time", sustainSpeed.value)
       clearInterval(sustainInterval)
       break
   }
@@ -341,10 +341,10 @@ watch(playDelayStatus, () => {
 })
 
 watch(delaySpeed, () => {
-  setConfig("delay_interval", delaySpeed.value / 10000)
+  setConfig("delay_interval", delaySpeed.value)
 })
 watch(sustainSpeed, () => {
-  setConfig("sustain_time", sustainSpeed.value / 10000)
+  setConfig("sustain_time", sustainSpeed.value)
 })
 
 function clearPlayInfo() {
