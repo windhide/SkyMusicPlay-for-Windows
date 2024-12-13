@@ -7,8 +7,8 @@
         indicator-placement="inside" processing :color="{ stops: ['white', 'blue'] }" @click="progressClick" />
     </n-gradient-text>
     <n-radio-group v-model:value="nowState" name="radiobuttongroup1" @update:value="playSelect">
-      <n-radio-button v-for="status in statusColumns" :key="status.value" :value="status.value" :label="status.label"
-        v-show="status.show" />
+      <n-radio-button v-for="status in statusColumns" :key="status.value+status.show" :value="status.value" :label="status.label"
+        v-show="status.show" :disabled="status.disabled" />
     </n-radio-group>
     <n-upload action="http://localhost:9899/userMusicUpload" multiple style="width: 100px; height: 34px" accept=".txt"
       :show-file-list="false" @finish="handleFinish">
@@ -132,22 +132,26 @@ let statusColumns = [
   {
     value: "start",
     label: "开始",
-    show: true
+    show: true,
+    disabled:false
   },
   {
     value: "resume",
     label: "继续",
-    show: false
+    show: false,
+    disabled:false
   },
   {
     value: "pause",
     label: "暂停",
-    show: false
+    show: false,
+    disabled:false
   },
   {
     value: "stop",
     label: "停止",
-    show: true
+    show: true,
+    disabled:false
   },
 ]; // 播放按钮
 let musicColumns = [
@@ -243,7 +247,7 @@ const myFavoriteMusicSelect = (row: RowData) => {
 let progressInterval: any = 0
 
 const playSelect = (value: string) => {
-  console.log(value)
+  console.log("value",value)
   switch (value) {
     case "start":
       if (nowPlayMusic.value === "没有歌曲") {
@@ -258,24 +262,41 @@ const playSelect = (value: string) => {
         });
         message.success("开始")
         progressInterval = setInterval(getProgress, 1000)
-        statusColumns[0].show = false;
-        statusColumns[1].show = true;
-        statusColumns[2].show = true;
-        statusColumns[3].show = true;
       }, playDelay.value * 1000)
+      statusColumns[0].show = false;
+      statusColumns[1].show = true;
+      statusColumns[2].show = true;
+      statusColumns[3].show = true;
+      statusColumns[0].disabled = true;
+      statusColumns[1].disabled = true;
+      statusColumns[2].disabled = false;
+      statusColumns[3].disabled = false;
+      break;
+    case "resume":
+      getData("resume")
+      progressInterval = setInterval(getProgress, 1000)
+      statusColumns[0].disabled = true;
+      statusColumns[1].disabled = false;
+      statusColumns[2].disabled = false;
+      statusColumns[3].disabled = false;
       break;
     case "pause":
       getData("pause");
       clearInterval(progressInterval)
       progressInterval = 0
+      statusColumns[0].disabled = false;
+      statusColumns[1].disabled = false;
+      statusColumns[2].disabled = false;
+      statusColumns[3].disabled = false;
       break;
     case "stop":
       getData("stop");
       clearPlayInfo()
+      statusColumns[0].disabled = false;
+      statusColumns[1].disabled = false;
+      statusColumns[2].disabled = false;
+      statusColumns[3].disabled = false;
       break;
-    case "resume":
-      getData("resume")
-      progressInterval = setInterval(getProgress, 1000)
   }
 };
 
