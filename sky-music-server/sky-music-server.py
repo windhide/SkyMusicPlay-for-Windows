@@ -9,7 +9,6 @@ import uvicorn
 # 配置文件
 import logging
 import sys, os
-
 from utils._global import global_state
 from utils.listUtils import getTypeMusicList
 from utils.musicFileTranselate import convert_notes_to_delayed_format
@@ -157,9 +156,19 @@ def get_convert_sheet(request: dict):
 
 @app.post('/setFavoriteMusic')
 def set_favorite_music(request: dict):
-    src = os.path.join(getResourcesPath(request['type']),request['fileName'] + ".txt")
-    dst = os.path.join(getResourcesPath('myFavorite'),request['fileName'] + ".txt")
-    shutil.copy(src, dst)
+        src = os.path.join(getResourcesPath(request['type']), request['fileName'] + ".txt")
+        dst = os.path.join(getResourcesPath('myFavorite'), request['fileName'] + ".txt")
+        shutil.copy(src, dst, follow_symlinks=False)
+
+@app.post('/dropFile')
+def drop_file(request: dict):
+    file_name = request["fileName"]
+    if file_name == None:
+        return '不ok'
+    drop_path = os.path.join(getResourcesPath(request['type']),file_name + ".txt")
+    os.remove(drop_path)
+    return 'ok'
+
 
 
 if __name__ == '__main__':

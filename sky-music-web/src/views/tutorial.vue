@@ -8,7 +8,7 @@
     </n-button>
   </n-flex>
   <n-card style="margin-top: 20px">
-    <n-tabs type="bar" animated @update:value="handleUpdateValue" size="small">
+    <n-tabs type="bar" animated @update:value="handleUpdateValue" @before-leave="handleBeforeLeave"  size="small">
       <n-tab-pane name="systemMusic" tab="自带歌曲">
         <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :max-height="301"
           :scroll-x="100" :row-props="systemMusicSelect" />
@@ -53,7 +53,7 @@ let music: any = reactive({
   myTranslate: [], // 扒谱的音乐
 });
 let nowPlayMusic = ref("没有歌曲"); // 当前选中歌曲
-let nowType = ""
+let nowType = "systemMusic"
 let searchText = ref("")
 let musicColumns = [
   {
@@ -66,7 +66,6 @@ const systemMusicSelect = (row: RowData) => {
   return {
     onClick: () => {
       nowPlayMusic.value = row.name;
-      nowType = "systemMusic"
     },
   };
 };
@@ -74,7 +73,6 @@ const myImportMusicSelect = (row: RowData) => {
   return {
     onClick: () => {
       nowPlayMusic.value = row.name;
-      nowType = "myImport"
     },
   };
 };
@@ -82,7 +80,6 @@ const myTranslateMusicSelect = (row: RowData) => {
   return {
     onClick: () => {
       nowPlayMusic.value = row.name;
-      nowType = "myTranslate"
     },
   };
 };
@@ -93,11 +90,16 @@ function handleUpdateValue(value: string) {
     eval("music." + value + "=res")
   })
 }
+
+function handleBeforeLeave(name: string){
+  nowType = name
+  return true;
+}
+
 const myFavoriteMusicSelect = (row: RowData) => {
   return {
     onClick: () => {
       nowPlayMusic.value = row.name;
-      nowType = "myFavorite"
     },
   };
 };

@@ -10,8 +10,8 @@
       <n-radio-button v-for="status in statusColumns" :key="status.value" :value="status.value" :label="status.label"
         v-show="status.show" />
     </n-radio-group>
-    <n-upload action="http://localhost:9899/userMusicUpload" multiple style="width: 100px; height: 34px"
-      accept=".txt" :show-file-list="false" @finish="handleFinish">
+    <n-upload action="http://localhost:9899/userMusicUpload" multiple style="width: 100px; height: 34px" accept=".txt"
+      :show-file-list="false" @finish="handleFinish">
       <n-button type="info" ghost>
         上传我的文件
       </n-button>
@@ -76,7 +76,7 @@
   </n-flex>
 
   <n-card style="margin-top: 20px">
-    <n-tabs type="bar" animated @update:value="handleUpdateValue" size="small">
+    <n-tabs type="bar" animated @update:value="handleUpdateValue" @before-leave="handleBeforeLeave" size="small">
       <n-tab-pane name="systemMusic" tab="自带歌曲">
         <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :max-height="301"
           virtual-scroll :min-row-height="18" :scroll-x="100" :row-props="systemMusicSelect" />
@@ -90,18 +90,12 @@
           :row-props="myTranslateMusicSelect" />
       </n-tab-pane>
       <n-tab-pane name="myFavorite" tab="收藏">
-        <n-data-table :columns="musicColumns" :data="music.myFavorite" :bordered="false" :max-height="250"
+        <n-data-table :columns="favoritColumns" :data="music.myFavorite" :bordered="false" :max-height="250"
           :row-props="myFavoriteMusicSelect" />
       </n-tab-pane>
       <template #suffix>
-        <n-button circle type="error" ghost style="margin-bottom: 1px;" @click="heartClick">
-          <template #icon>
-            <n-icon>
-              <HeartOutline />
-            </n-icon>
-          </template>
-        </n-button>
-        <n-input round placeholder="搜索" v-model:value="searchText" style="margin-bottom: 5px; width: 25vh; margin-left: 5px;">
+        <n-input round placeholder="搜索" v-model:value="searchText"
+          style="margin-bottom: 5px; width: 25vh; margin-left: 5px;">
           <template #suffix>
             <n-icon :component="Search" />
           </template>
@@ -116,7 +110,7 @@ import { getData, sendData, getList, setConfig } from "@/utils/fetchUtils";
 import { RowData } from "naive-ui/es/data-table/src/interface";
 import { h, reactive, ref, watch } from "vue";
 import { NButton, useMessage } from 'naive-ui'
-import { Search,HeartOutline } from '@vicons/ionicons5'
+import { Search } from '@vicons/ionicons5'
 const message = useMessage()
 
 
@@ -128,7 +122,7 @@ let music: any = reactive({
   myFavorite: [] // 我的最爱
 });
 let nowPlayMusic = ref("没有歌曲"); // 当前选中歌曲
-let nowType = ""
+let nowType = "systemMusic"
 let searchText = ref("")
 let nowState = ref("stop"); // 当前播放状态
 let delayStatus = ref("system")
@@ -161,22 +155,54 @@ let musicColumns = [
     title: "歌名",
     key: "name",
     resizable: true,
-  },{
-      title: 'Action',
-      key: 'actions',
-      width: 100,
-      render(row) {
-        return h(
-          NButton,
-          {
-            strong: true,
-            size: 'small',
-            onClick: () => {}
-          },
-          { default: () => '❤' }
-        )
-      }
+  }, {
+    title: '操作',
+    key: 'operation',
+    width: 100,
+    render(row) {
+      return h(
+        NButton,
+        {
+          size: 'medium',
+          text: music.myFavorite.filter(res => { return res.name.replaceAll(".mp3").includes(row.name) }).length == 0 ? false : true,
+          onClick: () => heartClick(row.name, true)
+        },
+        {
+          default: () => {
+            return music.myFavorite.filter(res => { return res.name.replaceAll(".mp3").includes(row.name) }).length == 0 ?
+              "❤" : null
+          }
+        }
+      )
     }
+  }
+]; // 音乐列
+
+let favoritColumns = [
+  {
+    title: "歌名",
+    key: "name",
+    resizable: true,
+  }, {
+    title: '操作',
+    key: 'operation',
+    width: 100,
+    render(row) {
+      return h(
+        NButton,
+        {
+          size: 'medium',
+          text: false,
+          onClick: () => heartClick(row.name, false)
+        },
+        {
+          default: () => {
+            return '💔'
+          }
+        }
+      )
+    }
+  }
 ]; // 音乐列
 
 let progress = ref(0.0); // 播放进度条
@@ -189,7 +215,6 @@ const systemMusicSelect = (row: RowData) => {
   return {
     onClick: () => {
       nowPlayMusic.value = row.name;
-      nowType = "systemMusic"
     },
   };
 };
@@ -197,7 +222,6 @@ const myImportMusicSelect = (row: RowData) => {
   return {
     onClick: () => {
       nowPlayMusic.value = row.name;
-      nowType = "myImport"
     },
   };
 };
@@ -205,7 +229,6 @@ const myTranslateMusicSelect = (row: RowData) => {
   return {
     onClick: () => {
       nowPlayMusic.value = row.name;
-      nowType = "myTranslate"
     },
   };
 };
@@ -213,7 +236,6 @@ const myFavoriteMusicSelect = (row: RowData) => {
   return {
     onClick: () => {
       nowPlayMusic.value = row.name;
-      nowType = "myFavorite"
     },
   };
 };
@@ -289,6 +311,7 @@ function getProgress() {
 }
 
 
+handleUpdateValue("myFavorite")
 handleUpdateValue("systemMusic")
 
 function handleUpdateValue(value: string) {
@@ -298,12 +321,17 @@ function handleUpdateValue(value: string) {
   })
 }
 
+function handleBeforeLeave(name: string){
+  nowType = name
+  return true;
+}
+
 watch(searchText, () => {
   if (searchText.value === "" || searchText.value === undefined || searchText.value === null) {
+    handleUpdateValue("myFavorite")
     handleUpdateValue("systemMusic")
     handleUpdateValue("myImport")
     handleUpdateValue("myTranslate")
-    handleUpdateValue("myFavorite")
     return
   }
   music.systemMusic = music.systemMusic.filter((res) => { return res.name.includes(searchText.value) })
@@ -375,19 +403,32 @@ function clearPlayInfo() {
 }
 
 //  收藏点击
-function heartClick(){
-  if (nowPlayMusic.value === "没有歌曲") {
-        message.error("选个歌吧靓仔")
-        return;
-  }
-  sendData("setFavoriteMusic",{
-      fileName: nowPlayMusic.value,
+function heartClick(name, state) {
+  if (state) {
+    sendData("setFavoriteMusic", {
+      fileName: name,
       type: nowType
-  }).then(()=>{
-    message.success("收藏成功")
-  })
-}
+    }).then(() => {
+      handleUpdateValue("myFavorite")
+      handleUpdateValue("systemMusic")
+      handleUpdateValue("myImport")
+      handleUpdateValue("myTranslate")
+      message.success("收藏成功")
+    })
+  } else {
+    sendData("dropFile", {
+      fileName: name,
+      type: "myFavorite"
+    }).then(() => {
+      handleUpdateValue("myFavorite")
+      handleUpdateValue("systemMusic")
+      handleUpdateValue("myImport")
+      handleUpdateValue("myTranslate")
+      message.success("移除成功")
+    })
+  }
 
+}
 
 function handleFinish({ file, event }) {
   handleUpdateValue("myImport")
