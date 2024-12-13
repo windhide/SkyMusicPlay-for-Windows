@@ -82,16 +82,17 @@ function blankClick(url) {
 function jump() {
 	if (window.innerWidth > 700) {
 		// 更新检测
-		getWWWData("https://cdn.jsdelivr.net/gh/windhide/SkyMusicPlay-for-Windows/.version").then(res => {
-			if (res > require('./../../package.json').version) {
+		getWWWData("https://raw.githubusercontent.com/windhide/SkyMusicPlay-for-Windows/main/.version").then(res => {
+			let updateMesseage = JSON.parse(res)
+			if (updateMesseage.version > require('./../../package.json').version) {
 				dialog.success({
-					title: '更新啦🔈',
-					content: '新版本v'+res+"请到github或者QQ群1007672060里获取最新版",
-					positiveText: '好哒❤',
+					title: updateMesseage.title,
+					content: updateMesseage.content,
+					positiveText: updateMesseage.positiveText,
+					contentStyle: { whiteSpace: 'pre-wrap' },
 					maskClosable: false
 				})
 			}
-
 		})
 		return
 	}
