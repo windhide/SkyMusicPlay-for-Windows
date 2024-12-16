@@ -22,6 +22,7 @@ module.exports = defineConfig({
         directories: {
           output: 'dist_electron',
         },
+        preload: 'src/preload.js', // 指定 preload 文件路径
         win: {
           icon: 'public/icon.ico', // 指定 Windows 的图标
           requestedExecutionLevel: 'requireAdministrator', // 需要管理员权限

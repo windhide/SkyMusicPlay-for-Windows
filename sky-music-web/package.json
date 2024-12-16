@@ -14,6 +14,7 @@
   "dependencies": {
     "@vicons/ionicons5": "^0.12.0",
     "core-js": "^3.8.3",
+    "electron-is-dev": "^3.0.1",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.2",
     "naive-ui": "^2.40.1",
@@ -32,6 +33,7 @@
     "@vue/cli-service": "~5.0.0",
     "electron": "^33.0.2",
     "electron-devtools-installer": "^3.1.0",
+    "ts-loader": "~8.2.0",
     "typescript": "^5.7.2",
     "vue-cli-plugin-electron-builder": "^2.1.1"
   },

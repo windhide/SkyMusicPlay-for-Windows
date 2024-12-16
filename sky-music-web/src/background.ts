@@ -1,76 +1,134 @@
-import { app, protocol, BrowserWindow, Menu, Tray } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain, screen, Menu } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
-import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
-const isDevelopment = process.env.NODE_ENV !== 'production'
+import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+const isDev = import('electron-is-dev');
 const path = require('path')
-const windowIconPath = path.join(__dirname,'icon.ico');
+const cmd = require('node-cmd')
 
+const preloadPath = isDev
+  ? path.join(__dirname, '../src/preload.ts')
+  : path.join(__dirname, 'preload.js')
 
-// 打包用的
-var cmd=require('node-cmd');
-var currentPath = require("path").dirname(require('electron').app.getPath("exe"));
+const windowIconPath = isDev
+  ? path.join(__dirname, '../public/icon.ico')
+  : path.join(__dirname, 'icon.ico')
 
-// Scheme must be registered before the app is ready
+const currentPath = isDev
+  ? __dirname
+  : require('path').dirname(app.getPath('exe'))
+
+let mainWindow: BrowserWindow | null = null
+
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 
 async function createWindow() {
-  const win = new BrowserWindow({
+  if (mainWindow) return
+
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 774,
-    resizable: false,  // 禁止调整窗口
-    icon: windowIconPath, // 设置ico
+    resizable: false,
+    icon: windowIconPath,
+    frame: false,
+    transparent: true,
     webPreferences: {
       webSecurity: false,
-      nodeIntegration: (process.env
-          .ELECTRON_NODE_INTEGRATION as unknown) as boolean,
-      contextIsolation: !(process.env
-          .ELECTRON_NODE_INTEGRATION as unknown) as boolean
+      preload: preloadPath,
+      nodeIntegration: false,
+      contextIsolation: true
     }
   })
-  if (process.env.WEBPACK_DEV_SERVER_URL) {
-    await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string)
-    if (!process.env.IS_TEST) win.webContents.openDevTools()
+
+  if (isDev && process.env.WEBPACK_DEV_SERVER_URL) {
+    await mainWindow.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
+    mainWindow.webContents.openDevTools()
   } else {
-    Menu.setApplicationMenu(null) //取消菜单栏
+    Menu.setApplicationMenu(null)
     createProtocol('app')
-    win.loadURL('app://./index.html')
+    mainWindow.loadURL('app://./index.html')
   }
+
+  // 窗口拖动逻辑
+  let isMousePressed = false
+  let offsetX = 0
+  let offsetY = 0
+
+  ipcMain.on('mousedown', (event, { x, y }) => {
+    const cursorPoint = screen.getCursorScreenPoint()
+    const bounds = mainWindow?.getBounds()
+
+    if (bounds) {
+      isMousePressed = true
+      offsetX = cursorPoint.x - bounds.x // 精确鼠标偏移量
+      offsetY = cursorPoint.y - bounds.y
+    }
+  })
+
+  ipcMain.on('mousemove', (event) => {
+    if (isMousePressed && mainWindow) {
+      const cursorPoint = screen.getCursorScreenPoint()
+
+      // 实时更新窗口位置
+      mainWindow.setBounds({
+        x: cursorPoint.x - offsetX,
+        y: cursorPoint.y - offsetY,
+        width: mainWindow.getBounds().width,
+        height: mainWindow.getBounds().height
+      })
+    }
+  })
+
+  ipcMain.on('mouseup', () => {
+    isMousePressed = false
+  })
+
+ipcMain.on('window-min', () => {
+  mainWindow?.minimize()
+})
+
+ipcMain.on('window-close', () => {
+  app.quit()
+})
+
+ipcMain.on('set-always-on-top', (event, isAlwaysOnTop) => {
+  mainWindow.setAlwaysOnTop(!!isAlwaysOnTop)
+})
+
+mainWindow.on('closed', () => {
+  mainWindow = null
+  ipcMain.removeAllListeners('mousedown')
+  ipcMain.removeAllListeners('mousemove')
+  ipcMain.removeAllListeners('mouseup')
+})
 }
-app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) createWindow()
-})
-
-
-app.on('window-all-closed', () => {
-  app.quit()
-})
-app.on('before-quit', () => {
-  app.quit()
-})
-
-app.disableHardwareAcceleration();
-app.commandLine.appendSwitch('disable-gpu'); // 完全禁用 GPU
-app.commandLine.appendSwitch('disable-gpu-compositing'); // 禁用 GPU 合成
-app.commandLine.appendSwitch('disable-software-rasterizer'); // 禁用软件光栅化器
-app.commandLine.appendSwitch('disable-gpu-vsync'); // 禁用 GPU 的垂直同步
-app.commandLine.appendSwitch('disable-frame-rate-limit'); // 禁用帧率限制（可选）
-app.commandLine.appendSwitch('ignore-gpu-blacklist');
 
 app.on('ready', async () => {
-  if (isDevelopment && !process.env.IS_TEST) {
+  if (isDev) {
     try {
-      await installExtension(VUEJS3_DEVTOOLS)
+      await installExtension(VUEJS_DEVTOOLS)
     } catch (e) {
       console.error('Vue Devtools failed to install:', e)
     }
   }
-  // 启动服务器exe
-  cmd.run(`${currentPath}/backend_dist/sky-music-server/sky-music-server.exe`,function(err, data, stderr){
-    console.log(data)
-    console.log(err)
-    console.log(stderr)
-  });
-  createWindow()
+
+  const serverPath = path.join(currentPath, 'backend_dist/sky-music-server/sky-music-server.exe')
+  cmd.run(serverPath, (err, data, stderr) => {
+    console.log(data || 'Backend started.')
+    if (err) console.error('Error starting backend:', err)
+    if (stderr) console.error('Backend stderr:', stderr)
+  })
+
+  if (!mainWindow) {
+    createWindow()
+  }
+})
+
+app.on('window-all-closed', () => {
+  app.quit()
+})
+
+app.on('before-quit', () => {
+  app.quit()
 })
