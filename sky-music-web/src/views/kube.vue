@@ -119,7 +119,7 @@ reloadTable()
 watch(progress.overall_progress.value, () => reloadTable())
 
 function handleUpdateValue(value: string) {
-  getList(value).then(res => {
+  getList(value,'').then(res => {
     eval("music." + value + "=res")
   })
 }

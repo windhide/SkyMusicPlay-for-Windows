@@ -31,8 +31,8 @@ app.add_middleware(
 )
 
 @app.get("/")
-async def get_list(listName: str):
-    return getTypeMusicList(listName)
+async def get_list(listName: str,searchStr: str):
+    return getTypeMusicList(listName,searchStr)
 
 @app.post("/start")
 def start(request: dict):
@@ -184,6 +184,6 @@ if __name__ == '__main__':
 
     # 启动 FastAPI 服务
     try:
-        uvicorn.run(app, host="localhost", port=9899, log_level="error")
+        uvicorn.run(app, host="localhost", port=9899, log_level="debug")
     except Exception as e:
         logging.error(e)

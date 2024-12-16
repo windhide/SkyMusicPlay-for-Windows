@@ -86,9 +86,7 @@ const myTranslateMusicSelect = (row: RowData) => {
 
 function handleUpdateValue(value: string) {
   searchText.value = ""
-  getList(value).then(res => {
-    eval("music." + value + "=res")
-  })
+  getListData(value)
 }
 
 function handleBeforeLeave(name: string){
@@ -105,17 +103,10 @@ const myFavoriteMusicSelect = (row: RowData) => {
 };
 
 watch(searchText, () => {
-  if (searchText.value === "" || searchText.value === undefined || searchText.value === null) {
-    handleUpdateValue("systemMusic")
-    handleUpdateValue("myImport")
-    handleUpdateValue("myTranslate")
-    handleUpdateValue("myFavorite")
-    return
-  }
-  music.systemMusic = music.systemMusic.filter((res) => { return res.name.includes(searchText.value) })
-  music.myImport = music.myImport.filter((res) => { return res.name.includes(searchText.value) })
-  music.myTranslate = music.myTranslate.filter((res) => { return res.name.includes(searchText.value) })
-  music.myFavorite = music.myFavorite.filter((res) => { return res.name.includes(searchText.value) })
+  getListData("systemMusic")
+  getListData("myImport")
+  getListData("myTranslate")
+  getListData("myFavorite")
 })
 
 function followTutorial() {
@@ -132,4 +123,11 @@ function followTutorial() {
   }
 }
 handleUpdateValue("systemMusic")
+
+
+function getListData(value){
+  getList(value,searchText.value).then(res => {
+    eval("music." + value + "=res")
+  })
+}
 </script>

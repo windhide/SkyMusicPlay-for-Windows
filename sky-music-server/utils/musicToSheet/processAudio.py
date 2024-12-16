@@ -51,8 +51,6 @@ def adjust_note_to_allowed_range(note):
     note.pitch = get_closest_allowed_note(note.pitch)
 
 def process_midi_to_txt(input_path, output_path, min_note=60, max_note=84):
-
-
     # 获取MIDI中的音符信息
     midi = pretty_midi.PrettyMIDI(input_path)
 

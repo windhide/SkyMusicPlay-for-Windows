@@ -337,9 +337,7 @@ handleUpdateValue("systemMusic")
 
 function handleUpdateValue(value: string) {
   searchText.value = ""
-  getList(value).then(res => {
-    eval("music." + value + "=res")
-  })
+  getListData(value)
 }
 
 function handleBeforeLeave(name: string){
@@ -348,17 +346,10 @@ function handleBeforeLeave(name: string){
 }
 
 watch(searchText, () => {
-  if (searchText.value === "" || searchText.value === undefined || searchText.value === null) {
-    handleUpdateValue("myFavorite")
-    handleUpdateValue("systemMusic")
-    handleUpdateValue("myImport")
-    handleUpdateValue("myTranslate")
-    return
-  }
-  music.systemMusic = music.systemMusic.filter((res) => { return res.name.includes(searchText.value) })
-  music.myImport = music.myImport.filter((res) => { return res.name.includes(searchText.value) })
-  music.myTranslate = music.myTranslate.filter((res) => { return res.name.includes(searchText.value) })
-  music.myFavorite = music.myFavorite.filter((res) => { return res.name.includes(searchText.value) })
+    getListData("myFavorite")
+    getListData("systemMusic")
+    getListData("myImport")
+    getListData("myTranslate")
 })
 
 let randomInterval: any = null
@@ -454,5 +445,11 @@ function heartClick(name, state) {
 function handleFinish({ file, event }) {
   handleUpdateValue("myImport")
   message.success("OK~")
+}
+
+function getListData(value){
+  getList(value,searchText.value).then(res => {
+    eval("music." + value + "=res")
+  })
 }
 </script>

@@ -50,6 +50,14 @@ app.on('before-quit', () => {
   app.quit()
 })
 
+app.disableHardwareAcceleration();
+app.commandLine.appendSwitch('disable-gpu'); // 完全禁用 GPU
+app.commandLine.appendSwitch('disable-gpu-compositing'); // 禁用 GPU 合成
+app.commandLine.appendSwitch('disable-software-rasterizer'); // 禁用软件光栅化器
+app.commandLine.appendSwitch('disable-gpu-vsync'); // 禁用 GPU 的垂直同步
+app.commandLine.appendSwitch('disable-frame-rate-limit'); // 禁用帧率限制（可选）
+app.commandLine.appendSwitch('ignore-gpu-blacklist');
+
 app.on('ready', async () => {
   if (isDevelopment && !process.env.IS_TEST) {
     try {

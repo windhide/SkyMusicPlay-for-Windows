@@ -2,8 +2,8 @@ const fetch = require('node-fetch');
 
 let baseUrl = "http://127.0.0.1:9899/"
 
-export function getList(listName){
-  return fetch(baseUrl+"?listName="+listName)
+export function getList(listName,searchStr){
+  return fetch(baseUrl+"?listName="+listName+"&searchStr="+searchStr)
   .then(response => response.json())
   .then(data =>{return data})
   .catch(error => console.error(error));
