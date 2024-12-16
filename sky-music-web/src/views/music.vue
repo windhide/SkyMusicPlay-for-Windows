@@ -82,7 +82,7 @@
           virtual-scroll :min-row-height="18" :scroll-x="100" :row-props="systemMusicSelect" />
       </n-tab-pane>
       <n-tab-pane name="myImport" tab="导入歌曲">
-        <n-data-table :columns="musicColumns" :data="music.myImport" :bordered="false" :max-height="300"
+        <n-data-table :columns="myImportColumns" :data="music.myImport" :bordered="false" :max-height="300"
           :min-row-height="18" :row-props="myImportMusicSelect" />
       </n-tab-pane>
       <n-tab-pane name="myTranslate" tab="转换歌曲">
@@ -202,6 +202,33 @@ let favoritColumns = [
         {
           default: () => {
             return '💔'
+          }
+        }
+      )
+    }
+  }
+]; // 音乐列
+
+let myImportColumns = [
+  {
+    title: "歌名",
+    key: "name",
+    resizable: true,
+  }, {
+    title: '操作',
+    key: 'operation',
+    width: 100,
+    render(row) {
+      return h(
+        NButton,
+        {
+          size: 'medium',
+          text: false,
+          onClick: () => deleteClick(row.name)
+        },
+        {
+          default: () => {
+            return "❌" 
           }
         }
       )
@@ -439,7 +466,20 @@ function heartClick(name, state) {
       message.success("移除成功")
     })
   }
+}
 
+// 删除点击
+function deleteClick(name) {
+    sendData("dropFile", {
+      fileName: name,
+      type: "myImport"
+    }).then(() => {
+      handleUpdateValue("myFavorite")
+      handleUpdateValue("systemMusic")
+      handleUpdateValue("myImport")
+      handleUpdateValue("myTranslate")
+      message.success("删除成功")
+    })
 }
 
 function handleFinish({ file, event }) {
