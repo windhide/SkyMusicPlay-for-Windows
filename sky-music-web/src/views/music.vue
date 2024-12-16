@@ -295,6 +295,7 @@ const playSelect = (value: string) => {
         nowState.value = 'stop'
         return;
       }
+      progress.value = 0
       setTimeout(() => {
         sendData("start", {
           fileName: nowPlayMusic.value,
@@ -369,6 +370,15 @@ function getProgress() {
   getData("getProgress").then(res => {
     progress.value = res.now_progress
   });
+
+  if(progress.value == 100){
+    getData("stop");
+      clearPlayInfo()
+      statusColumns[0].disabled = false;
+      statusColumns[1].disabled = false;
+      statusColumns[2].disabled = false;
+      statusColumns[3].disabled = false;
+  }
 }
 
 
