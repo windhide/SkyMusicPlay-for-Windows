@@ -95,6 +95,8 @@ def translate(request: dict):
         global_state.sustain_time = float(request["value"])
     if request["name"] == 'set_progress':
         global_state.set_progress = float(request["value"])
+    if request["name"] == 'play_speed':
+        global_state.play_speed = float(request["value"])
     return "ok"
 
 @app.post("/getConfig")

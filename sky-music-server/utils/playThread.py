@@ -32,14 +32,14 @@ class ControlledThread:
                     return
                 sheet = local_music_sheet[index]
                 keys = sheet["key"]
-                delay = sheet["delay"]
+                delay = sheet["delay"] / global_state.play_speed
                 global_state.now_progress = index / allLength * 100
                 # 批量发送按键
                 if len(keys) == 1:
                     robotUtils.send_single_key_to_window(keys)
                 else:
                     robotUtils.send_multiple_key_to_window(keys)
-                time.sleep(delay / 1000)
+                time.sleep(float(delay / 1000))
                 index += 1
 
     def start(self):
