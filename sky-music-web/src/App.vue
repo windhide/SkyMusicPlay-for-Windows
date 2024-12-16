@@ -1,6 +1,8 @@
 <template>
   <n-config-provider :theme="darkTheme">
-    <n-flex justify="end" id="drag-area" style="position:fixed; top: 0;left: 0; z-index: 200;width: 99%;">
+    <n-flex justify="end" id="drag-area" style="position:fixed;z-index: 200;right: 12px;" :style="{
+      width: collapsed ? '90%' : '80%'
+    }">
       <n-button circle :dashed="fixDashed" ghost type="warning" @click="fixHandle" style="margin-top: 12px;">
           📌
       </n-button>
@@ -9,7 +11,7 @@
           <n-icon><Remove /></n-icon>
         </template>
       </n-button>
-      <n-button circle ghost type="error" @click="closeHandle" style="margin-top: 12px; margin-right: 5px;">
+      <n-button circle ghost type="error" @click="closeHandle" style="margin-top: 12px;">
         <template #icon>
           <n-icon><Close /></n-icon>
         </template>
@@ -22,7 +24,7 @@
             <n-layout>
               <n-layout has-sider>
                 <n-layout-sider bordered show-trigger collapse-mode="width" :collapsed-width="64" :width="150"
-                  :native-scrollbar="false" style="height: 100vh" v-show="$route.fullPath.indexOf('keyboard') == -1">
+                  :native-scrollbar="false" style="height: 100vh" v-show="route.fullPath.indexOf('keyboard') == -1" @update:collapsed='collapsedHandle'>
                   <n-menu :collapsed-width="64" :collapsed-icon-size="22" :options="menuOptions"
                     @update:value="clickMenu" />
                 </n-layout-sider>
@@ -41,6 +43,12 @@
   </n-config-provider>
 </template>
 
+<style scoped>
+::v-deep .n-menu--vertical {
+  --n-border-radius: 21px !important;
+}
+</style>
+
 <script lang="ts" setup>
 import type { Component } from "vue";
 import { h, onMounted, ref } from "vue";
@@ -56,6 +64,10 @@ import {
   Remove
 } from "@vicons/ionicons5";
 import router from "@/router";
+
+import {useRoute} from 'vue-router'
+const route = useRoute()
+const collapsed = ref(false)
 
 function fixHandle() {
   if(fixDashed.value){
@@ -76,6 +88,11 @@ function closeHandle(){
 
 function renderIcon(icon: Component) {
   return () => h(NIcon, null, { default: () => h(icon) });
+}
+
+const collapsedHandle = (isCoolapsed: boolean) =>{
+  console.log(isCoolapsed)
+  collapsed.value = isCoolapsed
 }
 
 let show = ref(true)
