@@ -31,7 +31,7 @@
       </n-col>
       <n-col :span="9" style="margin-left: -50px;" v-show="delayStatus == 'custom'">
         <n-space vertical style="width: 150px; float: right; margin-top: 2px;">
-          <n-slider v-model:value="delaySpeed" :step="0.1" :min="0.01" :max="2" />
+          <n-slider v-model:value="delaySpeed" :step="0.01" :min="0" :max="2" />
         </n-space>
       </n-col>
     </n-row>
@@ -50,7 +50,20 @@
       </n-col>
       <n-col :span="9" style="margin-left: -50px;" v-show="sustainStatus == 'custom'">
         <n-space vertical style="width: 150px; float: right; margin-top: 2px;">
-          <n-slider v-model:value="sustainSpeed" :step="0.1" :min="0.02" :max="1.5" />
+          <n-slider v-model:value="sustainSpeed" :step="0.01" :min="0" :max="1.5" />
+        </n-space>
+      </n-col>
+    </n-row>
+    
+    <n-row gutter="12">
+      <n-col :span="3">
+        <n-gradient-text type="info" :size="13">
+          倍速设置-&nbsp;&nbsp;&nbsp;
+        </n-gradient-text>
+      </n-col>
+      <n-col :span="0" style="margin-left: -1.2%;">
+        <n-space vertical style="width: 240px; margin-top: 2px;">
+          <n-slider v-model:value="playSpeed" :step="0.1" :min="1" :max="5" />
         </n-space>
       </n-col>
     </n-row>
@@ -78,7 +91,7 @@
   <n-card style="margin-top: 20px">
     <n-tabs type="bar" animated @update:value="handleUpdateValue" @before-leave="handleBeforeLeave" size="small">
       <n-tab-pane name="systemMusic" tab="自带歌曲">
-        <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :max-height="301"
+        <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :max-height="300"
           virtual-scroll :min-row-height="18" :scroll-x="100" :row-props="systemMusicSelect" />
       </n-tab-pane>
       <n-tab-pane name="myImport" tab="导入歌曲">
@@ -238,8 +251,8 @@ let myImportColumns = [
 
 let progress = ref(0.0); // 播放进度条
 let playSpeed = ref(1); // 播放速度
-let delaySpeed = ref(0.01); // 延迟设置
-let sustainSpeed = ref(0.02); // 延音设置
+let delaySpeed = ref(0); // 延迟设置
+let sustainSpeed = ref(0); // 延音设置
 let playDelay = ref(0) // 播放延迟
 
 const systemMusicSelect = (row: RowData) => {
@@ -428,6 +441,10 @@ watch(delaySpeed, () => {
 })
 watch(sustainSpeed, () => {
   setConfig("sustain_time", sustainSpeed.value)
+})
+
+watch(playSpeed, () => {
+  setConfig("play_speed", playSpeed.value)
 })
 
 function clearPlayInfo() {
