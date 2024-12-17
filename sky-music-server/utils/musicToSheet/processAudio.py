@@ -128,34 +128,42 @@ def process_midi_to_txt(input_path, output_path):
 # 处理文件夹内的所有MIDI文件
 def process_directory_with_progress(use_gpu=False, output_dir=getResourcesPath("myTranslate"), modelName=""):
     os.makedirs(output_dir, exist_ok=True)
-    files_to_process = [f for f in os.listdir(getResourcesPath("translateOriginalMusic")) if f.endswith('.mp3') or f.endswith('.mp4') or f.endswith(".flac") or f.endswith(".ape")]
+    files_to_process = [f for f in os.listdir(getResourcesPath("translateOriginalMusic")) if f.endswith('.mp3') or f.endswith('.mp4') or f.endswith(".flac") or f.endswith(".ape") or f.endswith(".mid")]
     total_files = len(files_to_process)
     if total_files == 0:
         print("没有找到需要处理的文件")
         return
     for idx, file in enumerate(files_to_process):
         if file.find("_ok") != -1: continue # 有ok就跳过
+        try:
+            global_state.now_translate_text = [str(idx + 1) + "/"+str(len(files_to_process)), file]
+            global_state.tran_mid_progress = 0 # 进度条清空
+            fileNameNoEnd = ''
+            musicFilePath = ''
+            if not file.endswith(".mid"):
+                fileNameNoEnd = file.replace(".mp3", "").replace(".mp4", "").replace(".flac", "").replace(".ape", "")
+                midFilePath =os.path.join(getResourcesPath("translateMID"), fileNameNoEnd)
+                musicFilePath = os.path.join(getResourcesPath("translateOriginalMusic"), file)
+                inference(
+                    input_path=musicFilePath,
+                    output_mid_path=midFilePath+".mid",
+                    _cuda=use_gpu,
+                    checkpoint_path=os.path.join(getResourcesPath("modelData"),modelName))
+            else:
+                fileNameNoEnd = file.replace(".mid","")
+                midFilePath =os.path.join(getResourcesPath("translateOriginalMusic"), fileNameNoEnd)
 
-        global_state.now_translate_text = [str(idx + 1) + "/"+str(len(files_to_process)), file]
-        global_state.tran_mid_progress = 0 # 进度条清空
-        fileNameNoEnd = file.replace(".mp3", "").replace(".mp4", "").replace(".flac", "").replace(".ape", "")
-        midFilePath =os.path.join(getResourcesPath("translateMID"), fileNameNoEnd)
-        musicFilePath = os.path.join(getResourcesPath("translateOriginalMusic"), file)
-        inference(
-            input_path=musicFilePath,
-            output_mid_path=midFilePath+".mid",
-            _cuda=use_gpu,
-            checkpoint_path=os.path.join(getResourcesPath("modelData"),modelName))
-        file_progress = process_midi_to_txt(midFilePath+".mid",output_dir + "\\" + fileNameNoEnd + ".txt")
+            file_progress = process_midi_to_txt(midFilePath+".mid",output_dir + "\\" + fileNameNoEnd + ".txt")
+            # 完成的重命名 避免继续计算浪费资源
+            new_file_path = os.path.join(midFilePath+".mid",
+                                         os.path.splitext(musicFilePath)[0] + "_ok" +
+                                         os.path.splitext(musicFilePath)[1])
+            os.rename(musicFilePath, new_file_path)
+            print(f"已将文件 {musicFilePath} 重命名为 {new_file_path}")
 
-        # 完成的重命名 避免继续计算浪费资源
-        new_file_path = os.path.join(midFilePath+".mid",
-                                     os.path.splitext(musicFilePath)[0] + "_ok" +
-                                     os.path.splitext(musicFilePath)[1])
-        os.rename(musicFilePath, new_file_path)
-        print(f"已将文件 {musicFilePath} 重命名为 {new_file_path}")
-
-        global_state.overall_progress = ((idx + (file_progress / 100)) / total_files) * 100
+            global_state.overall_progress = ((idx + (file_progress / 100)) / total_files) * 100
+        except Exception as e:
+            print(e)
 
     global_state.tran_mid_progress = 100
     global_state.overall_progress = 100

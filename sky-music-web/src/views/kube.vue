@@ -4,7 +4,7 @@
       转换歌曲
     </n-gradient-text>
     <n-upload action="http://localhost:9899/fileUpload" multiple style="width: 100px; height: 34px"
-      accept=".mp3,.mp4,.flac" :show-file-list="false" @finish="handleFinish">
+      accept=".mp3,.mp4,.flac,.mid" :show-file-list="false" @finish="handleFinish">
       <n-button type="info" ghost>
         选择文件
       </n-button>
