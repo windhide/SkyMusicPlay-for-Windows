@@ -1,13 +1,13 @@
 import { app, protocol, BrowserWindow, ipcMain, screen, Menu } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
-const isDev = import('electron-is-dev');
+const isDev = process.env.NODE_ENV !== 'production'
 const path = require('path')
 const cmd = require('node-cmd')
 
 const preloadPath = isDev
   ? path.join(__dirname, '../src/preload.ts')
-  : path.join(__dirname, 'preload.js')
+  : path.join(__dirname, '../preload.js')
 
 const windowIconPath = isDev
   ? path.join(__dirname, '../public/icon.ico')

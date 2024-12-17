@@ -15,6 +15,10 @@ module.exports = defineConfig({
           from: 'public/icon.ico', // 指定 public 文件夹
           to: 'public/icon.ico'
         },
+        {
+          from: 'src/preload.ts', // 确保包含 preload.ts 文件
+          to: 'src/preload.ts',
+        },
       ],
       builderOptions: {
         appId: 'com.windhide.sky',
@@ -22,7 +26,11 @@ module.exports = defineConfig({
         directories: {
           output: 'dist_electron',
         },
-        preload: 'src/preload.js', // 指定 preload 文件路径
+        files: [
+          '**/*', // 包含所有源文件
+          '!**/tests/**', // 排除测试文件
+          'dist/**/*' // 包括编译后的 dist 文件夹内容
+        ],
         win: {
           icon: 'public/icon.ico', // 指定 Windows 的图标
           requestedExecutionLevel: 'requireAdministrator', // 需要管理员权限
