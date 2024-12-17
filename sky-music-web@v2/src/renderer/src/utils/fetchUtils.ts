@@ -1,0 +1,64 @@
+// const fetch = require('node-fetch');
+
+const baseUrl = import.meta.env.BASE_URL
+
+export function getList(listName, searchStr) {
+  return fetch(baseUrl + '?listName=' + listName + '&searchStr=' + searchStr)
+    .then((response) => response.json())
+    .then((data) => {
+      return data
+    })
+    .catch((error) => console.error(error))
+}
+
+export function getData(url) {
+  return fetch(baseUrl + url)
+    .then((response) => response.json())
+    .then((data) => {
+      return data
+    })
+    .catch((error) => console.error(error))
+}
+
+export function sendData(url, data) {
+  console.log('data', data)
+  return fetch(baseUrl + url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      return data
+    })
+    .catch((error) => console.error(error))
+}
+
+export function setConfig(name, value) {
+  return fetch(baseUrl + 'setConfig', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: name,
+      value: value
+    })
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      return data
+    })
+    .catch((error) => console.error(error))
+}
+
+export function getWWWData(url) {
+  return fetch(url)
+    .then((response) => response.text())
+    .then((data) => {
+      return data
+    })
+    .catch((error) => console.error(error))
+}
