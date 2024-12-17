@@ -5,6 +5,7 @@ import pretty_midi
 from utils._global import global_state
 from utils.musicToSheet.transferMID import inference
 from utils.pathUtils import getResourcesPath
+
 # 15个音符与键盘按键的映射
 note_to_key = {
     60: '1Key0',  # Do
@@ -21,87 +22,94 @@ note_to_key = {
     79: '1Key11',  # So (高音)
     81: '1Key12',  # La (高音)
     83: '1Key13',  # Xi (高音)
-    84: '1Key14'  # 高高音Do
+    84: '1Key14'   # 高高音Do
 }
-allowed_notes = note_to_key.keys()
 
+# 范围内但不在 note_to_key 中的音符映射（表示同时按键）
+extra_note_to_key = {
+    61: ['1Key0', '1Key1'],
+    63: ['1Key1', '1Key2'],
+    66: ['1Key3', '1Key4'],
+    68: ['1Key4', '1Key5'],
+    70: ['1Key5', '1Key6'],
+    73: ['1Key6', '1Key7'],
+    75: ['1Key8', '1Key9'],
+    78: ['1Key10', '1Key11'],
+    80: ['1Key11', '1Key12'],
+    82: ['1Key12', '1Key13'],
+}
 
+# 允许的音符集合
+allowed_notes = set(note_to_key.keys()).union(extra_note_to_key.keys())
+
+# 特殊音符的映射规则
+special_note_mapping = {
+    86: 81,  # 高高音Do
+    88: 83,  # 高音Xi
+    89: 84,  # 高音Do
+}
+
+# 获取BPM值
 def get_bpm_from_midi(midi_file_path):
     midi = pretty_midi.PrettyMIDI(midi_file_path)
     tempos = midi.get_tempo_changes()
     if len(tempos[1]) > 0:
-        # 取第一个 BPM 值作为主要 BPM
-        bpm = tempos[1][0]
-        return bpm
-    return 120  # 如果没有 tempo 信息，返回默认 BPM 120
+        return tempos[1][0]  # 取第一个 BPM 值
+    return 120  # 默认 BPM
 
-def get_closest_allowed_note(pitch):
-    return min(allowed_notes, key=lambda x: abs(x - pitch))
 
-def adjust_note_to_allowed_range(note):
-    """
-    调整单个音符：先按范围调整，再映射到最近的允许值。
-    """
-    # 将音符限制在范围内
-    if note.pitch < min(allowed_notes):
-        note.pitch = min(allowed_notes)
-    elif note.pitch > max(allowed_notes):
-        note.pitch = max(allowed_notes)
-    # 映射到最近的允许值
-    note.pitch = get_closest_allowed_note(note.pitch)
-
-def process_midi_to_txt(input_path, output_path, min_note=60, max_note=84):
-    # 获取MIDI中的音符信息
+# 处理MIDI文件并转换为txt格式
+def process_midi_to_txt(input_path, output_path):
     midi = pretty_midi.PrettyMIDI(input_path)
-
-    # 遍历每个乐器的音符
-    for instrument in midi.instruments:
-        for note in instrument.notes:
-            adjust_note_to_allowed_range(note)
-
-
     notes = []  # 存储所有音符的信息
+
     for instrument in midi.instruments:
-        time = 0  # 时间从零开始
         for note in instrument.notes:
-            # 转换时间为毫秒并取整
-            time = int(note.start * 1000)
-            notes.append({'time': time, 'note': note.pitch})  # 记录音符和其时间点（毫秒）
+            pitch = note.pitch
+            time = int(note.start * 1000)  # 时间转换为毫秒
+
+            # 处理标准音符
+            if pitch in note_to_key:
+                notes.append({'time': time, 'key': note_to_key[pitch]})
+
+            # 处理额外音符（如范围内的音符）
+            elif pitch in extra_note_to_key:
+                for extra_key in extra_note_to_key[pitch]:
+                    notes.append({'time': time, 'key': extra_key})
+
+            # 处理特殊音符（如高音符）
+            elif pitch in special_note_mapping:
+                notes.append({'time': time, 'key': note_to_key[special_note_mapping[pitch]]})
+
+    # 按时间点整理音符
+    time_dict = {}
+    for note in notes:
+        time = note['time']
+        key = note['key']
+        if time not in time_dict:
+            time_dict[time] = []
+        time_dict[time].append(key)
+
+    # 生成结果，处理同时按键的情况
+    result = []
+    for time in sorted(time_dict.keys()):
+        keys = time_dict[time]
+        for key in keys:
+            result.append({
+                "time": time,
+                "key": key
+            })
 
     # 获取BPM值
     bpm = get_bpm_from_midi(input_path)
 
-    # 按时间分类音符
-    time_dict = {}
-    for index, note in enumerate(notes):
-        time = note['time']
-        key = note['note']
-
-        # 如果时间点已存在，则添加到该时间点的列表中
-        if time not in time_dict:
-            time_dict[time] = []
-        # 如果音符在指定范围内，则映射到相应的键位
-        if key in note_to_key:
-            time_dict[time].append(note_to_key[key])
-
-    # 处理同时按键的情况
-    result = []
-    for time in sorted(time_dict.keys()):
-        keys = time_dict[time]
-        # 按时间点顺序，为每个按键添加前缀
-        for idx, key in enumerate(keys):
-            result.append({
-                "time": time,
-                "key": f"{len(keys)}{key[1:]}"  # 替换"1Key"前缀并根据按键数添加前缀
-            })
-
     # 构建输出字典
     output = [
         {
-            "name": os.path.basename(input_path),  # 获取文件名
+            "name": os.path.basename(input_path),
             "author": "skyMusic-WindHide",
             "transcribedBy": "WindHide'System",
-            "bpm": bpm,  # 从MIDI中提取BPM
+            "bpm": bpm,
             "bitsPerPage": 15,
             "pitchLevel": 0,
             "isComposed": True,
@@ -109,12 +117,15 @@ def process_midi_to_txt(input_path, output_path, min_note=60, max_note=84):
             "isEncrypted": False,
         }
     ]
-    # 将结果写入txt文件
+
+    # 将结果写入TXT文件
     with open(output_path, 'w') as f:
-        f.write(json.dumps(output, indent=4))  # 生成美化后的 JSON 格式
+        f.write(json.dumps(output, indent=4))
 
     return 100
 
+
+# 处理文件夹内的所有MIDI文件
 def process_directory_with_progress(use_gpu=False, output_dir=getResourcesPath("myTranslate"), modelName=""):
     os.makedirs(output_dir, exist_ok=True)
     files_to_process = [f for f in os.listdir(getResourcesPath("translateOriginalMusic")) if f.endswith('.mp3') or f.endswith('.mp4') or f.endswith(".flac") or f.endswith(".ape")]
