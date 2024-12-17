@@ -88,23 +88,23 @@
     </n-row>
   </n-flex>
 
-  <n-card style="margin-top: 20px">
+  <n-card style="margin-top: 20px; ">
     <n-tabs type="bar" animated @update:value="handleUpdateValue" @before-leave="handleBeforeLeave" size="small">
-      <n-tab-pane name="systemMusic" tab="自带歌曲">
-        <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :max-height="300"
-          virtual-scroll :min-row-height="18" :scroll-x="100" :row-props="systemMusicSelect" />
+      <n-tab-pane name="systemMusic" tab="自带歌曲" >
+        <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :min-row-height="48"  :max-height="300" :virtual-scroll="music.systemMusic.length > 7" 
+          :row-props="systemMusicSelect"/>
       </n-tab-pane>
       <n-tab-pane name="myImport" tab="导入歌曲">
-        <n-data-table :columns="myImportColumns" :data="music.myImport" :bordered="false" :max-height="300"
-          :min-row-height="18" :row-props="myImportMusicSelect" />
+        <n-data-table :columns="myImportColumns" :data="music.myImport" :bordered="false" :min-row-height="48"  :max-height="300" :virtual-scroll="music.myImport.length > 7"
+          :row-props="myImportMusicSelect" />
       </n-tab-pane>
       <n-tab-pane name="myTranslate" tab="转换歌曲">
-        <n-data-table :columns="musicColumns" :data="music.myTranslate" :bordered="false" :max-height="250"
-          :row-props="myTranslateMusicSelect" />
+        <n-data-table :columns="musicColumns" :data="music.myTranslate" :bordered="false" :min-row-height="48"  :max-height="300" :virtual-scroll="music.myTranslate.length > 7"
+        :row-props="myTranslateMusicSelect" />
       </n-tab-pane>
       <n-tab-pane name="myFavorite" tab="收藏">
-        <n-data-table :columns="favoritColumns" :data="music.myFavorite" :bordered="false" :max-height="250"
-          :row-props="myFavoriteMusicSelect" />
+        <n-data-table :columns="favoritColumns" :data="music.myFavorite" :bordered="false" :min-row-height="48"  :max-height="300" :virtual-scroll="music.myFavorite.length > 7"
+        :row-props="myFavoriteMusicSelect" />
       </n-tab-pane>
       <template #suffix>
         <n-input round placeholder="搜索" v-model:value="searchText"
