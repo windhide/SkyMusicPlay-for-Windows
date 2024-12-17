@@ -6,6 +6,9 @@ from utils._global import global_state
 from utils.musicToSheet.transferMID import inference
 from utils.pathUtils import getResourcesPath
 
+# 可动态配置的时间合并阈值（单位：毫秒）
+TIME_MERGE_THRESHOLD = 20
+
 # 15个音符与键盘按键的映射
 note_to_key = {
     60: '1Key0',  # Do
@@ -39,9 +42,6 @@ extra_note_to_key = {
     82: ['1Key12', '1Key13'],
 }
 
-# 允许的音符集合
-allowed_notes = set(note_to_key.keys()).union(extra_note_to_key.keys())
-
 # 特殊音符的映射规则
 special_note_mapping = {
     86: 81,  # 高高音Do
@@ -49,7 +49,6 @@ special_note_mapping = {
     89: 84,  # 高音Do
 }
 
-# 获取BPM值
 def get_bpm_from_midi(midi_file_path):
     midi = pretty_midi.PrettyMIDI(midi_file_path)
     tempos = midi.get_tempo_changes()
@@ -57,48 +56,67 @@ def get_bpm_from_midi(midi_file_path):
         return tempos[1][0]  # 取第一个 BPM 值
     return 120  # 默认 BPM
 
+def merge_keys(keys):
+    """
+    将同一时间点的多个按键进行合并，例如 ['1Key8', '1Key1'] -> ['2Key8', '2Key1']。
+    """
+    key_count = len(keys)
+    merged_keys = []
 
-# 处理MIDI文件并转换为txt格式
-def process_midi_to_txt(input_path, output_path):
+    for key in keys:
+        base_key = key.replace('1Key', '')  # 提取键编号
+        merged_key = f"{key_count}Key{base_key}"
+        merged_keys.append(merged_key)
+
+    return merged_keys
+
+def process_midi_to_txt(input_path, output_path, time_merge_threshold=TIME_MERGE_THRESHOLD):
     midi = pretty_midi.PrettyMIDI(input_path)
     notes = []  # 存储所有音符的信息
 
+    # 提取音符信息
     for instrument in midi.instruments:
         for note in instrument.notes:
             pitch = note.pitch
             time = int(note.start * 1000)  # 时间转换为毫秒
 
-            # 处理标准音符
+            # 处理音符映射
             if pitch in note_to_key:
                 notes.append({'time': time, 'key': note_to_key[pitch]})
-
-            # 处理额外音符（如范围内的音符）
             elif pitch in extra_note_to_key:
                 for extra_key in extra_note_to_key[pitch]:
                     notes.append({'time': time, 'key': extra_key})
-
-            # 处理特殊音符（如高音符）
             elif pitch in special_note_mapping:
                 notes.append({'time': time, 'key': note_to_key[special_note_mapping[pitch]]})
 
-    # 按时间点整理音符
-    time_dict = {}
+    # 按时间排序
+    notes.sort(key=lambda x: x['time'])
+
+    # 合并时间点接近的音符
+    merged_notes = []
+    last_time = None
+    temp_keys = []
+
     for note in notes:
         time = note['time']
         key = note['key']
-        if time not in time_dict:
-            time_dict[time] = []
-        time_dict[time].append(key)
 
-    # 生成结果，处理同时按键的情况
-    result = []
-    for time in sorted(time_dict.keys()):
-        keys = time_dict[time]
-        for key in keys:
-            result.append({
-                "time": time,
-                "key": key
-            })
+        if last_time is None or time - last_time <= time_merge_threshold:
+            # 累加同一时间点的按键
+            temp_keys.append(key)
+        else:
+            # 合并并保存上一组按键
+            merged_keys = merge_keys(temp_keys)
+            for merged_key in merged_keys:
+                merged_notes.append({'time': last_time, 'key': merged_key})
+            temp_keys = [key]
+
+        last_time = time
+
+    # 处理最后一组音符
+    merged_keys = merge_keys(temp_keys)
+    for merged_key in merged_keys:
+        merged_notes.append({'time': last_time, 'key': merged_key})
 
     # 获取BPM值
     bpm = get_bpm_from_midi(input_path)
@@ -113,7 +131,7 @@ def process_midi_to_txt(input_path, output_path):
             "bitsPerPage": 15,
             "pitchLevel": 0,
             "isComposed": True,
-            "songNotes": result,
+            "songNotes": merged_notes,
             "isEncrypted": False,
         }
     ]
@@ -124,44 +142,38 @@ def process_midi_to_txt(input_path, output_path):
 
     return 100
 
-
-# 处理文件夹内的所有MIDI文件
 def process_directory_with_progress(use_gpu=False, output_dir=getResourcesPath("myTranslate"), modelName=""):
     os.makedirs(output_dir, exist_ok=True)
-    files_to_process = [f for f in os.listdir(getResourcesPath("translateOriginalMusic")) if f.endswith('.mp3') or f.endswith('.mp4') or f.endswith(".flac") or f.endswith(".ape") or f.endswith(".mid")]
+    files_to_process = [f for f in os.listdir(getResourcesPath("translateOriginalMusic")) if f.endswith(('.mp3', '.mp4', '.flac', '.ape', '.mid'))]
     total_files = len(files_to_process)
+
     if total_files == 0:
         print("没有找到需要处理的文件")
         return
+
     for idx, file in enumerate(files_to_process):
-        if file.find("_ok") != -1: continue # 有ok就跳过
+        if "_ok" in file:
+            continue
+
         try:
-            global_state.now_translate_text = [str(idx + 1) + "/"+str(len(files_to_process)), file]
-            global_state.tran_mid_progress = 0 # 进度条清空
-            fileNameNoEnd = ''
-            musicFilePath = ''
+            global_state.now_translate_text = [f"{idx + 1}/{total_files}", file]
+            global_state.tran_mid_progress = 0
+            fileNameNoEnd = file.rsplit('.', 1)[0]
+
             if not file.endswith(".mid"):
-                fileNameNoEnd = file.replace(".mp3", "").replace(".mp4", "").replace(".flac", "").replace(".ape", "")
-                midFilePath =os.path.join(getResourcesPath("translateMID"), fileNameNoEnd)
+                midFilePath = os.path.join(getResourcesPath("translateMID"), fileNameNoEnd)
                 musicFilePath = os.path.join(getResourcesPath("translateOriginalMusic"), file)
-                inference(
-                    input_path=musicFilePath,
-                    output_mid_path=midFilePath+".mid",
-                    _cuda=use_gpu,
-                    checkpoint_path=os.path.join(getResourcesPath("modelData"),modelName))
+                inference(input_path=musicFilePath, output_mid_path=midFilePath + ".mid", _cuda=use_gpu, checkpoint_path=os.path.join(getResourcesPath("modelData"), modelName))
             else:
-                fileNameNoEnd = file.replace(".mid","")
-                midFilePath =os.path.join(getResourcesPath("translateOriginalMusic"), fileNameNoEnd)
+                midFilePath = os.path.join(getResourcesPath("translateOriginalMusic"), fileNameNoEnd)
 
-            file_progress = process_midi_to_txt(midFilePath+".mid",output_dir + "\\" + fileNameNoEnd + ".txt")
-            # 完成的重命名 避免继续计算浪费资源
-            new_file_path = os.path.join(midFilePath+".mid",
-                                         os.path.splitext(musicFilePath)[0] + "_ok" +
-                                         os.path.splitext(musicFilePath)[1])
-            os.rename(musicFilePath, new_file_path)
-            print(f"已将文件 {musicFilePath} 重命名为 {new_file_path}")
+            process_midi_to_txt(midFilePath + ".mid", os.path.join(output_dir, f"{fileNameNoEnd}.txt"))
 
-            global_state.overall_progress = ((idx + (file_progress / 100)) / total_files) * 100
+            new_file_path = os.path.join(getResourcesPath("translateOriginalMusic"), f"{fileNameNoEnd}_ok.{file.split('.')[-1]}")
+            os.rename(os.path.join(getResourcesPath("translateOriginalMusic"), file), new_file_path)
+
+            print(f"已将文件 {file} 重命名为 {new_file_path}")
+            global_state.overall_progress = ((idx + 1) / total_files) * 100
         except Exception as e:
             print(e)
 
