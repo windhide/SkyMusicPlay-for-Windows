@@ -576,7 +576,7 @@ function handleFinish({ file:_file, event:_event }) {
 
 function getListData(value) {
   getList(value, searchText.value).then((_res) => {
-    eval('music.' + value + '=res')
+    eval('music.' + value + '=_res')
   })
 }
 </script>

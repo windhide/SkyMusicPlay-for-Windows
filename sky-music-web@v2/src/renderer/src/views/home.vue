@@ -99,20 +99,20 @@ function blankClick(url) {
 function jump() {
   if (window.innerWidth > 700) {
     // 更新检测
-    // getWWWData(
-    //   'https://raw.githubusercontent.com/windhide/SkyMusicPlay-for-Windows/main/.version'
-    // ).then((res) => {
-    //   const updateMesseage = JSON.parse(res)
-    //   if (updateMesseage.version > require('./../../package.json').version) {
-    //     dialog.success({
-    //       title: updateMesseage.title,
-    //       content: updateMesseage.content,
-    //       positiveText: updateMesseage.positiveText,
-    //       contentStyle: { whiteSpace: 'pre-wrap' },
-    //       maskClosable: false
-    //     })
-    //   }
-    // })
+    getWWWData(
+      'https://raw.githubusercontent.com/windhide/SkyMusicPlay-for-Windows/main/.version'
+    ).then((res:any) => {
+      const updateMesseage = JSON.parse(res)
+      if (updateMesseage.version > require('./../../package.json').version) {
+        dialog.success({
+          title: updateMesseage.title,
+          content: updateMesseage.content,
+          positiveText: updateMesseage.positiveText,
+          contentStyle: { whiteSpace: 'pre-wrap' },
+          maskClosable: false
+        })
+      }
+    })
     return
   }
   sendData('nextSheet', { type: '不ok' }).then((res) => {

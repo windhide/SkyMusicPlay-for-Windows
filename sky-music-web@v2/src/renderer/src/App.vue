@@ -18,7 +18,7 @@
       >
         📌
       </n-button>
-      <n-button circle ghost type="info" style="margin-top: 12px" @click="miniHandle">
+      <n-button circle ghost type="info" style="margin-top: 12px" @click="miniHandle" v-show="miniShow" >
         <template #icon>
           <n-icon><Remove /></n-icon>
         </template>
@@ -85,77 +85,78 @@ import router from '@renderer/router'
 import { useRoute } from 'vue-router'
 const route = useRoute()
 const collapsed = ref(false)
-
 function fixHandle() {
-  if (fixDashed.value) {
-    // window.api.setAlwaysOnTop(fixDashed.value)
+  if(fixDashed.value){
+    window.api.setAlwaysOnTop(fixDashed.value); 
     fixDashed.value = false
-  } else {
-    // window.api.setAlwaysOnTop(fixDashed.value)
+  }else{
+    window.api.setAlwaysOnTop(fixDashed.value); 
     fixDashed.value = true
   }
 }
 
-function miniHandle() {
-  // window.api.mini()
+function miniHandle(){
+  window.api.mini()
 }
-function closeHandle() {
-  // window.api.close()
+function closeHandle(){
+  window.api.close()
 }
 
 function renderIcon(icon: Component) {
-  return () => h(NIcon, null, { default: () => h(icon) })
+  return () => h(NIcon, null, { default: () => h(icon) });
 }
 
-const collapsedHandle = (isCoolapsed: boolean) => {
+const collapsedHandle = (isCoolapsed: boolean) =>{
   console.log(isCoolapsed)
   collapsed.value = isCoolapsed
 }
 
-const show = ref(false)
+let show = ref(true)
+let miniShow = ref(window.innerWidth > 700)
 
-const fixDashed = ref(true)
+let fixDashed = ref(true)
 const menuOptions = [
   {
-    label: '介绍',
-    key: 'home',
-    icon: renderIcon(Home)
+    label: "介绍",
+    key: "home",
+    icon: renderIcon(Home),
   },
   {
-    label: '音乐',
-    key: 'music',
-    icon: renderIcon(MusicalNotes)
+    label: "音乐",
+    key: "music",
+    icon: renderIcon(MusicalNotes),
   },
   {
-    label: '跟弹',
-    key: 'tutorial',
-    icon: renderIcon(GameController)
+    label: "跟弹",
+    key: "tutorial",
+    icon: renderIcon(GameController),
   },
   {
-    label: '音乐扒谱',
-    key: 'kube',
-    icon: renderIcon(CubeSharp)
+    label: "音乐扒谱",
+    key: "kube",
+    icon: renderIcon(CubeSharp),
   },
   {
-    label: '生成乐谱',
-    key: 'sheetPdf',
-    icon: renderIcon(Library)
-  }
-]
+    label: "生成乐谱",
+    key: "sheetPdf",
+    icon: renderIcon(Library),
+  },
+];
 
-const clickMenu = (key: string, _item: MenuOption) => {
-  router.push({ name: key })
-}
+const clickMenu = (key: string) => {
+  router.push({ name: key });
+};
 
-router.push({ name: 'home' })
+router.push({ name: 'home' });
 
-// const checkInterval = setInterval(() => {
-//   getData('check').then((res) => {
-//     if (res === undefined) return
-//     show.value = !res
-//     clearInterval(checkInterval)
-//   })
-// }, 500)
+let checkInterval = setInterval(() => {
+  getData("check").then(res => {
+    if (res === undefined) return
+    show.value = !res
+    clearInterval(checkInterval)
+  });
+}, 500)
+
 
 onMounted(() => {
   const dragArea = document.getElementById('drag-area')
@@ -166,18 +167,16 @@ onMounted(() => {
       startX = event.clientX
       startY = event.clientY
 
-      // window.electron.onMouseDown(startX, startY)
-
+      window.electron.onMouseDown(startX, startY)
       const onMouseMove = (moveEvent) => {
         const deltaX = moveEvent.clientX - startX
         const deltaY = moveEvent.clientY - startY
-        // window.electron.onMouseMove(deltaX, deltaY)
+        window.electron.onMouseMove(deltaX, deltaY)
       }
-
       const onMouseUp = () => {
         document.removeEventListener('mousemove', onMouseMove)
         document.removeEventListener('mouseup', onMouseUp)
-        // window.electron.onMouseUp()
+        window.electron.onMouseUp()
       }
 
       document.addEventListener('mousemove', onMouseMove)
@@ -190,7 +189,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-::v-deep .n-menu--vertical {
+:v-deep .n-menu--vertical {
   --n-border-radius: 21px !important;
 }
 </style>

@@ -1,64 +1,51 @@
-// const fetch = require('node-fetch');
+let baseUrl = "http://127.0.0.1:9899/"
 
-const baseUrl = import.meta.env.BASE_URL
-
-export function getList(listName, searchStr) {
-  return fetch(baseUrl + '?listName=' + listName + '&searchStr=' + searchStr)
-    .then((response) => response.json())
-    .then((data) => {
-      return data
-    })
-    .catch((error) => console.error(error))
+export function getList(listName,searchStr){
+  return fetch(baseUrl+"?listName="+listName+"&searchStr="+searchStr)
+  .then(response => response.json())
+  .then(data =>{return data})
+  .catch(error => console.error(error));
 }
 
-export function getData(url) {
-  return fetch(baseUrl + url)
-    .then((response) => response.json())
-    .then((data) => {
-      return data
-    })
-    .catch((error) => console.error(error))
+export function getData(url){
+  return fetch(baseUrl+url)
+  .then(response => response.json())
+  .then(data =>{return data})
+  .catch(error => console.error(error));
 }
 
 export function sendData(url, data) {
-  console.log('data', data)
+  console.log("data",data)
   return fetch(baseUrl + url, {
-    method: 'POST',
+    method: 'POST', 
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data), 
   })
-    .then((response) => response.json())
-    .then((data) => {
-      return data
-    })
-    .catch((error) => console.error(error))
-}
+  .then(response => response.json())
+  .then(data =>{return data})
+  .catch(error => console.error(error));}
 
-export function setConfig(name, value) {
-  return fetch(baseUrl + 'setConfig', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      name: name,
-      value: value
+  export function setConfig(name,value){
+    return fetch(baseUrl + "setConfig", {
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        "name":name,
+        "value":value
+      }), 
     })
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      return data
-    })
-    .catch((error) => console.error(error))
-}
+    .then(response => response.json())
+    .then(data =>{return data})
+    .catch(error => console.error(error));
+  }
 
-export function getWWWData(url) {
-  return fetch(url)
-    .then((response) => response.text())
-    .then((data) => {
-      return data
-    })
-    .catch((error) => console.error(error))
-}
+  export function getWWWData(url){
+    return fetch(url)
+    .then(response => response.text())
+    .then(data =>{return data})
+    .catch(error => console.error(error));
+  }

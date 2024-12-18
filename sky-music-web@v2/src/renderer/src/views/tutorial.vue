@@ -155,11 +155,7 @@ function followTutorial() {
       fileName: nowPlayMusic.value,
       type: nowType
     }).then(() => {
-      window.open(
-        'app://./index.html',
-        '_blank',
-        'toolbar=yes, location=yes, directories=no, status=no, menubar=yes, scrollbars=yes, resizable=no, copyhistory=yes, width=600, height=400'
-      )
+      window.api.open_tutorial("keyboard")
     })
   }
 }
@@ -167,7 +163,7 @@ handleUpdateValue('systemMusic')
 
 function getListData(value) {
   getList(value, searchText.value).then((_res) => {
-    eval('music.' + value + '=res')
+    eval('music.' + value + '=_res')
   })
 }
 </script>

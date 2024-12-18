@@ -1,24 +1,33 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, screen } from 'electron'
 import { join } from 'path'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import { electronApp, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { exec } from 'child_process'
+const path = require('path')
 
+let mainWindow: BrowserWindow | null = null;
+let modal: BrowserWindow | null = null;
 function createWindow(): void {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
-    show: false,
+  mainWindow = new BrowserWindow({
+    width: 800,
+    height: 774,
+    resizable: false,
     autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? { icon } : {}),
+    frame: false,
+    transparent: true,
+    alwaysOnTop: false,
+    icon,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      nodeIntegration: false,
+      contextIsolation: true
     }
   })
 
   mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
+    mainWindow?.show()
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -26,49 +35,153 @@ function createWindow(): void {
     return { action: 'deny' }
   })
 
-  // HMR for renderer base on electron-vite cli.
-  // Load the remote URL for development or the local html file for production.
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
+    // Menu.setApplicationMenu(null)
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  // 窗口拖动逻辑
+  let isMousePressed = false
+  let offsetX = 0
+  let offsetY = 0
+
+  ipcMain.on('mousedown', (_event, { }) => {
+    const senderWebContents = _event.sender;  // 获取发送消息的 webContents
+    const cursorPoint = screen.getCursorScreenPoint()
+    let bounds:any = null
+
+    if (senderWebContents === mainWindow?.webContents) {
+      bounds = mainWindow?.getBounds()
+    } else if (senderWebContents === modal?.webContents) {
+      bounds = modal?.getBounds()
+    }
+
+
+    if (bounds) {
+      isMousePressed = true
+      offsetX = cursorPoint.x - bounds.x // 精确鼠标偏移量
+      offsetY = cursorPoint.y - bounds.y
+    }
+  })
+
+  ipcMain.on('mousemove', (event, arg) => {
+    const senderWebContents = event.sender;  // 获取发送消息的 webContents
+
+    if (senderWebContents === mainWindow?.webContents) {
+      if (isMousePressed && mainWindow) {
+        const cursorPoint = screen.getCursorScreenPoint()
+        // 实时更新窗口位置
+        mainWindow.setBounds({
+          x: cursorPoint.x - offsetX,
+          y: cursorPoint.y - offsetY,
+          width: mainWindow.getBounds().width,
+          height: mainWindow.getBounds().height
+        })
+      }
+    } else if (senderWebContents === modal?.webContents) {
+      if (isMousePressed && modal) {
+        const cursorPoint = screen.getCursorScreenPoint()
+        // 实时更新窗口位置
+        modal.setBounds({
+          x: cursorPoint.x - offsetX,
+          y: cursorPoint.y - offsetY,
+          width: modal.getBounds().width,
+          height: modal.getBounds().height
+        })
+      }
+    }
+  })
+
+  ipcMain.on('mouseup', () => {
+    isMousePressed = false
+  })
+
+  ipcMain.on('window-min', (event, arg) => {
+    const senderWebContents = event.sender;  // 获取发送消息的 webContents
+    if (senderWebContents === mainWindow?.webContents) {
+      mainWindow?.minimize()
+    } else if (senderWebContents === modal?.webContents) {
+      modal?.minimize()
+    }
+  })
+
+  ipcMain.on('window-close', (event, arg) => {
+    const senderWebContents = event.sender;  // 获取发送消息的 webContents
+    if (senderWebContents === mainWindow?.webContents) {
+      mainWindow?.close()
+    } else if (senderWebContents === modal?.webContents) {
+      modal?.close()
+    }
+  })
+
+  ipcMain.on('set-always-on-top', (event, {isAlwaysOnTop}) => {
+    const senderWebContents = event.sender;  // 获取发送消息的 webContents
+    if (senderWebContents === mainWindow?.webContents) {
+      mainWindow?.setAlwaysOnTop(!mainWindow?.isAlwaysOnTop())
+    } else if (senderWebContents === modal?.webContents) {
+      modal?.setAlwaysOnTop(!modal?.isAlwaysOnTop())
+    }  
+  })
+
+  ipcMain.on('open-tutorial', (path) => {
+    let root_path;
+    if (is.dev) {
+      root_path = "http://127.0.0.1:5173/";
+    } else {
+      root_path = `file://${__dirname}/index.html/`;
+    };
+    modal = new BrowserWindow({
+      width: 600,
+      height: 400,
+      hasShadow: true, // 阴影 
+      resizable: false, // 禁止调整窗口大小
+      frame: false,     // 禁用默认的窗口框架（包括菜单和标题栏）
+      transparent: true,
+      webPreferences: {
+        preload: join(__dirname, '../preload/index.js'),
+        sandbox: false,
+        nodeIntegration: false,
+        contextIsolation: true
+      },
+    });
+    modal.loadURL(root_path + "#/" + path);
+  });
+
+
+  mainWindow.on('closed', () => {
+    ipcMain.removeAllListeners('mousedown')
+    ipcMain.removeAllListeners('mousemove')
+    ipcMain.removeAllListeners('mouseup')
+  })
+
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
+app.on('window-all-closed', () => {
+  app.quit()
+})
+
 app.whenReady().then(() => {
   // Set app user model id for windows
-  electronApp.setAppUserModelId('com.electron')
-
-  // Default open or close DevTools by F12 in development
-  // and ignore CommandOrControl + R in production.
-  // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
-  app.on('browser-window-created', (_, window) => {
-    optimizer.watchWindowShortcuts(window)
-  })
+  electronApp.setAppUserModelId('com.windhide')
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
   createWindow()
 
-  app.on('activate', function () {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  const serverPath = path.join(require('path').dirname(app.getPath('exe')), 'backend_dist/sky-music-server/sky-music-server.exe')
+  exec(`runas /user:Administrator ${serverPath}`, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error executing exe as admin: ${error.message}`);
+      return;
+    }
+    if (stderr) {
+      console.error(`stderr: ${stderr}`);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
   })
 })
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
-
-// In this file you can include the rest of your app"s specific main process
-// code. You can also put them in separate files and require them here.

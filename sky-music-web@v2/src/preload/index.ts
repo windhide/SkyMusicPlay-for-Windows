@@ -1,4 +1,4 @@
-import { contextBridge } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
@@ -9,8 +9,25 @@ const api = {}
 // just add to the DOM global.
 if (process.contextIsolated) {
   try {
-    contextBridge.exposeInMainWorld('electron', electronAPI)
-    contextBridge.exposeInMainWorld('api', api)
+    contextBridge.exposeInMainWorld('api', {
+      setAlwaysOnTop: (isAlwaysOnTop) => {
+        ipcRenderer.send('set-always-on-top', isAlwaysOnTop);
+      },
+      close: () => {
+        ipcRenderer.send('window-close');
+      },
+      mini: () => {
+        ipcRenderer.send('window-min');
+      },
+      open_tutorial: (path) => {
+        ipcRenderer.send('open-tutorial', path);
+      }
+    });// 用于向主进程发送拖动事件
+    contextBridge.exposeInMainWorld('electron', {
+      onMouseDown: (x, y) => ipcRenderer.send('mousedown', { x, y }),
+      onMouseMove: (x, y) => ipcRenderer.send('mousemove', { x, y }),
+      onMouseUp: () => ipcRenderer.send('mouseup')
+    })
   } catch (error) {
     console.error(error)
   }

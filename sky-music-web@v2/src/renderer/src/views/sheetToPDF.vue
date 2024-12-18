@@ -4,9 +4,9 @@
       {{ '当前: ' + nowPlayMusic + '' }}
     </n-gradient-text>
     <n-button type="primary" ghost :loading="processFlag" @click="transferPDF"> 转PDF </n-button>
-    <n-gradient-text type="warning"> ⭐ </n-gradient-text>
+    ⭐
     <n-switch v-model:value="templateSelect" :round="false" />
-    <n-gradient-text type="info"> 噢 </n-gradient-text>
+    🎹
   </n-flex>
   <n-card style="margin-top: 20px">
     <n-tabs
@@ -305,7 +305,7 @@ handleUpdateValue('systemMusic')
 
 function getListData(value) {
   getList(value, searchText.value).then((_res) => {
-    eval('music.' + value + '=res')
+    eval('music.' + value + '=_res')
   })
 }
 </script>
