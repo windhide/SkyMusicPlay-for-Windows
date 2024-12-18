@@ -87,10 +87,10 @@ const route = useRoute()
 const collapsed = ref(false)
 function fixHandle() {
   if(fixDashed.value){
-    window.api.setAlwaysOnTop(fixDashed.value); 
+    window.api.setAlwaysOnTop(); 
     fixDashed.value = false
   }else{
-    window.api.setAlwaysOnTop(fixDashed.value); 
+    window.api.setAlwaysOnTop(); 
     fixDashed.value = true
   }
 }

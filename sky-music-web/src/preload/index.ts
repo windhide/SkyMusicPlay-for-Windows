@@ -10,8 +10,8 @@ const api = {}
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('api', {
-      setAlwaysOnTop: (isAlwaysOnTop) => {
-        ipcRenderer.send('set-always-on-top', isAlwaysOnTop);
+      setAlwaysOnTop: () => {
+        ipcRenderer.send('set-always-on-top');
       },
       close: () => {
         ipcRenderer.send('window-close');
@@ -20,7 +20,7 @@ if (process.contextIsolated) {
         ipcRenderer.send('window-min');
       },
       open_tutorial: (path) => {
-        ipcRenderer.send('open-tutorial', path);
+        ipcRenderer.send('open-tutorial');
       }
     });// 用于向主进程发送拖动事件
     contextBridge.exposeInMainWorld('electron', {

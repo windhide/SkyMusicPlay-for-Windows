@@ -66,7 +66,7 @@ function createWindow(): void {
     }
   })
 
-  ipcMain.on('mousemove', (event, arg) => {
+  ipcMain.on('mousemove', (event) => {
     const senderWebContents = event.sender;  // 获取发送消息的 webContents
 
     if (senderWebContents === mainWindow?.webContents) {
@@ -98,7 +98,7 @@ function createWindow(): void {
     isMousePressed = false
   })
 
-  ipcMain.on('window-min', (event, arg) => {
+  ipcMain.on('window-min', (event) => {
     const senderWebContents = event.sender;  // 获取发送消息的 webContents
     if (senderWebContents === mainWindow?.webContents) {
       mainWindow?.minimize()
@@ -107,7 +107,7 @@ function createWindow(): void {
     }
   })
 
-  ipcMain.on('window-close', (event, arg) => {
+  ipcMain.on('window-close', (event) => {
     const senderWebContents = event.sender;  // 获取发送消息的 webContents
     if (senderWebContents === mainWindow?.webContents) {
       mainWindow?.close()
@@ -116,7 +116,7 @@ function createWindow(): void {
     }
   })
 
-  ipcMain.on('set-always-on-top', (event, {isAlwaysOnTop}) => {
+  ipcMain.on('set-always-on-top', (event) => {
     const senderWebContents = event.sender;  // 获取发送消息的 webContents
     if (senderWebContents === mainWindow?.webContents) {
       mainWindow?.setAlwaysOnTop(!mainWindow?.isAlwaysOnTop())
@@ -125,12 +125,12 @@ function createWindow(): void {
     }  
   })
 
-  ipcMain.on('open-tutorial', (path) => {
+  ipcMain.on('open-tutorial', () => {
     let root_path;
     if (is.dev) {
       root_path = "http://127.0.0.1:5173/";
     } else {
-      root_path = `file://${__dirname}/index.html/`;
+      root_path = `file://${__dirname}/index.html`;  // 加载 index.html
     };
     modal = new BrowserWindow({
       width: 600,
@@ -146,7 +146,7 @@ function createWindow(): void {
         contextIsolation: true
       },
     });
-    modal.loadURL(root_path + "#/" + path);
+    modal.loadURL(root_path);
   });
 
 
@@ -165,14 +165,10 @@ app.on('window-all-closed', () => {
 app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.windhide')
-
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
-
   createWindow()
-
-  const serverPath = path.join(require('path').dirname(app.getPath('exe')), 'backend_dist/sky-music-server/sky-music-server.exe')
-  exec(`runas /user:Administrator ${serverPath}`, (error, stdout, stderr) => {
+  let runPath = __dirname.replace("resources\\app.asar\\out\\main","")
+  const serverPath = path.join(runPath, 'backend_dist/sky-music-server/sky-music-server.exe')
+  exec(`${serverPath}`, (error, stdout, stderr) => {
     if (error) {
       console.error(`Error executing exe as admin: ${error.message}`);
       return;

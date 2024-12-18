@@ -7,7 +7,8 @@ def process_files(input_folder, output_folder, keyword="1Key"):
     # 确保输出文件夹存在
     os.makedirs(output_folder, exist_ok=True)
 
-    # 初始化重复文件计数器
+    # 初始化计数器
+    remove_columns_count = 0
     duplicate_count = 0
 
     # 遍历输入文件夹下的所有文件
@@ -36,25 +37,32 @@ def process_files(input_folder, output_folder, keyword="1Key"):
             # 尝试将文件内容解析为 JSON 数组
             json_data = json.loads(content)
             if isinstance(json_data, list) and len(json_data) > 0:
-                first_name = json_data[0].get('name')
-                if first_name:
-                    # 重命名文件并更改后缀
-                    new_file_name = f"{first_name}.txt"
-                    new_file_path = os.path.join(output_folder, new_file_name)
+                # 提取第0个结构体
+                first_struct = json_data[0]
 
-                    # 检查目标文件是否已经存在
-                    if os.path.exists(new_file_path):
-                        duplicate_count += 1  # 记录重复文件的覆盖
+                # 如果结构体中包含columns，移除它
+                if 'columns' in first_struct:
+                    del first_struct['columns']
+                    remove_columns_count += 1  # 增加移除columns字段的计数
 
-                    # 将内容转换为 UTF-8 并保存（直接覆盖同名文件）
-                    with open(new_file_path, 'w', encoding='utf-8') as new_file:
-                        new_file.write(content)
+                # 将修改后的内容重新写入JSON文件
+                new_file_name = f"{first_struct.get('name', 'unnamed')}.json"
+                new_file_path = os.path.join(output_folder, new_file_name)
 
-                    print(f"文件 {file_name} 已重命名并保存为 {new_file_path}")
+                # 检查目标文件是否已经存在
+                if os.path.exists(new_file_path):
+                    duplicate_count += 1  # 记录重复文件的覆盖
+
+                # 将处理后的内容压缩为JSON格式并保存
+                with open(new_file_path, 'w', encoding='utf-8') as new_file:
+                    json.dump([first_struct], new_file, ensure_ascii=False, indent=None)  # 压缩JSON
+
+                print(f"文件 {file_name} 已处理并保存为 {new_file_path}")
         except (json.JSONDecodeError, KeyError, IOError, UnicodeDecodeError) as e:
             print(f"处理文件 {file_name} 时出错: {e}")
 
-    # 输出重复文件计数
+    # 输出统计信息
+    print(f"共有 {remove_columns_count} 个文件移除了 'columns' 字段。")
     print(f"共有 {duplicate_count} 个文件因重名被覆盖。")
 
 

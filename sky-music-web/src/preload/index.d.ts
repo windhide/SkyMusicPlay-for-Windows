@@ -3,8 +3,8 @@ import { ElectronAPI } from '@electron-toolkit/preload'
 declare global {
   interface Window {
     api: {
-      setAlwaysOnTop: (isAlwaysOnTop: boolean) => void;
-      open_tutorial: (path:string) => void;
+      setAlwaysOnTop: () => void;
+      open_tutorial: () => void;
       close: () => void;
       mini: () => void;
     };
