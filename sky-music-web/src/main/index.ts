@@ -130,7 +130,7 @@ function createWindow(): void {
     if (is.dev) {
       root_path = "http://127.0.0.1:5173/";
     } else {
-      root_path = `file://${__dirname}/index.html`;  // 加载 index.html
+      root_path = join(__dirname, '../renderer/index.html')
     };
     modal = new BrowserWindow({
       width: 600,

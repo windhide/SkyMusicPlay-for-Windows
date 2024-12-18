@@ -155,7 +155,7 @@ function followTutorial() {
       fileName: nowPlayMusic.value,
       type: nowType
     }).then(() => {
-      window.api.open_tutorial("keyboard")
+      window.api.open_tutorial()
     })
   }
 }

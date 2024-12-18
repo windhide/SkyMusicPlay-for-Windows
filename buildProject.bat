@@ -25,26 +25,26 @@ cd /d "%script_dir%"
 echo Current script directory: %script_dir%
 
 :: 删除旧的 Electron 构建目录
-rmdir /S /Q "%script_dir%sky-music-web\dist_electron"
+rmdir /S /Q "%script_dir%sky-music-web\dist"
 :: 删除python的构建目录
 rmdir /S /Q "%script_dir%sky-music-server\build"
 
 :: 构建 Electron 应用
 cd "%script_dir%sky-music-web"
-call npm run electron:build
+call npm run build:win
 
 :: 构建 Python 服务器
 cd "%script_dir%sky-music-server"
 call .venv\Scripts\activate
-call pyinstaller --uac-admin -w sky-music-server.py --distpath "%script_dir%sky-music-web\dist_electron\win-unpacked\backend_dist" --hidden-import=main
+call pyinstaller --uac-admin -w sky-music-server.py --distpath "%script_dir%sky-music-web\dist\win-unpacked\backend_dist" --hidden-import=main
 call deactivate
 
 :: 复制 ffmpeg 可执行文件
-copy "%script_dir%ffmpeg.exe" "%script_dir%sky-music-web\dist_electron\win-unpacked\backend_dist\sky-music-server\ffmpeg.exe"
+copy "%script_dir%ffmpeg.exe" "%script_dir%sky-music-web\dist\win-unpacked\backend_dist\sky-music-server\ffmpeg.exe"
 
 :: 设置源路径和目标路径
 set source="%script_dir%template-resources"
-set destination="%script_dir%sky-music-web\dist_electron\win-unpacked\resources"
+set destination="%script_dir%sky-music-web\dist\win-unpacked\resources"
 
 :: 使用 robocopy 复制文件并保留属性
 echo Copying files with robocopy...

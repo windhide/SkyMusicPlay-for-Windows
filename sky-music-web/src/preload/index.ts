@@ -19,7 +19,7 @@ if (process.contextIsolated) {
       mini: () => {
         ipcRenderer.send('window-min');
       },
-      open_tutorial: (path) => {
+      open_tutorial: () => {
         ipcRenderer.send('open-tutorial');
       }
     });// 用于向主进程发送拖动事件
