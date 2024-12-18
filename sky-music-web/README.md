@@ -1,19 +1,34 @@
-# sky-music-web
+# electron-app
 
-## Project setup
-```
-yarn install
+An Electron application with Vue and TypeScript
+
+## Recommended IDE Setup
+
+- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin)
+
+## Project Setup
+
+### Install
+
+```bash
+$ yarn
 ```
 
-### Compiles and hot-reloads for development
-```
-yarn serve
+### Development
+
+```bash
+$ yarn dev
 ```
 
-### Compiles and minifies for production
-```
-yarn build
-```
+### Build
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+```bash
+# For windows
+$ yarn build:win
+
+# For macOS
+$ yarn build:mac
+
+# For Linux
+$ yarn build:linux
+```
