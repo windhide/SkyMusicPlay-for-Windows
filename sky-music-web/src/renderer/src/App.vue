@@ -1,31 +1,26 @@
 <template>
   <n-config-provider :theme="darkTheme">
-    <n-flex
-      id="drag-area"
-      justify="end"
-      style="position: fixed; z-index: 200; right: 12px"
-      :style="{
-        width: collapsed ? '90%' : '80%'
-      }"
-    >
-      <n-button
-        circle
-        :dashed="fixDashed"
-        ghost
-        type="warning"
-        style="margin-top: 12px"
-        @click="fixHandle"
-      >
+    <n-flex id="drag-area" justify="end" style="position: fixed; z-index: 200; right: 12px" :style="{
+      width: collapsed ? '90%' : '80%'
+    }">
+      <n-button circle ghost dashed type="warning" style="margin-top: 12px" @click="openFileHandle" v-show="miniShow">
+        📁
+      </n-button>
+      <n-button circle :dashed="fixDashed" ghost type="warning" style="margin-top: 12px" @click="fixHandle">
         📌
       </n-button>
-      <n-button circle ghost type="info" style="margin-top: 12px" @click="miniHandle" v-show="miniShow" >
+      <n-button circle ghost type="info" style="margin-top: 12px" @click="miniHandle" v-show="miniShow">
         <template #icon>
-          <n-icon><Remove /></n-icon>
+          <n-icon>
+            <Remove />
+          </n-icon>
         </template>
       </n-button>
       <n-button circle ghost type="error" style="margin-top: 12px" @click="closeHandle">
         <template #icon>
-          <n-icon><Close /></n-icon>
+          <n-icon>
+            <Close />
+          </n-icon>
         </template>
       </n-button>
     </n-flex>
@@ -35,23 +30,11 @@
           <n-space vertical>
             <n-layout>
               <n-layout has-sider>
-                <n-layout-sider
-                  v-show="route.fullPath.indexOf('keyboard') == -1"
-                  bordered
-                  show-trigger
-                  collapse-mode="width"
-                  :collapsed-width="64"
-                  :width="150"
-                  :native-scrollbar="false"
-                  style="height: 100vh"
-                  @update:collapsed="collapsedHandle"
-                >
-                  <n-menu
-                    :collapsed-width="64"
-                    :collapsed-icon-size="22"
-                    :options="menuOptions"
-                    @update:value="clickMenu"
-                  />
+                <n-layout-sider v-show="route.fullPath.indexOf('keyboard') == -1" bordered show-trigger
+                  collapse-mode="width" :collapsed-width="64" :width="150" :native-scrollbar="false"
+                  style="height: 100vh" @update:collapsed="collapsedHandle">
+                  <n-menu :collapsed-width="64" :collapsed-icon-size="22" :options="menuOptions"
+                    @update:value="clickMenu" />
                 </n-layout-sider>
                 <n-layout style="max-height: 739px; padding: 25px">
                   <router-view />
@@ -69,7 +52,7 @@
 <script lang="ts" setup>
 import type { Component } from 'vue'
 import { h, onMounted, ref } from 'vue'
-import { MenuOption, NIcon, darkTheme, NMessageProvider } from 'naive-ui'
+import { NIcon, darkTheme, NMessageProvider } from 'naive-ui'
 import { getData } from '@renderer/utils/fetchUtils'
 import {
   CubeSharp,
@@ -78,7 +61,8 @@ import {
   GameController,
   Library,
   Close,
-  Remove
+  Remove,
+  ImageOutline
 } from '@vicons/ionicons5'
 import router from '@renderer/router'
 
@@ -86,19 +70,23 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 const collapsed = ref(false)
 function fixHandle() {
-  if(fixDashed.value){
-    window.api.setAlwaysOnTop(); 
+  if (fixDashed.value) {
+    window.api.setAlwaysOnTop();
     fixDashed.value = false
-  }else{
-    window.api.setAlwaysOnTop(); 
+  } else {
+    window.api.setAlwaysOnTop();
     fixDashed.value = true
   }
 }
 
-function miniHandle(){
+function openFileHandle() {
+  getData('openFiles')
+}
+
+function miniHandle() {
   window.api.mini()
 }
-function closeHandle(){
+function closeHandle() {
   window.api.close()
 }
 
@@ -106,7 +94,7 @@ function renderIcon(icon: Component) {
   return () => h(NIcon, null, { default: () => h(icon) });
 }
 
-const collapsedHandle = (isCoolapsed: boolean) =>{
+const collapsedHandle = (isCoolapsed: boolean) => {
   console.log(isCoolapsed)
   collapsed.value = isCoolapsed
 }
@@ -140,7 +128,7 @@ const menuOptions = [
     label: "生成乐谱",
     key: "sheetPdf",
     icon: renderIcon(Library),
-  },
+  }
 ];
 
 const clickMenu = (key: string) => {

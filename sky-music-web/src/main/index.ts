@@ -170,7 +170,8 @@ app.whenReady().then(() => {
   createWindow()
   let runPath = __dirname.replace("resources\\app.asar\\out\\main","")
   const serverPath = path.join(runPath, 'backend_dist/sky-music-server/sky-music-server.exe')
-  exec(`${serverPath}`, (error, stdout, stderr) => {
+  const command = `"${serverPath}"`;
+  exec(command, (error, stdout, stderr) => {
     if (error) {
       console.error(`Error executing exe as admin: ${error.message}`);
       return;

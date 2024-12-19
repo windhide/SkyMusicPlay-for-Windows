@@ -286,6 +286,11 @@ def drop_file(request: dict):
         logger.error(f"Error in /dropFile: {str(e)}")
         return '不ok'
 
+@app.get('/openFiles')
+def open_files():
+    appdata_path = os.getenv('APPDATA')
+    os.startfile(os.path.join(appdata_path, 'ThatGameCompany', 'com.netease.sky', 'images'))
+
 
 if __name__ == '__main__':
     # 创建监听 WebSocket 的线程
