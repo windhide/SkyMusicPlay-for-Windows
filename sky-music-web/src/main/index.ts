@@ -72,6 +72,7 @@ function createWindow(): void {
     if (senderWebContents === mainWindow?.webContents) {
       if (isMousePressed && mainWindow) {
         const cursorPoint = screen.getCursorScreenPoint()
+        mainWindow.setMaximumSize(800, 774); // 设置最大尺寸
         // 实时更新窗口位置
         mainWindow.setBounds({
           x: cursorPoint.x - offsetX,
@@ -83,6 +84,7 @@ function createWindow(): void {
     } else if (senderWebContents === modal?.webContents) {
       if (isMousePressed && modal) {
         const cursorPoint = screen.getCursorScreenPoint()
+        modal.setMaximumSize(600, 400); // 设置最大尺寸
         // 实时更新窗口位置
         modal.setBounds({
           x: cursorPoint.x - offsetX,
