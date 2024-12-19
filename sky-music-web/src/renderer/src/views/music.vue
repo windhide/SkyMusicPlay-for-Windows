@@ -30,6 +30,7 @@
       accept=".txt"
       :show-file-list="false"
       @finish="handleFinish"
+      @before-upload="beforeFileUpload"
     >
       <n-button type="info" ghost> 上传我的文件 </n-button>
     </n-upload>
@@ -571,7 +572,17 @@ function deleteClick(name) {
 
 function handleFinish({ file:_file, event:_event }) {
   handleUpdateValue('myImport')
-  message.success('OK~')
+}
+
+function beforeFileUpload(file){
+  return window.api.readFile(file.file.file.path).then(res=>{
+    if(res){
+      message.success("谱子👉"+file.file.file.name+"完成导入")
+    }else{
+      message.error("谱子👉"+file.file.file.name+"导入失败")
+    }
+    return res;
+  })
 }
 
 function getListData(value) {

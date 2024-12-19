@@ -4,6 +4,7 @@ import { electronApp, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { exec } from 'child_process'
 const path = require('path')
+const fs = require('fs');
 
 let mainWindow: BrowserWindow | null = null;
 let modal: BrowserWindow | null = null;
@@ -126,6 +127,27 @@ function createWindow(): void {
       modal?.setAlwaysOnTop(!modal?.isAlwaysOnTop())
     }  
   })
+
+  ipcMain.handle('read-file', async (_event, filePath) => {
+    try {
+      console.log(`Checking file: ${path}`);
+      const fileContent = await fs.promises.readFile(filePath, 'utf8');
+      const jsonData = JSON.parse(fileContent);
+      if (
+        jsonData &&
+        Array.isArray(jsonData) &&
+        jsonData.length > 0 &&
+        jsonData[0].hasOwnProperty('songNotes')
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (err) {
+      console.error('Error loading JSON:', err);
+      return false;
+    }
+  });
 
   ipcMain.on('open-tutorial', () => {
     let root_path;

@@ -7,6 +7,7 @@ declare global {
       open_tutorial: () => void;
       close: () => void;
       mini: () => void;
+      async readFile: (filePath) => any;
     };
     electron:{
       onMouseDown: (x, y) => void;
