@@ -113,6 +113,9 @@ function createWindow(): void {
   ipcMain.on('window-close', (event) => {
     const senderWebContents = event.sender;  // 获取发送消息的 webContents
     if (senderWebContents === mainWindow?.webContents) {
+      if (!modal?.isDestroyed()) {
+        modal?.close();
+      }
       mainWindow?.close()
     } else if (senderWebContents === modal?.webContents) {
       modal?.close()
