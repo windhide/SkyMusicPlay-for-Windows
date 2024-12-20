@@ -26,7 +26,6 @@ function createWindow(): void {
       contextIsolation: true
     }
   })
-
   mainWindow.on('ready-to-show', () => {
     mainWindow?.show()
   })
@@ -187,6 +186,10 @@ function createWindow(): void {
 app.on('window-all-closed', () => {
   app.exit()
 })
+
+app.disableHardwareAcceleration(); // 禁用gpu加速
+app.commandLine.appendSwitch('disable-gpu-vsync');
+
 
 app.whenReady().then(() => {
   // Set app user model id for windows
