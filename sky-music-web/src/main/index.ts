@@ -1,7 +1,7 @@
 import { app, shell, BrowserWindow, ipcMain, screen } from 'electron'
 import { join } from 'path'
 import { electronApp, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
+import icon from '../../build/icon.png?asset'
 import { exec } from 'child_process'
 const path = require('path')
 const fs = require('fs');
@@ -73,25 +73,23 @@ function createWindow(): void {
     if (senderWebContents === mainWindow?.webContents) {
       if (isMousePressed && mainWindow) {
         const cursorPoint = screen.getCursorScreenPoint()
-        mainWindow.setMaximumSize(800, 774); // 设置最大尺寸
         // 实时更新窗口位置
         mainWindow.setBounds({
           x: cursorPoint.x - offsetX,
           y: cursorPoint.y - offsetY,
-          width: mainWindow.getBounds().width,
-          height: mainWindow.getBounds().height
+          width: 800,
+          height: 774
         })
       }
     } else if (senderWebContents === modal?.webContents) {
       if (isMousePressed && modal) {
         const cursorPoint = screen.getCursorScreenPoint()
-        modal.setMaximumSize(600, 400); // 设置最大尺寸
         // 实时更新窗口位置
         modal.setBounds({
           x: cursorPoint.x - offsetX,
           y: cursorPoint.y - offsetY,
-          width: modal.getBounds().width,
-          height: modal.getBounds().height
+          width: 600,
+          height: 400
         })
       }
     }
