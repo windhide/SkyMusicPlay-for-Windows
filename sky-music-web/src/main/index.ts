@@ -179,12 +179,13 @@ function createWindow(): void {
     ipcMain.removeAllListeners('mousedown')
     ipcMain.removeAllListeners('mousemove')
     ipcMain.removeAllListeners('mouseup')
+    app.exit()
   })
 
 }
 
 app.on('window-all-closed', () => {
-  app.quit()
+  app.exit()
 })
 
 app.whenReady().then(() => {
