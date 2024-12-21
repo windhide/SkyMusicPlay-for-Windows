@@ -7,7 +7,7 @@ declare global {
       open_tutorial: () => void;
       close: () => void;
       mini: () => void;
-      async readFile: (filePath) => any;
+      async readFile: (filePath:string) => any;
       system_notification: (title,body) => void;
     };
     electron:{

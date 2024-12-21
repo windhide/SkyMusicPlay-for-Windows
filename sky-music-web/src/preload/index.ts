@@ -22,7 +22,7 @@ if (process.contextIsolated) {
       open_tutorial: () => {
         ipcRenderer.send('open-tutorial');
       },
-      readFile: async (filePath) => {
+      readFile: async (filePath: string) => {
         return await ipcRenderer.invoke('read-file', filePath); 
       },
       system_notification: async (title,body) => {

@@ -5,10 +5,15 @@ import icon from '../../build/icon.png?asset'
 import { exec } from 'child_process'
 const path = require('path')
 const fs = require('fs');
+const iconv = require('iconv-lite'); // 用于支持多种编码格式
 
 let mainWindow: BrowserWindow | null = null;
 let modal: BrowserWindow | null = null;
-// app.disableHardwareAcceleration()
+
+app.commandLine.appendSwitch('disable-gpu-compositing');
+app.commandLine.appendSwitch('enable-webgl-software-rendering');
+app.disableHardwareAcceleration();
+
 function createWindow(): void {
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -137,21 +142,23 @@ function createWindow(): void {
     },1000)
   })
   
-  ipcMain.handle('read-file', async (_event, filePath) => {
+  ipcMain.handle('read-file', async (_event, filePath:string) => {
     try {
-      console.log(`Checking file: ${path}`);
-      const fileContent = await fs.promises.readFile(filePath, 'utf8');
-      const jsonData = JSON.parse(fileContent);
-      if (
-        jsonData &&
-        Array.isArray(jsonData) &&
-        jsonData.length > 0 &&
-        jsonData[0].hasOwnProperty('songNotes')
-      ) {
-        return true;
-      } else {
-        return false;
+      let fileContent = await fs.promises.readFile(filePath, 'utf8');
+      const encodingList = ['utf8', 'utf16le', 'gbk']; // 支持的编码
+      for (const encoding of encodingList) {
+        try {
+          const buffer = await fs.promises.readFile(filePath);
+          fileContent = iconv.decode(buffer, encoding);
+          // 测试解析（假设文件是 JSON 格式）
+          JSON.parse(fileContent); // 尝试解析
+          break; // 成功解析则退出循环
+        } catch (err) {
+          // 如果解析失败，继续尝试下一个编码
+          fileContent = undefined;
+        }
       }
+      return fileContent.includes("songNotes")
     } catch (err) {
       console.error('Error loading JSON:', err);
       return false;
