@@ -188,7 +188,6 @@ app.on('window-all-closed', () => {
 })
 
 app.disableHardwareAcceleration(); // 禁用gpu加速
-app.commandLine.appendSwitch('disable-gpu-vsync');
 
 
 app.whenReady().then(() => {

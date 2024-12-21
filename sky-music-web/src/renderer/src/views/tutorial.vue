@@ -20,7 +20,7 @@
           :bordered="false"
           :min-row-height="48"
           :max-height="300"
-          :virtual-scroll="music.systemMusic.length > 7"
+          :virtual-scroll="music.systemMusic?.length > 7"
           :row-props="systemMusicSelect"
         />
       </n-tab-pane>
@@ -31,7 +31,7 @@
           :bordered="false"
           :min-row-height="48"
           :max-height="300"
-          :virtual-scroll="music.myImport.length > 7"
+          :virtual-scroll="music.myImport?.length > 7"
           :row-props="myImportMusicSelect"
         />
       </n-tab-pane>
@@ -42,7 +42,7 @@
           :bordered="false"
           :min-row-height="48"
           :max-height="300"
-          :virtual-scroll="music.myTranslate.length > 7"
+          :virtual-scroll="music.myTranslate?.length > 7"
           :row-props="myTranslateMusicSelect"
         />
       </n-tab-pane>
@@ -53,7 +53,7 @@
           :bordered="false"
           :min-row-height="48"
           :max-height="300"
-          :virtual-scroll="music.myFavorite.length > 7"
+          :virtual-scroll="music.myFavorite?.length > 7"
           :row-props="myFavoriteMusicSelect"
         />
       </n-tab-pane>

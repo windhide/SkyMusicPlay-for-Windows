@@ -1,19 +1,19 @@
+import threading
 import time
 
 from utils._global import global_state
 from utils.musicFileTranselate import convert_notes_to_delayed_format
 from utils.playThread import ControlledThread
-import keyboard
+from pynput.keyboard import Key, Controller
+keyboard = Controller()
 
-def send_single_key_to_window(key):
+def send_single_key_to_window_task(key):
     """发送单个按键，减少延迟"""
     keyboard.press(key)
     time.sleep(global_state.sustain_time)
     keyboard.release(key)
-    time.sleep(global_state.delay_interval)
-    print("keyDown ->", key)
 
-def send_multiple_key_to_window(keys):
+def send_multiple_key_to_window_task(keys):
     for key in keys:
         keyboard.press(key)
         time.sleep(0.01)
@@ -21,7 +21,20 @@ def send_multiple_key_to_window(keys):
     for key in keys:
         keyboard.release(key)
         time.sleep(0.01)
-    time.sleep(global_state.delay_interval)
+
+def execute_in_thread(target, *args, **kwargs):
+    """通用线程执行器"""
+    thread = threading.Thread(target=target, args=args, kwargs=kwargs)
+    thread.start()
+    return thread
+
+def send_single_key_to_window(key):
+    """发送单个按键（新线程中执行）"""
+    execute_in_thread(send_single_key_to_window_task,key)
+
+def send_multiple_key_to_window(keys):
+    """发送组合按键（新线程中执行）"""
+    execute_in_thread(send_multiple_key_to_window_task,keys)
 
 def playMusic(fileName, type):
     """优化音乐播放逻辑"""

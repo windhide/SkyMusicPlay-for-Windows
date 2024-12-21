@@ -40,6 +40,7 @@ class ControlledThread:
                 else:
                     robotUtils.send_multiple_key_to_window(keys)
                 time.sleep(float(delay / 1000))
+                time.sleep(global_state.delay_interval)
                 index += 1
 
     def start(self):
