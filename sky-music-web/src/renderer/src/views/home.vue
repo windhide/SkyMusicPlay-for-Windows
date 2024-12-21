@@ -103,7 +103,7 @@ function jump() {
       'https://raw.githubusercontent.com/windhide/SkyMusicPlay-for-Windows/main/.version'
     ).then((res:any) => {
       const updateMesseage = JSON.parse(res)
-      if (updateMesseage.version > require('./../../package.json').version) {
+      if (updateMesseage.version.match(/\d/g).join('') > '1.2.2'.match(/\d/g)!.join('')) {
         dialog.success({
           title: updateMesseage.title,
           content: updateMesseage.content,
