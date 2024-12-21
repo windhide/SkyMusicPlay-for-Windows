@@ -1,6 +1,6 @@
 {
   "name": "sky-music-web",
-  "version": "v1.2.1",
+  "version": "v1.2.2",
   "description": "WindHide",
   "main": "./out/main/index.js",
   "author": "WindHide",
@@ -38,7 +38,7 @@
     "@vitejs/plugin-vue": "^5.0.5",
     "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/eslint-config-typescript": "^13.0.0",
-    "electron": "^31.0.2",
+    "electron": "^33.2.1",
     "electron-builder": "^24.13.3",
     "electron-vite": "^2.3.0",
     "eslint": "^8.57.0",
