@@ -8,7 +8,7 @@ const fs = require('fs');
 
 let mainWindow: BrowserWindow | null = null;
 let modal: BrowserWindow | null = null;
-app.disableHardwareAcceleration()
+// app.disableHardwareAcceleration()
 function createWindow(): void {
   // Create the browser window.
   mainWindow = new BrowserWindow({
