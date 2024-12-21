@@ -15,7 +15,8 @@ from utils.musicFileTranselate import convert_notes_to_delayed_format
 from utils.musicToSheet.processAudio import process_directory_with_progress
 from utils.pathUtils import getResourcesPath
 from utils.robot import robotUtils
-from utils.websocket_hook import startWebsocket
+from utils.websocket_hook import startWebsocket as follow_webSocket
+from utils.shortcut_hook import startWebsocket as shortcut_webSocket
 from fastapi.middleware.cors import CORSMiddleware
 
 # 关闭print的输出
@@ -179,9 +180,15 @@ def open_files():
 
 if __name__ == '__main__':
     # 创建监听 WebSocket 的线程
-    websocket_thread = threading.Thread(target=startWebsocket)
-    websocket_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
-    websocket_thread.start()
+    follow_websocket_thread = threading.Thread(target=follow_webSocket)
+    follow_websocket_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
+    follow_websocket_thread.start()
+
+    # 创建监听 快捷键 的线程
+    shortcut_websocket_thread = threading.Thread(target=shortcut_webSocket)
+    shortcut_websocket_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
+    shortcut_websocket_thread.start()
+
     # 创建监听目标进程的线程
     target_process = "Sky_Music.exe"
     process_monitor_thread = threading.Thread(target=monitor_process, args=(target_process,))

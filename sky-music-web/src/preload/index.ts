@@ -23,7 +23,10 @@ if (process.contextIsolated) {
         ipcRenderer.send('open-tutorial');
       },
       readFile: async (filePath) => {
-        return await ipcRenderer.invoke('read-file', filePath);
+        return await ipcRenderer.invoke('read-file', filePath); 
+      },
+      system_notification: async (title,body) => {
+        ipcRenderer.send('send_system_notification', title, body); 
       },
     });// 用于向主进程发送拖动事件
     contextBridge.exposeInMainWorld('electron', {

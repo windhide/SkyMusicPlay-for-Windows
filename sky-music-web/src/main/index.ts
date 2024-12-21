@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain, screen } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, screen, Notification } from 'electron'
 import { join } from 'path'
 import { electronApp, is } from '@electron-toolkit/utils'
 import icon from '../../build/icon.png?asset'
@@ -129,6 +129,14 @@ function createWindow(): void {
     }  
   })
 
+  ipcMain.on('send_system_notification', (event, title:string, body: string) => {
+    const notification = new Notification({title,body});
+    notification.show();  // 显示通知
+    setTimeout(()=>{
+      notification.close()
+    },1000)
+  })
+  
   ipcMain.handle('read-file', async (_event, filePath) => {
     try {
       console.log(`Checking file: ${path}`);

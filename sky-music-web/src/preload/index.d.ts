@@ -8,6 +8,7 @@ declare global {
       close: () => void;
       mini: () => void;
       async readFile: (filePath) => any;
+      system_notification: (title,body) => void;
     };
     electron:{
       onMouseDown: (x, y) => void;

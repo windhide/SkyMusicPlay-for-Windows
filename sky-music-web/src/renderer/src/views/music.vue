@@ -3,35 +3,15 @@
     <n-gradient-text :size="20" type="success" style="width: 100%">
       {{ '当前播放: ' + nowPlayMusic + '' }}
       <br />
-      <n-progress
-        style="max-width: 60%; display: inline-block"
-        type="line"
-        :percentage="progress"
-        indicator-placement="inside"
-        processing
-        :color="{ stops: ['white', 'blue'] }"
-        @click="progressClick"
-      />
+      <n-progress style="max-width: 60%; display: inline-block" type="line" :percentage="progress"
+        indicator-placement="inside" processing :color="{ stops: ['white', 'blue'] }" @click="progressClick" />
     </n-gradient-text>
-    <n-radio-group v-model:value="nowState" name="radiobuttongroup1" @update:value="playSelect">
-      <n-radio-button
-        v-for="status in statusColumns"
-        v-show="status.show"
-        :key="status.value + status.show"
-        :value="status.value"
-        :label="status.label"
-        :disabled="status.disabled"
-      />
+    <n-radio-group v-model:value="nowState" name="radiobuttongroup1">
+      <n-radio-button v-for="status in statusColumns" v-show="status.show" :key="status.value + status.show"
+        :value="status.value" :label="status.label" :disabled="status.disabled" />
     </n-radio-group>
-    <n-upload
-      action="http://localhost:9899/userMusicUpload"
-      multiple
-      style="width: 100px; height: 34px"
-      accept=".txt"
-      :show-file-list="false"
-      @finish="handleFinish"
-      @before-upload="beforeFileUpload"
-    >
+    <n-upload action="http://localhost:9899/userMusicUpload" multiple style="width: 100px; height: 34px" accept=".txt"
+      :show-file-list="false" @finish="handleFinish" @before-upload="beforeFileUpload">
       <n-button type="info" ghost> 上传我的文件 </n-button>
     </n-upload>
     <n-row gutter="12">
@@ -68,7 +48,6 @@
         </n-space>
       </n-col>
     </n-row>
-
     <n-row gutter="12">
       <n-col :span="3">
         <n-gradient-text type="info" :size="13"> 倍速设置-&nbsp;&nbsp;&nbsp; </n-gradient-text>
@@ -82,11 +61,7 @@
     <n-row gutter="12">
       <n-col :span="15">
         <n-gradient-text type="info" :size="13"> 播放延迟s&nbsp;&nbsp;&nbsp; </n-gradient-text>
-        <n-radio-group
-          v-model:value="playDelayStatus"
-          name="radiogroup"
-          @update:value="delaySelect"
-        >
+        <n-radio-group v-model:value="playDelayStatus" name="radiogroup" @update:value="delaySelect">
           <n-space>
             <n-radio key="system" value="system">无</n-radio>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -101,66 +76,27 @@
       </n-col>
     </n-row>
   </n-flex>
-
   <n-card style="margin-top: 20px">
-    <n-tabs
-      type="bar"
-      animated
-      size="small"
-      @update:value="handleUpdateValue"
-      @before-leave="handleBeforeLeave"
-    >
+    <n-tabs type="bar" animated size="small" @update:value="handleUpdateValue" @before-leave="handleBeforeLeave">
       <n-tab-pane name="systemMusic" tab="自带歌曲">
-        <n-data-table
-          :columns="musicColumns"
-          :data="music.systemMusic"
-          :bordered="false"
-          :min-row-height="48"
-          :max-height="300"
-          :virtual-scroll="music.systemMusic?.length > 7"
-          :row-props="systemMusicSelect"
-        />
+        <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :min-row-height="48"
+          :max-height="300" :virtual-scroll="music.systemMusic?.length > 7" :row-props="systemMusicSelect" />
       </n-tab-pane>
       <n-tab-pane name="myImport" tab="导入歌曲">
-        <n-data-table
-          :columns="myImportColumns"
-          :data="music.myImport"
-          :bordered="false"
-          :min-row-height="48"
-          :max-height="300"
-          :virtual-scroll="music.myImport?.length > 7"
-          :row-props="myImportMusicSelect"
-        />
+        <n-data-table :columns="myImportColumns" :data="music.myImport" :bordered="false" :min-row-height="48"
+          :max-height="300" :virtual-scroll="music.myImport?.length > 7" :row-props="myImportMusicSelect" />
       </n-tab-pane>
       <n-tab-pane name="myTranslate" tab="转换歌曲">
-        <n-data-table
-          :columns="musicColumns"
-          :data="music.myTranslate"
-          :bordered="false"
-          :min-row-height="48"
-          :max-height="300"
-          :virtual-scroll="music.myTranslate?.length > 7"
-          :row-props="myTranslateMusicSelect"
-        />
+        <n-data-table :columns="musicColumns" :data="music.myTranslate" :bordered="false" :min-row-height="48"
+          :max-height="300" :virtual-scroll="music.myTranslate?.length > 7" :row-props="myTranslateMusicSelect" />
       </n-tab-pane>
       <n-tab-pane name="myFavorite" tab="收藏">
-        <n-data-table
-          :columns="favoritColumns"
-          :data="music.myFavorite"
-          :bordered="false"
-          :min-row-height="48"
-          :max-height="300"
-          :virtual-scroll="music.myFavorite?.length > 7"
-          :row-props="myFavoriteMusicSelect"
-        />
+        <n-data-table :columns="favoritColumns" :data="music.myFavorite" :bordered="false" :min-row-height="48"
+          :max-height="300" :virtual-scroll="music.myFavorite?.length > 7" :row-props="myFavoriteMusicSelect" />
       </n-tab-pane>
       <template #suffix>
-        <n-input
-          v-model:value="searchText"
-          round
-          placeholder="搜索"
-          style="margin-bottom: 5px; width: 25vh; margin-left: 5px"
-        >
+        <n-input v-model:value="searchText" round placeholder="搜索"
+          style="margin-bottom: 5px; width: 25vh; margin-left: 5px">
           <template #suffix>
             <n-icon :component="Search" />
           </template>
@@ -173,11 +109,10 @@
 <script lang="ts" setup>
 import { getData, sendData, getList, setConfig } from '@renderer/utils/fetchUtils'
 import { RowData } from 'naive-ui/es/data-table/src/interface'
-import { h, reactive, ref, watch } from 'vue'
+import { h, onUnmounted, reactive, ref, watch } from 'vue'
 import { NButton, useMessage } from 'naive-ui'
 import { Search } from '@vicons/ionicons5'
 const message = useMessage()
-
 const music: any = reactive({
   // 音乐列表
   systemMusic: [], // 原版音乐
@@ -187,8 +122,10 @@ const music: any = reactive({
 })
 const nowPlayMusic = ref('没有歌曲') // 当前选中歌曲
 let nowType = 'systemMusic'
+let progressInterval: any = 0
+let socket
 const searchText = ref('')
-const nowState = ref('stop') // 当前播放状态
+const nowState:any = ref('stop') // 当前播放状态
 const delayStatus = ref('system')
 const sustainStatus = ref('system')
 const playDelayStatus = ref('system')
@@ -346,11 +283,9 @@ const myFavoriteMusicSelect = (row: RowData) => {
   }
 }
 
-let progressInterval: any = 0
 
-const playSelect = (value: string) => {
-  console.log('value', value)
-  switch (value) {
+watch(nowState,(newValue)=>{
+  switch (newValue) {
     case 'start':
       if (nowPlayMusic.value === '没有歌曲') {
         message.error('选个歌再播放吧靓仔')
@@ -401,7 +336,7 @@ const playSelect = (value: string) => {
       statusColumns[3].disabled = false
       break
   }
-}
+})
 
 const delaySelect = (value: string) => {
   switch (value) {
@@ -501,12 +436,6 @@ watch(sustainStatus, () => {
   }
 })
 
-watch(playDelayStatus, () => {
-  if (playDelayStatus.value == 'system') {
-    playDelay.value = 0
-  }
-})
-
 watch(delaySpeed, () => {
   setConfig('delay_interval', delaySpeed.value)
 })
@@ -570,16 +499,16 @@ function deleteClick(name) {
   })
 }
 
-function handleFinish({ file:_file, event:_event }) {
+function handleFinish({ file: _file, event: _event }) {
   handleUpdateValue('myImport')
 }
 
-function beforeFileUpload(file){
-  return window.api.readFile(file.file.file.path).then(res=>{
-    if(res){
-      message.success("谱子👉"+file.file.file.name+"完成导入")
-    }else{
-      message.error("谱子👉"+file.file.file.name+"导入失败")
+function beforeFileUpload(file) {
+  return window.api.readFile(file.file.file.path).then(res => {
+    if (res) {
+      message.success("谱子👉" + file.file.file.name + "完成导入")
+    } else {
+      message.error("谱子👉" + file.file.file.name + "导入失败")
     }
     return res;
   })
@@ -590,4 +519,71 @@ function getListData(value) {
     eval('music.' + value + '=_res')
   })
 }
+
+
+function initWebSocket() {
+  socket = new WebSocket('ws://127.0.0.1:11452')
+  // 添加 WebSocket 事件监听
+  socket.onopen = () => {
+    console.log('WebSocket 已连接')
+  }
+
+  socket.onmessage = (event) => {
+    const key = decodeURIComponent(event.data) // 获取按下的按键
+    console.log(nowState.value)
+    switch (key) {
+      case 'F5': // start开始播放
+        if (nowState.value != 'stop') {
+          window.api.system_notification("🍎", "仅停止状态下允许开始")
+          break;
+        } else {
+          if (nowPlayMusic.value === '没有歌曲') {
+            window.api.system_notification("😭", "选个歌再播放吧靓仔")
+            break;
+          }
+          window.api.system_notification("✔", "开始")
+          nowState.value = 'start'
+        }
+        break;
+      case 'F6':
+        if (nowState.value != 'pause') {
+          window.api.system_notification("🍎", "仅暂停状态下允许继续")
+          break;
+        }else{
+          window.api.system_notification("▶", "继续")
+          nowState.value = 'resume'
+        }
+        break;
+      case 'F7':
+        if (nowState.value != 'start' && nowState.value != 'resume') {
+          window.api.system_notification("🍎", "仅正在播放时允许暂停")
+          break;
+        }else{
+          window.api.system_notification("⏸", "暂停")
+          nowState.value = 'pause'
+        }
+        break;
+      case 'F8':
+          window.api.system_notification("🛑", "停止")
+          nowState.value = 'stop'
+        break;
+    }
+  }
+  socket.onclose = () => {
+    console.log('WebSocket 已断开')
+  }
+
+  socket.onerror = (error) => {
+    console.error('WebSocket 出现错误', error)
+  }
+}
+
+initWebSocket()
+onUnmounted(() => {
+  if (socket) {
+    socket.close()
+    socket = null
+    message.info('WebSocket 已关闭')
+  }
+})
 </script>

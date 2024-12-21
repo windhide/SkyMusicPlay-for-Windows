@@ -139,8 +139,7 @@ let originalSheet = new Set()
 let pressedKeys = new Set()
 
 function initWebSocket() {
-  const socket = new WebSocket('ws://127.0.0.1:11451')
-  debugger
+  socket = new WebSocket('ws://127.0.0.1:11451')
   // 添加 WebSocket 事件监听
   socket.onopen = () => {
     console.log('WebSocket 已连接')
