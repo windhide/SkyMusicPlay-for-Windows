@@ -2136,7 +2136,7 @@
     "agent-base" "6"
     "debug" "4"
 
-"iconv-lite@^0.6.2":
+"iconv-lite@^0.6.2", "iconv-lite@^0.6.3":
   "integrity" "sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw=="
   "resolved" "https://registry.npmmirror.com/iconv-lite/-/iconv-lite-0.6.3.tgz"
   "version" "0.6.3"
