@@ -10,9 +10,7 @@ const iconv = require('iconv-lite'); // 用于支持多种编码格式
 let mainWindow: BrowserWindow | null = null;
 let modal: BrowserWindow | null = null;
 
-app.commandLine.appendSwitch('disable-gpu-compositing');
-app.commandLine.appendSwitch('enable-webgl-software-rendering');
-app.disableHardwareAcceleration();
+app.commandLine.appendSwitch('no-sandbox');
 
 function createWindow(): void {
   // Create the browser window.
