@@ -486,7 +486,7 @@ let sustainInterval: any = null
 watch(sustainStatus, () => {
   switch (sustainStatus.value) {
     case 'system':
-      setConfig('sustain_time', 0.02)
+      setConfig('sustain_time', 0.01)
       clearInterval(sustainInterval)
       break
     case 'random':
