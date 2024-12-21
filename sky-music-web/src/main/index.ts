@@ -129,7 +129,7 @@ function createWindow(): void {
     }  
   })
 
-  ipcMain.on('send_system_notification', (event, title:string, body: string) => {
+  ipcMain.on('send_system_notification', (_event, title:string, body: string) => {
     const notification = new Notification({title,body});
     notification.show();  // 显示通知
     setTimeout(()=>{
