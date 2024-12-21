@@ -8,6 +8,7 @@ const fs = require('fs');
 
 let mainWindow: BrowserWindow | null = null;
 let modal: BrowserWindow | null = null;
+app.disableHardwareAcceleration()
 function createWindow(): void {
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -186,9 +187,6 @@ function createWindow(): void {
 app.on('window-all-closed', () => {
   app.exit()
 })
-
-app.disableHardwareAcceleration(); // 禁用gpu加速
-
 
 app.whenReady().then(() => {
   // Set app user model id for windows
