@@ -111,7 +111,7 @@ function getProgress() {
     now_translate_text.process = res.now_translate_text[1]
   })
 
-  if (progress.tran_mid_progress == 100 && progress.overall_progress == 100) {
+  if (progress.tran_mid_progress == '100.0' && progress.overall_progress == '100.0') {
     clearInterval(progressInterval)
   }
 }
