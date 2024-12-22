@@ -54,7 +54,7 @@
       </n-col>
       <n-col :span="0" style="margin-left: -1.2%">
         <n-space vertical style="width: 240px; margin-top: 2px">
-          <n-slider v-model:value="playSpeed" :step="0.1" :min="1" :max="5" />
+          <n-slider v-model:value="playSpeed" :step="0.01" :min="0.25" :max="5" />
         </n-space>
       </n-col>
     </n-row>
