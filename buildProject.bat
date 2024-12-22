@@ -1,9 +1,9 @@
 @echo off
 
-:: ±£´æ½Å±¾µÄÔ­Ê¼Â·¾¶
+:: ä¿å­˜è„šæœ¬çš„åŸå§‹è·¯å¾„
 set script_dir=%~dp0
 
-:: ¼ì²éÊÇ·ñÒÔ¹ÜÀíÔ±Éí·İÔËĞĞ
+:: æ£€æŸ¥æ˜¯å¦ä»¥ç®¡ç†å‘˜èº«ä»½è¿è¡Œ
 powershell -Command "if (-not ([Security.Principal.WindowsPrincipal]([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) { exit 1 }"
 if %errorlevel% neq 0 (
     echo This script requires administrator privileges.
@@ -12,45 +12,45 @@ if %errorlevel% neq 0 (
     exit /b
 )
 
-:: ÉèÖÃ»·¾³±äÁ¿ÒÔÖ§³ÖÑÓ³Ù±äÁ¿À©Õ¹
+:: è®¾ç½®ç¯å¢ƒå˜é‡ä»¥æ”¯æŒå»¶è¿Ÿå˜é‡æ‰©å±•
 setlocal enabledelayedexpansion
 
-:: Èç¹ûÒÑÊÇ¹ÜÀíÔ±È¨ÏŞ£¬Ôò¼ÌĞøÖ´ĞĞ½Å±¾
+:: å¦‚æœå·²æ˜¯ç®¡ç†å‘˜æƒé™ï¼Œåˆ™ç»§ç»­æ‰§è¡Œè„šæœ¬
 echo Script successfully running as administrator!
 
-:: ÇĞ»»µ½½Å±¾ËùÔÚÄ¿Â¼
+:: åˆ‡æ¢åˆ°è„šæœ¬æ‰€åœ¨ç›®å½•
 cd /d "%script_dir%"
 
-:: ÏÔÊ¾µ±Ç°Ä¿Â¼
+:: æ˜¾ç¤ºå½“å‰ç›®å½•
 echo Current script directory: %script_dir%
 
-:: É¾³ı¾ÉµÄ Electron ¹¹½¨Ä¿Â¼
+:: åˆ é™¤æ—§çš„ Electron æ„å»ºç›®å½•
 rmdir /S /Q "%script_dir%sky-music-web\dist"
-:: É¾³ıpythonµÄ¹¹½¨Ä¿Â¼
+:: åˆ é™¤pythonçš„æ„å»ºç›®å½•
 rmdir /S /Q "%script_dir%sky-music-server\build"
 
-:: ¹¹½¨ Electron Ó¦ÓÃ
+:: æ„å»º Electron åº”ç”¨
 cd "%script_dir%sky-music-web"
 call npm run build:win
 
-:: ¹¹½¨ Python ·şÎñÆ÷
+:: æ„å»º Python æœåŠ¡å™¨
 cd "%script_dir%sky-music-server"
 call .venv\Scripts\activate
-call pyinstaller --uac-admin -w sky-music-server.py --distpath D:\Desktop\SkyMusicPlay-for-Windows\sky-music-web\dist\win-unpacked\backend_dist --hidden-import=main --collect-all=sklearn
+call pyinstaller --uac-admin -w sky-music-server.py --distpath "%script_dir%sky-music-web\dist\win-unpacked\backend_dist" --hidden-import=main --collect-all=sklearn
 call deactivate
 
-:: ¸´ÖÆ ffmpeg ¿ÉÖ´ĞĞÎÄ¼ş
+:: å¤åˆ¶ ffmpeg å¯æ‰§è¡Œæ–‡ä»¶
 copy "%script_dir%ffmpeg.exe" "%script_dir%sky-music-web\dist\win-unpacked\backend_dist\sky-music-server\ffmpeg.exe"
 
-:: ÉèÖÃÔ´Â·¾¶ºÍÄ¿±êÂ·¾¶
+:: è®¾ç½®æºè·¯å¾„å’Œç›®æ ‡è·¯å¾„
 set source="%script_dir%template-resources"
 set destination="%script_dir%sky-music-web\dist\win-unpacked\resources"
 
-:: Ê¹ÓÃ robocopy ¸´ÖÆÎÄ¼ş²¢±£ÁôÊôĞÔ
+:: ä½¿ç”¨ robocopy å¤åˆ¶æ–‡ä»¶å¹¶ä¿ç•™å±æ€§
 echo Copying files with robocopy...
 robocopy %source% %destination% /E /Z /COPYALL /R:3 /W:5
 
-:: É¾³ıÄ¿±êÎÄ¼ş¼ĞÏÂµÄËùÓĞ .gitkeep ÎÄ¼ş
+:: åˆ é™¤ç›®æ ‡æ–‡ä»¶å¤¹ä¸‹çš„æ‰€æœ‰ .gitkeep æ–‡ä»¶
 echo Cleaning up .gitkeep files...
 for /r "%destination%" %%f in (*.gitkeep) do (
     del /f /q "%%f"
@@ -58,7 +58,7 @@ for /r "%destination%" %%f in (*.gitkeep) do (
 
 echo File copy and cleanup completed!
 
-:: Íê³ÉÌáÊ¾
+:: å®Œæˆæç¤º
 echo.
 echo All tasks completed successfully!
 pause
