@@ -36,7 +36,7 @@ call npm run build:win
 :: 构建 Python 服务器
 cd "%script_dir%sky-music-server"
 call .venv\Scripts\activate
-call pyinstaller --uac-admin -w sky-music-server.py --distpath "%script_dir%sky-music-web\dist\win-unpacked\backend_dist" --hidden-import=main
+call pyinstaller --uac-admin -w sky-music-server.py --distpath D:\Desktop\SkyMusicPlay-for-Windows\sky-music-web\dist\win-unpacked\backend_dist --hidden-import=main --collect-all=sklearn
 call deactivate
 
 :: 复制 ffmpeg 可执行文件
