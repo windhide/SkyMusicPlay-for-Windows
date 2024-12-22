@@ -5,5 +5,5 @@ pyinstaller --uac-admin sky-music-server.py --distpath D:\Desktop\SkyMusicPlay-f
 # 无命令调试打包
 pyinstaller --uac-admin -w sky-music-server.py --distpath D:\Desktop\SkyMusicPlay-for-Windows\sky-music-web\dist\win-unpacked\backend_dist --hidden-import=main
 ```
-
+> pip install librosa==0.9.2 before pip install piano_transcription_inference
 > ffmpeg.exe 放在和 sky_windows_music.exe平级

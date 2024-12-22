@@ -76,18 +76,19 @@ def process_midi_to_txt(input_path, output_path, time_merge_threshold=TIME_MERGE
 
     # 提取音符信息
     for instrument in midi.instruments:
-        for note in instrument.notes:
-            pitch = note.pitch
-            time = int(note.start * 1000)  # 时间转换为毫秒
+        if not instrument.is_drum:  # 忽略打击乐器
+            for note in instrument.notes:
+                pitch = note.pitch
+                time = int(note.start * 1000)  # 时间转换为毫秒
 
-            # 处理音符映射
-            if pitch in note_to_key:
-                notes.append({'time': time, 'key': note_to_key[pitch]})
-            elif pitch in extra_note_to_key:
-                for extra_key in extra_note_to_key[pitch]:
-                    notes.append({'time': time, 'key': extra_key})
-            elif pitch in special_note_mapping:
-                notes.append({'time': time, 'key': note_to_key[special_note_mapping[pitch]]})
+                # 处理音符映射
+                if pitch in note_to_key:
+                    notes.append({'time': time, 'key': note_to_key[pitch]})
+                elif pitch in extra_note_to_key:
+                    for extra_key in extra_note_to_key[pitch]:
+                        notes.append({'time': time, 'key': extra_key})
+                elif pitch in special_note_mapping:
+                    notes.append({'time': time, 'key': note_to_key[special_note_mapping[pitch]]})
 
     # 按时间排序
     notes.sort(key=lambda x: x['time'])
