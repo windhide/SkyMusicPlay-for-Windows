@@ -241,18 +241,15 @@ def set_favorite_music(request: dict):
 
 @app.post('/dropFile')
 def drop_file(request: dict):
-    try:
-        file_name = request["fileName"]
-        if file_name == None:
-            print("No file name provided for dropFile")
-            return '不ok'
-        drop_path = os.path.join(getResourcesPath(request['type']), file_name + ".txt")
-        os.remove(drop_path)
-        print(f"File {file_name} dropped successfully")
-        return 'ok'
-    except Exception as e:
-        print(f"Error in /dropFile: {str(e)}")
+    file_name = request["fileName"]
+    if file_name == None:
         return '不ok'
+    if request.get('suffix', None) == None:
+        drop_path = os.path.join(getResourcesPath(request['type']),file_name + '.txt')
+    else:
+        drop_path = os.path.join(getResourcesPath(request['type']),file_name + request['suffix'])
+    os.remove(drop_path)
+    return 'ok'
 
 @app.get('/openFiles')
 def open_files():

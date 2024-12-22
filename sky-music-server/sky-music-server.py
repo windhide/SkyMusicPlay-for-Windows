@@ -168,7 +168,10 @@ def drop_file(request: dict):
     file_name = request["fileName"]
     if file_name == None:
         return '不ok'
-    drop_path = os.path.join(getResourcesPath(request['type']),file_name + ".txt")
+    if request.get('suffix', None) == None:
+        drop_path = os.path.join(getResourcesPath(request['type']),file_name + '.txt')
+    else:
+        drop_path = os.path.join(getResourcesPath(request['type']),file_name + request['suffix'])
     os.remove(drop_path)
     return 'ok'
 

@@ -12,7 +12,6 @@ builtins.print = lambda *args, **kwargs: None
 server = WebsocketServer("127.0.0.1", 11452)
 # 键盘按键事件处理
 def on_press(key):
-    print(key)
     try:
         # 仅处理特定的按键
         if key == keyboard.Key.f5:
