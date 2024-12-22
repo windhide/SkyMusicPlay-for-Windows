@@ -583,7 +583,6 @@ onUnmounted(() => {
   if (socket) {
     socket.close()
     socket = null
-    message.info('WebSocket 已关闭')
   }
 })
 </script>
