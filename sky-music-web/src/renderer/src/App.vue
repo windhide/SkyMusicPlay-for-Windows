@@ -177,7 +177,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-:v-deep .n-menu--vertical {
+:deep(.n-menu--vertical){
   --n-border-radius: 21px !important;
 }
 </style>
