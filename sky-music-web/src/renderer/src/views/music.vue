@@ -12,7 +12,7 @@
     </n-radio-group>
     <n-upload action="http://localhost:9899/userMusicUpload" multiple style="width: 100px; height: 34px" accept=".txt"
       :show-file-list="false" @finish="handleFinish" @before-upload="beforeFileUpload">
-      <n-button type="info" ghost> 上传我的文件 </n-button>
+      <n-button type="info" ghost> 选择乐谱📯 </n-button>
     </n-upload>
     <n-row gutter="12">
       <n-col :span="15">
