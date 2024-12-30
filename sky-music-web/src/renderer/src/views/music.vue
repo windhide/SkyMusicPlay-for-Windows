@@ -6,10 +6,39 @@
       <n-progress style="max-width: 60%; display: inline-block" type="line" :percentage="progress"
         indicator-placement="inside" processing :color="{ stops: ['white', 'blue'] }" @click="progressClick" />
     </n-gradient-text>
-    <n-radio-group v-model:value="nowState" name="radiobuttongroup1">
-      <n-radio-button v-for="status in statusColumns" v-show="status.show" :key="status.value + status.show"
-        :value="status.value" :label="status.label" :disabled="status.disabled" />
-    </n-radio-group>
+    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('pre')">
+      <template #icon>
+        <n-icon><PlaySkipBack /></n-icon>
+      </template>
+    </n-button>
+    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('resume')" v-show="!isPlay" >
+      <template #icon>
+        <n-icon><Play /></n-icon>
+      </template>
+    </n-button>
+    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('pause')" v-show="isPlay" >
+      <template #icon>
+        <n-icon><Pause /></n-icon>
+      </template>
+    </n-button>
+    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('next')">
+      <template #icon>
+        <n-icon><PlaySkipForward /></n-icon>
+      </template>
+    </n-button>
+    <n-button quaternary circle type="info" size="large" @click="musicList()">
+      <template #icon>
+        <n-icon><List /></n-icon>
+      </template>
+    </n-button>
+    <n-switch size="medium" v-model:value="isRandom">
+      <template #checked-icon>
+        <n-icon :component="ShuffleOutline" />
+      </template>
+      <template #unchecked-icon>
+        <n-icon :component="List" />
+      </template>
+    </n-switch>
     <n-upload action="http://localhost:9899/userMusicUpload" multiple style="width: 100px; height: 34px" accept=".txt"
       :show-file-list="false" @finish="handleFinish" @before-upload="beforeFileUpload">
       <n-button type="info" ghost> 选择乐谱📯 </n-button>
@@ -17,7 +46,7 @@
     <n-row gutter="12">
       <n-col :span="15">
         <n-gradient-text type="info" :size="13"> 间隔延迟s&nbsp;&nbsp;&nbsp; </n-gradient-text>
-        <n-radio-group v-model:value="delayStatus" name="radiogroup" @update:value="delaySelect">
+        <n-radio-group v-model:value="delayStatus" name="radiogroup">
           <n-space>
             <n-radio key="system" value="system">系统自带</n-radio>
             <n-radio key="random" value="random">随机</n-radio>
@@ -32,7 +61,7 @@
     <n-row gutter="12">
       <n-col :span="15">
         <n-gradient-text type="info" :size="13"> 延音设置s&nbsp;&nbsp;&nbsp; </n-gradient-text>
-        <n-radio-group v-model:value="sustainStatus" name="radiogroup" @update:value="delaySelect">
+        <n-radio-group v-model:value="sustainStatus" name="radiogroup">
           <n-space>
             <n-radio key="system" value="system">系统自带</n-radio>
             <n-radio key="random" value="random">随机</n-radio>
@@ -55,7 +84,7 @@
     <n-row gutter="12">
       <n-col :span="15">
         <n-gradient-text type="info" :size="13"> 播放延迟s&nbsp;&nbsp;&nbsp; </n-gradient-text>
-        <n-radio-group v-model:value="playDelayStatus" name="radiogroup" @update:value="delaySelect">
+        <n-radio-group v-model:value="playDelayStatus" name="radiogroup">
           <n-space>
             <n-radio key="system" value="system">无</n-radio>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -70,23 +99,23 @@
       </n-col>
     </n-row>
   </n-flex>
-  <n-card style="margin-top: 20px">
+  <n-card style="margin-top: 15px">
     <n-tabs type="bar" animated size="small" @update:value="handleUpdateValue" @before-leave="handleBeforeLeave">
       <n-tab-pane name="systemMusic" tab="自带歌曲">
         <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :min-row-height="48"
-          :max-height="300" :virtual-scroll="music.systemMusic?.length > 7" :row-props="systemMusicSelect" />
+          :max-height="300" :virtual-scroll="music.systemMusic?.length > 7" :row-props="MusicSelect" />
       </n-tab-pane>
       <n-tab-pane name="myImport" tab="导入歌曲">
         <n-data-table :columns="myImportColumns" :data="music.myImport" :bordered="false" :min-row-height="48"
-          :max-height="300" :virtual-scroll="music.myImport?.length > 7" :row-props="myImportMusicSelect" />
+          :max-height="300" :virtual-scroll="music.myImport?.length > 7" :row-props="MusicSelect" />
       </n-tab-pane>
       <n-tab-pane name="myTranslate" tab="转换歌曲">
         <n-data-table :columns="musicColumns" :data="music.myTranslate" :bordered="false" :min-row-height="48"
-          :max-height="300" :virtual-scroll="music.myTranslate?.length > 7" :row-props="myTranslateMusicSelect" />
+          :max-height="300" :virtual-scroll="music.myTranslate?.length > 7" :row-props="MusicSelect" />
       </n-tab-pane>
       <n-tab-pane name="myFavorite" tab="收藏">
         <n-data-table :columns="favoritColumns" :data="music.myFavorite" :bordered="false" :min-row-height="48"
-          :max-height="300" :virtual-scroll="music.myFavorite?.length > 7" :row-props="myFavoriteMusicSelect" />
+          :max-height="300" :virtual-scroll="music.myFavorite?.length > 7" :row-props="MusicSelect" />
       </n-tab-pane>
       <template #suffix>
         <n-input v-model:value="searchText" round placeholder="搜索"
@@ -105,7 +134,15 @@ import { getData, sendData, getList, setConfig } from '@renderer/utils/fetchUtil
 import { RowData } from 'naive-ui/es/data-table/src/interface'
 import { h, onUnmounted, reactive, ref, watch } from 'vue'
 import { NButton, useMessage } from 'naive-ui'
-import { Search } from '@vicons/ionicons5'
+import { 
+  Search,
+  ShuffleOutline,
+  List,
+  Play,
+  PlaySkipForward,
+  PlaySkipBack,
+  Pause
+  } from '@vicons/ionicons5'
 const message = useMessage()
 const music: any = reactive({
   // 音乐列表
@@ -123,32 +160,8 @@ const nowState:any = ref('stop') // 当前播放状态
 const delayStatus = ref('system')
 const sustainStatus = ref('system')
 const playDelayStatus = ref('system')
-const statusColumns = [
-  {
-    value: 'start',
-    label: '开始',
-    show: true,
-    disabled: false
-  },
-  {
-    value: 'resume',
-    label: '继续',
-    show: false,
-    disabled: false
-  },
-  {
-    value: 'pause',
-    label: '暂停',
-    show: false,
-    disabled: false
-  },
-  {
-    value: 'stop',
-    label: '停止',
-    show: true,
-    disabled: false
-  }
-] // 播放按钮
+const isRandom = ref(false)
+const isPlay = ref(false)
 const musicColumns = [
   {
     title: '歌名',
@@ -248,97 +261,76 @@ const delaySpeed = ref(0) // 延迟设置
 const sustainSpeed = ref(0) // 延音设置
 const playDelay = ref(0) // 播放延迟
 
-const systemMusicSelect = (row: RowData) => {
-  return {
-    onClick: () => {
-      nowPlayMusic.value = row.name
-    }
-  }
-}
-const myImportMusicSelect = (row: RowData) => {
-  return {
-    onClick: () => {
-      nowPlayMusic.value = row.name
-    }
-  }
-}
-const myTranslateMusicSelect = (row: RowData) => {
-  return {
-    onClick: () => {
-      nowPlayMusic.value = row.name
-    }
-  }
-}
-const myFavoriteMusicSelect = (row: RowData) => {
-  return {
-    onClick: () => {
-      nowPlayMusic.value = row.name
-    }
-  }
-}
 
-
-watch(nowState,(newValue)=>{
-  switch (newValue) {
-    case 'start':
-      if (nowPlayMusic.value === '没有歌曲') {
-        message.error('选个歌再播放吧靓仔')
-        nowState.value = 'stop'
-        return
+let clickTimeout: any = null;
+const MusicSelect = (row: RowData) => {
+  return {
+    onClick: () => {
+      if (clickTimeout) {
+        clearTimeout(clickTimeout);
+        clickTimeout = null;
+        progress.value = 0;
+        setTimeout(() => {
+          sendData('start', {
+            fileName: nowPlayMusic.value,
+            type: nowType
+          });
+          isPlay.value = true;
+          message.success('开始');
+          progressInterval = setInterval(getProgress, 1000);
+        }, playDelay.value * 1000);
+      } else {
+          nowPlayMusic.value = row.name;
+          clickTimeout = setTimeout(() => {
+            clickTimeout = null;
+          }, 300);
       }
-      progress.value = 0
+    }
+  }
+};
+
+const playBarClickHandler = (status: String) =>{
+  if(status === 'resume'){
+    if(nowState.value == 'stop')  {
+        message.info("双击歌曲播放！")
+        return
+    }
+    getData('resume')
+    isPlay.value = true;
+    progressInterval = setInterval(getProgress, 1000)
+  }
+  if(status === 'pause'){
+    getData('pause')
+    isPlay.value = false;
+    clearInterval(progressInterval)
+    progressInterval = 0
+  }
+  if(status === 'stop'){
+    getData('stop')
+    clearPlayInfo()
+  }
+  if(status === 'start'){
       setTimeout(() => {
         sendData('start', {
           fileName: nowPlayMusic.value,
           type: nowType
         })
         message.success('开始')
+        isPlay.value = true;
         progressInterval = setInterval(getProgress, 1000)
       }, playDelay.value * 1000)
-      statusColumns[0].show = false
-      statusColumns[1].show = true
-      statusColumns[2].show = true
-      statusColumns[3].show = true
-      statusColumns[0].disabled = true
-      statusColumns[1].disabled = true
-      statusColumns[2].disabled = false
-      statusColumns[3].disabled = false
-      break
-    case 'resume':
-      getData('resume')
-      progressInterval = setInterval(getProgress, 1000)
-      statusColumns[0].disabled = true
-      statusColumns[1].disabled = false
-      statusColumns[2].disabled = false
-      statusColumns[3].disabled = false
-      break
-    case 'pause':
-      getData('pause')
-      clearInterval(progressInterval)
-      progressInterval = 0
-      statusColumns[0].disabled = false
-      statusColumns[1].disabled = false
-      statusColumns[2].disabled = false
-      statusColumns[3].disabled = false
-      break
-    case 'stop':
-      getData('stop')
-      clearPlayInfo()
-      statusColumns[0].disabled = false
-      statusColumns[1].disabled = false
-      statusColumns[2].disabled = false
-      statusColumns[3].disabled = false
-      break
   }
-})
+  if(status === 'pre'){
+    return
+  }
+  if(status === 'next'){
+    return
+  }
+  nowState.value = status
+}
 
-const delaySelect = (value: string) => {
-  switch (value) {
-    case 'system':
-      break
-    case 'random':
-      break
-  }
+const musicList = () =>{
+
 }
 
 function progressClick(event) {
@@ -361,17 +353,21 @@ function getProgress() {
   getData('getProgress').then((res) => {
     progress.value = res.now_progress
   })
-
-  if (progress.value == 100) {
-    getData('stop')
-    clearPlayInfo()
-    statusColumns[0].disabled = false
-    statusColumns[1].disabled = false
-    statusColumns[2].disabled = false
-    statusColumns[3].disabled = false
-  }
+  if (progress.value == 100) 
+    if(isRandom.value){
+      getData('stop')
+      clearPlayInfo()
+      randomMusicSelect()
+    }else{
+    }
 }
-
+function randomMusicSelect(){
+  getData('stop').then(()=>{
+    clearPlayInfo()
+    nowPlayMusic.value =  music.systemMusic[Math.floor(Math.random() * (music.systemMusic.length))].name
+    progress.value = 0
+  })
+}
 handleUpdateValue('myFavorite')
 handleUpdateValue('systemMusic')
 
@@ -446,10 +442,9 @@ function clearPlayInfo() {
   nowState.value = 'stop'
   progress.value = 0
   clearInterval(progressInterval)
-  statusColumns[0].show = true
-  statusColumns[1].show = false
-  statusColumns[2].show = false
-  statusColumns[3].show = true
+  statusbar[0] = true
+  statusbar[1] = false
+  isPlay.value = false;
 }
 
 //  收藏点击
@@ -521,46 +516,40 @@ function initWebSocket() {
   socket.onopen = () => {
     console.log('WebSocket 已连接')
   }
-
   socket.onmessage = (event) => {
-    const key = decodeURIComponent(event.data) // 获取按下的按键
-    console.log(nowState.value)
-    switch (key) {
-      case 'F5': // start开始播放
-        if (nowState.value != 'stop') {
-          window.api.system_notification("🍎", "仅停止状态下允许开始")
-          break;
-        } else {
-          if (nowPlayMusic.value === '没有歌曲') {
-            window.api.system_notification("😭", "选个歌再播放吧靓仔")
-            break;
-          }
+    const key = decodeURIComponent(event.data).trim() // 获取按下的按键
+    if(key === 'F5'){
+      if (nowState.value != 'stop') {
+        window.api.system_notification("🍎", "仅停止状态下允许开始")
+      } else {
+        console.log("else")
+        if (nowPlayMusic.value === '没有歌曲') {
+          window.api.system_notification("😭", "选个歌再播放吧靓仔")
+        }else{
           window.api.system_notification("✔", "开始")
-          nowState.value = 'start'
+          playBarClickHandler('start')
         }
-        break;
-      case 'F6':
-        if (nowState.value != 'pause') {
-          window.api.system_notification("🍎", "仅暂停状态下允许继续")
-          break;
-        }else{
+      }
+    }
+    if(key === 'F6'){
+      if (nowState.value === 'pause') {
           window.api.system_notification("▶", "继续")
-          nowState.value = 'resume'
-        }
-        break;
-      case 'F7':
-        if (nowState.value != 'start' && nowState.value != 'resume') {
-          window.api.system_notification("🍎", "仅正在播放时允许暂停")
-          break;
-        }else{
-          window.api.system_notification("⏸", "暂停")
-          nowState.value = 'pause'
-        }
-        break;
-      case 'F8':
-          window.api.system_notification("🛑", "停止")
-          nowState.value = 'stop'
-        break;
+          playBarClickHandler('resume')
+      }else{
+        window.api.system_notification("🍎", "仅暂停状态下允许继续")
+      }
+    }
+    if(key === 'F7'){
+      if (isPlay.value) {
+        window.api.system_notification("⏸", "暂停")
+        playBarClickHandler('pause')
+      }else{
+        window.api.system_notification("🍎", "仅正在播放时允许暂停")
+      }
+    }
+    if(key === 'F8'){
+      window.api.system_notification("🛑", "停止")
+      playBarClickHandler('stop')
     }
   }
   socket.onclose = () => {
@@ -577,6 +566,8 @@ onUnmounted(() => {
   if (socket) {
     socket.close()
     socket = null
+    getData('stop')
+    clearPlayInfo()
   }
 })
 </script>
