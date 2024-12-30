@@ -1,10 +1,10 @@
 import threading
 import time
-
 from utils._global import global_state
 from utils.musicFileTranselate import convert_notes_to_delayed_format
 from utils.playThread import ControlledThread
 from pynput.keyboard import Key, Controller
+
 keyboard = Controller()
 
 def send_single_key_to_window_task(key):
@@ -14,46 +14,49 @@ def send_single_key_to_window_task(key):
     keyboard.release(key)
 
 def send_multiple_key_to_window_task(keys):
+    """发送组合按键，减少延迟"""
     for key in keys:
         keyboard.press(key)
-        time.sleep(0.01)
     time.sleep(global_state.sustain_time)
     for key in keys:
         keyboard.release(key)
-        time.sleep(0.01)
 
 def execute_in_thread(target, *args, **kwargs):
-    """通用线程执行器"""
+    """通用线程执行器，采用线程池管理"""
     thread = threading.Thread(target=target, args=args, kwargs=kwargs)
+    thread.daemon = True  # 将线程设置为守护线程，程序退出时自动结束线程
     thread.start()
     return thread
 
 def send_single_key_to_window(key):
     """发送单个按键（新线程中执行）"""
-    execute_in_thread(send_single_key_to_window_task,key)
+    execute_in_thread(send_single_key_to_window_task, key)
 
 def send_multiple_key_to_window(keys):
     """发送组合按键（新线程中执行）"""
-    execute_in_thread(send_multiple_key_to_window_task,keys)
+    execute_in_thread(send_multiple_key_to_window_task, keys)
 
 def playMusic(fileName, type):
-    """优化音乐播放逻辑"""
-    # 加载乐谱数据一次，避免重复转换ih
+    """优化音乐播放逻辑，只加载乐谱数据一次"""
     convert_notes_to_delayed_format(fileName, type)
     global_state.thread = ControlledThread()
     global_state.thread.start()
 
 def resume():
+    """恢复播放"""
+    if global_state.thread:
         global_state.thread.resume()
 
 def pause():
+    """暂停播放"""
+    if global_state.thread:
         global_state.thread.pause()
 
 def stop():
+    """停止播放"""
+    if global_state.thread:
         global_state.thread.stop()
-
-
-
+# 键盘映射
 KEYS_MAP = {
     'A': 0x41, 'a': 0x41,
     'B': 0x42, 'b': 0x42,
@@ -81,7 +84,7 @@ KEYS_MAP = {
     'X': 0x58, 'x': 0x58,
     'Y': 0x59, 'y': 0x59,
     'Z': 0x5A, 'z': 0x5A,
-    '0': 0x30, ')': 0x30,  # 右括号在某些键盘布局上可能是Shift+0
+    '0': 0x30, ')': 0x30,
     '1': 0x31, '!': 0x31,
     '2': 0x32, '@': 0x32,
     '3': 0x33, '#': 0x33,
@@ -90,7 +93,7 @@ KEYS_MAP = {
     '6': 0x36, '^': 0x36,
     '7': 0x37, '&': 0x37,
     '8': 0x38, '*': 0x38,
-    '9': 0x39, '(': 0x39,  # 左括号在某些键盘布局上可能是Shift+9
+    '9': 0x39, '(': 0x39,
     '-': 0x2D, '_': 0x2D,
     '=': 0x3D, '+': 0x3D,
     '[': 0x5B, '{': 0x5B,

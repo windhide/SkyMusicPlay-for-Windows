@@ -6,7 +6,6 @@ def getResourcesPath(file):
     target_subpath = os.path.join("backend_dist", "sky-music-server")
     if target_subpath in resources_path:
         resources_path = os.path.abspath(os.path.join(resources_path, "..", ".."))
-
     if file is None:
         return os.path.join(resources_path, 'resources')
     else:

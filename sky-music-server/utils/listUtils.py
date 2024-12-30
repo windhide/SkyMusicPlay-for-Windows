@@ -1,18 +1,13 @@
 import os
-
 from utils.pathUtils import getResourcesPath
 
-
-def getTypeMusicList(type,searchStr = None):
-    resources_dir = os.path.join(getResourcesPath(None) , type)
+def getTypeMusicList(type, searchStr=None):
+    # 获取资源目录路径
+    resources_dir = os.path.join(getResourcesPath(None), type)
+    # 获取目录下所有文件名
     file_names = [file for file in os.listdir(resources_dir) if os.path.isfile(os.path.join(resources_dir, file))]
-    file_names_array = []
-    print("searchStr",searchStr)
-    if searchStr is not None and searchStr != '' and searchStr != ' ':
-        for item in [item for item in file_names if searchStr.lower() in item.lower()]:
-            file_names_array.append({"name": item.replace(".txt", "")})
-    else:
-        for item in file_names:
-            file_names_array.append({"name": item.replace(".txt", "")})
-
-    return file_names_array
+    # 如果 searchStr 不为空，过滤包含 searchStr 的文件名，忽略大小写
+    if searchStr and searchStr.strip():
+        file_names = [file for file in file_names if searchStr.lower() in file.lower()]
+    # 返回处理后的文件列表，去掉扩展名 .txt
+    return [{"name": file.replace(".txt", "")} for file in file_names]
