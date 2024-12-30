@@ -166,7 +166,7 @@ function createWindow(): void {
   ipcMain.on('open-tutorial', () => {
     let root_path;
     if (is.dev) {
-      root_path = "http://127.0.0.1:5173/";
+      root_path = "http://localhost:5173";
     } else {
       root_path = join(__dirname, '../renderer/index.html')
     };

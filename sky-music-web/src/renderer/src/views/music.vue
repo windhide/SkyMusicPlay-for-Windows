@@ -26,7 +26,7 @@
         <n-icon><PlaySkipForward /></n-icon>
       </template>
     </n-button>
-    <n-button quaternary circle type="info" size="large" @click="musicList()">
+    <n-button quaternary circle type="info" size="large" @click="reloadMusicList()">
       <template #icon>
         <n-icon><List /></n-icon>
       </template>
@@ -127,13 +127,18 @@
       </template>
     </n-tabs>
   </n-card>
+  <n-drawer v-model:show="active" :width="400" :placement="placement" style="border-radius: 30px;">
+    <n-drawer-content title="播放列表">
+      <n-data-table :columns="musicListColumns" :data="music.musicList" :bordered="false" :height-for-row	="1" :virtual-scroll="music.systemMusic?.length > 7" :row-props="musicListSelect" />
+    </n-drawer-content>
+  </n-drawer>
 </template>
 
 <script lang="ts" setup>
 import { getData, sendData, getList, setConfig } from '@renderer/utils/fetchUtils'
 import { RowData } from 'naive-ui/es/data-table/src/interface'
 import { h, onUnmounted, reactive, ref, watch } from 'vue'
-import { NButton, useMessage } from 'naive-ui'
+import { NButton, useMessage, DrawerPlacement } from 'naive-ui'
 import { 
   Search,
   ShuffleOutline,
@@ -143,13 +148,15 @@ import {
   PlaySkipBack,
   Pause
   } from '@vicons/ionicons5'
+import { useStore } from 'vuex'
 const message = useMessage()
 const music: any = reactive({
   // 音乐列表
   systemMusic: [], // 原版音乐
   myImport: [], // 导入的音乐
   myTranslate: [], // 扒谱的音乐
-  myFavorite: [] // 我的最爱
+  myFavorite: [], // 我的最爱
+  musicList: [] // 我的最爱
 })
 const nowPlayMusic = ref('没有歌曲') // 当前选中歌曲
 let nowType = 'systemMusic'
@@ -162,6 +169,9 @@ const sustainStatus = ref('system')
 const playDelayStatus = ref('system')
 const isRandom = ref(false)
 const isPlay = ref(false)
+const active = ref(false)
+const placement = ref<DrawerPlacement>('left')
+const store = useStore()
 const musicColumns = [
   {
     title: '歌名',
@@ -255,6 +265,14 @@ const myImportColumns = [
   }
 ] // 音乐列
 
+const musicListColumns = [
+  {
+    title: '歌名',
+    key: 'name',
+    resizable: true
+  }
+] // 音乐列
+
 const progress = ref(0.0) // 播放进度条
 const playSpeed = ref(1) // 播放速度
 const delaySpeed = ref(0) // 延迟设置
@@ -283,11 +301,26 @@ const MusicSelect = (row: RowData) => {
           nowPlayMusic.value = row.name;
           clickTimeout = setTimeout(() => {
             clickTimeout = null;
+            store.commit('addPlayList', row.name);
           }, 300);
       }
     }
   }
 };
+
+const musicListSelect = (row: RowData,rowIndex : number) => {
+  return {
+    onClick: () => {
+            store.commit("removePlayList",rowIndex)
+            music.musicList = store.getters.getPlayList
+    }
+  }
+};
+
+function reloadMusicList(){
+  active.value = !active.value; 
+  music.musicList = store.getters.getPlayList
+}
 
 const playBarClickHandler = (status: String) =>{
   if(status === 'resume'){
@@ -329,10 +362,6 @@ const playBarClickHandler = (status: String) =>{
   nowState.value = status
 }
 
-const musicList = () =>{
-
-}
-
 function progressClick(event) {
   if (nowState.value === 'stop') {
     message.error('没有歌曲在播放，请播放歌曲后继续操作')
@@ -354,20 +383,27 @@ function getProgress() {
     progress.value = res.now_progress
   })
   if (progress.value == 100) 
+    getData('stop')
     if(isRandom.value){
-      getData('stop')
-      clearPlayInfo()
-      randomMusicSelect()
+      randomMusicPlay()
     }else{
+      listMusicPlay()
     }
 }
-function randomMusicSelect(){
+
+
+function randomMusicPlay(){
   getData('stop').then(()=>{
     clearPlayInfo()
     nowPlayMusic.value =  music.systemMusic[Math.floor(Math.random() * (music.systemMusic.length))].name
-    progress.value = 0
+    playBarClickHandler("start")
   })
 }
+
+function listMusicPlay(){
+
+}
+
 handleUpdateValue('myFavorite')
 handleUpdateValue('systemMusic')
 
