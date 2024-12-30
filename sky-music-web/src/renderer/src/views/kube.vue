@@ -11,7 +11,7 @@
       :show-file-list="false"
       @finish="handleFinish"
     >
-    <n-button type="info" ghost> step1.选择文件 </n-button>
+    <n-button type="info" ghost> step1.选择音乐 </n-button>
     </n-upload>
     <n-button type="primary" ghost :loading="processFlag" @click="handleStartTranslate" style="margin-left: 25px;">
       step2.开始转换
