@@ -26,9 +26,7 @@
         </n-radio-group>
       </n-col>
       <n-col v-show="delayStatus == 'custom'" :span="9" style="margin-left: -50px">
-        <n-space vertical style="width: 150px; float: right; margin-top: 2px">
-          <n-slider v-model:value="delaySpeed" :step="0.01" :min="0" :max="2" />
-        </n-space>
+        <n-input-number v-model:value="delaySpeed" size="tiny" :min="0" :max="2"  placeholder="输入间隔延迟" />
       </n-col>
     </n-row>
     <n-row gutter="12">
@@ -43,9 +41,7 @@
         </n-radio-group>
       </n-col>
       <n-col v-show="sustainStatus == 'custom'" :span="9" style="margin-left: -50px">
-        <n-space vertical style="width: 150px; float: right; margin-top: 2px">
-          <n-slider v-model:value="sustainSpeed" :step="0.01" :min="0" :max="1.5" />
-        </n-space>
+        <n-input-number v-model:value="sustainSpeed" size="tiny" :min="0" :max="2" placeholder="输入延音持续" />
       </n-col>
     </n-row>
     <n-row gutter="12">
@@ -53,9 +49,7 @@
         <n-gradient-text type="info" :size="13"> 倍速设置-&nbsp;&nbsp;&nbsp; </n-gradient-text>
       </n-col>
       <n-col :span="0" style="margin-left: -1.2%">
-        <n-space vertical style="width: 240px; margin-top: 2px">
-          <n-slider v-model:value="playSpeed" :step="0.01" :min="0.25" :max="5" />
-        </n-space>
+        <n-input-number v-model:value="playSpeed" size="tiny" :min="0.25" :max="5" placeholder="输入倍速速度" />
       </n-col>
     </n-row>
     <n-row gutter="12">
