@@ -129,7 +129,14 @@
   </n-card>
   <n-drawer v-model:show="active" :width="400" :placement="placement" style="border-radius: 30px;">
     <n-drawer-content title="播放列表">
-      <n-data-table :columns="musicListColumns" :data="music.musicList" :bordered="false" :height-for-row	="1" :virtual-scroll="music.systemMusic?.length > 7" :row-props="musicListSelect" />
+      <n-button type="info" ghost style="margin-bottom: 10px;" @click="clearPlayList"> 清空 </n-button>
+      <n-data-table :columns="musicListColumns" 
+      :max-height="570"
+      :data="music.musicList" 
+      :bordered="false" 
+      :height-for-row	="1" 
+      :virtual-scroll="music.systemMusic?.length > 7" 
+      :row-props="musicListSelect" />
     </n-drawer-content>
   </n-drawer>
 </template>
@@ -319,6 +326,10 @@ const musicListSelect = (row: RowData,rowIndex : number) => {
 
 function reloadMusicList(){
   active.value = !active.value; 
+  music.musicList = store.getters.getPlayList
+}
+function clearPlayList(){
+  store.commit('clearPlayList')
   music.musicList = store.getters.getPlayList
 }
 
