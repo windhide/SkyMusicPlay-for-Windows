@@ -13,6 +13,9 @@ delay_interval = 0.01 # 10毫秒
 sustain_time = 0.01 # 20毫秒
 follow_music = ""
 follow_sheet = []
+nowClientKey = ""
+isNowAutoPlaying = False
+nowRobotKey = ""
 
 keyMap = {
     '1Key0':'y', '1Key1':'u', '1Key2':'i', '1Key3':'o', '1Key4':'p',

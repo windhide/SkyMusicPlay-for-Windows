@@ -173,10 +173,12 @@ def next_sheet(request: dict):
             return ""
         if request["type"] == "ok":
             sheet = global_state.follow_sheet[0]
+            global_state.nowClientKey = sheet
             global_state.follow_sheet = global_state.follow_sheet[1:]
             print(f"Next sheet: {sheet}")
             return sheet
         else:
+            global_state.nowClientKey = global_state.follow_sheet[0]
             return global_state.follow_sheet[0]
     except IndexError:
         print("Empty follow sheet")

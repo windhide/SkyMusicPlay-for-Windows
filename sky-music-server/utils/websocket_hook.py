@@ -7,20 +7,34 @@ from utils._global import global_state
 
 # 打包放行
 import builtins
+
+from utils.robot.robotUtils import send_multiple_key_to_window_task
+
 # 重定向 print 到空函数
 # builtins.print = lambda *args, **kwargs: None
 
 # WebSocket 服务端实例
 server = WebsocketServer("127.0.0.1",11451)
+
 # 键盘按键事件处理
 def on_press(key):
     if global_state.follow_music != "":
         try:
             # 仅处理特定的按键
-            if key.char in 'yuiophjkl;nm,./':
-                print(f"按键 {key.char} 被触发")
-                # 向所有客户端发送按键信息
-                server.send_message_to_all(urllib.parse.quote(key.char))
+            if key.char in 'yuiophjkl;nm,./\\\\':
+                if global_state.isNowAutoPlaying:
+                    if key.char not in "\\\\":
+                        global_state.nowRobotKey += key.char
+                    if len(global_state.nowRobotKey) == len(global_state.nowClientKey):
+                        global_state.isNowAutoPlaying = False
+                        global_state.nowRobotKey = ''
+                else:
+                    if key.char in "\\\\":
+                        global_state.isNowAutoPlaying = True
+                        send_multiple_key_to_window_task(global_state.nowClientKey)
+                    else:
+                        # 向所有客户端发送按键信息
+                        server.send_message_to_all(urllib.parse.quote(key.char))
         except AttributeError:
             return
         except Exception as e:

@@ -97,11 +97,9 @@ def process_midi_to_txt(input_path, output_path, time_merge_threshold=TIME_MERGE
     merged_notes = []
     last_time = None
     temp_keys = []
-
     for note in notes:
         time = note['time']
         key = note['key']
-
         if last_time is None or time - last_time <= time_merge_threshold:
             # 累加同一时间点的按键
             temp_keys.append(key)
@@ -118,6 +116,26 @@ def process_midi_to_txt(input_path, output_path, time_merge_threshold=TIME_MERGE
     merged_keys = merge_keys(temp_keys)
     for merged_key in merged_keys:
         merged_notes.append({'time': last_time, 'key': merged_key})
+
+    index = 10
+    while(True):
+        # 检查谱子的长度
+        if len(merged_notes) < 50:
+            new_notes = []
+            for note in notes:
+                pitch = note['key']
+                original_pitch = int(pitch.split('Key')[-1])  # 提取原始音符编号
+                new_pitch = original_pitch - 1  # 整体降调一个半音
+                time = note['time']
+                # 映射新的降调音符
+                if new_pitch in note_to_key:
+                    new_notes.append({'time': time, 'key': note_to_key[new_pitch]})
+                elif new_pitch in extra_note_to_key:
+                    for extra_key in extra_note_to_key[new_pitch]:
+                        new_notes.append({'time': time, 'key': extra_key})
+            merged_notes = new_notes  # 更新降调后的音符列表
+        if len(merged_notes) > 50:
+            break
 
     # 获取BPM值
     bpm = get_bpm_from_midi(input_path)
