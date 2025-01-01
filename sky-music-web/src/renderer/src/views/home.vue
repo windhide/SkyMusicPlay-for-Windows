@@ -102,7 +102,15 @@ function blankClick(url) {
 
 function jump() {
   if (window.innerWidth == 800) {
-    // 更新检测
+    return;
+  }
+  sendData("nextSheet", { type: "不ok" }).then((res) => {
+    if (res.length != 0) router.push({ name: "keyboard" });
+  });
+}
+
+let updateInterval = setInterval(()=>{
+  if (window.innerWidth == 800) {
     window.api.getVersion().then((cilentVersion) => {
       getData("update").then((cloudVersion: any) => {
         if (
@@ -116,19 +124,19 @@ function jump() {
             contentStyle: { whiteSpace: "pre-wrap" },
             onPositiveClick: () => {
               getData("openBrowser?url=" + cloudVersion.downloadUrl);
+              clearInterval(updateInterval)
             },
             onNegativeClick: () => {
+              clearInterval(updateInterval)
             }
           });
         }
       });
     });
-    return;
   }
-  sendData("nextSheet", { type: "不ok" }).then((res) => {
-    if (res.length != 0) router.push({ name: "keyboard" });
-  });
-}
+},2000)
+
+
 jump();
 </script>
 
