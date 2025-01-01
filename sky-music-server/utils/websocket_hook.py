@@ -21,16 +21,18 @@ def on_press(key):
     if global_state.follow_music != "":
         try:
             # 仅处理特定的按键
-            if key.char in 'yuiophjkl;nm,./\\\\':
+            if key.char in 'yuiophjkl;nm,./-=':
                 if global_state.isNowAutoPlaying:
-                    if key.char not in "\\\\":
+                    if key.char not in "-":
                         global_state.nowRobotKey += key.char
                     if len(global_state.nowRobotKey) == len(global_state.nowClientKey):
                         global_state.isNowAutoPlaying = False
                         global_state.nowRobotKey = ''
                 else:
-                    if key.char in "\\\\":
+                    if key.char in "-":
                         global_state.isNowAutoPlaying = True
+                        send_multiple_key_to_window_task(global_state.nowClientKey)
+                    if key.char in "=":
                         send_multiple_key_to_window_task(global_state.nowClientKey)
                     else:
                         # 向所有客户端发送按键信息
