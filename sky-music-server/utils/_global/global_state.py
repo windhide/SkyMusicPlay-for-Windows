@@ -15,6 +15,7 @@ follow_music = ""
 follow_sheet = []
 nowClientKey = ""
 isNowAutoPlaying = False
+isShow = False
 nowRobotKey = ""
 
 keyMap = {

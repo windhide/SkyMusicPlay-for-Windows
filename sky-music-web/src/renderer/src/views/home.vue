@@ -110,7 +110,7 @@ function jump() {
         ) {
           dialog.success({
             title: cloudVersion.title,
-            content: cloudVersion.content,
+            content: cloudVersion.content?.replaceAll("\\n","\n").replaceAll("\\t","\t"),
             positiveText: cloudVersion.positiveText,
             negativeText: cloudVersion.negativeText,
             contentStyle: { whiteSpace: "pre-wrap" },
@@ -125,7 +125,6 @@ function jump() {
     });
     return;
   }
-
   sendData("nextSheet", { type: "不ok" }).then((res) => {
     if (res.length != 0) router.push({ name: "keyboard" });
   });
