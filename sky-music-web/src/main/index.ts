@@ -6,7 +6,6 @@ import { exec } from 'child_process'
 const path = require('path')
 const fs = require('fs');
 const iconv = require('iconv-lite'); // 用于支持多种编码格式
-
 let mainWindow: BrowserWindow | null = null;
 let modal: BrowserWindow | null = null;
 
@@ -161,6 +160,10 @@ function createWindow(): void {
       console.error('Error loading JSON:', err);
       return false;
     }
+  });
+
+  ipcMain.handle('getVersion', (_event) => {
+    return app.getVersion()
   });
 
   ipcMain.on('open-tutorial', () => {

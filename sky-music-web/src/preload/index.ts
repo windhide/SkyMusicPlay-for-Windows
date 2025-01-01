@@ -25,7 +25,10 @@ if (process.contextIsolated) {
       readFile: async (filePath: string) => {
         return await ipcRenderer.invoke('read-file', filePath); 
       },
-      system_notification: async (title,body) => {
+      getVersion: () => {
+        return ipcRenderer.invoke('getVersion'); 
+      },
+        system_notification: async (title,body) => {
         ipcRenderer.send('send_system_notification', title, body); 
       },
     });// 用于向主进程发送拖动事件

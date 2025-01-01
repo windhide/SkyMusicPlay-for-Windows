@@ -1,8 +1,10 @@
+import json
 import shutil
 import threading
 import time
 import webbrowser
 import psutil  # 新增，用于检查进程状态
+import requests
 from fastapi import FastAPI, UploadFile
 import uvicorn
 import os
@@ -177,9 +179,13 @@ def next_sheet(request: dict):
             global_state.follow_sheet = global_state.follow_sheet[1:]
             print(f"Next sheet: {sheet}")
             return sheet
+        elif request["type"] == "pre":
+            return global_state.follow_sheet[1]
         else:
             global_state.nowClientKey = global_state.follow_sheet[0]
             return global_state.follow_sheet[0]
+
+
     except IndexError:
         print("Empty follow sheet")
         return ""
@@ -258,6 +264,14 @@ def open_files():
     appdata_path = os.getenv('APPDATA')
     os.startfile(os.path.join(appdata_path, 'ThatGameCompany', 'com.netease.sky', 'images'))
 
+@app.get("/update")
+def get_update():
+    response = requests.get('https://gitee.com/WindHide/SkyMusicPlay-for-Windows/raw/main/.version')
+    if response.status_code == 200:
+        return json.loads(response.text)
+    else:
+        print(f'请求失败，状态码：{response.status_code}')
+    return "404"
 
 if __name__ == '__main__':
     # 创建监听 WebSocket 的线程
