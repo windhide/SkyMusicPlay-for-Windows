@@ -16,7 +16,7 @@
     <n-button type="primary" ghost :loading="processFlag" @click="handleStartTranslate" style="margin-left: 25px;">
       step2.开始转换
     </n-button>
-    <n-divider />
+    <n-divider style="margin:0px"/>
     <n-gradient-text type="info" :size="18">
       当前任务
       {{

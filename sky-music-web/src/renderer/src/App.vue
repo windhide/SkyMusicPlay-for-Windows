@@ -36,7 +36,7 @@
                   <n-menu :collapsed-width="64" :collapsed-icon-size="22" :options="menuOptions"
                     @update:value="clickMenu" />
                 </n-layout-sider>
-                <n-layout style="max-height: 739px; padding: 25px">
+                <n-layout style="max-height: 739px; padding: 40px 25px 0px 25px">
                   <router-view />
                 </n-layout>
               </n-layout>
