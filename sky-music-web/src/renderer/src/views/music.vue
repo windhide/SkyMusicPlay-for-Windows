@@ -320,10 +320,11 @@ const MusicSelect = (row: RowData) => {
 };
 
 const musicListSelect = (row: RowData,rowIndex : number) => {
+  console.log(row)
   return {
     onClick: () => {
-            store.commit("removePlayList",rowIndex)
-            music.musicList = store.getters.getPlayList
+      store.commit("removePlayList",rowIndex)
+      music.musicList = store.getters.getPlayList
     }
   }
 };
