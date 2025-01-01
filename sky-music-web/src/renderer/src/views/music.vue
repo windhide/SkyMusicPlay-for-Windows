@@ -295,21 +295,25 @@ const MusicSelect = (row: RowData) => {
         clearTimeout(clickTimeout);
         clickTimeout = null;
         progress.value = 0;
-        setTimeout(() => {
-          sendData('start', {
-            fileName: nowPlayMusic.value,
-            type: nowType
-          });
-          isPlay.value = true;
-          message.success('开始');
-          progressInterval = setInterval(getProgress, 1000);
-        }, playDelay.value * 1000);
+
+        getData('stop').then(() => {
+          setTimeout(() => {
+            sendData('start', {
+              fileName: nowPlayMusic.value,
+              type: nowType
+            });
+            isPlay.value = true;
+            message.success('开始');
+            progressInterval = setInterval(getProgress, 1000);
+          }, playDelay.value * 1000)
+        })
+          ;
       } else {
-          nowPlayMusic.value = row.name;
-          clickTimeout = setTimeout(() => {
-            clickTimeout = null;
-            store.commit('addPlayList', row.name);
-          }, 300);
+        nowPlayMusic.value = row.name;
+        clickTimeout = setTimeout(() => {
+          clickTimeout = null;
+          store.commit('addPlayList', row.name);
+        }, 300);
       }
     }
   }
