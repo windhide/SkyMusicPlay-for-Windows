@@ -137,7 +137,7 @@ function createWindow(): void {
     notification.show();  // 显示通知
     setTimeout(()=>{
       notification.close()
-    },1000)
+    },1500)
   })
   
   ipcMain.handle('read-file', async (_event, filePath:string) => {
