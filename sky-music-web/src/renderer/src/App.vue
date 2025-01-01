@@ -1,15 +1,15 @@
 <template>
-  <n-config-provider :theme="darkTheme">
+  <n-config-provider :theme="darkTheme" :style="bronWidth === 800 ? '' : 'background-color: rgba(0, 0, 0, 0.5)'">
     <n-flex id="drag-area" justify="end" style="position: fixed; z-index: 200; right: 12px" :style="{
       width: collapsed ? '90%' : '80%'
     }">
-      <n-button circle ghost dashed type="warning" style="margin-top: 12px" @click="openFileHandle" v-show="miniShow">
+      <n-button circle ghost dashed type="warning" style="margin-top: 12px" @click="openFileHandle" v-show="bronWidth === 800">
         📁
       </n-button>
       <n-button circle :dashed="fixDashed" ghost type="warning" style="margin-top: 12px" @click="fixHandle">
         📌
       </n-button>
-      <n-button circle ghost type="info" style="margin-top: 12px" @click="miniHandle" v-show="miniShow">
+      <n-button circle ghost type="info" style="margin-top: 12px" @click="miniHandle" v-show="bronWidth === 800">
         <template #icon>
           <n-icon>
             <Remove />
@@ -24,19 +24,19 @@
         </template>
       </n-button>
     </n-flex>
-    <n-spin :show="show" :size="90" style="background-color: black">
+    <n-spin :show="show" :size="90" :style="bronWidth === 800 ? 'background-color: black' : 'background-color: rgba(0, 0, 0, 0)'">
       <n-message-provider>
         <n-dialog-provider>
           <n-space vertical>
-            <n-layout>
-              <n-layout has-sider>
+            <n-layout :style="bronWidth === 800 ? '' : 'background-color: rgba(0, 0, 0, 0)'">
+              <n-layout has-sider :style="bronWidth === 800 ? '' : 'background-color: rgba(0, 0, 0, 0)'">
                 <n-layout-sider v-show="route.fullPath.indexOf('keyboard') == -1" bordered show-trigger
                   collapse-mode="width" :collapsed-width="64" :width="150" :native-scrollbar="false"
                   style="height: 100vh" @update:collapsed="collapsedHandle">
                   <n-menu :collapsed-width="64" :collapsed-icon-size="22" :options="menuOptions"
                     @update:value="clickMenu" />
                 </n-layout-sider>
-                <n-layout style="max-height: 739px; padding: 40px 25px 0px 25px">
+                <n-layout :style="bronWidth === 800 ? 'padding: 40px 25px 0px 25px' : 'background-color: rgba(0, 0, 0, 0)'">
                   <router-view />
                 </n-layout>
               </n-layout>
@@ -62,11 +62,11 @@ import {
   Library,
   Close,
   Remove,
-  ImageOutline
 } from '@vicons/ionicons5'
 import router from '@renderer/router'
 
 import { useRoute } from 'vue-router'
+let bronWidth = window.innerWidth
 const route = useRoute()
 const collapsed = ref(false)
 function fixHandle() {
@@ -100,8 +100,6 @@ const collapsedHandle = (isCoolapsed: boolean) => {
 }
 
 let show = ref(true)
-let miniShow = ref(window.innerWidth > 700)
-
 let fixDashed = ref(true)
 const menuOptions = [
   {

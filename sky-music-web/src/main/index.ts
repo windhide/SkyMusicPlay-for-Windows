@@ -9,6 +9,9 @@ const iconv = require('iconv-lite'); // 用于支持多种编码格式
 let mainWindow: BrowserWindow | null = null;
 let modal: BrowserWindow | null = null;
 
+let modalWidth:any = 1100
+let modalHeight:any = 600
+
 app.commandLine.appendSwitch('no-sandbox');
 
 function createWindow(): void {
@@ -90,8 +93,8 @@ function createWindow(): void {
         modal.setBounds({
           x: cursorPoint.x - offsetX,
           y: cursorPoint.y - offsetY,
-          width: 600,
-          height: 400
+          width: modalWidth,
+          height: modalHeight
         })
       }
     }
@@ -166,6 +169,7 @@ function createWindow(): void {
     return app.getVersion()
   });
 
+
   ipcMain.on('open-tutorial', () => {
     let root_path;
     if (is.dev) {
@@ -174,11 +178,11 @@ function createWindow(): void {
       root_path = join(__dirname, '../renderer/index.html')
     };
     modal = new BrowserWindow({
-      width: 600,
-      height: 400,
+      width: modalWidth,
+      height: modalHeight,
       hasShadow: true, // 阴影 
-      resizable: false, // 禁止调整窗口大小
-      frame: false,     // 禁用默认的窗口框架（包括菜单和标题栏）
+      // resizable: false, // 禁止调整窗口大小
+      frame: false,     // 禁用默认的窗口框架（包括菜单和标题栏）=
       transparent: true,
       webPreferences: {
         preload: join(__dirname, '../preload/index.js'),
@@ -188,6 +192,14 @@ function createWindow(): void {
       },
     });
     modal.loadURL(root_path);
+    modal.on('resize', () => {
+      console.log('Second window was resized',modal?.getBounds());
+      let tempWidth:any = modal?.getBounds().width;
+      if(Math.abs(modalWidth - tempWidth) > 2){
+        modalWidth = modal?.getBounds().width;
+        modalHeight = modal?.getBounds().height;
+      }
+    });
   });
 
 

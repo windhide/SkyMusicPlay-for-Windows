@@ -101,7 +101,7 @@ function blankClick(url) {
 }
 
 function jump() {
-  if (window.innerWidth > 700) {
+  if (window.innerWidth == 800) {
     // 更新检测
     window.api.getVersion().then((cilentVersion) => {
       getData("update").then((cloudVersion: any) => {
