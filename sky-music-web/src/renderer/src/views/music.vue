@@ -3,8 +3,13 @@
     <n-gradient-text :size="20" type="success" style="width: 100%">
       {{ '当前播放: ' + nowPlayMusic + '' }}
       <br />
-      <n-progress style="max-width: 60%; display: inline-block" type="line" :percentage="progress"
-        indicator-placement="inside" processing :color="{ stops: ['white', 'blue'] }" @click="progressClick" />
+      <n-slider v-model:value="progress" :step="0.1" style="max-width: 60%; display: inline-block; margin-left: 3px">
+        <template #thumb>
+          <n-icon-wrapper :size="20" :border-radius="12">
+              <n-icon :size="16" :component="PawSharp" />
+          </n-icon-wrapper>
+        </template>
+      </n-slider>
     </n-gradient-text>
     <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('resume','')" v-show="!isPlay" >
       <template #icon>
@@ -138,6 +143,7 @@
 
 <script lang="ts" setup>
 import { getData, sendData, getList, setConfig } from '@renderer/utils/fetchUtils'
+
 import { RowData } from 'naive-ui/es/data-table/src/interface'
 import { h, onUnmounted, reactive, ref, watch } from 'vue'
 import { NButton, useMessage, DrawerPlacement } from 'naive-ui'
@@ -147,7 +153,8 @@ import {
   List,
   Play,
   PlaySkipForward,
-  Pause
+  Pause,
+  PawSharp
   } from '@vicons/ionicons5'
 import { useStore } from 'vuex'
 const message = useMessage()
@@ -365,21 +372,10 @@ const playBarClickHandler = (status: String, type: String) =>{
   nowState.value = status
 }
 
-function progressClick(event) {
-  if (nowState.value === 'stop') {
-    message.error('没有歌曲在播放，请播放歌曲后继续操作')
-    return
-  }
-  // 获取点击事件对象
-  const rect = event.currentTarget.getBoundingClientRect() // 获取组件的边界框
-  const clickPosition = event.clientX - rect.left // 计算点击位置（相对于组件左边）
-  const componentWidth = rect.width // 获取组件的总宽度
-  // 计算百分比
-  const percentage = (clickPosition / componentWidth) * 100
-  // 更新进度条
-  progress.value = parseFloat(Math.min(Math.max(percentage, 0), 100).toFixed(1)) // 限制在0-100之间
+watch(progress,()=>{
   setConfig('set_progress', progress.value / 100)
-}
+})
+
 
 function getProgress() {
   getData('getProgress').then((res) => {
