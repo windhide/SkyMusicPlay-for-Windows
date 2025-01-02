@@ -113,6 +113,7 @@ let updateInterval = setInterval(()=>{
   if (window.innerWidth == 800) {
     window.api.getVersion().then((cilentVersion) => {
       getData("update").then((cloudVersion: any) => {
+        if (cloudVersion == null) clearInterval(updateInterval)
         if (
           cloudVersion.version.match(/\d/g).join("") > cilentVersion.match(/\d/g).join("")
         ) {
