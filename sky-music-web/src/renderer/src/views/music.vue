@@ -3,7 +3,7 @@
     <n-gradient-text :size="20" type="success" style="width: 100%">
       {{ '当前播放: ' + nowPlayMusic + '' }}
       <br />
-      <n-slider v-model:value="progress" :step="0.1" style="max-width: 60%; display: inline-block; margin-left: 3px">
+      <n-slider v-model:value="progress" :step="0.1" style="max-width: 60%; display: inline-block; margin-left: 3px" @dragend="drag_progress_end" @dragstart="drag_progress_start">
         <template #thumb>
           <n-icon-wrapper :size="20" :border-radius="12">
               <n-icon :size="16" :component="PawSharp" />
@@ -332,7 +332,6 @@ const playBarClickHandler = (status: String, type: String) =>{
         message.info("双击歌曲播放！")
         return
     }
-    getData('resume')
     isPlay.value = true;
     progressInterval = setInterval(getProgress, 1000)
   }
@@ -372,9 +371,18 @@ const playBarClickHandler = (status: String, type: String) =>{
   nowState.value = status
 }
 
-watch(progress,()=>{
+function drag_progress_start(){
+  getData('pause').then(()=>{
+    clearInterval(progressInterval)
+  })
+  
+}
+function drag_progress_end(){
   setConfig('set_progress', progress.value / 100)
-})
+  getData('resume').then(()=>{
+    progressInterval = setInterval(getProgress, 1000)
+  })
+}
 
 
 function getProgress() {
