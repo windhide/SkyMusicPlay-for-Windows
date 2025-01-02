@@ -6,22 +6,17 @@
       <n-progress style="max-width: 60%; display: inline-block" type="line" :percentage="progress"
         indicator-placement="inside" processing :color="{ stops: ['white', 'blue'] }" @click="progressClick" />
     </n-gradient-text>
-    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('pre')">
-      <template #icon>
-        <n-icon><PlaySkipBack /></n-icon>
-      </template>
-    </n-button>
-    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('resume')" v-show="!isPlay" >
+    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('resume','')" v-show="!isPlay" >
       <template #icon>
         <n-icon><Play /></n-icon>
       </template>
     </n-button>
-    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('pause')" v-show="isPlay" >
+    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('pause','')" v-show="isPlay" >
       <template #icon>
         <n-icon><Pause /></n-icon>
       </template>
     </n-button>
-    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('next')">
+    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('next','')">
       <template #icon>
         <n-icon><PlaySkipForward /></n-icon>
       </template>
@@ -152,7 +147,6 @@ import {
   List,
   Play,
   PlaySkipForward,
-  PlaySkipBack,
   Pause
   } from '@vicons/ionicons5'
 import { useStore } from 'vuex'
@@ -294,25 +288,12 @@ const MusicSelect = (row: RowData) => {
       if (clickTimeout) {
         clearTimeout(clickTimeout);
         clickTimeout = null;
-        progress.value = 0;
-
-        getData('stop').then(() => {
-          setTimeout(() => {
-            sendData('start', {
-              fileName: nowPlayMusic.value,
-              type: nowType
-            });
-            isPlay.value = true;
-            message.success('开始');
-            progressInterval = setInterval(getProgress, 1000);
-          }, playDelay.value * 1000)
-        })
-          ;
+        playBarClickHandler("start","")
       } else {
         nowPlayMusic.value = row.name;
         clickTimeout = setTimeout(() => {
           clickTimeout = null;
-          store.commit('addPlayList', row.name);
+          store.commit('addPlayList', {'name': row.name, 'type': nowType});
         }, 300);
       }
     }
@@ -338,7 +319,7 @@ function clearPlayList(){
   music.musicList = store.getters.getPlayList
 }
 
-const playBarClickHandler = (status: String) =>{
+const playBarClickHandler = (status: String, type: String) =>{
   if(status === 'resume'){
     if(nowState.value == 'stop')  {
         message.info("双击歌曲播放！")
@@ -359,20 +340,26 @@ const playBarClickHandler = (status: String) =>{
     clearPlayInfo()
   }
   if(status === 'start'){
+      nowState.value = 'stop'
+      progress.value = 0
+      clearInterval(progressInterval)
+      statusbar[0] = true
+      statusbar[1] = false
+      isPlay.value = false;
+      getData("stop").then(()=>{
       setTimeout(() => {
         sendData('start', {
-          fileName: nowPlayMusic.value,
-          type: nowType
-        })
-        message.success('开始')
-        isPlay.value = true;
-        progressInterval = setInterval(getProgress, 1000)
-      }, playDelay.value * 1000)
-  }
-  if(status === 'pre'){
-    return
+            fileName: nowPlayMusic.value,
+            type: type != "" ? type : nowType
+          })
+          message.success('开始')
+          isPlay.value = true;
+          progressInterval = setInterval(getProgress, 1000)
+        }, playDelay.value * 1000)
+      })
   }
   if(status === 'next'){
+    setConfig('set_progress', 1)
     return
   }
   nowState.value = status
@@ -398,13 +385,14 @@ function getProgress() {
   getData('getProgress').then((res) => {
     progress.value = res.now_progress
   })
-  if (progress.value == 100) 
-    getData('stop')
-    if(isRandom.value){
-      randomMusicPlay()
-    }else{
-      listMusicPlay()
-    }
+  if (progress.value == 100)
+    getData('stop').then(() => {
+      if (isRandom.value) {
+        randomMusicPlay()
+      } else {
+        listMusicPlay()
+      }
+    })
 }
 
 
@@ -412,12 +400,22 @@ function randomMusicPlay(){
   getData('stop').then(()=>{
     clearPlayInfo()
     nowPlayMusic.value =  music.systemMusic[Math.floor(Math.random() * (music.systemMusic.length))].name
-    playBarClickHandler("start")
+    playBarClickHandler("start",'systemMusic')
   })
 }
 
 function listMusicPlay(){
-
+  getData('stop').then(()=>{
+    let struct = store.getters.getNextPlayMusic
+    if(struct != null){
+      nowPlayMusic.value =  struct.name
+      let type =  struct.type
+      playBarClickHandler("start",type)
+    }else{
+      window.api.system_notification("😳", "列表的歌放完咯")
+      clearPlayInfo()
+    }
+  })
 }
 
 handleUpdateValue('myFavorite')
@@ -561,7 +559,6 @@ function getListData(value) {
   })
 }
 
-
 function initWebSocket() {
   socket = new WebSocket('ws://127.0.0.1:11452')
   // 添加 WebSocket 事件监听
@@ -579,14 +576,14 @@ function initWebSocket() {
           window.api.system_notification("😭", "选个歌再播放吧靓仔")
         }else{
           window.api.system_notification("✔", "开始")
-          playBarClickHandler('start')
+          playBarClickHandler('start','')
         }
       }
     }
     if(key === 'F6'){
       if (nowState.value === 'pause') {
           window.api.system_notification("▶", "继续")
-          playBarClickHandler('resume')
+          playBarClickHandler('resume','')
       }else{
         window.api.system_notification("🍎", "仅暂停状态下允许继续")
       }
@@ -594,15 +591,21 @@ function initWebSocket() {
     if(key === 'F7'){
       if (isPlay.value) {
         window.api.system_notification("⏸", "暂停")
-        playBarClickHandler('pause')
+        playBarClickHandler('pause','')
       }else{
         window.api.system_notification("🍎", "仅正在播放时允许暂停")
       }
     }
     if(key === 'F8'){
       window.api.system_notification("🛑", "停止")
-      playBarClickHandler('stop')
+      playBarClickHandler('stop','')
     }
+
+    if (key === 'F2'){
+      window.api.system_notification("⏩", "下一首")
+      playBarClickHandler('next','')
+    }
+
   }
   socket.onclose = () => {
     console.log('WebSocket 已断开')

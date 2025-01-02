@@ -17,8 +17,6 @@ from utils.robot import robotUtils
 from utils.websocket_hook import startWebsocket as follow_webSocket
 from utils.shortcut_hook import startWebsocket as shortcut_webSocket
 from fastapi.middleware.cors import CORSMiddleware
-import pygetwindow as gw
-
 
 app = FastAPI()
 app.add_middleware(

@@ -26,6 +26,9 @@ def on_press(key):
         elif key == keyboard.Key.f8:
             print("按键 F8 被触发")
             server.send_message_to_all(urllib.parse.quote("F8"))
+        elif key == keyboard.Key.f2:
+            print("按键 F2 被触发")
+            server.send_message_to_all(urllib.parse.quote("F2"))
     except AttributeError:
         return
     except Exception as e:
