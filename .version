@@ -1,8 +1,8 @@
 {
-    "version": "1.2.4",
+    "version": "1.2.5",
     "title": "更新啦🔔",
-    "content": "🍉新版本v1.2.4\\n🍊更新群-1007672060\\n🥝 更新日志\\n\\t🎵 新增歌曲 558 首\\n\\t🖥️ 跟弹功能 仅适配全屏游戏模式\\n\\t🔧 修复双击播放音乐可能导致按键错乱的问题\\n\\t⌨️ 跟弹快捷键调整：- 为弹下不步过，= 为弹下步过\\n\\t🪟 更新弹窗逻辑，确保单次启动仅展示一次\\n\\t🕒 系统通知时间 增加 0.5 秒\\n\\t📝 转谱逻辑优化：现在会输出 五个版本的谱子，请根据喜好选择",
-    "downloadUrl": "https://ghgo.xyz/?q=https://github.com/windhide/SkyMusicPlay-for-Windows/releases/download/v1.2.4/sky-music.v1.2.4.zip",
+    "content": "🍉新版本v1.2.5\\n🍊更新群-1007672060\\n🥝 更新日志\\n\\t🔧 修复异常线程问题\\n\\t❌ 移除上一首功能\\n\\t🎚️ 改动进度条样式\\n\\t功能改动：\\n\\t⌨️ 添加快捷键 F2，用于切换到下一首歌曲",
+    "downloadUrl": "https://ghgo.xyz/?q=https://github.com/windhide/SkyMusicPlay-for-Windows/releases/download/v1.2.5/sky-music.v1.2.5.zip",
     "positiveText": "太好了我马上去更新❤",
     "negativeText": "朕知道了，退下吧。😭"
 }
