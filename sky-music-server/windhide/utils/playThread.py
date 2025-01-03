@@ -1,8 +1,8 @@
 import math
 import threading
 import time
-from ._global import global_state
-from .robot import robotUtils
+from windhide._global import globalVariable
+from windhide.playRobot import robotUtils
 
 
 class ControlledThread:
@@ -13,14 +13,14 @@ class ControlledThread:
         self._running = False
 
     def _run(self):
-        if not global_state.music_sheet:
+        if not globalVariable.music_sheet:
             self.stop()
             return
 
-        local_music_sheet = global_state.music_sheet[:]
+        local_music_sheet = globalVariable.music_sheet[:]
         allLength = len(local_music_sheet) - 1
         index = 0
-        delay_interval = global_state.delay_interval
+        delay_interval = globalVariable.delay_interval
 
         while index < len(local_music_sheet):
             if not self._running:
@@ -29,15 +29,15 @@ class ControlledThread:
             if not self._pause_event.wait(timeout=0.1):  # 避免线程完全阻塞
                 continue
 
-            if global_state.set_progress != -0.01:
-                index = math.floor(allLength * global_state.set_progress)
-                global_state.set_progress = -0.01
+            if globalVariable.set_progress != -0.01:
+                index = math.floor(allLength * globalVariable.set_progress)
+                globalVariable.set_progress = -0.01
                 continue
 
             sheet = local_music_sheet[index]
             keys = sheet["key"]
-            delay = sheet["delay"] / global_state.play_speed
-            global_state.now_progress = index / allLength * 100
+            delay = sheet["delay"] / globalVariable.play_speed
+            globalVariable.now_progress = index / allLength * 100
 
             if len(keys) == 1:
                 robotUtils.send_single_key_to_window(keys)

@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 
-from utils._global import global_state
+from windhide._global import globalVariable
 
 
 def move_data_to_device(x, device):
@@ -56,7 +56,7 @@ def forward(model, x, batch_size):
 
         for key in batch_output_dict.keys():
             append_to_dict(output_dict, key, batch_output_dict[key].data.cpu().numpy())
-        global_state.tran_mid_progress = (pointer / total_segments) * 100
+        globalVariable.tran_mid_progress = (pointer / total_segments) * 100
 
     for key in output_dict.keys():
         output_dict[key] = np.concatenate(output_dict[key], axis=0)

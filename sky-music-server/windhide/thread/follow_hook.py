@@ -2,38 +2,33 @@ import urllib
 
 from pynput import keyboard
 from websocket_server import WebsocketServer
-from utils._global import global_state
+from windhide._global import globalVariable
+from windhide.playRobot.robotUtils import send_multiple_key_to_window_task
+from windhide.thread import hook_utils
 
-
-# 打包放行
-import builtins
-
-from utils.robot.robotUtils import send_multiple_key_to_window_task
-
-# 重定向 print 到空函数
-builtins.print = lambda *args, **kwargs: None
+hook_utils.sout_null()
 
 # WebSocket 服务端实例
 server = WebsocketServer("127.0.0.1",11451)
 
 # 键盘按键事件处理
 def on_press(key):
-    if global_state.follow_music != "":
+    if globalVariable.follow_music != "":
         try:
             # 仅处理特定的按键
             if key.char in 'yuiophjkl;nm,./-=':
-                if global_state.isNowAutoPlaying:
+                if globalVariable.isNowAutoPlaying:
                     if key.char not in "-":
-                        global_state.nowRobotKey += key.char
-                    if len(global_state.nowRobotKey) == len(global_state.nowClientKey):
-                        global_state.isNowAutoPlaying = False
-                        global_state.nowRobotKey = ''
+                        globalVariable.nowRobotKey += key.char
+                    if len(globalVariable.nowRobotKey) == len(globalVariable.nowClientKey):
+                        globalVariable.isNowAutoPlaying = False
+                        globalVariable.nowRobotKey = ''
                 else:
                     if key.char in "-":
-                        global_state.isNowAutoPlaying = True
-                        send_multiple_key_to_window_task(global_state.nowClientKey)
+                        globalVariable.isNowAutoPlaying = True
+                        send_multiple_key_to_window_task(globalVariable.nowClientKey)
                     if key.char in "=":
-                        send_multiple_key_to_window_task(global_state.nowClientKey)
+                        send_multiple_key_to_window_task(globalVariable.nowClientKey)
                     else:
                         # 向所有客户端发送按键信息
                         server.send_message_to_all(urllib.parse.quote(key.char))
@@ -49,12 +44,12 @@ def on_client_connect(client, server):
 
 # 客户端断开事件处理
 def on_client_disconnect(client, server):
-    global_state.follow_music = ""
-    global_state.follow_sheet = []
+    globalVariable.follow_music = ""
+    globalVariable.follow_sheet = []
     print(f"客户端 {client['id']} 已断开连接")
 
 # 启动 WebSocket 服务
-def startWebsocket():
+def startThread():
     try:
         # 设置 WebSocket 事件回调
         server.set_fn_new_client(on_client_connect)

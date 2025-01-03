@@ -5,19 +5,21 @@ set_progress = -0.01 #进度条
 # 音乐转换进度条
 overall_progress = 0 #总体进度
 tran_mid_progress = 0 # 转MID进度
-# MID转TXT进度
 now_translate_text = []
 # 1秒 =1000毫秒
 play_speed = 1 # 倍速
 delay_interval = 0.01 # 10毫秒
 sustain_time = 0.01 # 20毫秒
+# 跟弹相关
 follow_music = ""
 follow_sheet = []
 nowClientKey = ""
 isNowAutoPlaying = False
 isShow = False
 nowRobotKey = ""
-
+# 演奏核心
+_hWnd = None
+# 乐谱的映射
 keyMap = {
     '1Key0':'y', '1Key1':'u', '1Key2':'i', '1Key3':'o', '1Key4':'p',
     '1Key5':'h', '1Key6':'j', '1Key7':'k', '1Key8':'l', '1Key9': ';',

@@ -8,14 +8,15 @@ import requests
 from fastapi import FastAPI, UploadFile
 import uvicorn
 import os
-from utils._global import global_state
-from utils.listUtils import getTypeMusicList
-from utils.musicFileTranselate import convert_notes_to_delayed_format
-from utils.musicToSheet.processAudio import process_directory_with_progress
-from utils.pathUtils import getResourcesPath
-from utils.robot import robotUtils
-from utils.websocket_hook import startWebsocket as follow_webSocket
-from utils.shortcut_hook import startWebsocket as shortcut_webSocket
+from windhide._global import globalVariable
+from windhide.utils.listUtils import getTypeMusicList
+from windhide.utils.musicFileTranselate import convert_notes_to_delayed_format
+from windhide.musicToSheet.processAudio import process_directory_with_progress
+from windhide.utils.pathUtils import getResourcesPath
+from windhide.playRobot import robotUtils
+from windhide.thread.follow_hook import startThread as follow_thread
+from windhide.thread.shortcut_hook import startThread as shortcut_thread
+from windhide.thread.hwnd_check_hook import startThread as hwnd_check_thread
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -38,6 +39,11 @@ async def get_list(listName: str, searchStr: str):
 def start(request: dict):
     try:
         print(f"Starting music: {request['fileName']} of type {request['type']}")
+        if globalVariable._hWnd is None:
+            return {
+                "statusCode": 8008208820,
+                "messeage": "没检测到存活的光遇窗口"
+            }
         robotUtils.playMusic(request["fileName"], request["type"])
     except Exception as e:
         print(f"Error in /start: {str(e)}")
@@ -75,10 +81,10 @@ def get_progress():
     try:
         print("Fetching progress")
         return {
-            "overall_progress": f"{global_state.overall_progress:.1f}",
-            "tran_mid_progress": f"{global_state.tran_mid_progress:.1f}",
-            "now_progress": f"{global_state.now_progress:.1f}",
-            "now_translate_text": global_state.now_translate_text
+            "overall_progress": f"{globalVariable.overall_progress:.1f}",
+            "tran_mid_progress": f"{globalVariable.tran_mid_progress:.1f}",
+            "now_progress": f"{globalVariable.now_progress:.1f}",
+            "now_translate_text": globalVariable.now_translate_text
         }
     except Exception as e:
         print(f"Error in /getProgress: {str(e)}")
@@ -130,13 +136,13 @@ def translate(request: dict):
 def set_config(request: dict):
     try:
         if request["name"] == 'delay_interval':
-            global_state.delay_interval = float(request["value"])
+            globalVariable.delay_interval = float(request["value"])
         if request["name"] == 'sustain_time':
-            global_state.sustain_time = float(request["value"])
+            globalVariable.sustain_time = float(request["value"])
         if request["name"] == 'set_progress':
-            global_state.set_progress = float(request["value"])
+            globalVariable.set_progress = float(request["value"])
         if request["name"] == 'play_speed':
-            global_state.play_speed = float(request["value"])
+            globalVariable.play_speed = float(request["value"])
         print(f"Config set: {request['name']} = {request['value']}")
         return "ok"
     except Exception as e:
@@ -147,7 +153,7 @@ def set_config(request: dict):
 @app.post("/getConfig")
 def get_config(request: dict):
     try:
-        returnData = eval("global_state." + request["name"])
+        returnData = eval("globalVariable." + request["name"])
         print(f"Config fetched: {request['name']} = {returnData}")
         return returnData
     except Exception as e:
@@ -160,9 +166,9 @@ def set_follow_sheet(request: dict):
     try:
         print(f"Setting follow sheet for file: {request['fileName']}")
         convert_notes_to_delayed_format(request["fileName"], request["type"])
-        global_state.follow_sheet = list(map(lambda item: item['key'], global_state.music_sheet))
-        global_state.music_sheet = []
-        global_state.follow_music = request["fileName"]
+        globalVariable.follow_sheet = list(map(lambda item: item['key'], globalVariable.music_sheet))
+        globalVariable.music_sheet = []
+        globalVariable.follow_music = request["fileName"]
     except Exception as e:
         print(f"Error in /followSheet: {str(e)}")
 
@@ -170,20 +176,20 @@ def set_follow_sheet(request: dict):
 @app.post("/nextSheet")
 def next_sheet(request: dict):
     try:
-        if len(global_state.follow_sheet) == 0:
+        if len(globalVariable.follow_sheet) == 0:
             print("Follow sheet is empty")
             return ""
         if request["type"] == "ok":
-            sheet = global_state.follow_sheet[0]
-            global_state.nowClientKey = sheet
-            global_state.follow_sheet = global_state.follow_sheet[1:]
+            sheet = globalVariable.follow_sheet[0]
+            globalVariable.nowClientKey = sheet
+            globalVariable.follow_sheet = globalVariable.follow_sheet[1:]
             print(f"Next sheet: {sheet}")
             return sheet
         elif request["type"] == "pre":
-            return global_state.follow_sheet[1]
+            return globalVariable.follow_sheet[1]
         else:
-            global_state.nowClientKey = global_state.follow_sheet[0]
-            return global_state.follow_sheet[0]
+            globalVariable.nowClientKey = globalVariable.follow_sheet[0]
+            return globalVariable.follow_sheet[0]
 
 
     except IndexError:
@@ -226,8 +232,8 @@ def get_convert_sheet(request: dict):
     try:
         print(f"Converting sheet for file: {request['fileName']}")
         convert_notes_to_delayed_format(request["fileName"], request["type"])
-        convert_sheet = list(map(lambda item: item['key'], global_state.music_sheet))
-        global_state.music_sheet = []
+        convert_sheet = list(map(lambda item: item['key'], globalVariable.music_sheet))
+        globalVariable.music_sheet = []
         return convert_sheet
     except Exception as e:
         print(f"Error in /getConvertSheet: {str(e)}")
@@ -266,9 +272,9 @@ def open_files():
 
 @app.get("/update")
 def get_update():
-    if global_state.isShow is False:
+    if globalVariable.isShow is False:
         response = requests.get('https://gitee.com/WindHide/SkyMusicPlay-for-Windows/raw/main/.version')
-        global_state.isShow = True
+        globalVariable.isShow = True
         if response.status_code == 200:
             return json.loads(response.text)
         else:
@@ -277,14 +283,19 @@ def get_update():
 
 if __name__ == '__main__':
     # 创建监听 WebSocket 的线程
-    follow_websocket_thread = threading.Thread(target=follow_webSocket)
+    follow_websocket_thread = threading.Thread(target=follow_thread)
     follow_websocket_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
     follow_websocket_thread.start()
 
     # 创建监听 快捷键 的线程
-    shortcut_websocket_thread = threading.Thread(target=shortcut_webSocket)
+    shortcut_websocket_thread = threading.Thread(target=shortcut_thread)
     shortcut_websocket_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
     shortcut_websocket_thread.start()
+
+    # 创建监听 光遇 窗口的线程
+    hwnd_thread = threading.Thread(target=hwnd_check_thread)
+    hwnd_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
+    hwnd_thread.start()
 
     print("Now start service")
     # 启动 FastAPI 服务

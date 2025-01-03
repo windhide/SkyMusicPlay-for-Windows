@@ -1,23 +1,23 @@
 import threading
 import time
-from utils._global import global_state
-from utils.musicFileTranselate import convert_notes_to_delayed_format
-from utils.playThread import ControlledThread
-from pynput.keyboard import Key, Controller
+from windhide._global import globalVariable
+from windhide.utils.musicFileTranselate import convert_notes_to_delayed_format
+from windhide.utils.playThread import ControlledThread
+from pynput.keyboard import Controller
 
 keyboard = Controller()
 
 def send_single_key_to_window_task(key):
     """发送单个按键，减少延迟"""
     keyboard.press(key)
-    time.sleep(global_state.sustain_time)
+    time.sleep(globalVariable.sustain_time)
     keyboard.release(key)
 
 def send_multiple_key_to_window_task(keys):
     """发送组合按键，减少延迟"""
     for key in keys:
         keyboard.press(key)
-    time.sleep(global_state.sustain_time)
+    time.sleep(globalVariable.sustain_time)
     for key in keys:
         keyboard.release(key)
 
@@ -39,23 +39,23 @@ def send_multiple_key_to_window(keys):
 def playMusic(fileName, type):
     """优化音乐播放逻辑，只加载乐谱数据一次"""
     convert_notes_to_delayed_format(fileName, type)
-    global_state.thread = ControlledThread()
-    global_state.thread.start()
+    globalVariable.thread = ControlledThread()
+    globalVariable.thread.start()
 
 def resume():
     """恢复播放"""
-    if global_state.thread:
-        global_state.thread.resume()
+    if globalVariable.thread:
+        globalVariable.thread.resume()
 
 def pause():
     """暂停播放"""
-    if global_state.thread:
-        global_state.thread.pause()
+    if globalVariable.thread:
+        globalVariable.thread.pause()
 
 def stop():
     """停止播放"""
-    if global_state.thread:
-        global_state.thread.stop()
+    if globalVariable.thread:
+        globalVariable.thread.stop()
 # 键盘映射
 KEYS_MAP = {
     'A': 0x41, 'a': 0x41,
