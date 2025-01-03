@@ -2,7 +2,7 @@ import json
 import os
 import pretty_midi
 
-from windhide._global import global_state
+from windhide._global import globalVariable
 from windhide.musicToSheet.transferMID import inference
 from windhide.utils.pathUtils import getResourcesPath
 
@@ -120,8 +120,8 @@ def process_directory_with_progress(use_gpu=False, output_dir=getResourcesPath("
         if "_ok" in file:
             continue
 
-        global_state.now_translate_text = [f"{idx + 1}/{total_files}", file]
-        global_state.tran_mid_progress = 0
+        globalVariable.now_translate_text = [f"{idx + 1}/{total_files}", file]
+        globalVariable.tran_mid_progress = 0
         fileNameNoEnd = file.rsplit('.', 1)[0]
 
         if not file.endswith(".mid"):
@@ -140,8 +140,8 @@ def process_directory_with_progress(use_gpu=False, output_dir=getResourcesPath("
         os.rename(os.path.join(getResourcesPath("translateOriginalMusic"), file), new_file_path)
 
         print(f"已将文件 {file} 重命名为 {new_file_path}")
-        global_state.overall_progress = ((idx + 1) / total_files) * 100
+        globalVariable.overall_progress = ((idx + 1) / total_files) * 100
 
 
-    global_state.tran_mid_progress = 100
-    global_state.overall_progress = 100
+    globalVariable.tran_mid_progress = 100
+    globalVariable.overall_progress = 100

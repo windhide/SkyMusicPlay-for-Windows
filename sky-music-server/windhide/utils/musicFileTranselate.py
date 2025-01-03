@@ -1,8 +1,8 @@
 import json
 import os
 import chardet
-from windhide._global import global_state
-from windhide._global.global_state import keyMap
+from windhide._global import globalVariable
+from windhide._global.globalVariable import keyMap
 from windhide.utils.pathUtils import getResourcesPath
 
 def convert_notes_to_delayed_format(fileName, type):
@@ -36,7 +36,7 @@ def convert_notes_to_delayed_format(fileName, type):
     # 处理最后的累积按键
     if combined_keys:
         result.append({"key": combined_keys, "delay": 0})  # 最后条目的延迟为0
-    global_state.music_sheet = result
+    globalVariable.music_sheet = result
 
 
 def detect_encoding(file_path):
