@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 
-from utils._global import global_state
+from windhide._global import global_state
 
 
 def move_data_to_device(x, device):

@@ -11,14 +11,14 @@ import uvicorn
 # 配置文件
 import logging
 import sys, os
-from utils._global import global_state
-from utils.listUtils import getTypeMusicList
-from utils.musicFileTranselate import convert_notes_to_delayed_format
-from utils.musicToSheet.processAudio import process_directory_with_progress
-from utils.pathUtils import getResourcesPath
-from utils.robot import robotUtils
-from utils.websocket_hook import startWebsocket as follow_webSocket
-from utils.shortcut_hook import startWebsocket as shortcut_webSocket
+from windhide._global import global_state
+from windhide.utils.listUtils import getTypeMusicList
+from windhide.utils.musicFileTranselate import convert_notes_to_delayed_format
+from windhide.musicToSheet.processAudio import process_directory_with_progress
+from windhide.utils.pathUtils import getResourcesPath
+from windhide.playRobot import robotUtils
+from windhide.socket.follow_hook import startWebsocket as follow_webSocket
+from windhide.socket.shortcut_hook import startWebsocket as shortcut_webSocket
 from fastapi.middleware.cors import CORSMiddleware
 
 # 关闭print的输出

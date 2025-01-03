@@ -2,13 +2,13 @@ import urllib
 
 from pynput import keyboard
 from websocket_server import WebsocketServer
-from utils._global import global_state
+from windhide._global import global_state
 
 
 # 打包放行
 import builtins
 
-from utils.robot.robotUtils import send_multiple_key_to_window_task
+from windhide.playRobot.robotUtils import send_multiple_key_to_window_task
 
 # 重定向 print 到空函数
 builtins.print = lambda *args, **kwargs: None

@@ -1,8 +1,8 @@
 import math
 import threading
 import time
-from ._global import global_state
-from .robot import robotUtils
+from windhide._global import global_state
+from windhide.playRobot import robotUtils
 
 
 class ControlledThread:

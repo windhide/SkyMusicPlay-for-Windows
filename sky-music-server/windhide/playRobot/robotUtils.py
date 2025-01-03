@@ -1,9 +1,9 @@
 import threading
 import time
-from utils._global import global_state
-from utils.musicFileTranselate import convert_notes_to_delayed_format
-from utils.playThread import ControlledThread
-from pynput.keyboard import Key, Controller
+from windhide._global import global_state
+from windhide.utils.musicFileTranselate import convert_notes_to_delayed_format
+from windhide.utils.playThread import ControlledThread
+from pynput.keyboard import Controller
 
 keyboard = Controller()
 

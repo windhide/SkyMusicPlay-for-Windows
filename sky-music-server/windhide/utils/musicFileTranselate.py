@@ -1,9 +1,9 @@
 import json
 import os
 import chardet
-from utils._global import global_state
-from utils._global.global_state import keyMap
-from utils.pathUtils import getResourcesPath
+from windhide._global import global_state
+from windhide._global.global_state import keyMap
+from windhide.utils.pathUtils import getResourcesPath
 
 def convert_notes_to_delayed_format(fileName, type):
     # 优化了文件路径构建
