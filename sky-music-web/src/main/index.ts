@@ -118,10 +118,17 @@ function createWindow(): void {
     if (senderWebContents === mainWindow?.webContents) {
       if (!modal?.isDestroyed()) {
         modal?.close();
+        modal?.destroy();  // 销毁主窗口
       }
+      exec("taskkill /f /im Sky_Music.exe")
+      ipcMain.removeAllListeners('mousedown')
+      ipcMain.removeAllListeners('mousemove')
+      ipcMain.removeAllListeners('mouseup')
       mainWindow?.close()
+      app.quit()
     } else if (senderWebContents === modal?.webContents) {
       modal?.close()
+      modal?.destroy();  // 销毁主窗口
     }
   })
 
@@ -201,19 +208,10 @@ function createWindow(): void {
       }
     });
   });
-
-
-  mainWindow.on('closed', () => {
-    ipcMain.removeAllListeners('mousedown')
-    ipcMain.removeAllListeners('mousemove')
-    ipcMain.removeAllListeners('mouseup')
-    app.exit()
-  })
-
 }
 
 app.on('window-all-closed', () => {
-  app.exit()
+  app.quit();
 })
 
 app.whenReady().then(() => {
