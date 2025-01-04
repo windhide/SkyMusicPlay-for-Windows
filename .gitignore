@@ -32,6 +32,7 @@ sky-music-web/.idea/
 sky-music-server/build/
 sky-music-web/web2/
 sky-music-web/dist_electron/
+sky-music-web/backend_dist
 web2/
 **/__pycache__/**
 resources/

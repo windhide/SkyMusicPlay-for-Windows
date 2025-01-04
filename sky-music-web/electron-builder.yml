@@ -9,8 +9,6 @@ files:
   - '!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
   - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
-asarUnpack:
-  - resources/**
 win:
   executableName: Sky_Music
   icon: build/icon.ico
@@ -26,17 +24,23 @@ nsis:
   allowToChangeInstallationDirectory: true  # 允许用户选择安装目录
   createDesktopShortcut: true  # 允许创建桌面快捷方式
   createStartMenuShortcut: true  # 允许创建开始菜单快捷方式
-dmg:
-  artifactName: ${name}-${version}.${ext}
-linux:
-  target:
-    - AppImage
-    - snap
-    - deb
-  maintainer: electronjs.org
-  category: Utility
-appImage:
-  artifactName: ${name}-${version}.${ext}
+extraFiles:
+  - from: ".\\backend_dist"
+    to: ".\\backend_dist"
+  - from: "..\\template-resources"
+    to: ".\\resources"
+  - from: "..\\ffmpeg.exe"
+    to: ".\\backend_dist\\sky-music-server\\ffmpeg.exe"
+  - from: "..\\template-resources\\translateOriginalMusic"
+    to: ".\\resources\\translateOriginalMusic"
+  - from: "..\\template-resources\\myFavorite"
+    to: ".\\resources\\myFavorite"
+  - from: "..\\template-resources\\myImport"
+    to: ".\\resources\\myImport"
+  - from: "..\\template-resources\\myTranslate"
+    to: ".\\resources\\myTranslate"
+  - from: "..\\template-resources\\translateMID"
+    to: ".\\resources\\translateMID"
 npmRebuild: false
 publish:
   provider: generic
