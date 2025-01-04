@@ -332,6 +332,7 @@ const playBarClickHandler = (status: String, type: String) =>{
         message.info("双击歌曲播放！")
         return
     }
+    getData('resume')
     isPlay.value = true;
     progressInterval = setInterval(getProgress, 1000)
   }
