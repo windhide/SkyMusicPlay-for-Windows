@@ -32,6 +32,9 @@ export default createStore({
     removePlayList(state:any, index:number){
       console.log("删除下标",index)
       state.playList.splice(index, 1)
+    },
+    clearPlayList(state:any){
+      state.playList = []
     }
   },
   actions: {
