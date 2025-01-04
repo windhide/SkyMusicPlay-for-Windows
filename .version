@@ -1,7 +1,7 @@
 {
     "version": "2.0.0",
     "title": "更新啦🔔",
-    "content": "🍉新版本v2.0.0\\n🍊更新群-1007672060\\n🥝 更新日志\\n\\t⏱️ 延迟自定义：刻度精度调整为 0.01\\n\\t⏱️ 演奏功能优化：支持 后台演奏，不影响外部窗口的按键操作",
+    "content": "🍉新版本v2.0.0\\n🍊更新群-1007672060\\n🥝 更新日志\\n\\t⏱️ 延迟自定义：刻度精度调整为 0.01\\n\\t⏱️ 演奏功能优化：支持 后台演奏，不影响外部窗口的按键操作\\n\\t🛑 修复可能残留的文件后台问题",
     "downloadUrl": "https://ghgo.xyz/?q=https://github.com/windhide/SkyMusicPlay-for-Windows/releases/download/v2.0.0/sky-music.v2.0.0.zip",
     "positiveText": "太好了我马上去更新❤",
     "negativeText": "朕知道了，退下吧。😭"
