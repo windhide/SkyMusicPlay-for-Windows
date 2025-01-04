@@ -55,7 +55,7 @@
         </n-radio-group>
       </n-col>
       <n-col v-show="delayStatus == 'custom'" :span="9" style="margin-left: -50px">
-        <n-input-number v-model:value="delaySpeed" size="tiny" :min="0" :max="2"  placeholder="输入间隔延迟" />
+        <n-input-number step="0.01" v-model:value="delaySpeed" size="tiny" :min="0" :max="2"  placeholder="输入间隔延迟" />
       </n-col>
     </n-row>
     <n-row gutter="12">
@@ -70,7 +70,7 @@
         </n-radio-group>
       </n-col>
       <n-col v-show="sustainStatus == 'custom'" :span="9" style="margin-left: -50px">
-        <n-input-number v-model:value="sustainSpeed" size="tiny" :min="0" :max="2" placeholder="输入延音持续" />
+        <n-input-number step="0.01" v-model:value="sustainSpeed" size="tiny" :min="0" :max="2" placeholder="输入延音持续" />
       </n-col>
     </n-row>
     <n-row gutter="12">
@@ -78,7 +78,7 @@
         <n-gradient-text type="info" :size="13"> 倍速设置-&nbsp;&nbsp;&nbsp; </n-gradient-text>
       </n-col>
       <n-col :span="0" style="margin-left: -1.2%">
-        <n-input-number v-model:value="playSpeed" size="tiny" :min="0.25" :max="5" placeholder="输入倍速速度" />
+        <n-input-number step="0.1" v-model:value="playSpeed" size="tiny" :min="0.25" :max="5" placeholder="输入倍速速度" />
       </n-col>
     </n-row>
     <n-row gutter="12">
@@ -283,9 +283,9 @@ const musicListColumns = [
 
 const progress = ref(0.0) // 播放进度条
 const playSpeed = ref(1) // 播放速度
-const delaySpeed = ref(0) // 延迟设置
-const sustainSpeed = ref(0) // 延音设置
-const playDelay = ref(0) // 播放延迟
+const delaySpeed:any = ref(0.01) // 延迟设置
+const sustainSpeed:any = ref(0.01) // 延音设置
+const playDelay = ref(0.01) // 播放延迟
 
 
 let clickTimeout: any = null;
@@ -446,16 +446,16 @@ let randomInterval: any = null
 watch(delayStatus, () => {
   switch (delayStatus.value) {
     case 'system':
-      setConfig('delay_interval', 0.01)
+      delaySpeed.value = 0.01
       clearInterval(randomInterval)
       break
     case 'random':
       randomInterval = setInterval(() => {
-        setConfig('delay_interval', (Math.random() * (0.06 - 0.01) + 0.01).toFixed(3))
+        delaySpeed.value = (Math.random() * (0.06 - 0.01) + 0.01).toFixed(3)
       }, 1000)
       break
     case 'custom':
-      setConfig('delay_interval', delaySpeed.value)
+      delaySpeed.value = 0.01
       clearInterval(randomInterval)
       break
   }
@@ -465,16 +465,15 @@ let sustainInterval: any = null
 watch(sustainStatus, () => {
   switch (sustainStatus.value) {
     case 'system':
-      setConfig('sustain_time', 0.01)
+      sustainSpeed.value = 0.01
       clearInterval(sustainInterval)
       break
     case 'random':
       sustainInterval = setInterval(() => {
-        setConfig('sustain_time', (Math.random() * (0.6 - 0.02) + 0.02).toFixed(3))
+        sustainSpeed.value = (Math.random() * (0.6 - 0.02) + 0.02).toFixed(3)
       }, 1000)
       break
     case 'custom':
-      setConfig('sustain_time', sustainSpeed.value)
       clearInterval(sustainInterval)
       break
   }
