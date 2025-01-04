@@ -4,3 +4,4 @@ import builtins
 
 def sout_null():
     builtins.print = lambda *args, **kwargs: None
+    return None
