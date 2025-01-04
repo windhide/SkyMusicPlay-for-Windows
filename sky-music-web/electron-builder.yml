@@ -9,6 +9,10 @@ files:
   - '!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
   - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
+  - '!**/backend_dist/**'
+  - '!**/template-resources/**'
+  - '!**/ffmpeg.exe'
+  - '!*.keep'
 win:
   executableName: Sky_Music
   icon: build/icon.ico
@@ -31,16 +35,6 @@ extraFiles:
     to: ".\\resources"
   - from: "..\\ffmpeg.exe"
     to: ".\\backend_dist\\sky-music-server\\ffmpeg.exe"
-  - from: "..\\template-resources\\translateOriginalMusic"
-    to: ".\\resources\\translateOriginalMusic"
-  - from: "..\\template-resources\\myFavorite"
-    to: ".\\resources\\myFavorite"
-  - from: "..\\template-resources\\myImport"
-    to: ".\\resources\\myImport"
-  - from: "..\\template-resources\\myTranslate"
-    to: ".\\resources\\myTranslate"
-  - from: "..\\template-resources\\translateMID"
-    to: ".\\resources\\translateMID"
 npmRebuild: false
 publish:
   provider: generic
