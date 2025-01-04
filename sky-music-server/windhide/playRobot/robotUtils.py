@@ -67,6 +67,8 @@ def send_multiple_key_to_window(keys):
 def playMusic(fileName, type):
     """优化音乐播放逻辑，只加载乐谱数据一次"""
     convert_notes_to_delayed_format(fileName, type)
+    if globalVariable.thread != None:
+        stop()
     globalVariable.thread = ControlledThread()
     globalVariable.thread.start()
 
@@ -84,6 +86,8 @@ def stop():
     """停止播放"""
     if globalVariable.thread:
         globalVariable.thread.stop()
+        globalVariable.set_progress = 0
+        globalVariable.thread = None
 
 #  核心
 def key_down(key: str):

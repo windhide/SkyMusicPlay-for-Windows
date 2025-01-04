@@ -3,32 +3,41 @@
     <n-gradient-text :size="20" type="success" style="width: 100%">
       {{ '当前播放: ' + nowPlayMusic + '' }}
       <br />
-      <n-slider v-model:value="progress" :step="0.1" style="max-width: 60%; display: inline-block; margin-left: 3px" @dragend="drag_progress_end" @dragstart="drag_progress_start">
+      <n-slider v-model:value="progress" :step="0.1" style="max-width: 60%; display: inline-block; margin-left: 3px"
+        @dragend="drag_progress_end" @dragstart="drag_progress_start">
         <template #thumb>
           <n-icon-wrapper :size="20" :border-radius="12">
-              <n-icon :size="16" :component="PawSharp" />
+            <n-icon :size="16" :component="PawSharp" />
           </n-icon-wrapper>
         </template>
       </n-slider>
     </n-gradient-text>
-    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('resume','')" v-show="!isPlay" >
+    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('resume', '')" v-show="!isPlay">
       <template #icon>
-        <n-icon><Play /></n-icon>
+        <n-icon>
+          <Play />
+        </n-icon>
       </template>
     </n-button>
-    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('pause','')" v-show="isPlay" >
+    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('pause', '')" v-show="isPlay">
       <template #icon>
-        <n-icon><Pause /></n-icon>
+        <n-icon>
+          <Pause />
+        </n-icon>
       </template>
     </n-button>
-    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('next','')">
+    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('next', '')">
       <template #icon>
-        <n-icon><PlaySkipForward /></n-icon>
+        <n-icon>
+          <PlaySkipForward />
+        </n-icon>
       </template>
     </n-button>
     <n-button quaternary circle type="info" size="large" @click="reloadMusicList()">
       <template #icon>
-        <n-icon><List /></n-icon>
+        <n-icon>
+          <List />
+        </n-icon>
       </template>
     </n-button>
     <n-switch size="medium" v-model:value="isRandom">
@@ -55,7 +64,7 @@
         </n-radio-group>
       </n-col>
       <n-col v-show="delayStatus == 'custom'" :span="9" style="margin-left: -50px">
-        <n-input-number step="0.01" v-model:value="delaySpeed" size="tiny" :min="0" :max="2"  placeholder="输入间隔延迟" />
+        <n-input-number step="0.01" v-model:value="delaySpeed" size="tiny" :min="0" :max="2" placeholder="输入间隔延迟" />
       </n-col>
     </n-row>
     <n-row gutter="12">
@@ -130,13 +139,8 @@
   <n-drawer v-model:show="active" :width="400" :placement="placement" style="border-radius: 30px;">
     <n-drawer-content title="播放列表">
       <n-button type="info" ghost style="margin-bottom: 10px;" @click="clearPlayList"> 清空 </n-button>
-      <n-data-table :columns="musicListColumns" 
-      :max-height="570"
-      :data="music.musicList" 
-      :bordered="false" 
-      :height-for-row	="1" 
-      :virtual-scroll="music.systemMusic?.length > 7" 
-      :row-props="musicListSelect" />
+      <n-data-table :columns="musicListColumns" :max-height="570" :data="music.musicList" :bordered="false"
+        :height-for-row="1" :virtual-scroll="music.systemMusic?.length > 7" :row-props="musicListSelect" />
     </n-drawer-content>
   </n-drawer>
 </template>
@@ -147,7 +151,7 @@ import { getData, sendData, getList, setConfig } from '@renderer/utils/fetchUtil
 import { RowData } from 'naive-ui/es/data-table/src/interface'
 import { h, onUnmounted, reactive, ref, watch } from 'vue'
 import { NButton, useMessage, DrawerPlacement } from 'naive-ui'
-import { 
+import {
   Search,
   ShuffleOutline,
   List,
@@ -155,7 +159,7 @@ import {
   PlaySkipForward,
   Pause,
   PawSharp
-  } from '@vicons/ionicons5'
+} from '@vicons/ionicons5'
 import { useStore } from 'vuex'
 const message = useMessage()
 const music: any = reactive({
@@ -171,7 +175,7 @@ let nowType = 'systemMusic'
 let progressInterval: any = 0
 let socket
 const searchText = ref('')
-const nowState:any = ref('stop') // 当前播放状态
+const nowState: any = ref('stop') // 当前播放状态
 const delayStatus = ref('system')
 const sustainStatus = ref('system')
 const playDelayStatus = ref('system')
@@ -283,8 +287,8 @@ const musicListColumns = [
 
 const progress = ref(0.0) // 播放进度条
 const playSpeed = ref(1) // 播放速度
-const delaySpeed:any = ref(0.01) // 延迟设置
-const sustainSpeed:any = ref(0.01) // 延音设置
+const delaySpeed: any = ref(0.01) // 延迟设置
+const sustainSpeed: any = ref(0.01) // 延音设置
 const playDelay = ref(0.01) // 播放延迟
 
 
@@ -295,92 +299,86 @@ const MusicSelect = (row: RowData) => {
       if (clickTimeout) {
         clearTimeout(clickTimeout);
         clickTimeout = null;
-        playBarClickHandler("start","")
+        playBarClickHandler("start", "")
       } else {
         nowPlayMusic.value = row.name;
         clickTimeout = setTimeout(() => {
           clickTimeout = null;
-          store.commit('addPlayList', {'name': row.name, 'type': nowType});
+          store.commit('addPlayList', { 'name': row.name, 'type': nowType });
         }, 300);
       }
     }
   }
 };
 
-const musicListSelect = (row: RowData,rowIndex : number) => {
+const musicListSelect = (row: RowData, rowIndex: number) => {
   console.log(row)
   return {
     onClick: () => {
-      store.commit("removePlayList",rowIndex)
+      store.commit("removePlayList", rowIndex)
       music.musicList = store.getters.getPlayList
     }
   }
 };
 
-function reloadMusicList(){
-  active.value = !active.value; 
+function reloadMusicList() {
+  active.value = !active.value;
   music.musicList = store.getters.getPlayList
 }
-function clearPlayList(){
+function clearPlayList() {
   store.commit('clearPlayList')
   music.musicList = store.getters.getPlayList
 }
 
-const playBarClickHandler = (status: String, type: String) =>{
-  if(status === 'resume'){
-    if(nowState.value == 'stop')  {
-        message.info("双击歌曲播放！")
-        return
+const playBarClickHandler = (status: String, type: String) => {
+  if (status === 'resume') {
+    if (nowState.value == 'stop') {
+      message.info("双击歌曲播放！")
+      return
     }
     getData('resume')
     isPlay.value = true;
     progressInterval = setInterval(getProgress, 1000)
   }
-  if(status === 'pause'){
+  if (status === 'pause') {
     getData('pause')
     isPlay.value = false;
     clearInterval(progressInterval)
     progressInterval = 0
   }
-  if(status === 'stop'){
+  if (status === 'stop') {
     getData('stop')
     clearPlayInfo()
   }
-  if(status === 'start'){
-      nowState.value = 'stop'
-      progress.value = 0
-      clearInterval(progressInterval)
-      statusbar[0] = true
-      statusbar[1] = false
-      isPlay.value = false;
-      getData("stop").then(()=>{
-      setTimeout(() => {
-        sendData('start', {
-            fileName: nowPlayMusic.value,
-            type: type != "" ? type : nowType
-          })
-          message.success('开始')
-          isPlay.value = true;
-          progressInterval = setInterval(getProgress, 1000)
-        }, playDelay.value * 1000)
+  if (status === 'start') {
+    setTimeout(() => {
+      sendData('start', {
+        fileName: nowPlayMusic.value,
+        type: type != "" ? type : nowType
+      }).then(()=>{
+        progress.value = 0
       })
+      message.success('开始')
+      isPlay.value = true;
+      progressInterval = setInterval(getProgress, 1000)
+    }, playDelay.value * 1000)
   }
-  if(status === 'next'){
-    setConfig('set_progress', 1)
+  if (status === 'next') {
+    progress.value = 100
     return
   }
   nowState.value = status
 }
 
-function drag_progress_start(){
-  getData('pause').then(()=>{
+function drag_progress_start() {
+  getData('pause').then(() => {
     clearInterval(progressInterval)
   })
-  
+
 }
-function drag_progress_end(){
+function drag_progress_end() {
   setConfig('set_progress', progress.value / 100)
-  getData('resume').then(()=>{
+  getData('resume').then(() => {
     progressInterval = setInterval(getProgress, 1000)
   })
 }
@@ -390,37 +388,34 @@ function getProgress() {
   getData('getProgress').then((res) => {
     progress.value = res.now_progress
   })
-  if (progress.value == 100)
-    getData('stop').then(() => {
+  if (progress.value == 100) {
+    clearPlayInfo().then(() => {
       if (isRandom.value) {
         randomMusicPlay()
       } else {
         listMusicPlay()
       }
     })
+  }
 }
 
 
-function randomMusicPlay(){
-  getData('stop').then(()=>{
-    clearPlayInfo()
-    nowPlayMusic.value =  music.systemMusic[Math.floor(Math.random() * (music.systemMusic.length))].name
-    playBarClickHandler("start",'systemMusic')
-  })
+function randomMusicPlay() {
+  nowPlayMusic.value = music.systemMusic[Math.floor(Math.random() * (music.systemMusic.length))].name
+  playBarClickHandler("start", 'systemMusic')
+  
 }
 
-function listMusicPlay(){
-  getData('stop').then(()=>{
-    let struct = store.getters.getNextPlayMusic
-    if(struct != null){
-      nowPlayMusic.value =  struct.name
-      let type =  struct.type
-      playBarClickHandler("start",type)
-    }else{
-      window.api.system_notification("😳", "列表的歌放完咯")
-      clearPlayInfo()
-    }
-  })
+function listMusicPlay() {
+  let struct = store.getters.getNextPlayMusic
+  if (struct != null) {
+    nowPlayMusic.value = struct.name
+    let type = struct.type
+    playBarClickHandler("start", type)
+  } else {
+    playBarClickHandler("stop","")
+    window.api.system_notification("😳", "列表的歌放完咯")
+  }
 }
 
 handleUpdateValue('myFavorite')
@@ -491,7 +486,7 @@ watch(playSpeed, () => {
   setConfig('play_speed', playSpeed.value)
 })
 
-function clearPlayInfo() {
+async function clearPlayInfo() {
   nowPlayMusic.value = '没有歌曲'
   nowState.value = 'stop'
   progress.value = 0
@@ -571,43 +566,43 @@ function initWebSocket() {
   }
   socket.onmessage = (event) => {
     const key = decodeURIComponent(event.data).trim() // 获取按下的按键
-    if(key === 'F5'){
+    if (key === 'F5') {
       if (nowState.value != 'stop') {
         window.api.system_notification("🍎", "仅停止状态下允许开始")
       } else {
         console.log("else")
         if (nowPlayMusic.value === '没有歌曲') {
           window.api.system_notification("😭", "选个歌再播放吧靓仔")
-        }else{
+        } else {
           window.api.system_notification("✔", "开始")
-          playBarClickHandler('start','')
+          playBarClickHandler('start', '')
         }
       }
     }
-    if(key === 'F6'){
+    if (key === 'F6') {
       if (nowState.value === 'pause') {
-          window.api.system_notification("▶", "继续")
-          playBarClickHandler('resume','')
-      }else{
+        window.api.system_notification("▶", "继续")
+        playBarClickHandler('resume', '')
+      } else {
         window.api.system_notification("🍎", "仅暂停状态下允许继续")
       }
     }
-    if(key === 'F7'){
+    if (key === 'F7') {
       if (isPlay.value) {
         window.api.system_notification("⏸", "暂停")
-        playBarClickHandler('pause','')
-      }else{
+        playBarClickHandler('pause', '')
+      } else {
         window.api.system_notification("🍎", "仅正在播放时允许暂停")
       }
     }
-    if(key === 'F8'){
+    if (key === 'F8') {
       window.api.system_notification("🛑", "停止")
-      playBarClickHandler('stop','')
+      playBarClickHandler('stop', '')
     }
 
-    if (key === 'F2'){
+    if (key === 'F2') {
       window.api.system_notification("⏩", "下一首")
-      playBarClickHandler('next','')
+      playBarClickHandler('next', '')
     }
 
   }
