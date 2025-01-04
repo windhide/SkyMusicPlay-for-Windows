@@ -1,4 +1,7 @@
 import threading
+
+import keyboard
+
 from windhide._global import globalVariable
 from windhide.utils.musicFileTranselate import convert_notes_to_delayed_format
 from windhide.utils.playThread import ControlledThread
@@ -32,6 +35,19 @@ def send_multiple_key_to_window_task(keys):
     time.sleep(globalVariable.sustain_time)
     for key in keys:
         key_up(key)
+def send_single_key_to_window_follow(key):
+    """发送单个按键，减少延迟"""
+    keyboard.press(key)
+    time.sleep(0.01)
+    keyboard.release(key)
+
+def send_multiple_key_to_window_follow(keys):
+    """发送组合按键，减少延迟"""
+    for key in keys:
+        keyboard.press(key)
+    time.sleep(0.01)
+    for key in keys:
+        keyboard.release(key)
 
 def execute_in_thread(target, *args, **kwargs):
     """通用线程执行器，采用线程池管理"""

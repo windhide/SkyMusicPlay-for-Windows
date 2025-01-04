@@ -3,7 +3,7 @@ import urllib
 from pynput import keyboard
 from websocket_server import WebsocketServer
 from windhide._global import globalVariable
-from windhide.playRobot.robotUtils import send_multiple_key_to_window_task
+from windhide.playRobot.robotUtils import send_single_key_to_window_follow, send_multiple_key_to_window_follow
 from windhide.thread import hook_utils
 
 hook_utils.sout_null()
@@ -14,6 +14,7 @@ server = WebsocketServer("127.0.0.1",11451)
 # 键盘按键事件处理
 def on_press(key):
     if globalVariable.follow_music != "":
+        print(key)
         try:
             # 仅处理特定的按键
             if key.char in 'yuiophjkl;nm,./-=':
@@ -26,9 +27,9 @@ def on_press(key):
                 else:
                     if key.char in "-":
                         globalVariable.isNowAutoPlaying = True
-                        send_multiple_key_to_window_task(globalVariable.nowClientKey)
+                        send_single_key_to_window_follow(globalVariable.nowClientKey)
                     if key.char in "=":
-                        send_multiple_key_to_window_task(globalVariable.nowClientKey)
+                        send_multiple_key_to_window_follow(globalVariable.nowClientKey)
                     else:
                         # 向所有客户端发送按键信息
                         server.send_message_to_all(urllib.parse.quote(key.char))
