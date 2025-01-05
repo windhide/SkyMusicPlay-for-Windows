@@ -1,5 +1,5 @@
-import torch
 import time
+import torch
 
 from piano_transcription_inference import PianoTranscription, sample_rate, load_audio
 
