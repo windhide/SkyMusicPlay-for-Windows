@@ -1,5 +1,7 @@
 import os
-from windhide.utils.pathUtils import getResourcesPath
+
+from windhide.utils.path_util import getResourcesPath
+
 
 def getTypeMusicList(type, searchStr=None):
     # 获取资源目录路径

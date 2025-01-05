@@ -1,8 +1,6 @@
 import numpy as np
 import torch
 
-from windhide._global import globalVariable
-
 
 def move_data_to_device(x, device):
     if 'float' in str(x.dtype):

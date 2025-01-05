@@ -3,9 +3,9 @@ import urllib
 from pynput import keyboard
 from websocket_server import WebsocketServer
 
-from windhide.thread import hook_utils
+from windhide.utils import hook_util
 
-hook_utils.sout_null()
+hook_util.sout_null()
 
 # WebSocket 服务端实例
 server = WebsocketServer("127.0.0.1", 11452)

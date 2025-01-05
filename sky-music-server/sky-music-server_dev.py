@@ -1,23 +1,26 @@
 import json
+import os
+import psutil
+import requests
 import shutil
 import threading
 import time
-import webbrowser
-import psutil  # 新增，用于检查进程状态
-import requests
-from fastapi import FastAPI, UploadFile
 import uvicorn
-import os
-from windhide._global import globalVariable
-from windhide.utils.listUtils import getTypeMusicList
-from windhide.utils.musicFileTranselate import convert_notes_to_delayed_format
-from windhide.musicToSheet.processAudio import process_directory_with_progress
-from windhide.utils.pathUtils import getResourcesPath
-from windhide.playRobot import robotUtils
-from windhide.thread.follow_hook import startThread as follow_thread
-from windhide.thread.shortcut_hook import startThread as shortcut_thread
-from windhide.thread.hwnd_check_hook import startThread as hwnd_check_thread
+import webbrowser
+
+from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+
+from windhide._global import global_variable
+from windhide.auto.click_heart_fire import click_heart_fire
+from windhide.musicToSheet.process_audio import process_directory_with_progress
+from windhide.playRobot import _robot
+from windhide.thread.follow_thread import startThread as follow_thread
+from windhide.thread.hwnd_check_thread import startThread as hwnd_check_thread
+from windhide.thread.shortcut_thread import startThread as shortcut_thread
+from windhide.utils.list_util import getTypeMusicList
+from windhide.utils.music_file_transelate import convert_notes_to_delayed_format
+from windhide.utils.path_util import getResourcesPath
 
 app = FastAPI()
 app.add_middleware(
@@ -39,12 +42,12 @@ async def get_list(listName: str, searchStr: str):
 def start(request: dict):
     try:
         print(f"Starting music: {request['fileName']} of type {request['type']}")
-        if globalVariable._hWnd is None:
+        if global_variable._hWnd is None:
             return {
                 "statusCode": 8008208820,
                 "messeage": "没检测到存活的光遇窗口"
             }
-        robotUtils.playMusic(request["fileName"], request["type"])
+        _robot.playMusic(request["fileName"], request["type"])
     except Exception as e:
         print(f"Error in /start: {str(e)}")
 
@@ -53,7 +56,7 @@ def start(request: dict):
 def pause():
     try:
         print("Pausing music")
-        robotUtils.pause()
+        _robot.pause()
     except Exception as e:
         print(f"Error in /pause: {str(e)}")
 
@@ -62,7 +65,7 @@ def pause():
 def stop():
     try:
         print("Stopping music")
-        robotUtils.stop()
+        _robot.stop()
     except Exception as e:
         print(f"Error in /stop: {str(e)}")
 
@@ -71,7 +74,7 @@ def stop():
 def resume():
     try:
         print("Resuming music")
-        robotUtils.resume()
+        _robot.resume()
     except Exception as e:
         print(f"Error in /resume: {str(e)}")
 
@@ -81,10 +84,10 @@ def get_progress():
     try:
         print("Fetching progress")
         return {
-            "overall_progress": f"{globalVariable.overall_progress:.1f}",
-            "tran_mid_progress": f"{globalVariable.tran_mid_progress:.1f}",
-            "now_progress": f"{globalVariable.now_progress:.1f}",
-            "now_translate_text": globalVariable.now_translate_text
+            "overall_progress": f"{global_variable.overall_progress:.1f}",
+            "tran_mid_progress": f"{global_variable.tran_mid_progress:.1f}",
+            "now_progress": f"{global_variable.now_progress:.1f}",
+            "now_translate_text": global_variable.now_translate_text
         }
     except Exception as e:
         print(f"Error in /getProgress: {str(e)}")
@@ -136,13 +139,13 @@ def translate(request: dict):
 def set_config(request: dict):
     try:
         if request["name"] == 'delay_interval':
-            globalVariable.delay_interval = float(request["value"])
+            global_variable.delay_interval = float(request["value"])
         if request["name"] == 'sustain_time':
-            globalVariable.sustain_time = float(request["value"])
+            global_variable.sustain_time = float(request["value"])
         if request["name"] == 'set_progress':
-            globalVariable.set_progress = float(request["value"])
+            global_variable.set_progress = float(request["value"])
         if request["name"] == 'play_speed':
-            globalVariable.play_speed = float(request["value"])
+            global_variable.play_speed = float(request["value"])
         print(f"Config set: {request['name']} = {request['value']}")
         return "ok"
     except Exception as e:
@@ -153,7 +156,7 @@ def set_config(request: dict):
 @app.post("/getConfig")
 def get_config(request: dict):
     try:
-        returnData = eval("globalVariable." + request["name"])
+        returnData = eval("global_variable." + request["name"])
         print(f"Config fetched: {request['name']} = {returnData}")
         return returnData
     except Exception as e:
@@ -166,9 +169,9 @@ def set_follow_sheet(request: dict):
     try:
         print(f"Setting follow sheet for file: {request['fileName']}")
         convert_notes_to_delayed_format(request["fileName"], request["type"])
-        globalVariable.follow_sheet = list(map(lambda item: item['key'], globalVariable.music_sheet))
-        globalVariable.music_sheet = []
-        globalVariable.follow_music = request["fileName"]
+        global_variable.follow_sheet = list(map(lambda item: item['key'], global_variable.music_sheet))
+        global_variable.music_sheet = []
+        global_variable.follow_music = request["fileName"]
     except Exception as e:
         print(f"Error in /followSheet: {str(e)}")
 
@@ -176,20 +179,20 @@ def set_follow_sheet(request: dict):
 @app.post("/nextSheet")
 def next_sheet(request: dict):
     try:
-        if len(globalVariable.follow_sheet) == 0:
+        if len(global_variable.follow_sheet) == 0:
             print("Follow sheet is empty")
             return ""
         if request["type"] == "ok":
-            sheet = globalVariable.follow_sheet[0]
-            globalVariable.nowClientKey = sheet
-            globalVariable.follow_sheet = globalVariable.follow_sheet[1:]
+            sheet = global_variable.follow_sheet[0]
+            global_variable.nowClientKey = sheet
+            global_variable.follow_sheet = global_variable.follow_sheet[1:]
             print(f"Next sheet: {sheet}")
             return sheet
         elif request["type"] == "pre":
-            return globalVariable.follow_sheet[1]
+            return global_variable.follow_sheet[1]
         else:
-            globalVariable.nowClientKey = globalVariable.follow_sheet[0]
-            return globalVariable.follow_sheet[0]
+            global_variable.nowClientKey = global_variable.follow_sheet[0]
+            return global_variable.follow_sheet[0]
 
 
     except IndexError:
@@ -232,8 +235,8 @@ def get_convert_sheet(request: dict):
     try:
         print(f"Converting sheet for file: {request['fileName']}")
         convert_notes_to_delayed_format(request["fileName"], request["type"])
-        convert_sheet = list(map(lambda item: item['key'], globalVariable.music_sheet))
-        globalVariable.music_sheet = []
+        convert_sheet = list(map(lambda item: item['key'], global_variable.music_sheet))
+        global_variable.music_sheet = []
         return convert_sheet
     except Exception as e:
         print(f"Error in /getConvertSheet: {str(e)}")
@@ -272,16 +275,24 @@ def open_files():
 
 @app.get("/update")
 def get_update():
-    if globalVariable.isShow is False:
+    if global_variable.isShow is False:
         response = requests.get('https://gitee.com/WindHide/SkyMusicPlay-for-Windows/raw/main/.version')
-        globalVariable.isShow = True
+        global_variable.isShow = True
         if response.status_code == 200:
             return json.loads(response.text)
         else:
             print(f'请求失败，状态码：{response.status_code}')
         return "404"
 
+
+#  下面放识别相关的调用
+@app.get("/autoClickFire")
+def auto_click_fire():
+    return click_heart_fire()
+
 if __name__ == '__main__':
+    global_variable.isProd = False
+
     # 创建监听 WebSocket 的线程
     follow_websocket_thread = threading.Thread(target=follow_thread)
     follow_websocket_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出

@@ -1,10 +1,10 @@
 import json
 import os
+
 import pretty_midi
 
-from windhide._global import globalVariable
-from windhide.musicToSheet.transferMID import inference
-from windhide.utils.pathUtils import getResourcesPath
+from windhide.musicToSheet.transfer_MID import inference
+from windhide.utils.path_util import getResourcesPath
 
 # 可动态配置的时间合并阈值（单位：毫秒）
 TIME_MERGE_THRESHOLD = 20

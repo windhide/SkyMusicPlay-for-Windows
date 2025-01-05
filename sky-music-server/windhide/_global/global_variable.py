@@ -1,3 +1,5 @@
+isProd = False
+
 thread = None
 music_sheet = [] #乐谱
 now_progress  = 0 #进度条

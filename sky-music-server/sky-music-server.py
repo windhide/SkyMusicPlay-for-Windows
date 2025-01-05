@@ -1,26 +1,28 @@
 import json
+import logging
+import os
+import psutil
+import requests
 import shutil
+import sys
 import threading
 import time
+import uvicorn
 import webbrowser
 
-import psutil  # 新增，用于检查进程状态
-import requests
 from fastapi import FastAPI, UploadFile
-import uvicorn
-# 配置文件
-import logging
-import sys, os
-from windhide._global import globalVariable
-from windhide.utils.listUtils import getTypeMusicList
-from windhide.utils.musicFileTranselate import convert_notes_to_delayed_format
-from windhide.musicToSheet.processAudio import process_directory_with_progress
-from windhide.utils.pathUtils import getResourcesPath
-from windhide.playRobot import robotUtils
-from windhide.thread.follow_hook import startThread as follow_thread
-from windhide.thread.shortcut_hook import startThread as shortcut_thread
-from windhide.thread.hwnd_check_hook import startThread as hwnd_check_thread
 from fastapi.middleware.cors import CORSMiddleware
+
+from windhide._global import global_variable
+from windhide.auto.click_heart_fire import click_heart_fire
+from windhide.musicToSheet.process_audio import process_directory_with_progress
+from windhide.playRobot import _robot
+from windhide.thread.follow_thread import startThread as follow_thread
+from windhide.thread.hwnd_check_thread import startThread as hwnd_check_thread
+from windhide.thread.shortcut_thread import startThread as shortcut_thread
+from windhide.utils.list_util import getTypeMusicList
+from windhide.utils.music_file_transelate import convert_notes_to_delayed_format
+from windhide.utils.path_util import getResourcesPath
 
 # 关闭print的输出
 sys.stdout = open(os.devnull, 'w')
@@ -40,32 +42,32 @@ async def get_list(listName: str,searchStr: str):
 
 @app.post("/start")
 def start(request: dict):
-    if globalVariable._hWnd is None:
+    if global_variable._hWnd is None:
         return {
             "statusCode": 8008208820,
             "messeage": "没检测到存活的光遇窗口"
         }
-    robotUtils.playMusic(request["fileName"], request["type"])
+    _robot.playMusic(request["fileName"], request["type"])
 
 @app.get("/pause")
 def pause():
-    robotUtils.pause()
+    _robot.pause()
 
 @app.get("/stop")
 def stop():
-    robotUtils.stop()
+    _robot.stop()
 
 @app.get("/resume")
 def resume():
-    robotUtils.resume()
+    _robot.resume()
 
 @app.get("/getProgress")
 def get_progress():
     return {
-        "overall_progress": f"{globalVariable.overall_progress:.1f}",
-        "tran_mid_progress": f"{globalVariable.tran_mid_progress:.1f}",
-        "now_progress": f"{globalVariable.now_progress:.1f}",
-        "now_translate_text": globalVariable.now_translate_text
+        "overall_progress": f"{global_variable.overall_progress:.1f}",
+        "tran_mid_progress": f"{global_variable.tran_mid_progress:.1f}",
+        "now_progress": f"{global_variable.now_progress:.1f}",
+        "now_translate_text": global_variable.now_translate_text
     }
 
 @app.post("/fileUpload")
@@ -99,40 +101,40 @@ def translate(request: dict):
 @app.post("/setConfig")
 def translate(request: dict):
     if request["name"] == 'delay_interval':
-        globalVariable.delay_interval = float(request["value"])
+        global_variable.delay_interval = float(request["value"])
     if request["name"] == 'sustain_time':
-        globalVariable.sustain_time = float(request["value"])
+        global_variable.sustain_time = float(request["value"])
     if request["name"] == 'set_progress':
-        globalVariable.set_progress = float(request["value"])
+        global_variable.set_progress = float(request["value"])
     if request["name"] == 'play_speed':
-        globalVariable.play_speed = float(request["value"])
+        global_variable.play_speed = float(request["value"])
     return "ok"
 
 @app.post("/getConfig")
 def get_config(request: dict):
-    returnData = eval("globalVariable." + request["name"])
+    returnData = eval("global_variable." + request["name"])
     return returnData
 
 @app.post("/followSheet")
 def set_follow_sheet(request: dict):
     convert_notes_to_delayed_format(request["fileName"], request["type"])
-    globalVariable.follow_sheet = list(map(lambda item: item['key'], globalVariable.music_sheet))
-    globalVariable.music_sheet = []
-    globalVariable.follow_music = request["fileName"]
+    global_variable.follow_sheet = list(map(lambda item: item['key'], global_variable.music_sheet))
+    global_variable.music_sheet = []
+    global_variable.follow_music = request["fileName"]
 
 @app.post("/nextSheet")
 def next_sheet(request: dict):
-    if len(globalVariable.follow_sheet) == 0:
+    if len(global_variable.follow_sheet) == 0:
         return ""
     try:
         if request["type"] == "ok":
-            sheet = globalVariable.follow_sheet[0]
-            globalVariable.nowClientKey = sheet
-            globalVariable.follow_sheet = globalVariable.follow_sheet[1:]
+            sheet = global_variable.follow_sheet[0]
+            global_variable.nowClientKey = sheet
+            global_variable.follow_sheet = global_variable.follow_sheet[1:]
             return sheet
         else:
-            globalVariable.nowClientKey = globalVariable.follow_sheet[0]
-            return globalVariable.follow_sheet[0]
+            global_variable.nowClientKey = global_variable.follow_sheet[0]
+            return global_variable.follow_sheet[0]
     except IndexError:
         print("空数组")
         return ""
@@ -163,8 +165,8 @@ def open_browser(url: str):
 @app.post("/getConvertSheet")
 def get_convert_sheet(request: dict):
     convert_notes_to_delayed_format(request["fileName"], request["type"])
-    convert_sheet = list(map(lambda item: item['key'], globalVariable.music_sheet))
-    globalVariable.music_sheet = []
+    convert_sheet = list(map(lambda item: item['key'], global_variable.music_sheet))
+    global_variable.music_sheet = []
     return convert_sheet
 
 @app.post('/setFavoriteMusic')
@@ -192,16 +194,24 @@ def open_files():
 
 @app.get("/update")
 def get_update():
-    if globalVariable.isShow is False:
+    if global_variable.isShow is False:
         response = requests.get('https://gitee.com/WindHide/SkyMusicPlay-for-Windows/raw/main/.version')
-        globalVariable.isShow = True
+        global_variable.isShow = True
         if response.status_code == 200:
             return json.loads(response.text)
         else:
             print(f'请求失败，状态码：{response.status_code}')
         return "404"
 
+
+#  下面放识别相关的调用
+@app.get("/autoClickFire")
+def auto_click_fire():
+    return click_heart_fire()
+
+
 if __name__ == '__main__':
+    global_variable.isProd = True
     # 创建监听 WebSocket 的线程
     follow_websocket_thread = threading.Thread(target=follow_thread)
     follow_websocket_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出

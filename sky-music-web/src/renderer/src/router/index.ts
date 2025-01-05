@@ -30,6 +30,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/sheetPdf',
     name: 'sheetPdf',
     component: () => import('../views/sheetToPDF.vue')
+  },
+  {
+    path: '/magicTools',
+    name: 'magicTools',
+    component: () => import('../views/magicTools.vue')
   }
 ]
 

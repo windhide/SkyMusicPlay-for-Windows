@@ -62,6 +62,7 @@ import {
   Library,
   Close,
   Remove,
+  Flask
 } from '@vicons/ionicons5'
 import router from '@renderer/router'
 
@@ -126,6 +127,11 @@ const menuOptions = [
     label: "生成乐谱",
     key: "sheetPdf",
     icon: renderIcon(Library),
+  },
+  {
+    label: "奇怪功能",
+    key: "magicTools",
+    icon: renderIcon(Flask),
   }
 ];
 

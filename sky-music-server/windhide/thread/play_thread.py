@@ -1,8 +1,9 @@
 import math
 import threading
 import time
-from windhide._global import globalVariable
-from windhide.playRobot import robotUtils
+
+from windhide._global import global_variable
+from windhide.playRobot import _robot
 
 
 class ControlledThread:
@@ -13,14 +14,14 @@ class ControlledThread:
         self._running = False
 
     def _run(self):
-        if not globalVariable.music_sheet:
+        if not global_variable.music_sheet:
             self.stop()
             return
 
-        local_music_sheet = globalVariable.music_sheet[:]
+        local_music_sheet = global_variable.music_sheet[:]
         allLength = len(local_music_sheet) - 1
         index = 0
-        delay_interval = globalVariable.delay_interval
+        delay_interval = global_variable.delay_interval
 
         while index < len(local_music_sheet):
             if not self._running:
@@ -29,20 +30,20 @@ class ControlledThread:
             if not self._pause_event.wait(timeout=0.1):  # 避免线程完全阻塞
                 continue
 
-            if globalVariable.set_progress != -0.01:
-                index = math.floor(allLength * globalVariable.set_progress)
-                globalVariable.set_progress = -0.01
+            if global_variable.set_progress != -0.01:
+                index = math.floor(allLength * global_variable.set_progress)
+                global_variable.set_progress = -0.01
                 continue
 
             sheet = local_music_sheet[index]
             keys = sheet["key"]
-            delay = sheet["delay"] / globalVariable.play_speed
-            globalVariable.now_progress = index / allLength * 100
+            delay = sheet["delay"] / global_variable.play_speed
+            global_variable.now_progress = index / allLength * 100
 
             if len(keys) == 1:
-                robotUtils.send_single_key_to_window(keys)
+                _robot.send_single_key_to_window(keys)
             else:
-                robotUtils.send_multiple_key_to_window(keys)
+                _robot.send_multiple_key_to_window(keys)
 
             time.sleep(delay / 1000)
             time.sleep(delay_interval)
