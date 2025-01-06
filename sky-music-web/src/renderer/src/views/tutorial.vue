@@ -1,9 +1,9 @@
 <template>
   <n-flex align="center">
-    <n-gradient-text :size="20" type="success" style="width: 100%">
+    <n-gradient-text :size="20" type="success" style="width: 100%;color:#F2E8C4">
       {{ "当前: " + nowPlayMusic + "" }}
     </n-gradient-text>
-    <n-button type="primary" ghost @click="followTutorial"> 开始跟弹 </n-button>
+    <n-button type="primary" ghost @click="followTutorial" color="#F2E8C4"> 开始跟弹 </n-button>
   </n-flex>
   <n-card style="margin-top: 20px">
     <n-tabs
@@ -168,3 +168,13 @@ function getListData(value) {
   });
 }
 </script>
+
+<style scoped>
+:deep(.n-tabs-bar){
+  --n-bar-color: rgb(242,232,196)!important;
+}
+:deep(.n-tabs){
+    --n-tab-text-color-active: rgb(242,232,196)!important;
+    --n-tab-text-color-hover: rgb(242,232,196)!important;
+}
+</style>

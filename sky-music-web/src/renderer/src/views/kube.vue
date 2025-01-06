@@ -1,6 +1,6 @@
 <template>
   <n-flex align="center">
-    <n-gradient-text :size="24" type="success" style="width: 100%">
+    <n-gradient-text :size="24" type="success" style="width: 100%; color:#F2E8C4">
       转换歌曲
     </n-gradient-text>
     <n-upload
@@ -13,7 +13,7 @@
     >
     <n-button type="info" ghost> step1.选择音乐 </n-button>
     </n-upload>
-    <n-button type="primary" ghost :loading="processFlag" @click="handleStartTranslate" style="margin-left: 25px;">
+    <n-button type="primary" ghost :loading="processFlag" @click="handleStartTranslate" style="margin-left: 25px;" color="#F2E8C4">
       step2.开始转换
     </n-button>
     <n-divider style="margin:0px"/>
@@ -226,3 +226,13 @@ function handleUpdateValue(value: string) {
   });
 }
 </script>
+
+<style scoped>
+:deep(.n-tabs-bar){
+  --n-bar-color: rgb(242,232,196)!important;
+}
+:deep(.n-tabs){
+    --n-tab-text-color-active: rgb(242,232,196)!important;
+    --n-tab-text-color-hover: rgb(242,232,196)!important;
+}
+</style>

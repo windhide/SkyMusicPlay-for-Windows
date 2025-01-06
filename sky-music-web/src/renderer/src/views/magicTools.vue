@@ -13,7 +13,7 @@
         borderRadius: themeVars.borderRadius,
         display: 'inline-block',
         color: 'black',
-        background: 'cyan',
+        background: '#F2E8C4',
         transition: `all .3s ${themeVars.cubicBezierEaseInOut}`,
       }"
     />
@@ -57,10 +57,10 @@
 
 <script setup lang="ts">
 import { getData } from "@renderer/utils/fetchUtils";
-import { UploadCustomRequestOptions, useThemeVars } from "naive-ui";
+import { useThemeVars } from "naive-ui";
 const themeVars = useThemeVars();
-const headText = "此处是测试版功能请谨慎使用⚙，不涉及内存修改🔧";
-const patterns = ["谨慎使用⚙", "不涉及内存修改🔧", "咖啡☕"];
+const headText = "此处是测试版功能请谨慎使用🌶，不涉及内存修改🌶";
+const patterns = ["谨慎使用🌶", "不涉及内存修改🌶"];
 const percentage = [0,0,0,0,0]
 const ringColor = {
   activate:['#cde6c7','#afdfe4','#f3704b','#45b97c','#33a3dc'],

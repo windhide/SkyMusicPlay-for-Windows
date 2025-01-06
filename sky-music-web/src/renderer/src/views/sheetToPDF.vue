@@ -1,9 +1,9 @@
 <template>
   <n-flex align="center">
-    <n-gradient-text :size="20" type="success" style="width: 100%">
+    <n-gradient-text :size="20" type="success" style="width: 100%;color:#F2E8C4">
       {{ '当前: ' + nowPlayMusic + '' }}
     </n-gradient-text>
-    <n-button type="primary" ghost :loading="processFlag" @click="transferPDF"> 转PDF </n-button>
+    <n-button type="primary" ghost :loading="processFlag" @click="transferPDF" color="#F2E8C4"> 转PDF </n-button>
     ⭐
     <n-switch v-model:value="templateSelect" :round="false" />
     🎹
@@ -329,5 +329,16 @@ function getListData(value) {
   position: relative;
   overflow: visible; /* 确保没有被裁剪 */
   transform: none; /* 确保没有缩放 */
+}
+
+:deep(.n-tabs-bar){
+  --n-bar-color: rgb(242,232,196)!important;
+}
+:deep(.n-tabs){
+    --n-tab-text-color-active: rgb(242,232,196)!important;
+    --n-tab-text-color-hover: rgb(242,232,196)!important;
+}
+:deep(.n-switch--active){
+  --n-rail-color-active: rgb(242,232,196)!important;
 }
 </style>

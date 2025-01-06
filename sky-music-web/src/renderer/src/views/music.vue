@@ -1,12 +1,13 @@
 <template>
   <n-flex align="center">
-    <n-gradient-text :size="20" type="success" style="width: 100%">
+    <n-gradient-text :size="20" type="success" style="width: 100%; color:#F2E8C4">
       {{ '当前播放: ' + nowPlayMusic + '' }}
       <br />
-      <n-slider v-model:value="progress" :step="0.1" style="max-width: 60%; display: inline-block; margin-left: 3px"
-        @dragend="drag_progress_end" @dragstart="drag_progress_start">
+      <n-slider v-model:value="progress" :step="0.1" style="max-width: 60%; display: inline-block; margin-left: 3px;" 
+        @dragend="drag_progress_end" @dragstart="drag_progress_start"
+        >
         <template #thumb>
-          <n-icon-wrapper :size="20" :border-radius="12">
+          <n-icon-wrapper :size="20" :border-radius="12" style="background-color:#F2E8C4">
             <n-icon :size="16" :component="PawSharp" />
           </n-icon-wrapper>
         </template>
@@ -127,6 +128,7 @@
     </n-drawer-content>
   </n-drawer>
 </template>
+
 
 <script lang="ts" setup>
 import { getData, sendData, getList, setConfig } from '@renderer/utils/fetchUtils'
@@ -611,3 +613,30 @@ onUnmounted(() => {
   }
 })
 </script>
+<style scoped>
+:deep(.n-slider-rail__fill){
+  --n-fill-color-hover: rgb(242,232,196) !important;
+  background-color: rgb(242,232,196) !important;
+}
+:deep(.n-radio){
+  --n-box-shadow-active: inset 0 0 0 1px rgb(242,232,196)!important;
+  --n-box-shadow-focus: inset 0 0 0 1px rgb(242,232,196), 0 0 0 2px rgba(242,232,196, 0.3)!important;
+  --n-box-shadow-hover: inset 0 0 0 1px rgb(242,232,196)!important;
+  --n-dot-color-active: rgb(242,232,196)!important;
+}
+:deep(.n-input){
+  --n-border-hover: 1px solid rgb(242,232,196)!important;
+  --n-border-focus: 1px solid rgb(242,232,196)!important;
+  --n-color-focus: rgba(242,232,196,0.1)!important;
+}
+:deep(.n-tabs-bar){
+  --n-bar-color: rgb(242,232,196)!important;
+}
+:deep(.n-tabs){
+    --n-tab-text-color-active: rgb(242,232,196)!important;
+    --n-tab-text-color-hover: rgb(242,232,196)!important;
+}
+:deep(.n-switch--active){
+  --n-rail-color-active: rgb(242,232,196)!important;
+}
+</style>
