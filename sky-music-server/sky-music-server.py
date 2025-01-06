@@ -11,7 +11,9 @@ from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from windhide._global import global_variable
+from windhide.auto.candles_run import run_control
 from windhide.auto.click_heart_fire import click_heart_fire
+from windhide.auto.script_to_json import script_to_json
 from windhide.musicToSheet.process_audio import process_directory_with_progress
 from windhide.thread.follow_thread import startThread as follow_thread
 from windhide.thread.frame_alive_thread import monitor_process
@@ -38,7 +40,6 @@ app.add_middleware(
 @app.get("/")
 async def get_list(listName: str,searchStr: str):
     return getTypeMusicList(listName,searchStr)
-
 
 @app.post("/play_operate")
 def play_operate(request: dict):
@@ -100,7 +101,7 @@ def config_operate(request: dict):
         case 'favorite_music':
             favorite_music(request)
         case 'convert_sheet':
-            convert_sheet(request)
+            return convert_sheet(request)
         case 'drop_file':
             drop_file(request)
     return "ok"
@@ -112,7 +113,7 @@ def follow(request: dict):
         case 'setSheet':
             set_next_sheet(request)
         case 'nextSheet':
-            get_next_sheet(request)
+            return get_next_sheet(request)
 
 @app.get("/check")
 def check():
@@ -145,6 +146,12 @@ def get_update():
 def auto_click_fire():
     return click_heart_fire()
 
+
+@app.post("/autoScriptUpload")
+async def create_upload_files(file: UploadFile):
+    json = await script_to_json(await file.read())
+    await run_control("developer", json)
+    return "ok"
 
 if __name__ == '__main__':
     global_variable.isProd = True
