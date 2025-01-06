@@ -90,23 +90,6 @@
         <n-input-number step="0.1" v-model:value="playSpeed" size="tiny" :min="0.25" :max="5" placeholder="输入倍速速度" />
       </n-col>
     </n-row>
-    <n-row gutter="12">
-      <n-col :span="15">
-        <n-gradient-text type="info" :size="13"> 播放延迟s&nbsp;&nbsp;&nbsp; </n-gradient-text>
-        <n-radio-group v-model:value="playDelayStatus" name="radiogroup">
-          <n-space>
-            <n-radio key="system" value="system">无</n-radio>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <n-radio key="custom" value="custom">自定义</n-radio>
-          </n-space>
-        </n-radio-group>
-      </n-col>
-      <n-col v-show="playDelayStatus == 'custom'" :span="9" style="margin-left: -50px">
-        <n-space vertical style="width: 150px; float: right; margin-top: 2px">
-          <n-slider v-model:value="playDelay" :step="1" :min="1" :max="10" />
-        </n-space>
-      </n-col>
-    </n-row>
   </n-flex>
   <n-card style="margin-top: 15px">
     <n-tabs type="bar" animated size="small" @update:value="handleUpdateValue" @before-leave="handleBeforeLeave">
@@ -178,7 +161,6 @@ const searchText = ref('')
 const nowState: any = ref('stop') // 当前播放状态
 const delayStatus = ref('system')
 const sustainStatus = ref('system')
-const playDelayStatus = ref('system')
 const isRandom = ref(false)
 const isPlay = ref(false)
 const active = ref(false)
@@ -289,7 +271,6 @@ const progress = ref(0.0) // 播放进度条
 const playSpeed = ref(1) // 播放速度
 const delaySpeed: any = ref(0.01) // 延迟设置
 const sustainSpeed: any = ref(0.01) // 延音设置
-const playDelay = ref(0.01) // 播放延迟
 
 
 let clickTimeout: any = null;
@@ -336,32 +317,33 @@ const playBarClickHandler = (status: String, type: String) => {
       message.info("双击歌曲播放！")
       return
     }
-    getData('resume')
+    sendData('play_operate',{"operate":"resume"})
     isPlay.value = true;
     progressInterval = setInterval(getProgress, 1000)
   }
   if (status === 'pause') {
-    getData('pause')
+    sendData('play_operate',{"operate":"pause"})
     isPlay.value = false;
     clearInterval(progressInterval)
     progressInterval = 0
   }
   if (status === 'stop') {
-    getData('stop')
+    sendData('play_operate',{"operate":"stop"})
     clearPlayInfo()
   }
   if (status === 'start') {
     setTimeout(() => {
-      sendData('start', {
+      sendData('play_operate', {
         fileName: nowPlayMusic.value,
-        type: type != "" ? type : nowType
+        type: type != "" ? type : nowType,
+        operate: "start"
       }).then(()=>{
         progress.value = 0
       })
       message.success('开始')
       isPlay.value = true;
       progressInterval = setInterval(getProgress, 1000)
-    }, playDelay.value * 1000)
+    })
   }
   if (status === 'next') {
     progress.value = 100
@@ -371,14 +353,14 @@ const playBarClickHandler = (status: String, type: String) => {
 }
 
 function drag_progress_start() {
-  getData('pause').then(() => {
+  sendData('play_operate',{"operate":"pause"}).then(() => {
     clearInterval(progressInterval)
   })
 
 }
 function drag_progress_end() {
   setConfig('set_progress', progress.value / 100)
-  getData('resume').then(() => {
+  sendData('play_operate',{"operate":"resume"}).then(() => {
     progressInterval = setInterval(getProgress, 1000)
   })
 }
@@ -387,8 +369,7 @@ function drag_progress_end() {
 function getProgress() {
   getData('getProgress').then((res) => {
     progress.value = res.now_progress
-  })
-  if (progress.value == 100) {
+    if (progress.value == 100) {
     clearPlayInfo().then(() => {
       if (isRandom.value) {
         randomMusicPlay()
@@ -397,6 +378,7 @@ function getProgress() {
       }
     })
   }
+  })
 }
 
 
@@ -408,13 +390,14 @@ function randomMusicPlay() {
 
 function listMusicPlay() {
   let struct = store.getters.getNextPlayMusic
+  if (struct == undefined) return
   if (struct != null) {
     nowPlayMusic.value = struct.name
     let type = struct.type
     playBarClickHandler("start", type)
   } else {
     playBarClickHandler("stop","")
-    window.api.system_notification("😳", "列表的歌放完咯")
+    window.api.system_notification("😳", "列表的歌放完咯"+struct)
   }
 }
 
@@ -499,9 +482,10 @@ async function clearPlayInfo() {
 //  收藏点击
 function heartClick(name, state) {
   if (state) {
-    sendData('setFavoriteMusic', {
+    sendData('config_operate', {
       fileName: name,
-      type: nowType
+      type: nowType,
+      operate: 'favorite_music'
     }).then(() => {
       handleUpdateValue('myFavorite')
       handleUpdateValue('systemMusic')
@@ -510,9 +494,10 @@ function heartClick(name, state) {
       message.success('收藏成功')
     })
   } else {
-    sendData('dropFile', {
+    sendData('config_operate', {
       fileName: name,
-      type: 'myFavorite'
+      type: 'myFavorite',
+      operate: "drop_file"
     }).then(() => {
       handleUpdateValue('myFavorite')
       handleUpdateValue('systemMusic')
@@ -525,9 +510,10 @@ function heartClick(name, state) {
 
 // 删除点击
 function deleteClick(name) {
-  sendData('dropFile', {
+  sendData('config_operate', {
     fileName: name,
-    type: 'myImport'
+    type: 'myImport',
+    operate: "drop_file"
   }).then(() => {
     handleUpdateValue('myFavorite')
     handleUpdateValue('systemMusic')

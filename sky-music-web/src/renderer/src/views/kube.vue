@@ -147,10 +147,11 @@ const translateColumns = [
 ]; // 音乐列
 
 function originalClick(name) {
-    sendData("dropFile", {
+    sendData("config_operate", {
       fileName: name.slice(0, name.lastIndexOf('.')),
       type: 'translateOriginalMusic',
-      suffix: name.match(/(\.[^.]*)$/)[0]
+      suffix: name.match(/(\.[^.]*)$/)[0],
+      operate: "drop_file"
     }).then(() => {
       handleUpdateValue("translateOriginalMusic");
       message.success("移除成功");
@@ -158,18 +159,20 @@ function originalClick(name) {
 }
 
 function translateClick(name) {
-    sendData("dropFile", {
+    sendData("config_operate", {
       fileName: name,
       type: 'myTranslate',
+      operate: "drop_file"
     }).then(() => {
       handleUpdateValue("translateOriginalMusic");
       handleUpdateValue("myTranslate");
       message.success("移除成功");
     });
-    sendData("dropFile", {
+    sendData("config_operate", {
       fileName: name,
       type: 'translateMID',
-      suffix: '.mid'
+      suffix: '.mid',
+      operate: "drop_file"
     })
 }
 

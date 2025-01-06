@@ -104,7 +104,7 @@ function jump() {
   if (window.innerWidth == 800) {
     return;
   }
-  sendData("nextSheet", { type: "不ok" }).then((res) => {
+  sendData("follow", { type: "不ok", operate: 'nextSheet' }).then((res) => {
     if (res.length != 0) router.push({ name: "keyboard" });
   });
 }

@@ -63,7 +63,7 @@ def get_add_friend_position():
     return match_template_and_return_coordinates(
         source_image=get_window_screenshot(),
         template_image_path=os.path.join(os.path.join(getResourcesPath("systemTools"), "ocrTemplate"), "add_friend_template.png"),
-        match_threshold=float(0.5)
+        match_threshold=float(0.4)
     )
 
 

@@ -218,9 +218,10 @@ async function transferPDF() {
   } else {
     message.success('开始转换')
     processFlag.value = true
-    sendData('getConvertSheet', {
+    sendData('config_operate', {
       fileName: nowPlayMusic.value,
-      type: nowType
+      type: nowType,
+      operate: 'convert_sheet'
     })
       .then((res) => {
         convertSheet.push(...res)

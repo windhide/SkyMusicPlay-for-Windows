@@ -28,14 +28,15 @@ export function sendData(url, data) {
   .catch(error => console.error(error));}
 
   export function setConfig(name,value){
-    return fetch(baseUrl + "setConfig", {
+    return fetch(baseUrl + "config_operate", {
       method: 'POST', 
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         "name":name,
-        "value":value
+        "value":value,
+        "operate":'set'
       }), 
     })
     .then(response => response.json())

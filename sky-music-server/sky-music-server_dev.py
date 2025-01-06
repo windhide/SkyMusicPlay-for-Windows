@@ -1,13 +1,11 @@
 import json
 import os
-import psutil
-import requests
-import shutil
 import threading
-import time
-import uvicorn
 import webbrowser
 
+import psutil
+import requests
+import uvicorn
 from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -16,13 +14,17 @@ from windhide.auto.candles_run import run_control
 from windhide.auto.click_heart_fire import click_heart_fire
 from windhide.auto.script_to_json import script_to_json
 from windhide.musicToSheet.process_audio import process_directory_with_progress
-from windhide.playRobot import _robot
 from windhide.thread.follow_thread import startThread as follow_thread
 from windhide.thread.hwnd_check_thread import startThread as hwnd_check_thread
 from windhide.thread.shortcut_thread import startThread as shortcut_thread
+from windhide.utils.config_util import set_config, get_config, favorite_music, convert_sheet
+from windhide.utils.follow_util import set_next_sheet, get_next_sheet
 from windhide.utils.list_util import getTypeMusicList
-from windhide.utils.music_file_transelate import convert_notes_to_delayed_format
 from windhide.utils.path_util import getResourcesPath
+from windhide.utils.play_util import start, pause, stop, resume
+
+process = psutil.Process(os.getpid())
+process.cpu_affinity([1, 2])
 
 app = FastAPI()
 app.add_middleware(
@@ -40,45 +42,18 @@ async def get_list(listName: str, searchStr: str):
     return getTypeMusicList(listName, searchStr)
 
 
-@app.post("/start")
-def start(request: dict):
-    try:
-        print(f"Starting music: {request['fileName']} of type {request['type']}")
-        if global_variable._hWnd is None:
-            return {
-                "statusCode": 8008208820,
-                "messeage": "没检测到存活的光遇窗口"
-            }
-        _robot.playMusic(request["fileName"], request["type"])
-    except Exception as e:
-        print(f"Error in /start: {str(e)}")
+@app.post("/play_operate")
+def play_operate(request: dict):
+    match request["operate"]:
+        case 'start':
+            start(request)
+        case 'pause':
+            pause()
+        case 'resume':
+            resume()
+        case 'stop':
+            stop()
 
-
-@app.get("/pause")
-def pause():
-    try:
-        print("Pausing music")
-        _robot.pause()
-    except Exception as e:
-        print(f"Error in /pause: {str(e)}")
-
-
-@app.get("/stop")
-def stop():
-    try:
-        print("Stopping music")
-        _robot.stop()
-    except Exception as e:
-        print(f"Error in /stop: {str(e)}")
-
-
-@app.get("/resume")
-def resume():
-    try:
-        print("Resuming music")
-        _robot.resume()
-    except Exception as e:
-        print(f"Error in /resume: {str(e)}")
 
 
 @app.get("/getProgress")
@@ -137,126 +112,38 @@ def translate(request: dict):
         return "Translation failed"
 
 
-@app.post("/setConfig")
-def set_config(request: dict):
-    try:
-        if request["name"] == 'delay_interval':
-            global_variable.delay_interval = float(request["value"])
-        if request["name"] == 'sustain_time':
-            global_variable.sustain_time = float(request["value"])
-        if request["name"] == 'set_progress':
-            global_variable.set_progress = float(request["value"])
-        if request["name"] == 'play_speed':
-            global_variable.play_speed = float(request["value"])
-        print(f"Config set: {request['name']} = {request['value']}")
-        return "ok"
-    except Exception as e:
-        print(f"Error in /setConfig: {str(e)}")
-        return "Config set failed"
+@app.post("/config_operate")
+def config_operate(request: dict):
+    match request["operate"]:
+        case 'set':
+            set_config(request)
+        case 'get':
+            return get_config(request)
+        case 'favorite_music':
+            favorite_music(request)
+        case 'convert_sheet':
+            return convert_sheet(request)
+        case 'drop_file':
+            drop_file(request)
+    return "ok"
 
 
-@app.post("/getConfig")
-def get_config(request: dict):
-    try:
-        returnData = eval("global_variable." + request["name"])
-        print(f"Config fetched: {request['name']} = {returnData}")
-        return returnData
-    except Exception as e:
-        print(f"Error in /getConfig: {str(e)}")
-        return "Failed to fetch config"
-
-
-@app.post("/followSheet")
-def set_follow_sheet(request: dict):
-    try:
-        print(f"Setting follow sheet for file: {request['fileName']}")
-        convert_notes_to_delayed_format(request["fileName"], request["type"])
-        global_variable.follow_sheet = list(map(lambda item: item['key'], global_variable.music_sheet))
-        global_variable.music_sheet = []
-        global_variable.follow_music = request["fileName"]
-    except Exception as e:
-        print(f"Error in /followSheet: {str(e)}")
-
-
-@app.post("/nextSheet")
-def next_sheet(request: dict):
-    try:
-        if len(global_variable.follow_sheet) == 0:
-            print("Follow sheet is empty")
-            return ""
-        if request["type"] == "ok":
-            sheet = global_variable.follow_sheet[0]
-            global_variable.nowClientKey = sheet
-            global_variable.follow_sheet = global_variable.follow_sheet[1:]
-            print(f"Next sheet: {sheet}")
-            return sheet
-        elif request["type"] == "pre":
-            return global_variable.follow_sheet[1]
-        else:
-            global_variable.nowClientKey = global_variable.follow_sheet[0]
-            return global_variable.follow_sheet[0]
-
-
-    except IndexError:
-        print("Empty follow sheet")
-        return ""
-    except Exception as e:
-        print(f"Error in /nextSheet: {str(e)}")
-
+@app.post("/follow")
+def follow(request: dict):
+    match request["operate"]:
+        case 'setSheet':
+            set_next_sheet(request)
+        case 'nextSheet':
+            return get_next_sheet(request)
 
 @app.get("/check")
 def check():
     return 'True'
 
-
-def is_process_running(process_name):
-    """检查目标进程是否运行"""
-    for process in psutil.process_iter(['name']):
-        if process.info['name'] == process_name:
-            return True
-    return False
-
-
-def monitor_process(process_name):
-    """监听目标进程的状态，如果退出则结束主程序"""
-    print(f"监听进程: {process_name}")
-    while is_process_running(process_name):
-        time.sleep(1)  # 每秒检查一次
-    print(f"{process_name} 已退出，关闭主程序。")
-    os._exit(0)  # 强制退出主进程
-
-
 @app.get("/openBrowser")
 def open_browser(url: str):
     webbrowser.open(url)
     return 'ok'
-
-
-@app.post("/getConvertSheet")
-def get_convert_sheet(request: dict):
-    try:
-        print(f"Converting sheet for file: {request['fileName']}")
-        convert_notes_to_delayed_format(request["fileName"], request["type"])
-        convert_sheet = list(map(lambda item: item['key'], global_variable.music_sheet))
-        global_variable.music_sheet = []
-        return convert_sheet
-    except Exception as e:
-        print(f"Error in /getConvertSheet: {str(e)}")
-        return []
-
-
-@app.post('/setFavoriteMusic')
-def set_favorite_music(request: dict):
-    try:
-        print(f"Setting favorite music: {request['fileName']}")
-        src = os.path.join(getResourcesPath(request['type']), request['fileName'] + ".txt")
-        dst = os.path.join(getResourcesPath('myFavorite'), request['fileName'] + ".txt")
-        shutil.copy(src, dst, follow_symlinks=False)
-        return "ok"
-    except Exception as e:
-        print(f"Error in /setFavoriteMusic: {str(e)}")
-        return "Favorite music set failed"
-
 
 @app.post('/dropFile')
 def drop_file(request: dict):

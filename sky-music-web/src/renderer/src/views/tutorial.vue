@@ -1,7 +1,7 @@
 <template>
   <n-flex align="center">
     <n-gradient-text :size="20" type="success" style="width: 100%">
-      {{ '当前: ' + nowPlayMusic + '' }}
+      {{ "当前: " + nowPlayMusic + "" }}
     </n-gradient-text>
     <n-button type="primary" ghost @click="followTutorial"> 开始跟弹 </n-button>
   </n-flex>
@@ -74,96 +74,97 @@
 </template>
 
 <script lang="ts" setup>
-import { getList, sendData } from '@renderer/utils/fetchUtils'
-import { RowData } from 'naive-ui/es/data-table/src/interface'
-import { reactive, ref, watch } from 'vue'
-import { useMessage } from 'naive-ui'
-import { Search } from '@vicons/ionicons5'
+import { getList, sendData } from "@renderer/utils/fetchUtils";
+import { RowData } from "naive-ui/es/data-table/src/interface";
+import { reactive, ref, watch } from "vue";
+import { useMessage } from "naive-ui";
+import { Search } from "@vicons/ionicons5";
 
-const message = useMessage()
+const message = useMessage();
 
 const music: any = reactive({
   // 音乐列表
   systemMusic: [], // 原版音乐
   myImport: [], // 导入的音乐
   myTranslate: [], // 扒谱的音乐
-  myFavorite: []
-})
-const nowPlayMusic = ref('没有歌曲') // 当前选中歌曲
-let nowType = 'systemMusic'
-const searchText = ref('')
+  myFavorite: [],
+});
+const nowPlayMusic = ref("没有歌曲"); // 当前选中歌曲
+let nowType = "systemMusic";
+const searchText = ref("");
 const musicColumns = [
   {
-    title: '歌名',
-    key: 'name'
-  }
-] // 音乐列
+    title: "歌名",
+    key: "name",
+  },
+]; // 音乐列
 
 const systemMusicSelect = (row: RowData) => {
   return {
     onClick: () => {
-      nowPlayMusic.value = row.name
-    }
-  }
-}
+      nowPlayMusic.value = row.name;
+    },
+  };
+};
 const myImportMusicSelect = (row: RowData) => {
   return {
     onClick: () => {
-      nowPlayMusic.value = row.name
-    }
-  }
-}
+      nowPlayMusic.value = row.name;
+    },
+  };
+};
 const myTranslateMusicSelect = (row: RowData) => {
   return {
     onClick: () => {
-      nowPlayMusic.value = row.name
-    }
-  }
-}
+      nowPlayMusic.value = row.name;
+    },
+  };
+};
 
 function handleUpdateValue(value: string) {
-  searchText.value = ''
-  getListData(value)
+  searchText.value = "";
+  getListData(value);
 }
 
 function handleBeforeLeave(name: string) {
-  nowType = name
-  return true
+  nowType = name;
+  return true;
 }
 
 const myFavoriteMusicSelect = (row: RowData) => {
   return {
     onClick: () => {
-      nowPlayMusic.value = row.name
-    }
-  }
-}
+      nowPlayMusic.value = row.name;
+    },
+  };
+};
 
 watch(searchText, () => {
-  getListData('systemMusic')
-  getListData('myImport')
-  getListData('myTranslate')
-  getListData('myFavorite')
-})
+  getListData("systemMusic");
+  getListData("myImport");
+  getListData("myTranslate");
+  getListData("myFavorite");
+});
 
 function followTutorial() {
-  if (nowPlayMusic.value === '没有歌曲') {
-    message.error('选个歌再跟弹吧靓仔')
-    return
+  if (nowPlayMusic.value === "没有歌曲") {
+    message.error("选个歌再跟弹吧靓仔");
+    return;
   } else {
-    sendData('followSheet', {
+    sendData("follow", {
       fileName: nowPlayMusic.value,
-      type: nowType
+      type: nowType,
+      operate: "setSheet",
     }).then(() => {
-      window.api.open_tutorial()
-    })
+      window.api.open_tutorial();
+    });
   }
 }
-handleUpdateValue('systemMusic')
+handleUpdateValue("systemMusic");
 
 function getListData(value) {
   getList(value, searchText.value).then((_res) => {
-    eval('music.' + value + '=_res')
-  })
+    eval("music." + value + "=_res");
+  });
 }
 </script>

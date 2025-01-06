@@ -1,28 +1,27 @@
 import json
 import logging
 import os
-import psutil
-import requests
-import shutil
 import sys
 import threading
-import time
-import uvicorn
 import webbrowser
 
+import requests
+import uvicorn
 from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from windhide._global import global_variable
 from windhide.auto.click_heart_fire import click_heart_fire
 from windhide.musicToSheet.process_audio import process_directory_with_progress
-from windhide.playRobot import _robot
 from windhide.thread.follow_thread import startThread as follow_thread
+from windhide.thread.frame_alive_thread import monitor_process
 from windhide.thread.hwnd_check_thread import startThread as hwnd_check_thread
 from windhide.thread.shortcut_thread import startThread as shortcut_thread
+from windhide.utils.config_util import set_config, get_config, favorite_music, convert_sheet, drop_file
+from windhide.utils.follow_util import set_next_sheet, get_next_sheet
 from windhide.utils.list_util import getTypeMusicList
-from windhide.utils.music_file_transelate import convert_notes_to_delayed_format
 from windhide.utils.path_util import getResourcesPath
+from windhide.utils.play_util import start, pause, resume, stop
 
 # 关闭print的输出
 sys.stdout = open(os.devnull, 'w')
@@ -40,26 +39,18 @@ app.add_middleware(
 async def get_list(listName: str,searchStr: str):
     return getTypeMusicList(listName,searchStr)
 
-@app.post("/start")
-def start(request: dict):
-    if global_variable._hWnd is None:
-        return {
-            "statusCode": 8008208820,
-            "messeage": "没检测到存活的光遇窗口"
-        }
-    _robot.playMusic(request["fileName"], request["type"])
 
-@app.get("/pause")
-def pause():
-    _robot.pause()
-
-@app.get("/stop")
-def stop():
-    _robot.stop()
-
-@app.get("/resume")
-def resume():
-    _robot.resume()
+@app.post("/play_operate")
+def play_operate(request: dict):
+    match request["operate"]:
+        case 'start':
+            start(request)
+        case 'pause':
+            pause()
+        case 'resume':
+            resume()
+        case 'stop':
+            stop()
 
 @app.get("/getProgress")
 def get_progress():
@@ -98,93 +89,38 @@ def translate(request: dict):
     )
     return "ok"
 
-@app.post("/setConfig")
-def translate(request: dict):
-    if request["name"] == 'delay_interval':
-        global_variable.delay_interval = float(request["value"])
-    if request["name"] == 'sustain_time':
-        global_variable.sustain_time = float(request["value"])
-    if request["name"] == 'set_progress':
-        global_variable.set_progress = float(request["value"])
-    if request["name"] == 'play_speed':
-        global_variable.play_speed = float(request["value"])
+
+@app.post("/config_operate")
+def config_operate(request: dict):
+    match request["operate"]:
+        case 'set':
+            set_config(request)
+        case 'get':
+            return get_config(request)
+        case 'favorite_music':
+            favorite_music(request)
+        case 'convert_sheet':
+            convert_sheet(request)
+        case 'drop_file':
+            drop_file(request)
     return "ok"
 
-@app.post("/getConfig")
-def get_config(request: dict):
-    returnData = eval("global_variable." + request["name"])
-    return returnData
 
-@app.post("/followSheet")
-def set_follow_sheet(request: dict):
-    convert_notes_to_delayed_format(request["fileName"], request["type"])
-    global_variable.follow_sheet = list(map(lambda item: item['key'], global_variable.music_sheet))
-    global_variable.music_sheet = []
-    global_variable.follow_music = request["fileName"]
-
-@app.post("/nextSheet")
-def next_sheet(request: dict):
-    if len(global_variable.follow_sheet) == 0:
-        return ""
-    try:
-        if request["type"] == "ok":
-            sheet = global_variable.follow_sheet[0]
-            global_variable.nowClientKey = sheet
-            global_variable.follow_sheet = global_variable.follow_sheet[1:]
-            return sheet
-        else:
-            global_variable.nowClientKey = global_variable.follow_sheet[0]
-            return global_variable.follow_sheet[0]
-    except IndexError:
-        print("空数组")
-        return ""
+@app.post("/follow")
+def follow(request: dict):
+    match request["operate"]:
+        case 'setSheet':
+            set_next_sheet(request)
+        case 'nextSheet':
+            get_next_sheet(request)
 
 @app.get("/check")
 def check():
     return 'True'
 
-def is_process_running(process_name):
-    """检查目标进程是否运行"""
-    for process in psutil.process_iter(['name']):
-        if process.info['name'] == process_name:
-            return True
-    return False
-
-def monitor_process(process_name):
-    """监听目标进程的状态，如果退出则结束主程序"""
-    print(f"监听进程: {process_name}")
-    while is_process_running(process_name):
-        time.sleep(1)  # 每秒检查一次
-    print(f"{process_name} 已退出，关闭主程序。")
-    os._exit(0)  # 强制退出主进程
-
 @app.get("/openBrowser")
 def open_browser(url: str):
     webbrowser.open(url)
-    return 'ok'
-@app.post("/getConvertSheet")
-def get_convert_sheet(request: dict):
-    convert_notes_to_delayed_format(request["fileName"], request["type"])
-    convert_sheet = list(map(lambda item: item['key'], global_variable.music_sheet))
-    global_variable.music_sheet = []
-    return convert_sheet
-
-@app.post('/setFavoriteMusic')
-def set_favorite_music(request: dict):
-        src = os.path.join(getResourcesPath(request['type']), request['fileName'] + ".txt")
-        dst = os.path.join(getResourcesPath('myFavorite'), request['fileName'] + ".txt")
-        shutil.copy(src, dst, follow_symlinks=False)
-
-@app.post('/dropFile')
-def drop_file(request: dict):
-    file_name = request["fileName"]
-    if file_name == None:
-        return '不ok'
-    if request.get('suffix', None) == None:
-        drop_path = os.path.join(getResourcesPath(request['type']),file_name + '.txt')
-    else:
-        drop_path = os.path.join(getResourcesPath(request['type']),file_name + request['suffix'])
-    os.remove(drop_path)
     return 'ok'
 
 @app.get('/openFiles')

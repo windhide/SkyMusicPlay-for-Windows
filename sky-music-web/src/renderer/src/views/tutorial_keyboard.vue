@@ -210,8 +210,9 @@ function getNextKey(pass) {
   pressedKeys.clear()
 
   // 获取新按键
-  sendData('nextSheet', {
-    type: pass ? 'ok' : '不ok'
+  sendData('follow', {
+    type: pass ? 'ok' : '不ok',
+    operate: 'nextSheet'
   }).then((res) => {
     ghostButton.forEach((char) => eval(char + '.value = true'))
     console.log('giao', res)

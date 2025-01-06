@@ -9,13 +9,12 @@ import win32con
 import win32gui
 
 from windhide._global import global_variable
-from windhide._global.global_variable import vk_code_map
 from windhide.thread.play_thread import ControlledThread
 from windhide.utils.music_file_transelate import convert_notes_to_delayed_format
 
 PostMessageW = windll.user32.PostMessageW
 MapVirtualKeyW = windll.user32.MapVirtualKeyW
-VkKeyScanA = windll.user32.VkKeyScanA
+VkKeyScanW = windll.user32.VkKeyScanW
 user32 = ctypes.windll.user32
 
 WM_KEYDOWN = 0x100
@@ -104,8 +103,8 @@ def click_window_position(x: int, y: int):
 
 #  核心
 def key_press(key: str):
-    vk_code = VkKeyScanA(vk_code_map(key.upper())) & 0xff
-    scan_code = MapVirtualKeyW(vk_code, 0)
+    vk_code = VkKeyScanW(ctypes.c_wchar(key))
+    scan_code = keyboard.key_to_scan_codes(key)[0] if key != '/' else keyboard.key_to_scan_codes(key)[1]
     lparam = (scan_code << 16) | 1
     win32gui.PostMessage(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
     PostMessageW(global_variable._hWnd, WM_KEYDOWN, vk_code, lparam)
@@ -113,15 +112,16 @@ def key_press(key: str):
     PostMessageW(global_variable._hWnd, WM_KEYUP, vk_code, lparam)
 
 def key_down(key: str):
-    vk_code = VkKeyScanA(vk_code_map(key.upper())) & 0xff
-    scan_code = MapVirtualKeyW(vk_code, 0)
+    set_us_keyboard_layout()
+    vk_code = VkKeyScanW(ctypes.c_wchar(key))
+    scan_code = keyboard.key_to_scan_codes(key)[0] if key != '/' else keyboard.key_to_scan_codes(key)[1]
     lparam = (scan_code << 16) | 1
     win32gui.PostMessage(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
     PostMessageW(global_variable._hWnd, WM_KEYDOWN, vk_code, lparam)
 
 def key_up(key: str):
-    vk_code = VkKeyScanA(vk_code_map(key.upper())) & 0xff
-    scan_code = MapVirtualKeyW(vk_code, 0)
+    vk_code = VkKeyScanW(ctypes.c_wchar(key))
+    scan_code = keyboard.key_to_scan_codes(key)[0] if key != '/' else keyboard.key_to_scan_codes(key)[1]
     lparam = (scan_code << 16) | 0XC0000001
     win32gui.PostMessage(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
     PostMessageW(global_variable._hWnd, WM_KEYUP, vk_code, lparam)
@@ -143,3 +143,8 @@ def mouse_wheel_scroll(operator):
     pyautogui.scroll(delta)
 
 
+def set_us_keyboard_layout():
+    # LoadKeyboardLayoutW 函数的定义
+    user32.LoadKeyboardLayoutW.argtypes = [ctypes.c_wchar_p, ctypes.c_uint]
+    user32.LoadKeyboardLayoutW.restype = ctypes.c_void_p
+    user32.LoadKeyboardLayoutW("00000409", 1)  # 0409 是美国键盘布局标识符，1 表示激活

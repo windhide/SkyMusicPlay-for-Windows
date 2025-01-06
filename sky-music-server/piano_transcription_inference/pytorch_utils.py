@@ -1,6 +1,8 @@
 import numpy as np
 import torch
 
+from windhide._global import global_variable
+
 
 def move_data_to_device(x, device):
     if 'float' in str(x.dtype):
@@ -54,7 +56,7 @@ def forward(model, x, batch_size):
 
         for key in batch_output_dict.keys():
             append_to_dict(output_dict, key, batch_output_dict[key].data.cpu().numpy())
-        globalVariable.tran_mid_progress = (pointer / total_segments) * 100
+        global_variable.tran_mid_progress = (pointer / total_segments) * 100
 
     for key in output_dict.keys():
         output_dict[key] = np.concatenate(output_dict[key], axis=0)
