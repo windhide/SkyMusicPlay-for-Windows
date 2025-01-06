@@ -180,7 +180,7 @@ def auto_click_fire():
 
 @app.post("/autoScriptUpload")
 async def create_upload_files(file: UploadFile):
-    json = await script_to_json(await file.read())
+    json = await script_to_json(await file.read(),file.filename)
     await run_control("developer", json)
     return "ok"
 
