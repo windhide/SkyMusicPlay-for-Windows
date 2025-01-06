@@ -9,6 +9,7 @@ import win32con
 import win32gui
 
 from windhide._global import global_variable
+from windhide._global.global_variable import vk_code_map
 from windhide.thread.play_thread import ControlledThread
 from windhide.utils.music_file_transelate import convert_notes_to_delayed_format
 
@@ -103,10 +104,7 @@ def click_window_position(x: int, y: int):
 
 #  核心
 def key_press(key: str):
-    if key == "ESC":
-        vk_code = 0x1B  # ESC 的虚拟键码
-    else:
-        vk_code = VkKeyScanA(ord(key)) & 0xff
+    vk_code = VkKeyScanA(vk_code_map(key.upper())) & 0xff
     scan_code = MapVirtualKeyW(vk_code, 0)
     lparam = (scan_code << 16) | 1
     win32gui.PostMessage(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
@@ -115,30 +113,26 @@ def key_press(key: str):
     PostMessageW(global_variable._hWnd, WM_KEYUP, vk_code, lparam)
 
 def key_down(key: str):
-    if key == "ESC":
-        vk_code = 0x1B  # ESC 的虚拟键码
-    else:
-        vk_code = VkKeyScanA(ord(key)) & 0xff
+    vk_code = VkKeyScanA(vk_code_map(key.upper())) & 0xff
     scan_code = MapVirtualKeyW(vk_code, 0)
     lparam = (scan_code << 16) | 1
     win32gui.PostMessage(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
     PostMessageW(global_variable._hWnd, WM_KEYDOWN, vk_code, lparam)
 
 def key_up(key: str):
-    if key == "ESC":
-        vk_code = 0x1B  # ESC 的虚拟键码
-    else:
-        vk_code = VkKeyScanA(ord(key)) & 0xff
+    vk_code = VkKeyScanA(vk_code_map(key.upper())) & 0xff
     scan_code = MapVirtualKeyW(vk_code, 0)
     lparam = (scan_code << 16) | 0XC0000001
     PostMessageW(global_variable._hWnd, WM_KEYUP, vk_code, lparam)
 
 
 def mouse_wheel_scroll(operator):
-    if operator == 'up':
-        delta = 3000
-    else:
-        delta = -3000
+    match operator:
+        case 'up':
+            delta =  3000
+        case 'down':
+            delta = -3000
+
     window_rect = win32gui.GetWindowRect(global_variable._hWnd)  # 返回 (left, top, right, bottom)
     # 窗口中心
     window_x, window_y = window_rect[0] + window_rect[0] / 2, window_rect[1] + window_rect[1] / 2
@@ -146,3 +140,5 @@ def mouse_wheel_scroll(operator):
     win32gui.PostMessage(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
     pyautogui.moveTo(window_x, window_y)
     pyautogui.scroll(delta)
+
+
