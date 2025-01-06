@@ -12,7 +12,9 @@ from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from windhide._global import global_variable
+from windhide.auto.candles_run import run_control
 from windhide.auto.click_heart_fire import click_heart_fire
+from windhide.auto.script_to_json import script_to_json
 from windhide.musicToSheet.process_audio import process_directory_with_progress
 from windhide.playRobot import _robot
 from windhide.thread.follow_thread import startThread as follow_thread
@@ -284,11 +286,16 @@ def get_update():
             print(f'请求失败，状态码：{response.status_code}')
         return "404"
 
-
 #  下面放识别相关的调用
 @app.get("/autoClickFire")
 def auto_click_fire():
     return click_heart_fire()
+
+@app.post("/autoScriptUpload")
+async def create_upload_files(file: UploadFile):
+    json = await script_to_json(await file.read())
+    await run_control("developer", json)
+    return "ok"
 
 if __name__ == '__main__':
     global_variable.isProd = False

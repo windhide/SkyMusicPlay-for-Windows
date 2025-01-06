@@ -127,7 +127,7 @@ def process_directory_with_progress(use_gpu=False, output_dir=getResourcesPath("
         if not file.endswith(".mid"):
             midFilePath = os.path.join(getResourcesPath("translateMID"), fileNameNoEnd)
             musicFilePath = os.path.join(getResourcesPath("translateOriginalMusic"), file)
-            inference(input_path=musicFilePath, output_mid_path=midFilePath + ".mid", _cuda=use_gpu, checkpoint_path=os.path.join(getResourcesPath("modelData"), modelName))
+            inference(input_path=musicFilePath, output_mid_path=midFilePath + ".mid", _cuda=use_gpu, checkpoint_path=os.path.join(getResourcesPath("systemTools"), "modelData", modelName))
         else:
             midFilePath = os.path.join(getResourcesPath("translateOriginalMusic"), fileNameNoEnd)
 

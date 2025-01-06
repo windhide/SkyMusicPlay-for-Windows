@@ -54,7 +54,7 @@ def click_heart_fire():
 def get_heart_fire_position():
     return match_template_and_return_coordinates(
         source_image=get_window_screenshot(),
-        template_image_path=os.path.join(getResourcesPath("ocrTemplate"), "heartFire_template.png"),
+        template_image_path=os.path.join(os.path.join(getResourcesPath("systemTools"), "ocrTemplate"), "heartFire_template.png"),
         match_threshold=float(0.4)
     )
 
@@ -62,7 +62,7 @@ def get_heart_fire_position():
 def get_add_friend_position():
     return match_template_and_return_coordinates(
         source_image=get_window_screenshot(),
-        template_image_path=os.path.join(getResourcesPath("ocrTemplate"), "add_friend_template.png"),
+        template_image_path=os.path.join(os.path.join(getResourcesPath("systemTools"), "ocrTemplate"), "add_friend_template.png"),
         match_threshold=float(0.5)
     )
 
@@ -70,6 +70,6 @@ def get_add_friend_position():
 def can_fire():
     return len(match_template_and_return_coordinates(
         source_image=get_window_screenshot(),
-        template_image_path=os.path.join(getResourcesPath("ocrTemplate"), "fire_template.png"),
+        template_image_path=os.path.join(os.path.join(getResourcesPath("systemTools"), "ocrTemplate"), "fire_template.png"),
         match_threshold=float(0.45)
     )) > 0
