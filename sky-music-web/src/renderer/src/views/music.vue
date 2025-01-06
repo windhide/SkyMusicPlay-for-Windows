@@ -425,7 +425,7 @@ let randomInterval: any = null
 watch(delayStatus, () => {
   switch (delayStatus.value) {
     case 'system':
-      delaySpeed.value = 0.01
+      delaySpeed.value = 0
       clearInterval(randomInterval)
       break
     case 'random':
