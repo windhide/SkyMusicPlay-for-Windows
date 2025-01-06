@@ -123,6 +123,7 @@ def key_up(key: str):
     vk_code = VkKeyScanA(vk_code_map(key.upper())) & 0xff
     scan_code = MapVirtualKeyW(vk_code, 0)
     lparam = (scan_code << 16) | 0XC0000001
+    win32gui.PostMessage(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
     PostMessageW(global_variable._hWnd, WM_KEYUP, vk_code, lparam)
 
 
