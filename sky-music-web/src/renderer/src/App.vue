@@ -183,5 +183,17 @@ onMounted(() => {
 <style scoped>
 :deep(.n-menu--vertical){
   --n-border-radius: 21px !important;
+  --n-item-text-color-active: rgb(242,232,196) !important;
+  --n-item-icon-color-active: rgb(242,232,196) !important;
+  --n-item-text-color-active-hover: rgb(242,232,196) !important;
+  --n-item-icon-color: rgba(255, 255, 255, 0.9);
+  --n-item-icon-color-hover: rgba(255, 255, 255, 0.9);
+  --n-item-icon-color-active: rgb(242,232,196) !important;
+  --n-item-icon-color-active-hover: rgb(242,232,196) !important;
+  --n-item-icon-color-child-active: rgb(242,232,196) !important;
+  --n-item-icon-color-child-active-hover: rgb(242,232,196) !important;
+  --n-item-icon-color-collapsed: rgba(255, 255, 255, 0.9);
+  --n-item-color-active: rgba(242,232,196,0.15) !important;
+  --n-item-color-active-hover: rgba(242,232,196,0.3) !important;
 }
 </style>
