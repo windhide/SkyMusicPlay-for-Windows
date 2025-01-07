@@ -3,6 +3,7 @@ thread = None
 music_sheet = [] #乐谱
 now_progress  = 0 #进度条
 set_progress = -0.01 #进度条
+nowPlayMusic = "没有正在播放的歌曲哦"
 # 音乐转换进度条
 overall_progress = 0 #总体进度
 tran_mid_progress = 0 # 转MID进度
@@ -15,9 +16,9 @@ sustain_time = 0.01 # 20毫秒
 follow_music = ""
 follow_sheet = []
 nowClientKey = ""
+nowRobotKey = ""
 isNowAutoPlaying = False
 isShow = False
-nowRobotKey = ""
 # 演奏核心
 _hWnd = None
 # 乐谱的映射

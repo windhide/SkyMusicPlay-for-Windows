@@ -66,7 +66,8 @@ def get_progress():
         "overall_progress": f"{global_variable.overall_progress:.1f}",
         "tran_mid_progress": f"{global_variable.tran_mid_progress:.1f}",
         "now_progress": f"{global_variable.now_progress:.1f}",
-        "now_translate_text": global_variable.now_translate_text
+        "now_translate_text": global_variable.now_translate_text,
+        "now_play_music": global_variable.nowPlayMusic
     }
 
 @app.post("/fileUpload")

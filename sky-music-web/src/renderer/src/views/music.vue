@@ -1,7 +1,9 @@
 <template>
   <n-flex align="center">
     <n-gradient-text :size="20" type="success" style="width: 100%; color:#F2E8C4">
-      {{ '当前播放: ' + nowPlayMusic + '' }}
+      {{ '播&nbsp&nbsp&nbsp放: ' + nowPlayMusic + '' }}
+      <br />
+      {{ '选&nbsp&nbsp&nbsp择: ' + nowSelectMusic + '' }}
       <br />
       <n-slider v-model:value="progress" :step="0.1" style="max-width: 60%; display: inline-block; margin-left: 3px;" 
         @dragend="drag_progress_end" @dragstart="drag_progress_start"
@@ -155,6 +157,7 @@ const music: any = reactive({
   myFavorite: [], // 我的最爱
   musicList: [] // 我的最爱
 })
+const nowSelectMusic = ref('没有歌曲') // 当前选中歌曲
 const nowPlayMusic = ref('没有歌曲') // 当前选中歌曲
 let nowType = 'systemMusic'
 let progressInterval: any = 0
@@ -284,7 +287,7 @@ const MusicSelect = (row: RowData) => {
         clickTimeout = null;
         playBarClickHandler("start", "")
       } else {
-        nowPlayMusic.value = row.name;
+        nowSelectMusic.value = row.name;
         clickTimeout = setTimeout(() => {
           clickTimeout = null;
           store.commit('addPlayList', { 'name': row.name, 'type': nowType });
@@ -336,7 +339,7 @@ const playBarClickHandler = (status: String, type: String) => {
   if (status === 'start') {
     setTimeout(() => {
       sendData('play_operate', {
-        fileName: nowPlayMusic.value,
+        fileName: nowSelectMusic.value,
         type: type != "" ? type : nowType,
         operate: "start"
       }).then(()=>{
@@ -369,37 +372,39 @@ function drag_progress_end() {
 
 
 function getProgress() {
-  getData('getProgress').then((res) => {
-    progress.value = res.now_progress
-    if (progress.value == 100) {
-    clearPlayInfo().then(() => {
-      if (isRandom.value) {
-        randomMusicPlay()
-      } else {
-        listMusicPlay()
-      }
+  if (progress.value == 100) {
+    return clearPlayInfo().then(() => {
+        if (isRandom.value) {
+          randomMusicPlay()
+        } else {
+          listMusicPlay()
+        }
     })
   }
+  getData('getProgress').then((res) => {
+    progress.value = res.now_progress
+    nowPlayMusic.value = res.now_play_music
   })
 }
 
 
 function randomMusicPlay() {
-  nowPlayMusic.value = music.systemMusic[Math.floor(Math.random() * (music.systemMusic.length))].name
+  nowSelectMusic.value = music.systemMusic[Math.floor(Math.random() * (music.systemMusic.length))].name
   playBarClickHandler("start", 'systemMusic')
   
 }
 
 function listMusicPlay() {
   let struct = store.getters.getNextPlayMusic
-  if (struct == undefined) return
-  if (struct != null) {
-    nowPlayMusic.value = struct.name
+  if (struct != null && struct != undefined) {
+    nowSelectMusic.value = struct.name
     let type = struct.type
     playBarClickHandler("start", type)
   } else {
+    window.api.system_notification("😳", "列表的歌放完咯" + struct)
     playBarClickHandler("stop","")
-    window.api.system_notification("😳", "列表的歌放完咯"+struct)
+    clearInterval(progressInterval)
+    nowPlayMusic.value = "没有正在播放的歌曲哦"
   }
 }
 
@@ -472,7 +477,7 @@ watch(playSpeed, () => {
 })
 
 async function clearPlayInfo() {
-  nowPlayMusic.value = '没有歌曲'
+  nowSelectMusic.value = '没有歌曲'
   nowState.value = 'stop'
   progress.value = 0
   clearInterval(progressInterval)
@@ -559,7 +564,7 @@ function initWebSocket() {
         window.api.system_notification("🍎", "仅停止状态下允许开始")
       } else {
         console.log("else")
-        if (nowPlayMusic.value === '没有歌曲') {
+        if (nowSelectMusic.value === '没有歌曲') {
           window.api.system_notification("😭", "选个歌再播放吧靓仔")
         } else {
           window.api.system_notification("✔", "开始")

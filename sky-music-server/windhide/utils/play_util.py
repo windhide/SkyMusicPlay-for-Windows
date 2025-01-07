@@ -10,6 +10,7 @@ def start(request: dict):
                 "statusCode": 8008208820,
                 "messeage": "没检测到存活的光遇窗口"
             }
+        global_variable.nowPlayMusic = request["fileName"]
         _robot.playMusic(request["fileName"], request["type"])
     except Exception as e:
         print(f"Error in /start: {str(e)}")
@@ -27,6 +28,7 @@ def stop():
     try:
         print("Stopping music")
         _robot.stop()
+        global_variable.nowPlayMusic = "没有正在播放的歌曲哦"
     except Exception as e:
         print(f"Error in /stop: {str(e)}")
 
