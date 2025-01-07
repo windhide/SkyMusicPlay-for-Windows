@@ -409,7 +409,7 @@ function getProgress() {
     return clearPlayInfo().then(() => {
       switch (selectMode.value){
         case "order":
-        orderMusicPlay()
+          orderMusicPlay()
           break
         case "random":
           randomMusicPlay()
@@ -424,6 +424,7 @@ function getProgress() {
     progress.value = res.now_progress
     nowPlayMusic.value = res.now_play_music
   })
+  return "ok"
 }
 
 
