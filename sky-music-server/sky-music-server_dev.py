@@ -23,8 +23,11 @@ from windhide.utils.list_util import getTypeMusicList
 from windhide.utils.path_util import getResourcesPath
 from windhide.utils.play_util import start, pause, stop, resume
 
+# 避开与光遇相同核心运行
 process = psutil.Process(os.getpid())
-process.cpu_affinity([1, 2])
+all_cores = list(range(psutil.cpu_count()))
+cores_to_use = [core for core in all_cores if core != 0]
+process.cpu_affinity(cores_to_use)
 
 app = FastAPI()
 app.add_middleware(

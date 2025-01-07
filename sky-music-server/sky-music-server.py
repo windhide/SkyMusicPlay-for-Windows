@@ -5,6 +5,7 @@ import sys
 import threading
 import webbrowser
 
+import psutil
 import requests
 import uvicorn
 from fastapi import FastAPI, UploadFile
@@ -27,8 +28,14 @@ from windhide.utils.play_util import start, pause, resume, stop
 
 # 关闭print的输出
 sys.stdout = open(os.devnull, 'w')
-app = FastAPI()
 
+# 避开与光遇相同核心运行
+process = psutil.Process(os.getpid())
+all_cores = list(range(psutil.cpu_count()))
+cores_to_use = [core for core in all_cores if core != 0]
+process.cpu_affinity(cores_to_use)
+
+app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # 允许的源，可根据需求设置特定地址或使用 ["*"] 允许所有
