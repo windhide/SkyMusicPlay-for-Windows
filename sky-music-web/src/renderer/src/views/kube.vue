@@ -11,13 +11,13 @@
       :show-file-list="false"
       @finish="handleFinish"
     >
-    <n-button type="info" ghost> step1.选择音乐 </n-button>
+    <n-button type="info" ghost  color="#F2C9C4"> step1.选择音乐 </n-button>
     </n-upload>
     <n-button type="primary" ghost :loading="processFlag" @click="handleStartTranslate" style="margin-left: 25px;" color="#F2E8C4">
       step2.开始转换
     </n-button>
     <n-divider style="margin:0px"/>
-    <n-gradient-text type="info" :size="18">
+    <n-gradient-text type="info" :size="18" style="color: #F2C9C4">
       当前任务
       {{
         now_translate_text.process == undefined && now_translate_text.text == undefined
@@ -26,8 +26,9 @@
       }}
     </n-gradient-text>
     <div style="width: 100%">
-      <n-gradient-text type="info"> 总体进度 </n-gradient-text>
+      <n-gradient-text type="info" style="color: #F2C9C4"> 总体进度 </n-gradient-text>
       <n-progress
+        color="#F2C9C4"
         style="max-width: 50%"
         type="line"
         :percentage="progress.overall_progress"
@@ -36,8 +37,9 @@
       />
     </div>
     <div style="width: 100%">
-      <n-gradient-text type="info"> 当前歌曲MID转换 </n-gradient-text>
+      <n-gradient-text type="info" style="color: #F2E8C4"> 当前歌曲MID转换 </n-gradient-text>
       <n-progress
+        color="#F2E8C4"
         style="max-width: 50%"
         type="line"
         :percentage="progress.tran_mid_progress"
@@ -86,6 +88,7 @@ const music: any = reactive({
 const progress: any = reactive({
   translate_progress: 0,
   overall_progress: 0,
+  tran_mid_progress: 0,
 });
 const now_translate_text = reactive({
   process: "",

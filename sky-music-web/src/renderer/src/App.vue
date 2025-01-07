@@ -24,7 +24,7 @@
         </template>
       </n-button>
     </n-flex>
-    <n-spin :show="show" :size="90" :style="bronWidth === 800 ? 'background-color: black' : 'background-color: rgba(0, 0, 0, 0)'">
+    <n-spin :show="show" :size="90" :style="bronWidth === 800 ? 'background-color: black;' : 'background-color: rgba(0, 0, 0, 0)'" stroke="#F2E8C4">
       <n-message-provider>
         <n-dialog-provider>
           <n-space vertical>
@@ -44,7 +44,7 @@
           </n-space>
         </n-dialog-provider>
       </n-message-provider>
-      <template #description> 🍉应用加载中，请稍等~ </template>
+      <template #description> <div style="color: #F2E8C4;">🍉应用加载中，请稍等~</div> </template>
     </n-spin>
   </n-config-provider>
 </template>

@@ -1,42 +1,41 @@
 <template>
   <n-flex align="center">
-    <n-gradient-text :size="20" type="success" style="width: 100%; color:#F2E8C4">
+    <n-gradient-text :size="20" type="success" style="width: 100%; color:#F2C9C4">
       {{ '播&nbsp&nbsp&nbsp放: ' + nowPlayMusic + '' }}
-      <br />
+    </n-gradient-text>
+    <n-gradient-text :size="20" type="success" style="width: 100%; color:#F2E8C4">
       {{ '选&nbsp&nbsp&nbsp择: ' + nowSelectMusic + '' }}
-      <br />
-      <n-slider v-model:value="progress" :step="0.1" style="max-width: 60%; display: inline-block; margin-left: 3px;" 
-        @dragend="drag_progress_end" @dragstart="drag_progress_start"
-        >
+    </n-gradient-text>
+      <n-slider v-model:value="progress" :step="0.1" style="max-width: 51.5%; display: inline-block; margin-left: 3px;" 
+        @dragend="drag_progress_end" @dragstart="drag_progress_start">
         <template #thumb>
           <n-icon-wrapper :size="20" :border-radius="12" style="background-color:#F2E8C4">
             <n-icon :size="16" :component="PawSharp" />
           </n-icon-wrapper>
         </template>
       </n-slider>
-    </n-gradient-text>
-    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('resume', '')" v-show="!isPlay">
+    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('resume', '')" v-show="!isPlay" color="#F2C9C4">
       <template #icon>
         <n-icon>
           <Play />
         </n-icon>
       </template>
     </n-button>
-    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('pause', '')" v-show="isPlay">
+    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('pause', '')" v-show="isPlay" color="#F2C9C4">
       <template #icon>
         <n-icon>
           <Pause />
         </n-icon>
       </template>
     </n-button>
-    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('next', '')">
+    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('next', '')" color="#F2C9C4">
       <template #icon>
         <n-icon>
           <PlaySkipForward />
         </n-icon>
       </template>
     </n-button>
-    <n-button quaternary circle type="info" size="large" @click="reloadMusicList()">
+    <n-button quaternary circle type="info" size="large" @click="reloadMusicList()" color="#F2C9C4">
       <template #icon>
         <n-icon>
           <List />
@@ -51,13 +50,17 @@
         <n-icon :component="List" />
       </template>
     </n-switch>
-    <n-upload action="http://localhost:9899/userMusicUpload" multiple style="width: 100px; height: 34px" accept=".txt"
+    <n-upload action="http://localhost:9899/userMusicUpload" multiple accept=".txt" style="width: 20px; margin-left: 15px;"
       :show-file-list="false" @finish="handleFinish" @before-upload="beforeFileUpload">
-      <n-button type="info" ghost> 选择乐谱📯 </n-button>
+      <n-button type="info" ghost circle dashed color="#F2C9C4">
+        <template #icon>
+          <n-icon><Pricetags /></n-icon>
+        </template>
+      </n-button>
     </n-upload>
     <n-row gutter="12">
       <n-col :span="15">
-        <n-gradient-text type="info" :size="13"> 间隔延迟s&nbsp;&nbsp;&nbsp; </n-gradient-text>
+        <n-gradient-text type="info" :size="13" style="color: #F2C9C4"> 间隔延迟s&nbsp;&nbsp;&nbsp; </n-gradient-text>
         <n-radio-group v-model:value="delayStatus" name="radiogroup">
           <n-space>
             <n-radio key="system" value="system">系统自带</n-radio>
@@ -72,7 +75,7 @@
     </n-row>
     <n-row gutter="12">
       <n-col :span="15">
-        <n-gradient-text type="info" :size="13"> 延音设置s&nbsp;&nbsp;&nbsp; </n-gradient-text>
+        <n-gradient-text type="info" :size="13" style="color: #F2C9C4"> 延音设置s&nbsp;&nbsp;&nbsp; </n-gradient-text>
         <n-radio-group v-model:value="sustainStatus" name="radiogroup">
           <n-space>
             <n-radio key="system" value="system">系统自带</n-radio>
@@ -87,7 +90,7 @@
     </n-row>
     <n-row gutter="12">
       <n-col :span="3">
-        <n-gradient-text type="info" :size="13"> 倍速设置-&nbsp;&nbsp;&nbsp; </n-gradient-text>
+        <n-gradient-text type="info" :size="13" style="color: #F2C9C4"> 倍速设置-&nbsp;&nbsp;&nbsp; </n-gradient-text>
       </n-col>
       <n-col :span="0" style="margin-left: -1.2%">
         <n-input-number step="0.1" v-model:value="playSpeed" size="tiny" :min="0.25" :max="5" placeholder="输入倍速速度" />
@@ -124,7 +127,7 @@
   </n-card>
   <n-drawer v-model:show="active" :width="400" :placement="placement" style="border-radius: 30px;">
     <n-drawer-content title="播放列表">
-      <n-button type="info" ghost style="margin-bottom: 10px;" @click="clearPlayList"> 清空 </n-button>
+      <n-button type="info" ghost style="margin-bottom: 10px;" @click="clearPlayList" color="#F2C9C4"> 清空 </n-button>
       <n-data-table :columns="musicListColumns" :max-height="570" :data="music.musicList" :bordered="false"
         :height-for-row="1" :virtual-scroll="music.systemMusic?.length > 7" :row-props="musicListSelect" />
     </n-drawer-content>
@@ -145,7 +148,8 @@ import {
   Play,
   PlaySkipForward,
   Pause,
-  PawSharp
+  PawSharp,
+  Pricetags
 } from '@vicons/ionicons5'
 import { useStore } from 'vuex'
 const message = useMessage()
@@ -642,6 +646,6 @@ onUnmounted(() => {
     --n-tab-text-color-hover: rgb(242,232,196)!important;
 }
 :deep(.n-switch--active){
-  --n-rail-color-active: rgb(242,232,196)!important;
+  --n-rail-color-active: #F2C9C4 !important;
 }
 </style>

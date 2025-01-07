@@ -7,7 +7,7 @@
       />
     </n-divider>
     <n-highlight
-      style="margin-bottom: 5px"
+      style="margin-bottom: 5px; color: #DDF2C4;"
       :text="headText"
       :patterns="patterns"
       :highlight-style="{
@@ -16,11 +16,12 @@
         borderRadius: themeVars.borderRadius,
         display: 'inline-block',
         color: 'black',
-        background: 'Pink',
+        background: '#F2C9C4',
         transition: `all .3s ${themeVars.cubicBezierEaseInOut}`,
       }"
     />
     <n-highlight
+      style="color: #DDF2C4;"
       :text="text"
       :patterns="patterns"
       :highlight-style="{
@@ -29,57 +30,28 @@
         borderRadius: themeVars.borderRadius,
         display: 'inline-block',
         color: 'black',
-        background: 'Pink',
+        background: '#F2C9C4',
         transition: `all .3s ${themeVars.cubicBezierEaseInOut}`,
       }"
     />
     <n-divider>
-      <n-gradient-text type="info" :size="25"> 向我提意见 </n-gradient-text>
+      <n-gradient-text type="info" :size="25" style="color:#F2C9C4"> 向我提意见 </n-gradient-text>
     </n-divider>
-    <n-tooltip trigger="hover" placement="bottom">
-      <template #trigger>
-        <n-float-button
-          position="relative"
-          @click="
-            blankClick('https://github.com/windhide/SkyMusicPlay-for-Windows/pulls')
-          "
-        >
-          <n-icon>
-            <GitPullRequest />
-          </n-icon>
-        </n-float-button>
-      </template>
-      有更好的功能？来提Request！
-    </n-tooltip>
-    <n-tooltip trigger="hover" placement="bottom">
-      <template #trigger>
-        <n-float-button
-          position="relative"
-          style="margin: 0 30px"
-          @click="blankClick('https://github.com/windhide/SkyMusicPlay-for-Windows')"
-        >
-          <n-icon>
-            <LogoGithub />
-          </n-icon>
-        </n-float-button>
-      </template>
-      点个星星吧靓仔
-    </n-tooltip>
-    <n-tooltip trigger="hover" placement="bottom">
-      <template #trigger>
-        <n-float-button
-          position="relative"
-          @click="
-            blankClick('https://github.com/windhide/SkyMusicPlay-for-Windows/issues/new')
-          "
-        >
-          <n-icon>
-            <Build />
-          </n-icon>
-        </n-float-button>
-      </template>
-      向我提功能需求或者提bug！
-    </n-tooltip>
+    <n-button type="info" color="#F2C9C4" text  @click="blankClick('https://github.com/windhide/SkyMusicPlay-for-Windows/pulls')"  style="font-size: 30px">
+      <n-icon>
+        <GitPullRequest />
+      </n-icon>
+    </n-button>
+    <n-button type="info" color="#F2E8C4" text  @click="blankClick('https://github.com/windhide/SkyMusicPlay-for-Windows')" style="margin-left: 20px; font-size: 30px">
+      <n-icon>
+        <LogoGithub />
+      </n-icon>
+    </n-button>
+    <n-button type="info" color="#DDF2C4" text  @click="blankClick('https://github.com/windhide/SkyMusicPlay-for-Windows/issues/new')" style="margin-left: 20px; font-size: 30px">
+      <n-icon>
+        <Build />
+      </n-icon>
+    </n-button>
   </div>
 </template>
 
