@@ -1,27 +1,28 @@
 <template>
   <n-config-provider :theme="darkTheme" :style="bronWidth === 800 ? '' : 'background-color: rgba(0, 0, 0, 0.5)'">
-    <n-flex id="drag-area" justify="end" style="position: fixed; z-index: 200; right: 12px" :style="{
+    <n-flex id="drag-area" justify="end" style="position: fixed; z-index: 200; right: 18px" :style="{
       width: collapsed ? '90%' : '80%'
     }">
-      <n-button circle ghost dashed type="warning" style="margin-top: 12px" @click="openFileHandle" v-show="bronWidth === 800">
-        📁
+      <n-button text :dashed="fixDashed" size="large" type="warning" style="margin-top: 12px; font-size: 20px;" @click="fixHandle">
+        <n-icon size="25px">
+          <Pin48Regular v-if="fixDashed" />
+          <Pin48Filled v-else />
+        </n-icon>
       </n-button>
-      <n-button circle :dashed="fixDashed" ghost type="warning" style="margin-top: 12px" @click="fixHandle">
-        📌
+      <n-button text type="warning" size="large" style="margin-top: 12px; font-size: 20px;" @click="openFileHandle" v-show="bronWidth === 800">
+        <n-icon size="25px">
+          <ImageOutline />
+        </n-icon>
       </n-button>
-      <n-button circle ghost type="info" style="margin-top: 12px" @click="miniHandle" v-show="bronWidth === 800">
-        <template #icon>
+      <n-button text type="info" size="large" style="margin-top: 12px; font-size: 25px;" @click="miniHandle" v-show="bronWidth === 800">
           <n-icon>
             <Remove />
           </n-icon>
-        </template>
       </n-button>
-      <n-button circle ghost type="error" style="margin-top: 12px" @click="closeHandle">
-        <template #icon>
+      <n-button text type="error" size="large" style="margin-top: 12px; font-size: 25px;" @click="closeHandle">
           <n-icon>
             <Close />
           </n-icon>
-        </template>
       </n-button>
     </n-flex>
     <n-spin :show="show" :size="90" :style="bronWidth === 800 ? 'background-color: black;' : 'background-color: rgba(0, 0, 0, 0)'" stroke="#F2E8C4">
@@ -62,8 +63,15 @@ import {
   Library,
   Close,
   Remove,
-  Flask
+  Flask,
+  ImageOutline,
+  LockOpenOutline,
+  LockClosedOutline
 } from '@vicons/ionicons5'
+import {
+  Pin48Regular,
+  Pin48Filled
+} from '@vicons/fluent'
 import router from '@renderer/router'
 
 import { useRoute } from 'vue-router'
