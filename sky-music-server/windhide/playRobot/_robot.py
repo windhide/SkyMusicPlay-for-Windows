@@ -19,7 +19,7 @@ user32 = ctypes.windll.user32
 
 WM_KEYDOWN = 0x100
 WM_KEYUP = 0x101
-
+pyautogui.FAILSAFE = False
 
 def send_single_key_to_window_task(key):
     """发送单个按键，减少延迟"""
@@ -103,8 +103,12 @@ def click_window_position(x: int, y: int):
 
 #  核心
 def key_press(key: str):
-    vk_code = VkKeyScanW(ctypes.c_wchar(key))
-    scan_code = keyboard.key_to_scan_codes(key)[0] if key != '/' else keyboard.key_to_scan_codes(key)[1]
+    if key in special_keys:
+        vk_code, scan_code = special_keys[key]
+    else:
+        # 普通按键的处理
+        vk_code = VkKeyScanW(ctypes.c_wchar(key))
+        scan_code = keyboard.key_to_scan_codes(key)[0] if key != '/' else keyboard.key_to_scan_codes(key)[1]
     lparam = (scan_code << 16) | 1
     win32gui.PostMessage(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
     PostMessageW(global_variable._hWnd, WM_KEYDOWN, vk_code, lparam)
@@ -113,15 +117,23 @@ def key_press(key: str):
 
 def key_down(key: str):
     set_us_keyboard_layout()
-    vk_code = VkKeyScanW(ctypes.c_wchar(key))
-    scan_code = keyboard.key_to_scan_codes(key)[0] if key != '/' else keyboard.key_to_scan_codes(key)[1]
+    if key in special_keys:
+        vk_code, scan_code = special_keys[key]
+    else:
+        # 普通按键的处理
+        vk_code = VkKeyScanW(ctypes.c_wchar(key))
+        scan_code = keyboard.key_to_scan_codes(key)[0] if key != '/' else keyboard.key_to_scan_codes(key)[1]
     lparam = (scan_code << 16) | 1
     win32gui.PostMessage(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
     PostMessageW(global_variable._hWnd, WM_KEYDOWN, vk_code, lparam)
 
 def key_up(key: str):
-    vk_code = VkKeyScanW(ctypes.c_wchar(key))
-    scan_code = keyboard.key_to_scan_codes(key)[0] if key != '/' else keyboard.key_to_scan_codes(key)[1]
+    if key in special_keys:
+        vk_code, scan_code = special_keys[key]
+    else:
+        # 普通按键的处理
+        vk_code = VkKeyScanW(ctypes.c_wchar(key))
+        scan_code = keyboard.key_to_scan_codes(key)[0] if key != '/' else keyboard.key_to_scan_codes(key)[1]
     lparam = (scan_code << 16) | 0XC0000001
     win32gui.PostMessage(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
     PostMessageW(global_variable._hWnd, WM_KEYUP, vk_code, lparam)
@@ -148,3 +160,10 @@ def set_us_keyboard_layout():
     user32.LoadKeyboardLayoutW.argtypes = [ctypes.c_wchar_p, ctypes.c_uint]
     user32.LoadKeyboardLayoutW.restype = ctypes.c_void_p
     user32.LoadKeyboardLayoutW("00000409", 1)  # 0409 是美国键盘布局标识符，1 表示激活
+
+special_keys = {
+        'Space': (0x20, 0x39),  # 虚拟键码和扫描码
+        'Tab': (0x09, 0x0F),
+        'Esc': (0x1B, 0x01),
+        'Shift': (0x10, 0x2A)  # 左 Shift 键
+}
