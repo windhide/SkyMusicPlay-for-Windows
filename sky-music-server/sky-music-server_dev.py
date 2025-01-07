@@ -10,13 +10,12 @@ from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from windhide._global import global_variable
-from windhide.auto.candles_run import run_control
-from windhide.auto.click_heart_fire import click_heart_fire
 from windhide.auto.script_to_json import script_to_json
 from windhide.musicToSheet.process_audio import process_directory_with_progress
 from windhide.thread.follow_thread import startThread as follow_thread
 from windhide.thread.hwnd_check_thread import startThread as hwnd_check_thread
 from windhide.thread.shortcut_thread import startThread as shortcut_thread
+from windhide.utils.auto_util import auto_click_fire, shutdown, auto_candles_run
 from windhide.utils.config_util import set_config, get_config, favorite_music, convert_sheet
 from windhide.utils.follow_util import set_next_sheet, get_next_sheet
 from windhide.utils.list_util import getTypeMusicList
@@ -176,19 +175,22 @@ def get_update():
         return "404"
 
 #  下面放识别相关的调用
-@app.get("/autoClickFire")
-def auto_click_fire():
-    return click_heart_fire()
+@app.post("/auto")
+def auto(request: dict):
+    match request["operate"]:
+        case 'click_fire':
+            auto_click_fire()
+        case 'shutdown':
+            shutdown()
 
 @app.post("/autoScriptUpload")
 async def create_upload_files(file: UploadFile):
     json = await script_to_json(await file.read(),file.filename)
-    await run_control("developer", json)
+    await auto_candles_run("developer", json)
     return "ok"
 
 if __name__ == '__main__':
     global_variable.isProd = False
-
     # 创建监听 WebSocket 的线程
     follow_websocket_thread = threading.Thread(target=follow_thread)
     follow_websocket_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
@@ -203,6 +205,7 @@ if __name__ == '__main__':
     hwnd_thread = threading.Thread(target=hwnd_check_thread)
     hwnd_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
     hwnd_thread.start()
+
 
     print("Now start service")
     # 启动 FastAPI 服务

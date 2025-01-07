@@ -33,7 +33,7 @@
         accept=".txt"
         :show-file-list="false"
       >
-      <n-button type="info" dashed :color=button.color> {{ button.context }}</n-button>
+        <n-button type="info" dashed :color=button.color> {{ button.context }}</n-button>
       </n-upload>
     </div>
     <n-space vertical style="flex: 0 0 100%; margin-top:30px" class="father">
@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { getData } from "@renderer/utils/fetchUtils";
+import { getData, sendData } from "@renderer/utils/fetchUtils";
 import { useThemeVars } from "naive-ui";
 const themeVars = useThemeVars();
 const headText = "此处是测试版功能请谨慎使用🌶，不涉及内存修改🌶";
@@ -100,18 +100,32 @@ const buttons = [
     color:"#fe6673",
     context:"开发者自定义",
     value: "developer"
+  },{
+    color:"#ff0000",
+    context:"终止线程",
+    value: "shutdown"
   }
 ]
 
 function run(value: any){
   console.log(value)
+  if (value == 'shutdown'){
+    shutdown()
+  }
 }
 
 
 function autoClickFire(){
   window.api.system_notification("🔧🔧🔧🔧🔧", "现在开始自动点击心火")
-  getData("autoClickFire").then(res=>{
-    window.api.system_notification("❤❤❤❤❤", res)
+  sendData("auto", {
+    "operate":"click_fire"
+  })
+}
+
+function shutdown(){
+  window.api.system_notification("⛔⛔⛔⛔⛔", "终止！！！！！")
+  sendData("auto", {
+    "operate":"shutdown"
   })
 }
 

@@ -12,14 +12,13 @@ from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from windhide._global import global_variable
-from windhide.auto.candles_run import run_control
-from windhide.auto.click_heart_fire import click_heart_fire
 from windhide.auto.script_to_json import script_to_json
 from windhide.musicToSheet.process_audio import process_directory_with_progress
 from windhide.thread.follow_thread import startThread as follow_thread
 from windhide.thread.frame_alive_thread import monitor_process
 from windhide.thread.hwnd_check_thread import startThread as hwnd_check_thread
 from windhide.thread.shortcut_thread import startThread as shortcut_thread
+from windhide.utils.auto_util import auto_click_fire, shutdown, auto_candles_run
 from windhide.utils.config_util import set_config, get_config, favorite_music, convert_sheet, drop_file
 from windhide.utils.follow_util import set_next_sheet, get_next_sheet
 from windhide.utils.list_util import getTypeMusicList
@@ -148,17 +147,19 @@ def get_update():
             print(f'请求失败，状态码：{response.status_code}')
         return "404"
 
-
 #  下面放识别相关的调用
-@app.get("/autoClickFire")
-def auto_click_fire():
-    return click_heart_fire()
-
+@app.post("/auto")
+def auto(request: dict):
+    match request["operate"]:
+        case 'click_fire':
+            auto_click_fire()
+        case 'shutdown':
+            shutdown()
 
 @app.post("/autoScriptUpload")
 async def create_upload_files(file: UploadFile):
-    json = await script_to_json(await file.read())
-    await run_control("developer", json)
+    json = await script_to_json(await file.read(),file.filename)
+    await auto_candles_run("developer", json)
     return "ok"
 
 if __name__ == '__main__':
