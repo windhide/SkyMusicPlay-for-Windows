@@ -38,23 +38,24 @@
     <n-button quaternary circle type="info" size="large" @click="reloadMusicList()" color="#F2C9C4">
       <template #icon>
         <n-icon>
-          <List />
+          <SparklesOutline />
         </n-icon>
       </template>
     </n-button>
-    <n-switch size="medium" v-model:value="isRandom">
-      <template #checked-icon>
-        <n-icon :component="ShuffleOutline" />
-      </template>
-      <template #unchecked-icon>
-        <n-icon :component="List" />
-      </template>
-    </n-switch>
-    <n-upload action="http://localhost:9899/userMusicUpload" multiple accept=".txt" style="width: 20px; margin-left: 15px;"
+    <n-popselect v-model:value="selectMode" :options="modeColumns">
+      <n-button circle dashed color="#F2C9C4">
+        <template #icon>
+          <n-icon v-if="selectMode == 'order'"><List /></n-icon>
+          <n-icon v-if="selectMode == 'random'"><ShuffleOutline /></n-icon>
+          <n-icon v-if="selectMode == 'cycle'"><Sync /></n-icon>
+        </template>
+      </n-button>
+    </n-popselect>
+    <n-upload action="http://localhost:9899/userMusicUpload" multiple accept=".txt" style="width: 20px; margin-left: 8px;"
       :show-file-list="false" @finish="handleFinish" @before-upload="beforeFileUpload">
       <n-button type="info" ghost circle dashed color="#F2C9C4">
         <template #icon>
-          <n-icon><Pricetags /></n-icon>
+          <n-icon><CloudUploadOutline /></n-icon>
         </template>
       </n-button>
     </n-upload>
@@ -149,7 +150,9 @@ import {
   PlaySkipForward,
   Pause,
   PawSharp,
-  Pricetags
+  Sync,
+  SparklesOutline,
+  CloudUploadOutline
 } from '@vicons/ionicons5'
 import { useStore } from 'vuex'
 const message = useMessage()
@@ -170,11 +173,26 @@ const searchText = ref('')
 const nowState: any = ref('stop') // 当前播放状态
 const delayStatus = ref('system')
 const sustainStatus = ref('system')
-const isRandom = ref(false)
 const isPlay = ref(false)
 const active = ref(false)
 const placement = ref<DrawerPlacement>('left')
 const store = useStore()
+const selectMode = ref("order")
+let cycleMusic:any = {}
+const modeColumns = [
+  {
+    label: '顺序',
+    value: 'order'
+  },
+  {
+    label: '随机',
+    value: 'random'
+  },
+  {
+    label: '循环',
+    value: 'cycle'
+  }
+]
 const musicColumns = [
   {
     title: '歌名',
@@ -355,6 +373,10 @@ const playBarClickHandler = (status: String, type: String) => {
         operate: "start"
       }).then(()=>{
         progress.value = 0
+        cycleMusic = {
+          fileName: nowSelectMusic.value,
+          type: type != "" ? type : nowType,
+        }
       })
       message.success('开始')
       isPlay.value = true;
@@ -385,11 +407,17 @@ function drag_progress_end() {
 function getProgress() {
   if (progress.value == 100) {
     return clearPlayInfo().then(() => {
-        if (isRandom.value) {
+      switch (selectMode.value){
+        case "order":
+        orderMusicPlay()
+          break
+        case "random":
           randomMusicPlay()
-        } else {
-          listMusicPlay()
-        }
+          break
+        case "cycle":
+          cycleMusicPlay()
+          break
+      }
     })
   }
   getData('getProgress').then((res) => {
@@ -405,7 +433,7 @@ function randomMusicPlay() {
   
 }
 
-function listMusicPlay() {
+function orderMusicPlay() {
   let struct = store.getters.getNextPlayMusic
   if (struct != null && struct != undefined) {
     nowSelectMusic.value = struct.name
@@ -417,6 +445,11 @@ function listMusicPlay() {
     clearInterval(progressInterval)
     nowPlayMusic.value = "没有正在播放的歌曲哦"
   }
+}
+
+function cycleMusicPlay() {
+  nowSelectMusic.value = cycleMusic?.fileName
+  playBarClickHandler("start", cycleMusic?.type)
 }
 
 handleUpdateValue('myFavorite')
