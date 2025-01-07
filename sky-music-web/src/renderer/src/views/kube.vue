@@ -58,6 +58,7 @@
           :bordered="false"
           :max-height="330"
           :scroll-x="100"
+          row-class-name="td_css"
         />
       </n-tab-pane>
       <n-tab-pane name="myTranslate" tab="已转换歌曲">
@@ -67,6 +68,7 @@
           :bordered="false"
           :max-height="300"
           :scroll-x="100"
+          row-class-name="td_css"
         />
       </n-tab-pane>
     </n-tabs>
@@ -99,11 +101,13 @@ const originalColumns = [
   {
     title: "歌名",
     key: "name",
+    className: 'th_css'
   },
   {
     title: "操作",
     key: "operation",
     width: 100,
+    className: 'th_css',
     render(row) {
       return h(
         NButton,
@@ -126,11 +130,13 @@ const translateColumns = [
   {
     title: "歌名",
     key: "name",
+    className: 'th_css'
   },
   {
     title: "操作",
     key: "operation",
     width: 100,
+    className: 'th_css',
     render(row) {
       return h(
         NButton,
@@ -237,5 +243,16 @@ function handleUpdateValue(value: string) {
 :deep(.n-tabs){
     --n-tab-text-color-active: rgb(242,232,196)!important;
     --n-tab-text-color-hover: rgb(242,232,196)!important;
+    --n-tab-text-color: rgb(221,242,196)!important;
+}
+.n-input{
+  background-color: rgba(24, 24, 28, 0) !important;
+  border: 1px solid rgba(242,232,196,0.5);
+}
+:deep(.td_css td) {
+  color: rgb(242,232,196) !important;
+}
+:deep(.th_css){
+  color: rgb(221,242,196) !important;
 }
 </style>

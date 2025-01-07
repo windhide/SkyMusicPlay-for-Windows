@@ -194,8 +194,8 @@ onMounted(() => {
   --n-item-text-color-active: rgb(242,232,196) !important;
   --n-item-icon-color-active: rgb(242,232,196) !important;
   --n-item-text-color-active-hover: rgb(242,232,196) !important;
-  --n-item-icon-color: rgba(255, 255, 255, 0.9);
-  --n-item-icon-color-hover: rgba(255, 255, 255, 0.9);
+  --n-item-icon-color: rgba(221,242,196, 0.82) !important;
+  --n-item-icon-color-hover:  rgb(242,201,196) !important;
   --n-item-icon-color-active: rgb(242,232,196) !important;
   --n-item-icon-color-active-hover: rgb(242,232,196) !important;
   --n-item-icon-color-child-active: rgb(242,232,196) !important;
@@ -203,5 +203,9 @@ onMounted(() => {
   --n-item-icon-color-collapsed: rgba(255, 255, 255, 0.9);
   --n-item-color-active: rgba(242,232,196,0.15) !important;
   --n-item-color-active-hover: rgba(242,232,196,0.3) !important;
+}
+:deep(.n-menu-item-content){
+  --n-item-text-color: rgba(221,242,196, 0.82) !important;
+  --n-item-text-color-hover: rgb(242,201,196) !important;
 }
 </style>

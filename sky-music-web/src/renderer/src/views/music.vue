@@ -63,7 +63,7 @@
         <n-gradient-text type="info" :size="13" style="color: #F2C9C4"> 间隔延迟s&nbsp;&nbsp;&nbsp; </n-gradient-text>
         <n-radio-group v-model:value="delayStatus" name="radiogroup">
           <n-space>
-            <n-radio key="system" value="system">系统自带</n-radio>
+            <n-radio key="system" value="system" style="color: red;">系统自带</n-radio>
             <n-radio key="random" value="random">随机</n-radio>
             <n-radio key="custom" value="custom">自定义</n-radio>
           </n-space>
@@ -97,23 +97,23 @@
       </n-col>
     </n-row>
   </n-flex>
-  <n-card style="margin-top: 15px">
+  <n-card style="margin-top: 15px;">
     <n-tabs type="bar" animated size="small" @update:value="handleUpdateValue" @before-leave="handleBeforeLeave">
       <n-tab-pane name="systemMusic" tab="自带歌曲">
         <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :min-row-height="48"
-          :max-height="300" :virtual-scroll="music.systemMusic?.length > 7" :row-props="MusicSelect" />
+          :max-height="300" :virtual-scroll="music.systemMusic?.length > 7" :row-props="MusicSelect" row-class-name="td_css" />
       </n-tab-pane>
       <n-tab-pane name="myImport" tab="导入歌曲">
         <n-data-table :columns="myImportColumns" :data="music.myImport" :bordered="false" :min-row-height="48"
-          :max-height="300" :virtual-scroll="music.myImport?.length > 7" :row-props="MusicSelect" />
+          :max-height="300" :virtual-scroll="music.myImport?.length > 7" :row-props="MusicSelect"  row-class-name="td_css" />
       </n-tab-pane>
       <n-tab-pane name="myTranslate" tab="转换歌曲">
         <n-data-table :columns="musicColumns" :data="music.myTranslate" :bordered="false" :min-row-height="48"
-          :max-height="300" :virtual-scroll="music.myTranslate?.length > 7" :row-props="MusicSelect" />
+          :max-height="300" :virtual-scroll="music.myTranslate?.length > 7" :row-props="MusicSelect" row-class-name="td_css"  />
       </n-tab-pane>
       <n-tab-pane name="myFavorite" tab="收藏">
         <n-data-table :columns="favoritColumns" :data="music.myFavorite" :bordered="false" :min-row-height="48"
-          :max-height="300" :virtual-scroll="music.myFavorite?.length > 7" :row-props="MusicSelect" />
+          :max-height="300" :virtual-scroll="music.myFavorite?.length > 7" :row-props="MusicSelect"  row-class-name="td_css" />
       </n-tab-pane>
       <template #suffix>
         <n-input v-model:value="searchText" round placeholder="搜索"
@@ -179,12 +179,14 @@ const musicColumns = [
   {
     title: '歌名',
     key: 'name',
-    resizable: true
+    resizable: true,
+    className: 'th_css'
   },
   {
     title: '操作',
     key: 'operation',
     width: 100,
+    className: 'th_css',
     render(row) {
       return h(
         NButton,
@@ -216,12 +218,14 @@ const favoritColumns = [
   {
     title: '歌名',
     key: 'name',
-    resizable: true
+    resizable: true,
+    className: 'th_css'
   },
   {
     title: '操作',
     key: 'operation',
     width: 100,
+    className: 'th_css',
     render(row) {
       return h(
         NButton,
@@ -244,12 +248,14 @@ const myImportColumns = [
   {
     title: '歌名',
     key: 'name',
-    resizable: true
+    resizable: true,
+    className: 'th_css'
   },
   {
     title: '操作',
     key: 'operation',
     width: 100,
+    className: 'th_css',
     render(row) {
       return h(
         NButton,
@@ -272,7 +278,8 @@ const musicListColumns = [
   {
     title: '歌名',
     key: 'name',
-    resizable: true
+    resizable: true,
+    className: 'th_css'
   }
 ] // 音乐列
 
@@ -644,8 +651,19 @@ onUnmounted(() => {
 :deep(.n-tabs){
     --n-tab-text-color-active: rgb(242,232,196)!important;
     --n-tab-text-color-hover: rgb(242,232,196)!important;
+    --n-tab-text-color: rgb(221,242,196)!important;
 }
 :deep(.n-switch--active){
   --n-rail-color-active: #F2C9C4 !important;
+}
+.n-input{
+  background-color: rgba(24, 24, 28, 0) !important;
+  border: 1px solid rgba(242,232,196,0.5);
+}
+:deep(.td_css td) {
+  color: rgb(242,232,196) !important;
+}
+:deep(.th_css){
+  color: rgb(221,242,196) !important;
 }
 </style>

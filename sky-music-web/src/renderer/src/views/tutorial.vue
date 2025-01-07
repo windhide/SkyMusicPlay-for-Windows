@@ -22,6 +22,7 @@
           :max-height="300"
           :virtual-scroll="music.systemMusic?.length > 7"
           :row-props="systemMusicSelect"
+          row-class-name="td_css"
         />
       </n-tab-pane>
       <n-tab-pane name="myImport" tab="导入歌曲">
@@ -33,6 +34,7 @@
           :max-height="300"
           :virtual-scroll="music.myImport?.length > 7"
           :row-props="myImportMusicSelect"
+          row-class-name="td_css"
         />
       </n-tab-pane>
       <n-tab-pane name="myTranslate" tab="转换歌曲">
@@ -44,6 +46,7 @@
           :max-height="300"
           :virtual-scroll="music.myTranslate?.length > 7"
           :row-props="myTranslateMusicSelect"
+          row-class-name="td_css"
         />
       </n-tab-pane>
       <n-tab-pane name="myFavorite" tab="收藏">
@@ -55,6 +58,7 @@
           :max-height="300"
           :virtual-scroll="music.myFavorite?.length > 7"
           :row-props="myFavoriteMusicSelect"
+          row-class-name="td_css"
         />
       </n-tab-pane>
       <template #suffix>
@@ -96,6 +100,7 @@ const musicColumns = [
   {
     title: "歌名",
     key: "name",
+    className: 'th_css'
   },
 ]; // 音乐列
 
@@ -176,5 +181,16 @@ function getListData(value) {
 :deep(.n-tabs){
     --n-tab-text-color-active: rgb(242,232,196)!important;
     --n-tab-text-color-hover: rgb(242,232,196)!important;
+    --n-tab-text-color: rgb(221,242,196)!important;
+}
+.n-input{
+  background-color: rgba(24, 24, 28, 0) !important;
+  border: 1px solid rgba(242,232,196,0.5);
+}
+:deep(.td_css td) {
+  color: rgb(242,232,196) !important;
+}
+:deep(.th_css){
+  color: rgb(221,242,196) !important;
 }
 </style>
