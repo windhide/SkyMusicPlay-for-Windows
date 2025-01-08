@@ -137,7 +137,7 @@ const menuOptions = [
     icon: renderIcon(Library),
   },
   {
-    label: "奇怪功能",
+    label: "开发者功能",
     key: "magicTools",
     icon: renderIcon(Flask),
   }

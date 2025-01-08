@@ -17,10 +17,24 @@
         transition: `all .3s ${themeVars.cubicBezierEaseInOut}`,
       }"
     />
+    <n-highlight
+      style="margin-bottom: 5px"
+      :text="headText2"
+      :patterns="patterns"
+      :highlight-style="{
+        padding: '0 6px',
+        margin: '0 6px',
+        borderRadius: themeVars.borderRadius,
+        display: 'inline-block',
+        color: 'black',
+        background: '#F2E8C4',
+        transition: `all .3s ${themeVars.cubicBezierEaseInOut}`,
+      }"
+    />
     <n-divider />
     <div style="flex: 0 0 100%;" class="father">
       <n-button type="warning" ghost @click="autoClickFire">
-        自动点火（使用前请把火和爱心都收了，不然会点不到）
+        自动点火
       </n-button>
     </div>
     <div class="father" v-for="button in buttons">
@@ -59,8 +73,9 @@
 import { getData, sendData } from "@renderer/utils/fetchUtils";
 import { useThemeVars } from "naive-ui";
 const themeVars = useThemeVars();
-const headText = "此处是测试版功能请谨慎使用🌶，不涉及内存修改🌶";
-const patterns = ["谨慎使用🌶", "不涉及内存修改🌶"];
+const headText = "此处是测试版功能请谨慎使用🌶，不涉及内存修改🌶。";
+const headText2 = "此处功能仅供学习交流，严禁用于商业用途，请于24小时内删除";
+const patterns = ["谨慎使用🌶", "不涉及内存修改🌶", "此处功能仅供学习交流，严禁用于商业用途，请于24小时内删除"];
 const percentage = [0,0,0,0,0]
 const ringColor = {
   activate:['#cde6c7','#afdfe4','#f3704b','#45b97c','#33a3dc'],
