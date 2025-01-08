@@ -1,52 +1,53 @@
+import os
+
 import cv2
 import numpy as np
 import pyautogui
 import win32con
 import win32gui
+from ultralytics import YOLO
 
 from windhide._global import global_variable
+from windhide.utils.path_util import getResourcesPath
+
+# 全局变量，保存模型
+global_model = None
 
 
-def match_template_and_return_coordinates(source_image, template_image_path, match_threshold=0.8):
-    # 读取模板图像
-    template_image = cv2.imread(template_image_path, cv2.IMREAD_COLOR)
-    if source_image is None or template_image is None:
-        raise FileNotFoundError("无法加载原始图像或模板图像，请检查路径或截图是否成功！")
+def load_model():
+    """加载模型并保存在全局变量中"""
+    global global_model
+    if global_model is None:
+        model_path = os.path.join(getResourcesPath("systemTools"), "modelData", "heart_model.pt")
+        global_model = YOLO(model_path)  # 加载模型并保存在 global_model 中
+        print("模型加载完成")
+    return global_model
 
-    # 转为灰度图
-    gray_source_image = cv2.cvtColor(source_image, cv2.COLOR_BGR2GRAY)
-    gray_template_image = cv2.cvtColor(template_image, cv2.COLOR_BGR2GRAY)
 
-    # 使用Canny边缘检测提取边缘
-    edges_source = cv2.Canny(gray_source_image, 50, 150)
-    edges_template = cv2.Canny(gray_template_image, 50, 150)
-
-    # 进行模板匹配
-    result = cv2.matchTemplate(edges_source, edges_template, cv2.TM_CCOEFF_NORMED)
-    locations = np.where(result >= match_threshold)
-
-    center_coordinates = []
-    for point in zip(*locations[::-1]):  # 转换坐标顺序为 (x, y)
-        top_left = point
-        # 计算中心点坐标
-        center_x = top_left[0] + edges_template.shape[1] // 2
-        center_y = top_left[1] + edges_template.shape[0] // 2
-        center_coordinates.append({"x": int(center_x), "y": int(center_y)})  # 返回中心点坐标 (x, y)
-    filtered_points = []
-    for point in center_coordinates:
-        # 假设当前点是有效的
-        is_valid = True
-        # 检查当前点与已过滤点之间的差异
-        for filtered_point in filtered_points:
-            if abs(point['x'] - filtered_point['x']) < 10 or abs(point['y'] - filtered_point['y']) < 10:
-                is_valid = False
-                break
-        # 如果当前点是有效的，则将其添加到结果数组中
-        if is_valid:
-            filtered_points.append(point)
-
-    return filtered_points
-
+def get_model_position(conf):
+    # 加载已经训练好的模型
+    image = get_window_screenshot()
+    model = load_model()
+    results = model(image, conf=conf)  # 替换为你的图片路径
+    boxes = results[0].boxes  # 这是检测到的所有框
+    xyxy = boxes.xyxy.cpu().numpy()  # 获取每个框的绝对坐标 (x1, y1, x2, y2)
+    classes = boxes.cls.cpu().numpy()  # 获取每个框对应的分类号
+    class_names = ["button", "get_fire", "send_fire"]  # 获取所有类别的名称
+    result_dict = {
+        "button": [],
+        "get_fire": [],
+        "send_fire": [],
+    }
+    # 打印绝对坐标和分类号
+    for i, box in enumerate(xyxy):
+        x1, y1, x2, y2 = box
+        class_id = int(classes[i])  # 获取类别ID
+        label = class_names[class_id]  # 获取类别名称
+        center_x = (x1 + x2) / 2
+        center_y = (y1 + y2) / 2
+        result_dict[label].append({"x": int(center_x), "y": int(center_y)})
+    # results[0].show()
+    return result_dict
 
 def resetGameFrame():
     win32gui.ShowWindow(global_variable._hWnd, win32con.SW_RESTORE)  # 先恢复窗口，以防最小化

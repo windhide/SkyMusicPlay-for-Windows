@@ -1,13 +1,16 @@
+plyer~=2.1.0
+charset-normalizer~=3.4.0
 opencv-python~=4.10.0.84
 numpy~=2.0.2
 PyAutoGUI~=0.9.54
+ultralytics~=8.3.58
 chardet~=5.2.0
 pynput~=1.7.7
 PyGetWindow~=0.0.9
+psutil~=6.1.1
 keyboard~=0.13.5
 torch~=2.5.1
 pretty_midi~=0.2.10
-psutil~=6.1.1
 requests~=2.32.3
 uvicorn~=0.32.1
 fastapi~=0.115.6

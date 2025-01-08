@@ -1,11 +1,12 @@
-import os
 import time
 import threading
+import time
+
+import plyer
 
 from windhide._global import global_variable
 from windhide.playRobot._robot import click_window_position, key_press, mouse_wheel_scroll
-from windhide.utils.ocr_screenshot_util import resetGameFrame, get_window_screenshot, match_template_and_return_coordinates
-from windhide.utils.path_util import getResourcesPath
+from windhide.utils.ocr_screenshot_util import resetGameFrame, get_model_position
 
 
 class HeartFireThread(threading.Thread):
@@ -17,51 +18,58 @@ class HeartFireThread(threading.Thread):
     def run(self):
         """线程启动后执行的主逻辑"""
         self._running = True
-        # 0.4 heartFire_template.png
-        # 0.45 fire_template.png
-        # 0.8 add_friend_template.png
         resetGameFrame()
         mouse_wheel_scroll("down")
         time.sleep(2)
         key_press("g")
-        time.sleep(2)
+        time.sleep(3)
         # 先判断是不是第一页
         while self._running:
-            friend_position = self.get_add_friend_position()
-            if len(friend_position) != 0:
+            friend_button = get_model_position(0.2)["button"]
+            if len(friend_button) >= 2:
                 break
             else:
                 key_press("z")
             self.check_running()
-            time.sleep(2)
+            time.sleep(3)
         key_press("c")
         time.sleep(2)
         # 来到第一页
         while True:
             if not self._running:
                 break
-            heart_positions = self.get_heart_fire_position()
-            if len(heart_positions) != 0:
-                for position in heart_positions:
+            results = get_model_position(0.2)
+            button = results["button"]
+            send_fire = results["send_fire"]
+            get_fire = results["get_fire"]
+            if len(get_fire) != 0:
+                for position in get_fire:
+                    time.sleep(0.3)
+                    click_window_position(position["x"], position["y"])
+            if len(send_fire) != 0:
+                for position in send_fire:
                     if not self._running:
                         break
-                    # 点火处理
                     time.sleep(1)
                     click_window_position(position["x"], position["y"])
-                    time.sleep(2)
-                if self.can_fire():  # 在点击光崽靠近的时候可能会识别不到，不过在上边已经拖动滚轮了
+                    time.sleep(3.5)
                     key_press("f")
-                    time.sleep(0.8)
+                    time.sleep(1)
                     key_press("ESC")
                 # 下一页
                 key_press("c")
-                time.sleep(2.5)
+                time.sleep(3)
             else:
                 # 如果没有，显示别是不是到第一页去了，否则直接下一页
-                if len(self.get_add_friend_position()) == 0:
+                if len(button) < 2:
                     key_press("c")
-                    time.sleep(2.5)
+                    time.sleep(3)
                 else:
+                    plyer.notification.notify(
+                        title='🔥🔥🔥🔥🔥🔥🔥🔥',
+                        message='点火结束🔥🔥🔥🔥🔥',
+                        timeout=1
+                    )
                     return "点火结束"
 
     def stop(self):
@@ -70,35 +78,8 @@ class HeartFireThread(threading.Thread):
             self._running = False
         global_variable.auto_thread = None
 
-    @staticmethod
-    def get_heart_fire_position():
-        return match_template_and_return_coordinates(
-            source_image=get_window_screenshot(),
-            template_image_path=os.path.join(
-                os.path.join(getResourcesPath("systemTools"), "ocrTemplate"),
-                "heartFire_template.png"
-            ),
-            match_threshold=float(0.4)
-        )
-
-    @staticmethod
-    def get_add_friend_position():
-        return match_template_and_return_coordinates(
-            source_image=get_window_screenshot(),
-            template_image_path=os.path.join(
-                os.path.join(getResourcesPath("systemTools"), "ocrTemplate"),
-                "add_friend_template.png"
-            ),
-            match_threshold=float(0.4)
-        )
-
-    @staticmethod
-    def can_fire():
-        return len(match_template_and_return_coordinates(
-            source_image=get_window_screenshot(),
-            template_image_path=os.path.join(
-                os.path.join(getResourcesPath("systemTools"), "ocrTemplate"),
-                "fire_template.png"
-            ),
-            match_threshold=float(0.45)
-        )) > 0
+    def check_running(self):
+        """检查线程是否正在运行，若未运行则安全退出"""
+        with self._lock:
+            if not self._running:
+                raise StopIteration("线程已停止")

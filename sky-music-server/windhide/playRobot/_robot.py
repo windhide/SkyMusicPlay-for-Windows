@@ -103,6 +103,7 @@ def click_window_position(x: int, y: int):
 
 #  核心
 def key_press(key: str):
+    key = key.lower()
     if key in special_keys:
         vk_code, scan_code = special_keys[key]
     else:
@@ -117,6 +118,7 @@ def key_press(key: str):
 
 def key_down(key: str):
     set_us_keyboard_layout()
+    key = key.lower()
     if key in special_keys:
         vk_code, scan_code = special_keys[key]
     else:
@@ -128,6 +130,7 @@ def key_down(key: str):
     PostMessageW(global_variable._hWnd, WM_KEYDOWN, vk_code, lparam)
 
 def key_up(key: str):
+    key = key.lower()
     if key in special_keys:
         vk_code, scan_code = special_keys[key]
     else:
@@ -137,7 +140,6 @@ def key_up(key: str):
     lparam = (scan_code << 16) | 0XC0000001
     win32gui.PostMessage(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
     PostMessageW(global_variable._hWnd, WM_KEYUP, vk_code, lparam)
-
 
 def mouse_wheel_scroll(operator):
     match operator:
@@ -162,8 +164,8 @@ def set_us_keyboard_layout():
     user32.LoadKeyboardLayoutW("00000409", 1)  # 0409 是美国键盘布局标识符，1 表示激活
 
 special_keys = {
-        'Space': (0x20, 0x39),  # 虚拟键码和扫描码
-        'Tab': (0x09, 0x0F),
-        'Esc': (0x1B, 0x01),
-        'Shift': (0x10, 0x2A)  # 左 Shift 键
+    'space': (0x20, 0x39),  # 虚拟键码和扫描码
+    'tab': (0x09, 0x0F),
+    'esc': (0x1B, 0x01),
+    'shift': (0x10, 0x2A)  # 左 Shift 键
 }
