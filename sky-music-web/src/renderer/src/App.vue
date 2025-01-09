@@ -3,7 +3,7 @@
     <n-flex id="drag-area" justify="end" style="position: fixed; z-index: 200; right: 18px" :style="{
       width: collapsed ? '90%' : '80%'
     }">
-      <n-tooltip placement="bottom" trigger="hover">
+      <n-popover style="border-radius: 25px;" trigger="click">
         <template #trigger>
           <n-button text size="large" type="warning" style="margin-top: 12px; font-size: 20px;" :round="false"> 
             <n-icon size="25px">
@@ -11,10 +11,15 @@
             </n-icon> 
           </n-button>
         </template>
-        <span> 
-          模拟器模式 <n-switch size="small" v-model:value="isSimulator" @update:value="SimulatorChange"/>  
-        </span>
-      </n-tooltip>
+        <n-switch size="small" v-model:value="isSimulator" @update:value="SimulatorChange" :rail-style="railStyle"> 
+            <template #checked>
+              <p style="color: rgba(94, 104, 81, 0.65);">模拟器模式</p>
+            </template>
+            <template #unchecked>
+              <p style="color: rgba(94, 104, 81, 0.65);">常规模式</p>
+            </template>
+          </n-switch> 
+      </n-popover>
       <n-button text :dashed="fixDashed" size="large" type="warning" style="margin-top: 12px; font-size: 20px; margin-right: 3px;" @click="fixHandle">
         <n-icon size="25px">
           <Pin48Regular v-if="fixDashed" />
@@ -63,7 +68,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Component } from 'vue'
+import type { Component, CSSProperties } from 'vue'
 import { h, onMounted, ref } from 'vue'
 import { NIcon, darkTheme, NMessageProvider } from 'naive-ui'
 import { getData, sendData } from '@renderer/utils/fetchUtils'
@@ -98,6 +103,23 @@ function fixHandle() {
     window.api.setAlwaysOnTop();
     fixDashed.value = true
   }
+}
+
+function railStyle({ focused, checked }){
+        const style: CSSProperties = {}
+        if (checked) {
+          style.background = '#F2C9C4'
+          if (focused) {
+            style.boxShadow = '0 0 0 2px #F2C9C440'
+          }
+        }
+        else {
+          style.background = '#F2E8C4'
+          if (focused) {
+            style.boxShadow = '0 0 0 2px #F2E8C440'
+          }
+        }
+        return style
 }
 
 function openFileHandle() {
@@ -226,5 +248,6 @@ onMounted(() => {
 :deep(.n-menu-item-content){
   --n-item-text-color: rgba(221,242,196, 0.82) !important;
   --n-item-text-color-hover: rgb(242,201,196) !important;
+  color: rgba(94, 104, 81, 0.82);
 }
 </style>
