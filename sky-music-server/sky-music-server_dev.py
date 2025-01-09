@@ -1,6 +1,7 @@
 import json
 import os
 import threading
+import time
 import webbrowser
 
 import psutil
@@ -12,6 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from windhide._global import global_variable
 from windhide.auto.script_to_json import script_to_json
 from windhide.musicToSheet.process_audio import process_directory_with_progress
+from windhide.playRobot._robot import key_down, key_up
 from windhide.thread.follow_thread import startThread as follow_thread
 from windhide.thread.hwnd_check_thread import startThread as hwnd_check_thread
 from windhide.thread.shortcut_thread import startThread as shortcut_thread
@@ -193,7 +195,13 @@ async def create_upload_files(file: UploadFile):
 
 @app.post("/test")
 def test(request: dict):
-    test_model_position(float(request["conf"]))
+    match request["operate"]:
+        case 'image':
+            test_model_position(float(request["conf"]))
+        case 'press':
+            key_down(request["key"])
+            time.sleep(1)
+            key_up(request["key"])
 
 if __name__ == '__main__':
     global_variable.isProd = False

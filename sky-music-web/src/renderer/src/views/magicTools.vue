@@ -1,11 +1,14 @@
 <template>
   <div class="father">
     <n-divider>
-      <n-button text style="font-size: 30px" @click="isShow = !isShow">
-        ⚠ 🚧
+      <n-button text style="font-size: 30px" @click="layoutChange('isScriptShow')">
+        ⚠
+      </n-button>
+      <n-button text style="font-size: 30px" @click="layoutChange('isTestShow')">
+        🚧
       </n-button>
     </n-divider>
-    <div class="father" v-show="isShow">
+    <div class="father" v-show="isScriptShow">
       <n-highlight style="margin-bottom: 5px" :text="headText" :patterns="patterns" :highlight-style="{
         padding: '0 6px',
         margin: '0 6px',
@@ -61,19 +64,58 @@
           </n-progress>
         </n-el>
       </n-space>
-      <n-input-number v-model:value="mathValue" clearable step="0.01"  style="margin-top: 20px;"/>
-      <n-button type="error" dashed style="margin-left: 20px;margin-top: 20px;" @click="checkFile">
-        Check
-      </n-button>
+    </div>
+    <div class="father" v-show="isTestShow">
+      <div class="father">
+        <n-space style="width: 100%;" align='center' justify='center'>
+          <n-button class="dynamicButtonStyles" ghost @click="keypress('Y')">Y</n-button>
+          <n-button class="dynamicButtonStyles" ghost @click="keypress('U')">U</n-button>
+          <n-button class="dynamicButtonStyles" ghost @click="keypress('I')">I</n-button>
+          <n-button class="dynamicButtonStyles" ghost @click="keypress('O')">O</n-button>
+          <n-button class="dynamicButtonStyles" ghost @click="keypress('P')">P</n-button>
+        </n-space>
+        <n-space class="dynamicSpaceStyles" align='center' justify='center'>
+          <n-button class="dynamicButtonStyles" ghost @click="keypress('H')">H</n-button>
+          <n-button class="dynamicButtonStyles" ghost @click="keypress('J')">J</n-button>
+          <n-button class="dynamicButtonStyles" ghost @click="keypress('K')">K</n-button>
+          <n-button class="dynamicButtonStyles" ghost @click="keypress('L')">L</n-button>
+          <n-button class="dynamicButtonStyles" ghost @click="keypress(';')">;</n-button>
+        </n-space>
+        <n-space class="dynamicSpaceStyles" align='center' justify='center'>
+          <n-button class="dynamicButtonStyles" ghost @click="keypress('N')">N</n-button>
+          <n-button class="dynamicButtonStyles" ghost @click="keypress('M')">M</n-button>
+          <n-button class="dynamicButtonStyles" ghost @click="keypress(',')">,</n-button>
+          <n-button class="dynamicButtonStyles" ghost @click="keypress('.')">.</n-button>
+          <n-button class="dynamicButtonStyles" ghost @click="keypress('/')">/</n-button>
+        </n-space>
+      </div>
+      <n-divider />
+      <div class="father" v-for="button in devButtons">
+        <n-button dashed :color=button.color @click="run(button.value)"
+          :style="{marginLeft: button.value === 'all' ? '0' : '15px' }"
+          v-if="button.value != 'developer'">
+          {{ button.context }}
+        </n-button>
+        <n-upload v-else action="http://localhost:9899/autoScriptUpload" accept=".txt"
+          :show-file-list="false">
+          <n-button type="info" dashed :color=button.color> {{ button.context }}</n-button>
+        </n-upload>
+      </div>
+      <n-divider />
+        <n-input-number v-model:value="mathValue" clearable step="0.01" style="margin-top: 20px;" />
+        <n-button type="error" dashed style="margin-left: 20px;margin-top: 20px;" @click="checkFile">
+          Check
+        </n-button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { getData, sendData } from "@renderer/utils/fetchUtils";
+import { sendData } from "@renderer/utils/fetchUtils";
 import { useThemeVars } from "naive-ui";
 import { ref } from "vue";
-const isShow = ref(false)
+const isScriptShow = ref(false)
+const isTestShow = ref(false)
 const themeVars = useThemeVars();
 const headText = "此处是测试版功能请谨慎使用🌶，不涉及内存修改🌶。";
 const headText2 = "此处功能仅供学习交流，严禁用于商业用途，请于24小时内删除";
@@ -115,6 +157,13 @@ const buttons = [
     context:"挂机点我",
     value: "afk"
   },{
+    color:"#ff0000",
+    context:"终止线程",
+    value: "shutdown"
+  }
+]
+
+const devButtons = [{
     color:"#fe6673",
     context:"开发者自定义",
     value: "developer"
@@ -125,6 +174,7 @@ const buttons = [
   }
 ]
 
+
 function run(value: any){
   console.log(value)
   if (value == 'shutdown'){
@@ -134,7 +184,15 @@ function run(value: any){
 
 function checkFile(){
   sendData("test",{
+    operate:'image',
     conf:mathValue.value
+  })
+}
+
+function keypress(key){
+  sendData("test",{
+    operate:'press',
+    key
   })
 }
 
@@ -152,6 +210,18 @@ function shutdown(){
   })
 }
 
+function layoutChange(layout){
+  eval(layout + '.value = !' + layout + '.value')
+  switch(layout){
+    case 'isTestShow':
+      isScriptShow.value = !isTestShow.value
+      break
+    case 'isScriptShow':
+      isTestShow.value = !isScriptShow.value
+      break
+  }
+}
+
 </script>
 
 <style scoped>
@@ -160,5 +230,14 @@ function shutdown(){
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+}
+.dynamicButtonStyles{
+    height: 50px;
+    width: 50px;
+    margin-left: 5px;
+    font-size: 20px;
+}
+.dynamicSpaceStyles{
+  margin-top: 5px;
 }
 </style>
