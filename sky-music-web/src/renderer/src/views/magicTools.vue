@@ -1,13 +1,12 @@
 <template>
   <div class="father">
     <n-divider>
-      <n-gradient-text type="error" :size="25"> 注意 </n-gradient-text>
+      <n-button text style="font-size: 30px" @click="isShow = !isShow">
+        ⚠ 🚧
+      </n-button>
     </n-divider>
-    <n-highlight
-      style="margin-bottom: 5px"
-      :text="headText"
-      :patterns="patterns"
-      :highlight-style="{
+    <div class="father" v-show="isShow">
+      <n-highlight style="margin-bottom: 5px" :text="headText" :patterns="patterns" :highlight-style="{
         padding: '0 6px',
         margin: '0 6px',
         borderRadius: themeVars.borderRadius,
@@ -15,13 +14,8 @@
         color: 'black',
         background: '#F2E8C4',
         transition: `all .3s ${themeVars.cubicBezierEaseInOut}`,
-      }"
-    />
-    <n-highlight
-      style="margin-bottom: 5px"
-      :text="headText2"
-      :patterns="patterns"
-      :highlight-style="{
+      }" />
+      <n-highlight style="margin-bottom: 5px" :text="headText2" :patterns="patterns" :highlight-style="{
         padding: '0 6px',
         margin: '0 6px',
         borderRadius: themeVars.borderRadius,
@@ -29,53 +23,58 @@
         color: 'black',
         background: '#F2E8C4',
         transition: `all .3s ${themeVars.cubicBezierEaseInOut}`,
-      }"
-    />
-    <n-divider />
-    <div style="flex: 0 0 100%;" class="father">
-      <n-button type="warning" ghost @click="autoClickFire">
-        自动点火
-      </n-button>
+      }" />
+      <n-highlight style="margin-bottom: 5px" :text="headText3" :patterns="patterns" :highlight-style="{
+        padding: '0 6px',
+        margin: '0 6px',
+        borderRadius: themeVars.borderRadius,
+        display: 'inline-block',
+        color: 'black',
+        background: '#F2E8C4',
+        transition: `all .3s ${themeVars.cubicBezierEaseInOut}`,
+      }" />
+      <n-divider />
+      <div style="flex: 0 0 100%;" class="father">
+        <n-button type="warning" ghost @click="autoClickFire">
+          自动点火（站在星盘上，确保游戏出现了G，再点本按钮）
+        </n-button>
+      </div>
+      <n-divider />
+      <div class="father" v-for="button in buttons">
+        <n-button dashed :color=button.color @click="run(button.value)"
+          :style="{ marginTop: '30px', marginLeft: button.value === 'all' ? '0' : '15px' }"
+          v-if="button.value != 'developer'">
+          {{ button.context }}
+        </n-button>
+        <n-upload v-else action="http://localhost:9899/autoScriptUpload" style="margin-top:30px" accept=".txt"
+          :show-file-list="false">
+          <n-button type="info" dashed :color=button.color> {{ button.context }}</n-button>
+        </n-upload>
+      </div>
+      <n-space vertical style="flex: 0 0 100%; margin-top:30px" class="father">
+        <n-el>
+          <n-progress type="multiple-circle" :stroke-width="6" :circle-gap="0.3" :percentage="percentage"
+            :color="ringColor.activate" :rail-style="ringColor.not_activate">
+            <div style="text-align: center">
+              进度
+            </div>
+          </n-progress>
+        </n-el>
+      </n-space>
     </div>
-    <div class="father" v-for="button in buttons">
-      <n-button dashed :color=button.color @click="run(button.value)"  :style="{ marginTop: '30px', marginLeft: button.value === 'all' ? '0' : '15px' }" v-if="button.value != 'developer'" >
-        {{ button.context }}
-      </n-button>
-      <n-upload v-else
-        action="http://localhost:9899/autoScriptUpload"
-        style="margin-top:30px"
-        accept=".txt"
-        :show-file-list="false"
-      >
-        <n-button type="info" dashed :color=button.color> {{ button.context }}</n-button>
-      </n-upload>
-    </div>
-    <n-space vertical style="flex: 0 0 100%; margin-top:30px" class="father">
-      <n-el>
-        <n-progress
-          type="multiple-circle"
-          :stroke-width="6"
-          :circle-gap="0.3"
-          :percentage="percentage"
-          :color="ringColor.activate"
-          :rail-style="ringColor.not_activate"
-        >
-          <div style="text-align: center">
-            进度
-          </div>
-        </n-progress>
-    </n-el>
-    </n-space>
   </div>
 </template>
 
 <script setup lang="ts">
 import { getData, sendData } from "@renderer/utils/fetchUtils";
 import { useThemeVars } from "naive-ui";
+import { ref } from "vue";
+const isShow = ref(false)
 const themeVars = useThemeVars();
 const headText = "此处是测试版功能请谨慎使用🌶，不涉及内存修改🌶。";
 const headText2 = "此处功能仅供学习交流，严禁用于商业用途，请于24小时内删除";
-const patterns = ["谨慎使用🌶", "不涉及内存修改🌶", "此处功能仅供学习交流，严禁用于商业用途，请于24小时内删除"];
+const headText3 = "🚫模拟器玩家禁止使用下面的所有功能🚫";
+const patterns = ["谨慎使用🌶", "不涉及内存修改🌶", "此处功能仅供学习交流，严禁用于商业用途，请于24小时内删除", "🚫模拟器玩家禁止使用下面的所有功能🚫"];
 const percentage = [0,0,0,0,0]
 const ringColor = {
   activate:['#cde6c7','#afdfe4','#f3704b','#45b97c','#33a3dc'],
