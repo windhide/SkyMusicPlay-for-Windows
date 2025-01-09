@@ -1,4 +1,5 @@
 import os
+import time
 
 import cv2
 import numpy as np
@@ -48,6 +49,14 @@ def get_model_position(conf):
         result_dict[label].append({"x": int(center_x), "y": int(center_y)})
     # results[0].show()
     return result_dict
+
+def test_model_position(conf):
+    resetGameFrame()
+    time.sleep(1)
+    image = get_window_screenshot()
+    model = load_model()
+    results = model(image, conf=conf)  # 替换为你的图片路径
+    results[0].show()
 
 def resetGameFrame():
     win32gui.ShowWindow(global_variable._hWnd, win32con.SW_RESTORE)  # 先恢复窗口，以防最小化

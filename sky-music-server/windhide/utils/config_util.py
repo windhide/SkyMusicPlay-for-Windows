@@ -16,7 +16,8 @@ def set_config(request: dict):
             global_variable.set_progress = float(request["value"])
         case 'play_speed':
             global_variable.play_speed = float(request["value"])
-
+        case 'is_simulator':
+            global_variable.is_simulator = request["value"]
 
 def get_config(request: dict):
     configValue = eval("global_variable." + request["name"])

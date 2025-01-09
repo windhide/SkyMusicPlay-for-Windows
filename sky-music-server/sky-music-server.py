@@ -22,6 +22,7 @@ from windhide.utils.auto_util import auto_click_fire, shutdown, auto_candles_run
 from windhide.utils.config_util import set_config, get_config, favorite_music, convert_sheet, drop_file
 from windhide.utils.follow_util import set_next_sheet, get_next_sheet
 from windhide.utils.list_util import getTypeMusicList
+from windhide.utils.ocr_screenshot_util import test_model_position
 from windhide.utils.path_util import getResourcesPath
 from windhide.utils.play_util import start, pause, resume, stop
 
@@ -111,6 +112,8 @@ def config_operate(request: dict):
             return convert_sheet(request)
         case 'drop_file':
             drop_file(request)
+        case 'drop_file':
+            drop_file(request)
     return "ok"
 
 
@@ -161,6 +164,10 @@ async def create_upload_files(file: UploadFile):
     json = await script_to_json(await file.read(),file.filename)
     await auto_candles_run("developer", json)
     return "ok"
+
+@app.post("/test")
+def test(request: dict):
+    test_model_position(float(request["conf"]))
 
 if __name__ == '__main__':
     global_variable.isProd = True

@@ -13,6 +13,7 @@ now_translate_text = []
 play_speed = 1 # 倍速
 delay_interval = 0  # 0
 sustain_time = 0.01 # 20毫秒
+is_simulator = False #是否虚拟机
 # 跟弹相关
 follow_music = ""
 follow_sheet = []

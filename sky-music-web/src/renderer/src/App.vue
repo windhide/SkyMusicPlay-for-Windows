@@ -3,7 +3,19 @@
     <n-flex id="drag-area" justify="end" style="position: fixed; z-index: 200; right: 18px" :style="{
       width: collapsed ? '90%' : '80%'
     }">
-      <n-button text :dashed="fixDashed" size="large" type="warning" style="margin-top: 12px; font-size: 20px;" @click="fixHandle">
+      <n-tooltip placement="bottom" trigger="hover">
+        <template #trigger>
+          <n-button text size="large" type="warning" style="margin-top: 12px; font-size: 20px;" :round="false"> 
+            <n-icon size="25px">
+              <Settings48Regular />
+            </n-icon> 
+          </n-button>
+        </template>
+        <span> 
+          模拟器模式 <n-switch size="small" v-model:value="isSimulator" @update:value="SimulatorChange"/>  
+        </span>
+      </n-tooltip>
+      <n-button text :dashed="fixDashed" size="large" type="warning" style="margin-top: 12px; font-size: 20px; margin-right: 3px;" @click="fixHandle">
         <n-icon size="25px">
           <Pin48Regular v-if="fixDashed" />
           <Pin48Filled v-else />
@@ -54,7 +66,7 @@
 import type { Component } from 'vue'
 import { h, onMounted, ref } from 'vue'
 import { NIcon, darkTheme, NMessageProvider } from 'naive-ui'
-import { getData } from '@renderer/utils/fetchUtils'
+import { getData, sendData } from '@renderer/utils/fetchUtils'
 import {
   CubeSharp,
   Home,
@@ -64,13 +76,12 @@ import {
   Close,
   Remove,
   Flask,
-  ImageOutline,
-  LockOpenOutline,
-  LockClosedOutline
+  ImageOutline
 } from '@vicons/ionicons5'
 import {
   Pin48Regular,
-  Pin48Filled
+  Pin48Filled,
+  Settings48Regular
 } from '@vicons/fluent'
 import router from '@renderer/router'
 
@@ -78,6 +89,7 @@ import { useRoute } from 'vue-router'
 let bronWidth = window.innerWidth
 const route = useRoute()
 const collapsed = ref(false)
+const isSimulator = ref(false)
 function fixHandle() {
   if (fixDashed.value) {
     window.api.setAlwaysOnTop();
@@ -157,6 +169,13 @@ let checkInterval = setInterval(() => {
   });
 }, 500)
 
+function SimulatorChange(value: boolean){
+  sendData("config_operate",{
+    operate:"set",
+    name:"is_simulator",
+    value
+  })
+}
 
 onMounted(() => {
   const dragArea = document.getElementById('drag-area')

@@ -34,17 +34,21 @@ def send_multiple_key_to_window_task(keys):
     time.sleep(global_variable.sustain_time)
     for key in keys:
         key_up(key)
+
+
+# 现在给模拟器和跟弹在用了
 def send_single_key_to_window_follow(key):
     """发送单个按键，减少延迟"""
     keyboard.press(key)
-    time.sleep(0.01)
+    time.sleep(global_variable.sustain_time)
     keyboard.release(key)
 
+ # 现在给模拟器和跟弹在用了
 def send_multiple_key_to_window_follow(keys):
     """发送组合按键，减少延迟"""
     for key in keys:
         keyboard.press(key)
-    time.sleep(0.01)
+    time.sleep(global_variable.sustain_time)
     for key in keys:
         keyboard.release(key)
 
@@ -57,11 +61,17 @@ def execute_in_thread(target, *args, **kwargs):
 
 def send_single_key_to_window(key):
     """发送单个按键（新线程中执行）"""
-    execute_in_thread(send_single_key_to_window_task, key)
+    if global_variable.is_simulator:
+        execute_in_thread(send_single_key_to_window_follow, key)
+    else:
+        execute_in_thread(send_single_key_to_window_task, key)
 
 def send_multiple_key_to_window(keys):
     """发送组合按键（新线程中执行）"""
-    execute_in_thread(send_multiple_key_to_window_task, keys)
+    if global_variable.is_simulator:
+        execute_in_thread(send_multiple_key_to_window_task, keys)
+    else:
+        execute_in_thread(send_multiple_key_to_window_follow, keys)
 
 def playMusic(fileName, type):
     """优化音乐播放逻辑，只加载乐谱数据一次"""

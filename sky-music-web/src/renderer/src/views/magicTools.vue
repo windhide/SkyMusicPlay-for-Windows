@@ -61,6 +61,10 @@
           </n-progress>
         </n-el>
       </n-space>
+      <n-input-number v-model:value="mathValue" clearable step="0.01"  style="margin-top: 20px;"/>
+      <n-button type="error" dashed style="margin-left: 20px;margin-top: 20px;" @click="checkFile">
+        Check
+      </n-button>
     </div>
   </div>
 </template>
@@ -80,7 +84,7 @@ const ringColor = {
   activate:['#cde6c7','#afdfe4','#f3704b','#45b97c','#33a3dc'],
   not_activate:[{ stroke: '#cde6c7', opacity: 0.2 },{ stroke: '#afdfe4', opacity: 0.2 },{ stroke: '#f3704b', opacity: 0.2 },{ stroke: '#45b97c', opacity: 0.2 },{ stroke: '#33a3dc', opacity: 0.2 }]
 }
-
+let mathValue = ref(0)
 const buttons = [
   {
     color:"#f0dc70",
@@ -128,6 +132,11 @@ function run(value: any){
   }
 }
 
+function checkFile(){
+  sendData("test",{
+    conf:mathValue.value
+  })
+}
 
 function autoClickFire(){
   window.api.system_notification("🔧🔧🔧🔧🔧", "现在开始自动点击心火")
