@@ -13,10 +13,10 @@
         </template>
         <n-switch size="small" v-model:value="isSimulator" @update:value="SimulatorChange" :rail-style="railStyle"> 
             <template #checked>
-              <p style="color: rgba(94, 104, 81, 0.65);">模拟器模式</p>
+              <p style="color: rgba(94, 104, 81, 0.65);">兼容模式</p>
             </template>
             <template #unchecked>
-              <p style="color: rgba(94, 104, 81, 0.65);">常规模式</p>
+              <p style="color: rgba(94, 104, 81, 0.65);">后台模式</p>
             </template>
           </n-switch> 
       </n-popover>
