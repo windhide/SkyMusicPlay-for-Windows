@@ -16,13 +16,14 @@ def set_config(request: dict):
             global_variable.set_progress = float(request["value"])
         case 'play_speed':
             global_variable.play_speed = float(request["value"])
-        case 'is_simulator':
-            global_variable.is_simulator = request["value"]
+        case 'compatibility_mode':
+            global_variable.compatibility_mode = request["value"]
+        case 'is_post_w':
+            global_variable.is_post_w = request["value"]
 
 def get_config(request: dict):
     configValue = eval("global_variable." + request["name"])
     return configValue
-
 
 def favorite_music(request: dict):
     src = os.path.join(getResourcesPath(request['type']), request['fileName'] + ".txt")
