@@ -154,7 +154,7 @@ const buttons = [
     value: "library"
   },{
     color:"#2ae0c8",
-    context:"挂机点我",
+    context:"挂机",
     value: "afk"
   },{
     color:"#ff0000",
