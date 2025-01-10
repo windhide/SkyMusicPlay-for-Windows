@@ -1,7 +1,6 @@
 import ctypes
 import threading
 import time
-from concurrent.futures import ThreadPoolExecutor
 from ctypes import windll
 
 import keyboard
@@ -23,10 +22,6 @@ user32 = ctypes.windll.user32
 WM_KEYDOWN = 0x100
 WM_KEYUP = 0x101
 pyautogui.FAILSAFE = False
-
-# 设置线程池的最大线程数
-MAX_THREADS = 50
-executor = ThreadPoolExecutor(max_workers=MAX_THREADS)  # 创建线程池
 
 def send_single_key_to_window_task(key):
     """发送单个按键，减少延迟"""
@@ -61,8 +56,10 @@ def send_multiple_key_to_window_follow(keys):
 
 def execute_in_thread(target, *args, **kwargs):
     """通用线程执行器，采用线程池管理"""
-    future = executor.submit(target, *args, **kwargs)  # 提交任务给线程池
-    return future
+    thread = threading.Thread(target=target, args=args, kwargs=kwargs)
+    thread.daemon = True  # 将线程设置为守护线程，程序退出时自动结束线程
+    thread.start()
+    return thread
 
 def send_single_key_to_window(key):
     """发送单个按键（新线程中执行）"""
@@ -74,9 +71,9 @@ def send_single_key_to_window(key):
 def send_multiple_key_to_window(keys):
     """发送组合按键（新线程中执行）"""
     if global_variable.compatibility_mode:
-        execute_in_thread(send_multiple_key_to_window_task, keys)
-    else:
         execute_in_thread(send_multiple_key_to_window_follow, keys)
+    else:
+        execute_in_thread(send_multiple_key_to_window_task, keys)
 
 def playMusic(fileName, type):
     """优化音乐播放逻辑，只加载乐谱数据一次"""
@@ -112,10 +109,7 @@ def click_window_position(x: int, y: int):
     window_x, window_y = window_rect[0], window_rect[1]
     client_x = window_x + x
     client_y = window_y + y
-    if is_post_w:
-        PostMessageW(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
-    else:
-        SendMessageW(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
+    win32gui.SendMessage(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
     pyautogui.moveTo(client_x, client_y, duration=0)
     pyautogui.click()
 
