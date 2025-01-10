@@ -421,7 +421,7 @@ function getProgress() {
     })
   }
   getData('getProgress').then((res) => {
-    progress.value = res.now_progress
+    progress.value = Number(res.now_progress)
     nowPlayMusic.value = res.now_play_music
   })
   return "ok"
@@ -442,6 +442,7 @@ function orderMusicPlay() {
     playBarClickHandler("start", type)
   } else {
     window.api.system_notification("😳", "列表的歌放完咯")
+    playBarClickHandler("pause","")
     playBarClickHandler("stop","")
     clearInterval(progressInterval)
     nowPlayMusic.value = "没有正在播放的歌曲哦"
