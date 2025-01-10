@@ -1,6 +1,8 @@
 import threading
 import time
+
 import plyer
+
 from windhide._global import global_variable
 from windhide.utils.ocr_screenshot_util import resetGameFrame, get_model_position
 
@@ -25,7 +27,7 @@ class HeartFireThread(threading.Thread):
         time.sleep(3)
         # 先判断是不是第一页
         while self._running:
-            friend_button = get_model_position(0.2)["button"]
+            friend_button = get_model_position(0.3)["button"]
             if len(friend_button) >= 2:
                 break
             else:
@@ -38,7 +40,7 @@ class HeartFireThread(threading.Thread):
         while True:
             if not self._running:
                 break
-            results = get_model_position(0.2)
+            results = get_model_position(0.3)
             button = results["button"]
             send_fire = results["send_fire"]
             get_fire = results["get_fire"]
