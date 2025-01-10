@@ -25,7 +25,12 @@ def startThread():
             else:
                 global_variable._hWnd = None
         elif wide and len(wide) > 0:
-            window_wide = wide[0]
+            for hwnd in wide:
+                if hwnd.title == 'Sky':
+                    window_wide = hwnd
+                    break
+                else:
+                    window_wide = None
             if is_window_alive(window_wide):
                 global_variable._hWnd = window_wide._hWnd
             else:
