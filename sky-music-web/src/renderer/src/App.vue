@@ -3,7 +3,7 @@
     <n-flex id="drag-area" justify="end" style="position: fixed; z-index: 200; right: 18px" :style="{
       width: collapsed ? '90%' : '80%'
     }">
-      <n-popover style="border-radius: 25px;" trigger="click">
+      <n-popover style="border-radius: 17px;" trigger="click">
         <template #trigger>
           <n-button text size="large" type="warning" style="margin-top: 12px; font-size: 20px;" :round="false"> 
             <n-icon size="25px">
@@ -11,7 +11,7 @@
             </n-icon> 
           </n-button>
         </template>
-        <n-switch size="small" v-model:value="isSimulator" @update:value="SimulatorChange" :rail-style="railStyle"> 
+        <n-switch size="small" v-model:value="is_compatibility_mode" @update:value="CompatibilityModeChange" :rail-style="railStyle"> 
             <template #checked>
               <p style="color: rgba(94, 104, 81, 0.65);">兼容模式</p>
             </template>
@@ -19,6 +19,15 @@
               <p style="color: rgba(94, 104, 81, 0.65);">后台模式</p>
             </template>
           </n-switch> 
+          <br>
+          <n-switch size="small" v-model:value="isPostW" @update:value="PostWChange" :rail-style="railStyle" v-show="is_compatibility_mode != true"> 
+              <template #checked>
+                <p style="color: rgba(94, 104, 81, 0.65);">队列模式</p>
+              </template>
+              <template #unchecked>
+                <p style="color: rgba(94, 104, 81, 0.65);">插队模式</p>
+              </template>
+          </n-switch>
       </n-popover>
       <n-button text :dashed="fixDashed" size="large" type="warning" style="margin-top: 12px; font-size: 20px; margin-right: 3px;" @click="fixHandle">
         <n-icon size="25px">
@@ -94,7 +103,8 @@ import { useRoute } from 'vue-router'
 let bronWidth = window.innerWidth
 const route = useRoute()
 const collapsed = ref(false)
-const isSimulator = ref(false)
+const is_compatibility_mode = ref(false)
+const isPostW = ref(true)
 function fixHandle() {
   if (fixDashed.value) {
     window.api.setAlwaysOnTop();
@@ -191,10 +201,18 @@ let checkInterval = setInterval(() => {
   });
 }, 500)
 
-function SimulatorChange(value: boolean){
+function CompatibilityModeChange(value: boolean){
   sendData("config_operate",{
     operate:"set",
-    name:"is_simulator",
+    name:"compatibility_mode",
+    value
+  })
+}
+
+function PostWChange(value: boolean){
+  sendData("config_operate",{
+    operate:"set",
+    name:"is_post_w",
     value
   })
 }
