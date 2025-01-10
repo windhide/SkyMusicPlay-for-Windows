@@ -1,13 +1,13 @@
-import time
 import threading
 import time
-
 import plyer
-
 from windhide._global import global_variable
-from windhide.playRobot._robot import click_window_position, key_press, mouse_wheel_scroll
 from windhide.utils.ocr_screenshot_util import resetGameFrame, get_model_position
 
+if global_variable.cpu_type == 'Intel':
+    from windhide.playRobot.intel_robot import click_window_position, key_press, mouse_wheel_scroll
+else:
+    from windhide.playRobot.amd_robot import click_window_position, key_press, mouse_wheel_scroll
 
 class HeartFireThread(threading.Thread):
     def __init__(self):

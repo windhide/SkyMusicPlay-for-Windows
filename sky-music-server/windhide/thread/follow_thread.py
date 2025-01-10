@@ -4,7 +4,7 @@ from pynput import keyboard
 from websocket_server import WebsocketServer
 
 from windhide._global import global_variable
-from windhide.playRobot._robot import send_single_key_to_window_follow, send_multiple_key_to_window_follow
+from windhide.playRobot.amd_robot import send_single_key_to_window_follow, send_multiple_key_to_window_follow
 from windhide.utils import hook_util
 
 hook_util.sout_null()

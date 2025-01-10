@@ -1,6 +1,7 @@
 isProd = False
 thread = None
 auto_thread = None
+cpu_type = None
 music_sheet = [] #乐谱
 now_progress  = 0 #进度条
 set_progress = -0.01 #进度条

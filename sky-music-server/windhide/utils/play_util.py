@@ -1,5 +1,5 @@
 from windhide._global import global_variable
-from windhide.playRobot import _robot
+from windhide.playRobot import intel_robot, amd_robot
 
 
 def start(request: dict):
@@ -11,7 +11,12 @@ def start(request: dict):
                 "messeage": "没检测到存活的光遇窗口"
             }
         global_variable.nowPlayMusic = request["fileName"]
-        _robot.playMusic(request["fileName"], request["type"])
+
+        match global_variable.cpu_type:
+            case "Intel":
+                intel_robot.playMusic(request["fileName"], request["type"])
+            case "AMD":
+                amd_robot.playMusic(request["fileName"], request["type"])
     except Exception as e:
         print(f"Error in /start: {str(e)}")
 
@@ -19,7 +24,12 @@ def start(request: dict):
 def pause():
     try:
         print("Pausing music")
-        _robot.pause()
+        match global_variable.cpu_type:
+            case "Intel":
+                intel_robot.pause()
+            case "AMD":
+                amd_robot.pause()
+
     except Exception as e:
         print(f"Error in /pause: {str(e)}")
 
@@ -27,7 +37,11 @@ def pause():
 def stop():
     try:
         print("Stopping music")
-        _robot.stop()
+        match global_variable.cpu_type:
+            case "Intel":
+                intel_robot.stop()
+            case "AMD":
+                amd_robot.stop()
         global_variable.nowPlayMusic = "没有正在播放的歌曲哦"
     except Exception as e:
         print(f"Error in /stop: {str(e)}")
@@ -36,6 +50,10 @@ def stop():
 def resume():
     try:
         print("Resuming music")
-        _robot.resume()
+        match global_variable.cpu_type:
+            case "Intel":
+                intel_robot.resume()
+            case "AMD":
+                amd_robot.resume()
     except Exception as e:
         print(f"Error in /resume: {str(e)}")

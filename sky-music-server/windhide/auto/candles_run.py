@@ -2,7 +2,10 @@ import time
 import threading
 
 from windhide._global import global_variable
-from windhide.playRobot._robot import key_down, key_up, mouse_wheel_scroll
+if global_variable.cpu_type == 'Intel':
+    from windhide.playRobot.intel_robot import key_down, key_up, mouse_wheel_scroll
+else:
+    from windhide.playRobot.amd_robot import key_down, key_up, mouse_wheel_scroll
 
 
 class ControlThread:

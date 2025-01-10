@@ -1,9 +1,8 @@
 import math
 import threading
 import time
-
 from windhide._global import global_variable
-from windhide.playRobot import _robot
+from windhide.playRobot import intel_robot
 
 
 class ControlledThread:
@@ -39,12 +38,10 @@ class ControlledThread:
             keys = sheet["key"]
             delay = sheet["delay"] / global_variable.play_speed
             global_variable.now_progress = index / allLength * 100
-
             if len(keys) == 1:
-                _robot.send_single_key_to_window(keys)
+                intel_robot.send_single_key_to_window(keys)
             else:
-                _robot.send_multiple_key_to_window(keys)
-
+                intel_robot.send_multiple_key_to_window(keys)
             time.sleep(delay / 1000)
             time.sleep(delay_interval)
             index += 1
