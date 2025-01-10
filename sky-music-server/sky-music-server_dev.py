@@ -18,7 +18,7 @@ from windhide.thread.follow_thread import startThread as follow_thread
 from windhide.thread.hwnd_check_thread import startThread as hwnd_check_thread
 from windhide.thread.shortcut_thread import startThread as shortcut_thread
 from windhide.utils.auto_util import auto_click_fire, shutdown, auto_candles_run
-from windhide.utils.config_util import set_config, get_config, favorite_music, convert_sheet
+from windhide.utils.config_util import set_config, get_config, favorite_music, convert_sheet, drop_file
 from windhide.utils.follow_util import set_next_sheet, get_next_sheet
 from windhide.utils.list_util import getTypeMusicList
 from windhide.utils.ocr_screenshot_util import test_model_position
@@ -149,18 +149,6 @@ def open_browser(url: str):
     webbrowser.open(url)
     return 'ok'
 
-@app.post('/dropFile')
-def drop_file(request: dict):
-    file_name = request["fileName"]
-    if file_name == None:
-        return '不ok'
-    if request.get('suffix', None) == None:
-        drop_path = os.path.join(getResourcesPath(request['type']),file_name + '.txt')
-    else:
-        drop_path = os.path.join(getResourcesPath(request['type']),file_name + request['suffix'])
-    os.remove(drop_path)
-    return 'ok'
-
 @app.get('/openFiles')
 def open_files():
     appdata_path = os.getenv('APPDATA')
@@ -191,7 +179,6 @@ async def create_upload_files(file: UploadFile):
     json = await script_to_json(await file.read(),file.filename)
     await auto_candles_run("developer", json)
     return "ok"
-
 
 @app.post("/test")
 def test(request: dict):

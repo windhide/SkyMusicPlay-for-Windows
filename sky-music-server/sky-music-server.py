@@ -114,8 +114,6 @@ def config_operate(request: dict):
             return convert_sheet(request)
         case 'drop_file':
             drop_file(request)
-        case 'drop_file':
-            drop_file(request)
     return "ok"
 
 
