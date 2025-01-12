@@ -1,0 +1,787 @@
+[
+	{
+		"name": "I want it that way Backstreet Boys ",
+		"bpm": 200,
+		"bitsPerPage": 16,
+		"pitchLevel": 1,
+		"isComposed": false,
+		"songNotes": [
+			{
+				"time": 950,
+				"key": "1Key4"
+			},
+			{
+				"time": 1558,
+				"key": "1Key2"
+			},
+			{
+				"time": 1562,
+				"key": "1Key0"
+			},
+			{
+				"time": 1566,
+				"key": "1Key7"
+			},
+			{
+				"time": 2339,
+				"key": "1Key2"
+			},
+			{
+				"time": 2345,
+				"key": "1Key0"
+			},
+			{
+				"time": 3070,
+				"key": "1Key9"
+			},
+			{
+				"time": 3553,
+				"key": "1Key3"
+			},
+			{
+				"time": 3557,
+				"key": "1Key1"
+			},
+			{
+				"time": 3560,
+				"key": "1Key5"
+			},
+			{
+				"time": 4265,
+				"key": "1Key2"
+			},
+			{
+				"time": 4268,
+				"key": "1Key4"
+			},
+			{
+				"time": 4989,
+				"key": "1Key4"
+			},
+			{
+				"time": 5480,
+				"key": "1Key2"
+			},
+			{
+				"time": 5488,
+				"key": "1Key7"
+			},
+			{
+				"time": 5493,
+				"key": "1Key0"
+			},
+			{
+				"time": 6178,
+				"key": "1Key2"
+			},
+			{
+				"time": 6192,
+				"key": "1Key0"
+			},
+			{
+				"time": 6884,
+				"key": "1Key9"
+			},
+			{
+				"time": 7326,
+				"key": "1Key1"
+			},
+			{
+				"time": 7332,
+				"key": "1Key3"
+			},
+			{
+				"time": 7338,
+				"key": "1Key5"
+			},
+			{
+				"time": 8005,
+				"key": "1Key4"
+			},
+			{
+				"time": 8008,
+				"key": "1Key2"
+			},
+			{
+				"time": 8695,
+				"key": "1Key4"
+			},
+			{
+				"time": 9170,
+				"key": "1Key2"
+			},
+			{
+				"time": 9175,
+				"key": "1Key7"
+			},
+			{
+				"time": 9179,
+				"key": "1Key0"
+			},
+			{
+				"time": 9848,
+				"key": "1Key2"
+			},
+			{
+				"time": 9861,
+				"key": "1Key0"
+			},
+			{
+				"time": 10474,
+				"key": "1Key9"
+			},
+			{
+				"time": 10907,
+				"key": "1Key1"
+			},
+			{
+				"time": 10913,
+				"key": "1Key3"
+			},
+			{
+				"time": 10936,
+				"key": "1Key5"
+			},
+			{
+				"time": 11598,
+				"key": "1Key2"
+			},
+			{
+				"time": 11602,
+				"key": "1Key4"
+			},
+			{
+				"time": 12752,
+				"key": "1Key1"
+			},
+			{
+				"time": 12762,
+				"key": "1Key3"
+			},
+			{
+				"time": 12779,
+				"key": "1Key5"
+			},
+			{
+				"time": 13481,
+				"key": "1Key7"
+			},
+			{
+				"time": 14187,
+				"key": "1Key9"
+			},
+			{
+				"time": 14645,
+				"key": "1Key1"
+			},
+			{
+				"time": 14647,
+				"key": "1Key4"
+			},
+			{
+				"time": 14651,
+				"key": "1Key8"
+			},
+			{
+				"time": 15308,
+				"key": "1Key2"
+			},
+			{
+				"time": 15310,
+				"key": "1Key7"
+			},
+			{
+				"time": 15317,
+				"key": "1Key0"
+			},
+			{
+				"time": 16014,
+				"key": "1Key4"
+			},
+			{
+				"time": 16491,
+				"key": "1Key7"
+			},
+			{
+				"time": 16495,
+				"key": "1Key2"
+			},
+			{
+				"time": 16501,
+				"key": "1Key0"
+			},
+			{
+				"time": 17162,
+				"key": "1Key2"
+			},
+			{
+				"time": 17168,
+				"key": "1Key0"
+			},
+			{
+				"time": 17811,
+				"key": "1Key9"
+			},
+			{
+				"time": 18281,
+				"key": "1Key3"
+			},
+			{
+				"time": 18284,
+				"key": "1Key1"
+			},
+			{
+				"time": 18289,
+				"key": "1Key5"
+			},
+			{
+				"time": 18927,
+				"key": "1Key2"
+			},
+			{
+				"time": 18934,
+				"key": "1Key4"
+			},
+			{
+				"time": 19544,
+				"key": "1Key4"
+			},
+			{
+				"time": 20022,
+				"key": "1Key2"
+			},
+			{
+				"time": 20030,
+				"key": "1Key0"
+			},
+			{
+				"time": 20034,
+				"key": "1Key7"
+			},
+			{
+				"time": 20674,
+				"key": "1Key2"
+			},
+			{
+				"time": 20681,
+				"key": "1Key0"
+			},
+			{
+				"time": 21272,
+				"key": "1Key9"
+			},
+			{
+				"time": 21680,
+				"key": "1Key3"
+			},
+			{
+				"time": 21686,
+				"key": "1Key5"
+			},
+			{
+				"time": 21690,
+				"key": "1Key1"
+			},
+			{
+				"time": 22310,
+				"key": "1Key0"
+			},
+			{
+				"time": 22314,
+				"key": "1Key3"
+			},
+			{
+				"time": 22317,
+				"key": "1Key8"
+			},
+			{
+				"time": 22537,
+				"key": "1Key7"
+			},
+			{
+				"time": 23000,
+				"key": "1Key9"
+			},
+			{
+				"time": 23431,
+				"key": "1Key2"
+			},
+			{
+				"time": 23437,
+				"key": "1Key4"
+			},
+			{
+				"time": 23462,
+				"key": "1Key0"
+			},
+			{
+				"time": 24075,
+				"key": "1Key2"
+			},
+			{
+				"time": 24084,
+				"key": "1Key0"
+			},
+			{
+				"time": 24775,
+				"key": "1Key9"
+			},
+			{
+				"time": 25292,
+				"key": "1Key1"
+			},
+			{
+				"time": 25299,
+				"key": "1Key3"
+			},
+			{
+				"time": 25302,
+				"key": "1Key5"
+			},
+			{
+				"time": 25971,
+				"key": "1Key2"
+			},
+			{
+				"time": 25980,
+				"key": "1Key4"
+			},
+			{
+				"time": 27073,
+				"key": "1Key3"
+			},
+			{
+				"time": 27090,
+				"key": "1Key1"
+			},
+			{
+				"time": 27093,
+				"key": "1Key5"
+			},
+			{
+				"time": 27784,
+				"key": "1Key7"
+			},
+			{
+				"time": 28467,
+				"key": "1Key9"
+			},
+			{
+				"time": 28944,
+				"key": "1Key1"
+			},
+			{
+				"time": 28947,
+				"key": "1Key4"
+			},
+			{
+				"time": 28950,
+				"key": "1Key8"
+			},
+			{
+				"time": 29665,
+				"key": "1Key0"
+			},
+			{
+				"time": 29668,
+				"key": "1Key2"
+			},
+			{
+				"time": 29671,
+				"key": "1Key7"
+			},
+			{
+				"time": 30388,
+				"key": "1Key9"
+			},
+			{
+				"time": 30652,
+				"key": "1Key11"
+			},
+			{
+				"time": 30949,
+				"key": "1Key12"
+			},
+			{
+				"time": 30958,
+				"key": "1Key0"
+			},
+			{
+				"time": 30961,
+				"key": "1Key3"
+			},
+			{
+				"time": 31457,
+				"key": "1Key11"
+			},
+			{
+				"time": 31670,
+				"key": "1Key0"
+			},
+			{
+				"time": 31697,
+				"key": "1Key3"
+			},
+			{
+				"time": 31942,
+				"key": "1Key10"
+			},
+			{
+				"time": 32190,
+				"key": "1Key9"
+			},
+			{
+				"time": 32418,
+				"key": "1Key5"
+			},
+			{
+				"time": 32433,
+				"key": "1Key3"
+			},
+			{
+				"time": 32437,
+				"key": "1Key0"
+			},
+			{
+				"time": 32440,
+				"key": "1Key8"
+			},
+			{
+				"time": 32703,
+				"key": "1Key7"
+			},
+			{
+				"time": 32920,
+				"key": "1Key3"
+			},
+			{
+				"time": 32934,
+				"key": "1Key8"
+			},
+			{
+				"time": 32942,
+				"key": "1Key1"
+			},
+			{
+				"time": 32946,
+				"key": "1Key6"
+			},
+			{
+				"time": 33666,
+				"key": "1Key4"
+			},
+			{
+				"time": 33670,
+				"key": "1Key2"
+			},
+			{
+				"time": 33675,
+				"key": "1Key9"
+			},
+			{
+				"time": 33677,
+				"key": "1Key7"
+			},
+			{
+				"time": 34406,
+				"key": "1Key9"
+			},
+			{
+				"time": 34638,
+				"key": "1Key11"
+			},
+			{
+				"time": 34902,
+				"key": "1Key3"
+			},
+			{
+				"time": 34906,
+				"key": "1Key0"
+			},
+			{
+				"time": 34910,
+				"key": "1Key12"
+			},
+			{
+				"time": 35416,
+				"key": "1Key11"
+			},
+			{
+				"time": 35622,
+				"key": "1Key3"
+			},
+			{
+				"time": 35637,
+				"key": "1Key0"
+			},
+			{
+				"time": 35890,
+				"key": "1Key10"
+			},
+			{
+				"time": 36115,
+				"key": "1Key9"
+			},
+			{
+				"time": 36361,
+				"key": "1Key8"
+			},
+			{
+				"time": 36376,
+				"key": "1Key3"
+			},
+			{
+				"time": 36381,
+				"key": "1Key0"
+			},
+			{
+				"time": 36617,
+				"key": "1Key7"
+			},
+			{
+				"time": 36877,
+				"key": "1Key1"
+			},
+			{
+				"time": 36880,
+				"key": "1Key4"
+			},
+			{
+				"time": 36883,
+				"key": "1Key6"
+			},
+			{
+				"time": 36886,
+				"key": "1Key8"
+			},
+			{
+				"time": 37580,
+				"key": "1Key4"
+			},
+			{
+				"time": 37584,
+				"key": "1Key7"
+			},
+			{
+				"time": 37588,
+				"key": "1Key9"
+			},
+			{
+				"time": 38571,
+				"key": "1Key7"
+			},
+			{
+				"time": 38836,
+				"key": "1Key7"
+			},
+			{
+				"time": 39080,
+				"key": "1Key6"
+			},
+			{
+				"time": 39308,
+				"key": "1Key3"
+			},
+			{
+				"time": 39317,
+				"key": "1Key1"
+			},
+			{
+				"time": 39322,
+				"key": "1Key5"
+			},
+			{
+				"time": 39560,
+				"key": "1Key4"
+			},
+			{
+				"time": 39828,
+				"key": "1Key11"
+			},
+			{
+				"time": 40057,
+				"key": "1Key0"
+			},
+			{
+				"time": 40060,
+				"key": "1Key3"
+			},
+			{
+				"time": 40303,
+				"key": "1Key10"
+			},
+			{
+				"time": 40513,
+				"key": "1Key9"
+			},
+			{
+				"time": 40754,
+				"key": "1Key0"
+			},
+			{
+				"time": 40757,
+				"key": "1Key3"
+			},
+			{
+				"time": 40760,
+				"key": "1Key8"
+			},
+			{
+				"time": 40987,
+				"key": "1Key7"
+			},
+			{
+				"time": 41223,
+				"key": "1Key4"
+			},
+			{
+				"time": 41226,
+				"key": "1Key1"
+			},
+			{
+				"time": 41234,
+				"key": "1Key6"
+			},
+			{
+				"time": 41237,
+				"key": "1Key8"
+			},
+			{
+				"time": 41641,
+				"key": "1Key8"
+			},
+			{
+				"time": 41872,
+				"key": "1Key7"
+			},
+			{
+				"time": 41886,
+				"key": "1Key4"
+			},
+			{
+				"time": 41888,
+				"key": "1Key9"
+			},
+			{
+				"time": 41912,
+				"key": "1Key2"
+			},
+			{
+				"time": 42214,
+				"key": "1Key8"
+			},
+			{
+				"time": 42306,
+				"key": "1Key7"
+			},
+			{
+				"time": 42834,
+				"key": "1Key4"
+			},
+			{
+				"time": 43421,
+				"key": "1Key3"
+			},
+			{
+				"time": 43425,
+				"key": "1Key1"
+			},
+			{
+				"time": 43430,
+				"key": "1Key5"
+			},
+			{
+				"time": 44161,
+				"key": "1Key7"
+			},
+			{
+				"time": 44878,
+				"key": "1Key9"
+			},
+			{
+				"time": 45329,
+				"key": "1Key1"
+			},
+			{
+				"time": 45333,
+				"key": "1Key4"
+			},
+			{
+				"time": 45340,
+				"key": "1Key8"
+			},
+			{
+				"time": 46045,
+				"key": "1Key0"
+			},
+			{
+				"time": 46066,
+				"key": "1Key7"
+			},
+			{
+				"time": 46069,
+				"key": "1Key2"
+			},
+			{
+				"time": 46741,
+				"key": "1Key4"
+			},
+			{
+				"time": 47296,
+				"key": "1Key1"
+			},
+			{
+				"time": 47414,
+				"key": "1Key3"
+			},
+			{
+				"time": 47486,
+				"key": "1Key5"
+			},
+			{
+				"time": 48242,
+				"key": "1Key7"
+			},
+			{
+				"time": 48986,
+				"key": "1Key9"
+			},
+			{
+				"time": 49395,
+				"key": "1Key1"
+			},
+			{
+				"time": 49440,
+				"key": "1Key4"
+			},
+			{
+				"time": 49561,
+				"key": "1Key8"
+			},
+			{
+				"time": 50494,
+				"key": "1Key0"
+			},
+			{
+				"time": 50523,
+				"key": "1Key2"
+			},
+			{
+				"time": 50623,
+				"key": "1Key7"
+			},
+			{
+				"time": 50972,
+				"key": "1Key9"
+			},
+			{
+				"time": 51277,
+				"key": "1Key12"
+			},
+			{
+				"time": 51644,
+				"key": "1Key14"
+			}
+		]
+	}
+]

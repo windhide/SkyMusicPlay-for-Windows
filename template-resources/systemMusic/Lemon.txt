@@ -1,1 +1,167 @@
-[{"name":"Lemon","author":"知音@深空失忆か","arrangedBy":"","transcribedBy":"","permission":"","isComposed":true,"bpm":500,"bitsPerPage":16,"pitchLevel":0,"songNotes":[{"time":120,"key":"1Key7"},{"time":360,"key":"1Key8"},{"time":600,"key":"1Key9"},{"time":1080,"key":"1Key7"},{"time":1320,"key":"1Key5"},{"time":2040,"key":"1Key8"},{"time":2520,"key":"1Key6"},{"time":3000,"key":"1Key4"},{"time":3240,"key":"1Key2"},{"time":3960,"key":"1Key6"},{"time":4440,"key":"1Key5"},{"time":4920,"key":"1Key4"},{"time":5160,"key":"1Key0"},{"time":5880,"key":"1Key4"},{"time":6360,"key":"1Key2"},{"time":7800,"key":"1Key1"},{"time":8040,"key":"1Key2"},{"time":8280,"key":"1Key3"},{"time":9240,"key":"1Key7"},{"time":9720,"key":"1Key6"},{"time":9960,"key":"1Key7"},{"time":10200,"key":"1Key4"},{"time":11160,"key":"1Key3"},{"time":11640,"key":"1Key2"},{"time":12000,"key":"1Key3"},{"time":12120,"key":"1Key1"},{"time":13080,"key":"1Key7"},{"time":13560,"key":"1Key6"},{"time":13800,"key":"1Key5"},{"time":14040,"key":"1Key6"},{"time":14880,"key":"1Key2"},{"time":15240,"key":"1Key7"},{"time":15480,"key":"1Key8"},{"time":15720,"key":"1Key9"},{"time":16200,"key":"1Key7"},{"time":16440,"key":"1Key5"},{"time":17280,"key":"1Key8"},{"time":17760,"key":"1Key6"},{"time":18240,"key":"1Key4"},{"time":18480,"key":"1Key2"},{"time":19200,"key":"1Key6"},{"time":19680,"key":"1Key5"},{"time":20160,"key":"1Key4"},{"time":20400,"key":"1Key0"},{"time":21120,"key":"1Key4"},{"time":21600,"key":"1Key2"},{"time":23040,"key":"1Key1"},{"time":23280,"key":"1Key2"},{"time":23520,"key":"1Key3"},{"time":24480,"key":"1Key4"},{"time":24960,"key":"1Key3"},{"time":25200,"key":"1Key4"},{"time":25440,"key":"1Key2"},{"time":25920,"key":"1Key4"},{"time":26400,"key":"1Key7"},{"time":26880,"key":"1Key9"},{"time":27360,"key":"1Key8"},{"time":28080,"key":"1Key8"},{"time":28320,"key":"1Key8"},{"time":28560,"key":"1Key7"},{"time":29040,"key":"1Key7"},{"time":29280,"key":"1Key7"}],"keyCount":15}]
+[
+	{
+		"name": "lemon",
+		"bpm": 200,
+		"bitsPerPage": 16,
+		"pitchLevel": 0,
+		"isComposed": false,
+		"songNotes": [
+			{
+				"time": 1185,
+				"key": "1Key7"
+			},
+			{
+				"time": 1660,
+				"key": "1Key8"
+			},
+			{
+				"time": 2756,
+				"key": "1Key9"
+			},
+			{
+				"time": 2793,
+				"key": "1Key5"
+			},
+			{
+				"time": 2812,
+				"key": "1Key2"
+			},
+			{
+				"time": 3622,
+				"key": "1Key7"
+			},
+			{
+				"time": 4500,
+				"key": "1Key5"
+			},
+			{
+				"time": 4805,
+				"key": "1Key8"
+			},
+			{
+				"time": 5885,
+				"key": "1Key8"
+			},
+			{
+				"time": 6657,
+				"key": "1Key6"
+			},
+			{
+				"time": 6694,
+				"key": "1Key4"
+			},
+			{
+				"time": 6724,
+				"key": "1Key1"
+			},
+			{
+				"time": 8076,
+				"key": "1Key4"
+			},
+			{
+				"time": 9249,
+				"key": "1Key2"
+			},
+			{
+				"time": 10609,
+				"key": "1Key6"
+			},
+			{
+				"time": 11958,
+				"key": "1Key3"
+			},
+			{
+				"time": 12084,
+				"key": "1Key5"
+			},
+			{
+				"time": 12144,
+				"key": "1Key0"
+			},
+			{
+				"time": 12767,
+				"key": "1Key4"
+			},
+			{
+				"time": 13781,
+				"key": "1Key0"
+			},
+			{
+				"time": 14564,
+				"key": "1Key4"
+			},
+			{
+				"time": 15522,
+				"key": "1Key2"
+			},
+			{
+				"time": 15683,
+				"key": "1Key0"
+			},
+			{
+				"time": 17561,
+				"key": "1Key1"
+			},
+			{
+				"time": 18212,
+				"key": "1Key2"
+			},
+			{
+				"time": 19229,
+				"key": "1Key3"
+			},
+			{
+				"time": 19255,
+				"key": "1Key1"
+			},
+			{
+				"time": 21137,
+				"key": "1Key0"
+			},
+			{
+				"time": 22229,
+				"key": "1Key7"
+			},
+			{
+				"time": 22607,
+				"key": "1Key6"
+			},
+			{
+				"time": 23068,
+				"key": "1Key7"
+			},
+			{
+				"time": 24100,
+				"key": "1Key4"
+			},
+			{
+				"time": 24183,
+				"key": "1Key0"
+			},
+			{
+				"time": 26064,
+				"key": "1Key0"
+			},
+			{
+				"time": 26164,
+				"key": "1Key2"
+			},
+			{
+				"time": 26936,
+				"key": "1Key1"
+			},
+			{
+				"time": 27741,
+				"key": "1Key2"
+			},
+			{
+				"time": 29186,
+				"key": "1Key3"
+			},
+			{
+				"time": 29294,
+				"key": "1Key1"
+			}
+		]
+	}
+]key":"1Key4"},{"time":13770,"key":"1Key2"},{"time":13770,"key":"1Key4"},{"time":14103,"key":"1Key4"},{"time":14103,"key":"1Key7"},{"time":14436,"key":"1Key7"},{"time":14436,"key":"1Key9"},{"time":14880,"key":"1Key4"},{"time":14880,"key":"1Key8"},{"time":15213,"key":"1Key4"},{"time":15213,"key":"1Key8"},{"time":15324,"key":"1Key4"},{"time":15324,"key":"1Key8"},{"time":15657,"key":"1Key2"},{"time":15657,"key":"1Key7"},{"time":15768,"key":"1Key2"},{"time":15768,"key":"1Key7"},{"time":16323,"key":"1Key4"},{"time":16656,"key":"1Key7"},{"time":16989,"key":"1Key11"},{"time":17433,"key":"1Key7"},{"time":17655,"key":"1Key8"},{"time":17766,"key":"1Key2"},{"time":17766,"key":"1Key5"},{"time":17766,"key":"1Key9"},{"time":17988,"key":"1Key7"},{"time":18099,"key":"1Key5"},{"time":18210,"key":"1Key2"},{"time":18210,"key":"1Key5"},{"time":18543,"key":"1Key8"},{"time":18765,"key":"1Key1"},{"time":18765,"key":"1Key4"},{"time":18765,"key":"1Key6"},{"time":18987,"key":"1Key4"},{"time":19098,"key":"1Key2"},{"time":19209,"key":"1Key1"},{"time":19209,"key":"1Key4"},{"time":19542,"key":"1Key6"},{"time":19764,"key":"1Key0"},{"time":19764,"key":"1Key3"},{"time":19764,"key":"1Key5"},{"time":20041,"key":"1Key4"},{"time":20207,"key":"1Key0"},{"time":20429,"key":"1Key0"},{"time":20429,"key":"1Key3"},{"time":20651,"key":"1Key4"},{"time":20873,"key":"1Key2"},{"time":21428,"key":"1Key1"},{"time":21650,"key":"1Key2"},{"time":21761,"key":"1Key0"},{"time":21761,"key":"1Key3"},{"time":22149,"key":"1Key7"},{"time":22371,"key":"1Key6"},{"time":22482,"key":"1Key7"},{"time":22593,"key":"1Key0"},{"time":22593,"key":"1Key2"},{"time":22593,"key":"1Key4"},{"time":23037,"key":"1Key3"},{"time":23259,"key":"1Key2"},{"time":23370,"key":"1Key2"},{"time":23481,"key":"1Key3"},{"time":23481,"key":"1Key5"},{"time":24036,"key":"1Key7"},{"time":24258,"key":"1Key6"},{"time":24369,"key":"1Key5"},{"time":24480,"key":"1Key2"},{"time":24480,"key":"1Key6"},{"time":24813,"key":"1Key4"},{"time":25035,"key":"1Key2"},{"time":25368,"key":"1Key7"},{"time":25590,"key":"1Key8"},{"time":25701,"key":"1Key5"},{"time":25701,"key":"1Key9"},{"time":25923,"key":"1Key2"},{"time":25923,"key":"1Key7"},{"time":26145,"key":"1Key5"},{"time":26256,"key":"1Key5"},{"time":26422,"key":"1Key8"},{"time":26644,"key":"1Key4"},{"time":26644,"key":"1Key6"},{"time":26866,"key":"1Key1"},{"time":26866,"key":"1Key4"},{"time":27088,"key":"1Key1"},{"time":27088,"key":"1Key2"},{"time":27421,"key":"1Key6"},{"time":27643,"key":"1Key0"},{"time":27643,"key":"1Key3"},{"time":27643,"key":"1Key5"},{"time":27920,"key":"1Key4"},{"time":28086,"key":"1Key0"},{"time":28474,"key":"1Key4"},{"time":28696,"key":"1Key2"},{"time":29140,"key":"1Key1"},{"time":29362,"key":"1Key2"},{"time":29473,"key":"1Key0"},{"time":29473,"key":"1Key3"},{"time":29917,"key":"1Key0"},{"time":30250,"key":"1Key0"},{"time":30250,"key":"1Key2"},{"time":30250,"key":"1Key4"},{"time":30583,"key":"1Key3"},{"time":30805,"key":"1Key4"},{"time":30916,"key":"1Key2"},{"time":30916,"key":"1Key4"},{"time":31249,"key":"1Key4"},{"time":31249,"key":"1Key7"},{"time":31582,"key":"1Key7"},{"time":31582,"key":"1Key9"},{"time":32026,"key":"1Key6"},{"time":32026,"key":"1Key8"},{"time":32248,"key":"1Key6"},{"time":32248,"key":"1Key8"},{"time":32359,"key":"1Key6"},{"time":32359,"key":"1Key8"},{"time":32581,"key":"1Key2"},{"time":32581,"key":"1Key7"},{"time":32692,"key":"1Key5"},{"time":32692,"key":"1Key7"},{"time":33247,"key":"1Key0"},{"time":33247,"key":"1Key4"},{"time":33247,"key":"1Key5"},{"time":33524,"key":"1Key6"},{"time":33635,"key":"1Key7"},{"time":33857,"key":"1Key6"},{"time":33968,"key":"1Key5"},{"time":34079,"key":"1Key0"},{"time":34079,"key":"1Key2"},{"time":34079,"key":"1Key4"},{"time":34301,"key":"1Key9"},{"time":34634,"key":"1Key9"},{"time":35189,"key":"1Key1"},{"time":35189,"key":"1Key4"},{"time":35189,"key":"1Key8"},{"time":35466,"key":"1Key9"},{"time":35688,"key":"1Key10"},{"time":35910,"key":"1Key9"},{"time":36021,"key":"1Key8"},{"time":36243,"key":"1Key0"},{"time":36243,"key":"1Key4"},{"time":36243,"key":"1Key7"},{"time":36409,"key":"1Key8"},{"time":36631,"key":"1Key1"},{"time":36631,"key":"1Key4"},{"time":37186,"key":"1Key1"},{"time":37186,"key":"1Key3"},{"time":37463,"key":"1Key4"},{"time":37574,"key":"1Key5"},{"time":37796,"key":"1Key4"},{"time":37907,"key":"1Key3"},{"time":38129,"key":"1Key0"},{"time":38129,"key":"1Key2"},{"time":38129,"key":"1Key4"},{"time":38573,"key":"1Key7"},{"time":38795,"key":"1Key7"},{"time":39017,"key":"1Key7"},{"time":39294,"key":"1Key0"},{"time":39294,"key":"1Key4"},{"time":39294,"key":"1Key6"},{"time":39849,"key":"1Key0"},{"time":39849,"key":"1Key4"},{"time":39849,"key":"1Key5"},{"time":40182,"key":"1Key0"},{"time":40182,"key":"1Key4"},{"time":40182,"key":"1Key6"},{"time":40515,"key":"1Key0"},{"time":40515,"key":"1Key4"},{"time":40515,"key":"1Key7"},{"time":40903,"key":"1Key8"},{"time":41125,"key":"1Key9"},{"time":41236,"key":"1Key8"},{"time":41458,"key":"1Key7"},{"time":41680,"key":"1Key0"},{"time":41680,"key":"1Key3"},{"time":41680,"key":"1Key5"},{"time":41791,"key":"1Key7"},{"time":42124,"key":"1Key1"},{"time":42124,"key":"1Key4"},{"time":42124,"key":"1Key9"},{"time":42235,"key":"1Key11"},{"time":42568,"key":"1Key1"},{"time":42568,"key":"1Key4"},{"time":42568,"key":"1Key8"},{"time":42679,"key":"1Key7"},{"time":43123,"key":"1Key4"},{"time":43123,"key":"1Key8"},{"time":43345,"key":"1Key9"},{"time":43456,"key":"1Key8"},{"time":43678,"key":"1Key7"},{"time":43900,"key":"1Key3"},{"time":43900,"key":"1Key5"},{"time":44011,"key":"1Key7"},{"time":44344,"key":"1Key6"},{"time":44344,"key":"1Key9"},{"time":44455,"key":"1Key11"},{"time":44788,"key":"1Key5"},{"time":44788,"key":"1Key8"},{"time":44899,"key":"1Key7"},{"time":45343,"key":"1Key1"},{"time":45343,"key":"1Key4"},{"time":45343,"key":"1Key8"},{"time":45565,"key":"1Key9"},{"time":45676,"key":"1Key8"},{"time":45898,"key":"1Key7"},{"time":46120,"key":"1Key0"},{"time":46120,"key":"1Key3"},{"time":46120,"key":"1Key5"},{"time":46231,"key":"1Key7"},{"time":46564,"key":"1Key1"},{"time":46564,"key":"1Key4"},{"time":46564,"key":"1Key9"},{"time":46786,"key":"1Key11"},{"time":47008,"key":"1Key11"},{"time":47119,"key":"1Key0"},{"time":47119,"key":"1Key4"},{"time":47119,"key":"1Key12"},{"time":47341,"key":"1Key11"},{"time":47618,"key":"1Key0"},{"time":47618,"key":"1Key4"},{"time":47618,"key":"1Key11"},{"time":47951,"key":"1Key14"},{"time":48228,"key":"1Key2"},{"time":48228,"key":"1Key6"},{"time":48228,"key":"1Key13"},{"time":48339,"key":"1Key11"},{"time":48616,"key":"1Key2"},{"time":48616,"key":"1Key6"},{"time":48616,"key":"1Key9"},{"time":48727,"key":"1Key11"},{"time":49004,"key":"1Key2"},{"time":49004,"key":"1Key6"},{"time":49004,"key":"1Key8"},{"time":49448,"key":"1Key1"},{"time":49448,"key":"1Key4"},{"time":49448,"key":"1Key8"},{"time":49670,"key":"1Key9"},{"time":49781,"key":"1Key8"},{"time":50003,"key":"1Key7"},{"time":50225,"key":"1Key0"},{"time":50225,"key":"1Key3"},{"time":50225,"key":"1Key5"},{"time":50336,"key":"1Key7"},{"time":50669,"key":"1Key1"},{"time":50669,"key":"1Key4"},{"time":50669,"key":"1Key9"},{"time":50891,"key":"1Key11"},{"time":51224,"key":"1Key1"},{"time":51224,"key":"1Key4"},{"time":51224,"key":"1Key8"},{"time":51446,"key":"1Key7"},{"time":51890,"key":"1Key0"},{"time":51890,"key":"1Key4"},{"time":51890,"key":"1Key7"},{"time":52112,"key":"1Key7"},{"time":52223,"key":"1Key8"},{"time":52445,"key":"1Key9"},{"time":52556,"key":"1Key6"},{"time":52556,"key":"1Key10"},{"time":52889,"key":"1Key7"},{"time":53222,"key":"1Key1"},{"time":53222,"key":"1Key4"},{"time":53222,"key":"1Key8"},{"time":53555,"key":"1Key6"},{"time":53888,"key":"1Key0"},{"time":53888,"key":"1Key5"},{"time":53888,"key":"1Key7"},{"time":54443,"key":"1Key0"},{"time":54443,"key":"1Key4"},{"time":54998,"key":"1Key7"},{"time":55220,"key":"1Key6"},{"time":55331,"key":"1Key0"},{"time":55331,"key":"1Key3"},{"time":55331,"key":"1Key5"},{"time":55664,"key":"1Key6"},{"time":55886,"key":"1Key0"},{"time":55886,"key":"1Key4"},{"time":55886,"key":"1Key7"},{"time":56219,"key":"1Key8"},{"time":56441,"key":"1Key0"},{"time":56441,"key":"1Key4"},{"time":56441,"key":"1Key7"},{"time":56885,"key":"1Key4"},{"time":57107,"key":"1Key0"},{"time":57107,"key":"1Key2"},{"time":57107,"key":"1Key4"},{"time":57218,"key":"1Key4"},{"time":57551,"key":"1Key0"},{"time":57551,"key":"1Key4"},{"time":57551,"key":"1Key5"},{"time":57884,"key":"1Key4"},{"time":57884,"key":"1Key8"},{"time":58328,"key":"1Key7"},{"time":58439,"key":"1Key6"},{"time":58661,"key":"1Key5"},{"time":58661,"key":"1Key7"},{"time":59216,"key":"1Key2"},{"time":59216,"key":"1Key5"},{"time":59771,"key":"1Key7"},{"time":59993,"key":"1Key6"},{"time":60104,"key":"1Key0"},{"time":60104,"key":"1Key3"},{"time":60104,"key":"1Key5"},{"time":60437,"key":"1Key6"},{"time":60659,"key":"1Key0"},{"time":60659,"key":"1Key4"},{"time":60659,"key":"1Key7"},{"time":60992,"key":"1Key8"},{"time":61214,"key":"1Key0"},{"time":61214,"key":"1Key4"},{"time":61214,"key":"1Key7"},{"time":61658,"key":"1Key4"},{"time":61991,"key":"1Key0"},{"time":61991,"key":"1Key4"},{"time":61991,"key":"1Key7"},{"time":62435,"key":"1Key8"},{"time":62768,"key":"1Key1"},{"time":62768,"key":"1Key4"},{"time":62768,"key":"1Key9"},{"time":63212,"key":"1Key10"},{"time":63545,"key":"1Key1"},{"time":63545,"key":"1Key4"},{"time":63545,"key":"1Key8"},{"time":63989,"key":"1Key7"},{"time":64322,"key":"1Key0"},{"time":64322,"key":"1Key2"},{"time":64322,"key":"1Key4"},{"time":64322,"key":"1Key7"},{"time":64988,"key":"1Key7"},{"time":65043,"key":"1Key9"},{"time":65098,"key":"1Key11"},{"time":65153,"key":"1Key14"}]}]
