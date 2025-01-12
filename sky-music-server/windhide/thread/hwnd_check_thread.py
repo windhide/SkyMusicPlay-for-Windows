@@ -19,7 +19,12 @@ def startThread():
         china = gw.getWindowsWithTitle("光·遇")
         wide = gw.getWindowsWithTitle("Sky")
         if china and len(china) > 0:
-            window_china = china[0]
+            for hwnd in wide:
+                if hwnd.title == '光·遇':
+                    window_china = hwnd
+                    break
+                else:
+                    window_china = None
             if is_window_alive(window_china):
                 global_variable._hWnd = window_china._hWnd
             else:
