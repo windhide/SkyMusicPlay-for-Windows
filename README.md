@@ -45,3 +45,4 @@
 - [MID转换思路](https://github.com/azuwis/pianotrans)
 - [最终使用模型插件](https://github.com/qiuqiangkong/piano_transcription_inference)
 - [模型来源](https://github.com/bytedance/piano_transcription)
+- [音乐伴奏人声分离](https://github.com/facebookresearch/demucs)
