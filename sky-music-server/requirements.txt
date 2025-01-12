@@ -23,3 +23,5 @@ python-multipart
 pyinstaller
 websocket_server
 piano_transcription_inference
+demucs~=4.0.1
+Jinja2~=3.1.5

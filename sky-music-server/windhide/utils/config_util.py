@@ -2,6 +2,7 @@ import os
 import shutil
 
 from windhide._global import global_variable
+from windhide.musicToSheet.music2html import generatorSheetHtml
 from windhide.utils.music_file_transelate import convert_notes_to_delayed_format
 from windhide.utils.path_util import getResourcesPath
 
@@ -33,9 +34,9 @@ def favorite_music(request: dict):
 
 def convert_sheet(request: dict):
     convert_notes_to_delayed_format(request["fileName"], request["type"])
-    convert_sheet = list(map(lambda item: item['key'], global_variable.music_sheet))
+    generatorSheetHtml(request["fileName"], list(map(lambda item: item['key'], global_variable.music_sheet)))
     global_variable.music_sheet = []
-    return convert_sheet
+    return "ok"
 
 
 def drop_file(request: dict):
