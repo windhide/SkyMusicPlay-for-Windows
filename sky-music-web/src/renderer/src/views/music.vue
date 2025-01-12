@@ -448,6 +448,10 @@ function orderMusicPlay() {
     playBarClickHandler("stop","")
     playBarClickHandler("stop","")
     clearInterval(progressInterval)
+    clearInterval(progressInterval)
+    clearInterval(progressInterval)
+    clearInterval(progressInterval)
+    clearInterval(progressInterval)
     nowPlayMusic.value = "没有正在播放的歌曲哦"
   }
 }
