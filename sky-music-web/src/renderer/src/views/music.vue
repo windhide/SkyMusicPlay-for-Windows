@@ -442,7 +442,10 @@ function orderMusicPlay() {
     playBarClickHandler("start", type)
   } else {
     window.api.system_notification("😳", "列表的歌放完咯")
-    playBarClickHandler("pause","")
+    playBarClickHandler("stop","")
+    playBarClickHandler("stop","")
+    playBarClickHandler("stop","")
+    playBarClickHandler("stop","")
     playBarClickHandler("stop","")
     clearInterval(progressInterval)
     nowPlayMusic.value = "没有正在播放的歌曲哦"
@@ -659,7 +662,7 @@ onUnmounted(() => {
   if (socket) {
     socket.close()
     socket = null
-    getData('stop')
+    playBarClickHandler("stop","")
     clearPlayInfo()
   }
 })

@@ -89,7 +89,7 @@
 
 <script lang="ts" setup>
 import { getData, sendData, getList } from "@renderer/utils/fetchUtils";
-import { h, reactive, ref, watch } from "vue";
+import { h, onUnmounted, reactive, ref, watch } from "vue";
 import { NButton, useMessage } from "naive-ui";
 const message = useMessage();
 const processFlag = ref(false);
@@ -272,6 +272,10 @@ function handleUpdateValue(value: string) {
     eval("music." + value + "=_res");
   });
 }
+
+onUnmounted(() => {
+  clearInterval(progressInterval);
+})
 </script>
 
 <style scoped>
