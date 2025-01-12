@@ -1,11 +1,14 @@
-import os
 import json
-import chardet  # 用于检测文件编码
+import os
+import re
 from concurrent.futures import ThreadPoolExecutor
-from threading import Lock
 
-# 初始化全局计数器和锁
-lock = Lock()
+import chardet  # 用于检测文件编码
+
+
+def sanitize_filename(name):
+    """清理文件名中的非法字符"""
+    return re.sub(r'[<>:"/\\\\|?*]', '_', name)
 
 def process_file(file_path, output_folder, keyword="1Key"):
     try:
@@ -14,27 +17,30 @@ def process_file(file_path, output_folder, keyword="1Key"):
             raw_data = file.read()
             detected = chardet.detect(raw_data)
             encoding = detected.get('encoding', 'utf-8')
+
         # 用检测到的编码读取文件
         with open(file_path, 'r', encoding=encoding) as file:
             content = file.read()
+
         # 检查是否包含关键词
         if keyword not in content:
             print(f"文件 {os.path.basename(file_path)} 不包含关键词 '{keyword}'")
             return
+
         # 尝试将文件内容解析为 JSON 数组
         json_data = json.loads(content)
         if isinstance(json_data, list) and len(json_data) > 0:
             first_name = json_data[0].get('name')
             if first_name:
-                # 原始文件名（无扩展名部分）
-                original_name = os.path.splitext(os.path.basename(file_path))[0]
-                new_file_name = f"{original_name}.txt"
-                new_file_path = os.path.join(output_folder, new_file_name)
+                # 清理非法字符
+                sanitized_name = sanitize_filename(first_name)
+                new_file_name = f"{sanitized_name}.txt"
+                new_file_path = os.path.join(output_folder, "genshin_" + new_file_name)
 
                 # 检查目标文件是否存在，若存在则添加序号
                 counter = 1
                 while os.path.exists(new_file_path):
-                    new_file_name = f"{original_name}_{counter}.txt"
+                    new_file_name = f"{sanitized_name}_{counter}.txt"
                     new_file_path = os.path.join(output_folder, new_file_name)
                     counter += 1
 
@@ -63,6 +69,6 @@ def process_files(input_folder, output_folder, keyword="1Key"):
 
 if __name__ == '__main__':
     # 示例用法
-    input_folder = "D:\\Desktop\\music\\original"  # 输入文件夹路径
-    output_folder = "D:\\Desktop\\music\\out"  # 输出文件夹路径
+    input_folder = "D:\\Desktop\\genshin"  # 输入文件夹路径
+    output_folder = "D:\\Desktop\\genshin_pre"  # 输出文件夹路径
     process_files(input_folder, output_folder)
