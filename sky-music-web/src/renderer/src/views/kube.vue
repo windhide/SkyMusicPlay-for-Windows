@@ -10,12 +10,24 @@
       accept=".mp3,.mp4,.flac,.mid"
       :show-file-list="false"
       @finish="handleFinish"
+      :disabled="processFlag"
     >
     <n-button type="info" ghost  color="#F2C9C4"> step1.选择音乐 </n-button>
     </n-upload>
     <n-button type="primary" ghost :loading="processFlag" @click="handleStartTranslate" style="margin-left: 25px;" color="#F2E8C4">
       step2.开始转换
     </n-button>
+    <n-upload action="#"
+      style="width: 100px; height: 34px"
+      accept=".mp3,.mp4,.flac"
+      :show-file-list="false"
+      :on-before-upload="getFilePath"
+      :disabled="processFlag"
+    >
+      <n-button type="primary" ghost color="#DDF2C4" :loading="processFlag">
+        可选.人声伴奏分离导入
+      </n-button>
+    </n-upload>
     <n-divider style="margin:0px"/>
     <n-gradient-text type="info" :size="18" style="color: #F2C9C4">
       当前任务
@@ -210,7 +222,8 @@ function handleStartTranslate() {
   processFlag.value = true;
   message.success("开始转换");
   sendData("translate", {
-    processor: "cpu",
+    operate:'translate',
+    processor: "cpu"
   })
     .then(() => {
       reloadTable();
@@ -218,8 +231,33 @@ function handleStartTranslate() {
     })
     .finally(() => {
       processFlag.value = false;
+      clearInterval(progressInterval)
     });
 }
+
+function handleStartMusicSplit(filepath){
+  if (processFlag.value) return;
+  processFlag.value = true;
+  message.success("开始分离");
+  sendData("translate", {
+    operate:'split',
+    musicPath: filepath
+  })
+  .then(() => {
+    reloadTable();
+    message.success("分离完成");
+  })
+  .finally(() => {
+    processFlag.value = false;
+    handleUpdateValue("translateOriginalMusic");
+  });
+}
+
+function getFilePath(file){
+  handleStartMusicSplit(file.file.file.path)
+  return false
+}
+
 
 function reloadTable() {
   handleUpdateValue("myTranslate");
