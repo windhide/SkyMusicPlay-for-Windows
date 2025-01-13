@@ -1,6 +1,7 @@
 import math
 import threading
 import time
+
 from windhide._global import global_variable
 from windhide.playRobot import intel_robot
 
@@ -20,8 +21,6 @@ class ControlledThread:
         local_music_sheet = global_variable.music_sheet[:]
         allLength = len(local_music_sheet) - 1
         index = 0
-        delay_interval = global_variable.delay_interval
-
         while index < len(local_music_sheet):
             if not self._running:
                 break
@@ -43,7 +42,7 @@ class ControlledThread:
             else:
                 intel_robot.send_multiple_key_to_window(keys)
             time.sleep(delay / 1000)
-            time.sleep(delay_interval)
+            time.sleep(global_variable.delay_interval)
             index += 1
 
     def start(self):
