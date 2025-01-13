@@ -3,7 +3,7 @@
     <n-divider>
       <img
         id="avatar"
-        src="https://s1.imagehub.cc/images/2024/12/10/3a2621aff049cdd9a933496dbf93d930.png"
+        src="https://s1.imagehub.cc/images/2025/01/13/47f2e793dc71cd0719575340939d814b.png"
       />
     </n-divider>
     <n-highlight
