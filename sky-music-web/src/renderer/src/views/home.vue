@@ -35,7 +35,11 @@
       }"
     />
     <n-divider>
-      <n-gradient-text type="info" :size="25" style="color:#F2C9C4"> 向我提意见 </n-gradient-text>
+      <n-gradient-text type="info" :size="25" style="color:#F2C9C4"> 
+        <n-button ghost color="#F2C9C4"  @click="blankClick('https://windhide.github.io/Sky-Music-Doc')"  style="font-size: 20px">
+          查看教使用教程
+        </n-button> 
+      </n-gradient-text>
     </n-divider>
     <n-button type="info" color="#F2C9C4" text  @click="blankClick('https://github.com/windhide/SkyMusicPlay-for-Windows/pulls')"  style="font-size: 30px">
       <n-icon>
