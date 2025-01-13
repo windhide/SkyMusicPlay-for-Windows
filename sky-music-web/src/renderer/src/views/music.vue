@@ -509,7 +509,7 @@ watch(sustainStatus, () => {
       break
     case 'random':
       sustainInterval = setInterval(() => {
-        sustainSpeed.value = (Math.random() * (0.6 - 0.02) + 0.02).toFixed(3)
+        sustainSpeed.value = (Math.random() * (1.5 - 0.5) + 0.5).toFixed(3)
       }, 1000)
       break
     case 'custom':
