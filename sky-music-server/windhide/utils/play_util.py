@@ -5,7 +5,7 @@ from windhide.playRobot import intel_robot, amd_robot
 def start(request: dict):
     try:
         print(f"Starting music: {request['fileName']} of type {request['type']}")
-        if global_variable._hWnd is None:
+        if global_variable._hWnd is None and global_variable.compatibility_mode is False:
             return {
                 "statusCode": 8008208820,
                 "messeage": "没检测到存活的光遇窗口"
