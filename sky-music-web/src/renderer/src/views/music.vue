@@ -406,19 +406,10 @@ function drag_progress_end() {
 
 function getProgress() {
   if (progress.value == 100) {
-    return clearPlayInfo().then(() => {
-      switch (selectMode.value){
-        case "order":
-          orderMusicPlay()
-          break
-        case "random":
-          randomMusicPlay()
-          break
-        case "cycle":
-          cycleMusicPlay()
-          break
-      }
-    })
+    clearPlayInfo();
+    if (selectMode.value === 'order') orderMusicPlay();
+    else if (selectMode.value === 'random') randomMusicPlay();
+    else if (selectMode.value === 'cycle') cycleMusicPlay();
   }
   getData('getProgress').then((res) => {
     progress.value = Number(res.now_progress)
@@ -434,24 +425,15 @@ function randomMusicPlay() {
   
 }
 
-function orderMusicPlay() {
+async function orderMusicPlay() {
   let struct = store.getters.getNextPlayMusic
   if (struct != null && struct != undefined) {
     nowSelectMusic.value = struct.name
     let type = struct.type
     playBarClickHandler("start", type)
   } else {
+    playBarClickHandler("stop","")
     window.api.system_notification("😳", "列表的歌放完咯")
-    playBarClickHandler("stop","")
-    playBarClickHandler("stop","")
-    playBarClickHandler("stop","")
-    playBarClickHandler("stop","")
-    playBarClickHandler("stop","")
-    clearInterval(progressInterval)
-    clearInterval(progressInterval)
-    clearInterval(progressInterval)
-    clearInterval(progressInterval)
-    clearInterval(progressInterval)
     nowPlayMusic.value = "没有正在播放的歌曲哦"
   }
 }
@@ -530,10 +512,11 @@ watch(playSpeed, () => {
 })
 
 async function clearPlayInfo() {
+  await clearInterval(progressInterval)
   nowSelectMusic.value = '没有歌曲'
+  nowPlayMusic.value = "没有正在播放的歌曲哦"
   nowState.value = 'stop'
   progress.value = 0
-  clearInterval(progressInterval)
   statusbar[0] = true
   statusbar[1] = false
   isPlay.value = false;

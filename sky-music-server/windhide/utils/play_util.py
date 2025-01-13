@@ -37,12 +37,12 @@ def pause():
 def stop():
     try:
         print("Stopping music")
+        global_variable.nowPlayMusic = "没有正在播放的歌曲哦"
         match global_variable.cpu_type:
             case "Intel":
                 intel_robot.stop()
             case "AMD":
                 amd_robot.stop()
-        global_variable.nowPlayMusic = "没有正在播放的歌曲哦"
     except Exception as e:
         print(f"Error in /stop: {str(e)}")
 
