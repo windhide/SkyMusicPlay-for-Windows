@@ -33,8 +33,6 @@ extraFiles:
     to: ".\\backend_dist"
   - from: "..\\template-resources"
     to: ".\\resources"
-  - from: "..\\ffmpeg.exe"
-    to: ".\\backend_dist\\sky-music-server\\ffmpeg.exe"
 npmRebuild: false
 publish:
   provider: generic
