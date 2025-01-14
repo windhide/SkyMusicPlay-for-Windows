@@ -345,7 +345,7 @@ function clearPlayList() {
   music.musicList = store.getters.getPlayList
 }
 
-const playBarClickHandler = (status: String, type: String) => {
+const playBarClickHandler = async (status: String, type: String) => {
   if (status === 'resume') {
     if (nowState.value == 'stop') {
       message.info("双击歌曲播放！")
@@ -363,7 +363,7 @@ const playBarClickHandler = (status: String, type: String) => {
   }
   if (status === 'stop') {
     sendData('play_operate',{"operate":"stop"})
-    clearPlayInfo()
+    await clearPlayInfo()
   }
   if (status === 'start') {
     setTimeout(() => {
@@ -404,9 +404,9 @@ function drag_progress_end() {
 }
 
 
-function getProgress() {
+async function getProgress() {
   if (progress.value == 100) {
-    clearPlayInfo();
+    await clearPlayInfo();
     if (selectMode.value === 'order') orderMusicPlay();
     else if (selectMode.value === 'random') randomMusicPlay();
     else if (selectMode.value === 'cycle') cycleMusicPlay();
@@ -645,12 +645,12 @@ function initWebSocket() {
 }
 
 initWebSocket()
-onUnmounted(() => {
+onUnmounted(async () => {
   if (socket) {
     socket.close()
     socket = null
     playBarClickHandler("stop","")
-    clearPlayInfo()
+    await clearPlayInfo()
   }
 })
 </script>
