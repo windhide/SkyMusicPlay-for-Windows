@@ -210,7 +210,7 @@ function handleStartTranslate() {
   processFlag.value = true;
   message.success("开始转换");
   sendData("translate", {
-    processor: "cpu",
+    operate: "translate",
   })
     .then(() => {
       reloadTable();

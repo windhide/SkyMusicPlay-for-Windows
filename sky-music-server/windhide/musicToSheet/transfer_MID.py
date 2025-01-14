@@ -1,20 +1,17 @@
-import time
-import torch
+from basic_pitch import ICASSP_2022_MODEL_PATH
+from basic_pitch.inference import predict_and_save
+from windhide.utils.path_util import getResourcesPath
 
-from piano_transcription_inference import PianoTranscription, sample_rate, load_audio
-
-
-def inference(input_path,output_mid_path,_cuda=False,checkpoint_path=None):
-    # Arugments & parameters
-    device = 'cuda' if _cuda and torch.cuda.is_available() else 'cpu'
-
-    # Load audio
-    (audio, _) = load_audio(input_path, sr=sample_rate, mono=True)
-
-    # Transcriptor
-    transcriptor = PianoTranscription(device=device, checkpoint_path=checkpoint_path)
-
-    # Transcribe and write out to MIDI file
-    transcribe_time = time.time()
-    transcribed_dict = transcriptor.transcribe(audio, output_mid_path)
-    print('Transcribe time: {:.3f} s'.format(time.time() - transcribe_time))
+def inference(input_path):
+    output_midi_path = getResourcesPath("translateMID")
+    try:
+        predict_and_save([  input_path ],
+            output_midi_path,
+            True,
+            False,
+            False,
+            False,
+            ICASSP_2022_MODEL_PATH
+        )
+    except Exception as e:
+        print(e)

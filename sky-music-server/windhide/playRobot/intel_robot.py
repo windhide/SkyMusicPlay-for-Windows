@@ -66,7 +66,7 @@ def send_multiple_key_to_window_follow(keys):
 def playMusic(fileName, type):
     """优化音乐播放逻辑，只加载乐谱数据一次"""
     convert_notes_to_delayed_format(fileName, type)
-    if global_variable.thread != None:
+    if global_variable.thread is not None:
         stop()
     global_variable.thread = ControlledThread()
     global_variable.thread.start()

@@ -41,9 +41,9 @@ def convert_sheet(request: dict):
 
 def drop_file(request: dict):
     file_name = request["fileName"]
-    if file_name == None:
+    if file_name is None:
         return '不ok'
-    if request.get('suffix', None) == None:
+    if request.get('suffix', None) is None:
         drop_path = os.path.join(getResourcesPath(request['type']), file_name + '.txt')
     else:
         drop_path = os.path.join(getResourcesPath(request['type']), file_name + request['suffix'])

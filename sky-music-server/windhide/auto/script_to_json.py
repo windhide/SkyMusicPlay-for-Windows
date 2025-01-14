@@ -84,7 +84,7 @@ async def script_to_json(content, file_name):
         if "mouse" not in item["key"]:
             filtered_array.append(item)
     output_json = json.dumps(filtered_array, ensure_ascii=False, indent=4)
-    filePath = path.join(getResourcesPath("systemTools"),"scriptTemplate", f"{file_name.replace(".txt","")}.json")
+    filePath = path.join(getResourcesPath("systemTools"),"scriptTemplate", file_name.replace(".txt","")+".json")
     with open(filePath, "w", encoding="utf-8") as f:
         f.write(output_json)
     return filtered_array

@@ -107,11 +107,7 @@ def translate(request: dict):
     match request["operate"]:
         case 'translate':
             try:
-                print(f"Starting translation with processor: {request['processor']}")
-                process_directory_with_progress(
-                    use_gpu=False if request["processor"] == 'cpu' else True,
-                    modelName="note_F1=0.9677_pedal_F1=0.9186.pth"
-                )
+                process_directory_with_progress()
                 return "ok"
             except Exception as e:
                 print(f"Error in /translate: {str(e)}")

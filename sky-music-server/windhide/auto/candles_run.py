@@ -10,6 +10,7 @@ else:
 
 class ControlThread:
     def __init__(self, mapSelect, json):
+        self.thread = None
         self.mapSelect = mapSelect
         self.json = json
         self.stop_event = threading.Event()  # 用于停止线程的事件

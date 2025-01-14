@@ -108,7 +108,7 @@ def process_midi_to_txt(input_path, output_path, version, time_merge_threshold=T
         f.write(json.dumps(output, indent=4))
     return 100
 
-def process_directory_with_progress(use_gpu=False, output_dir=getResourcesPath("myTranslate"), modelName=""):
+def process_directory_with_progress(output_dir=getResourcesPath("myTranslate")):
     os.makedirs(output_dir, exist_ok=True)
     files_to_process = [f for f in os.listdir(getResourcesPath("translateOriginalMusic")) if f.endswith(('.mp3', '.mp4', '.flac', '.ape', '.mid'))]
     total_files = len(files_to_process)
@@ -125,22 +125,20 @@ def process_directory_with_progress(use_gpu=False, output_dir=getResourcesPath("
         fileNameNoEnd = file.rsplit('.', 1)[0]
 
         if not file.endswith(".mid"):
-            midFilePath = os.path.join(getResourcesPath("translateMID"), fileNameNoEnd)
+            midFilePath = os.path.join(getResourcesPath("translateMID"), f"{fileNameNoEnd}_basic_pitch")
             musicFilePath = os.path.join(getResourcesPath("translateOriginalMusic"), file)
-            inference(input_path=musicFilePath, output_mid_path=midFilePath + ".mid", _cuda=use_gpu, checkpoint_path=os.path.join(getResourcesPath("systemTools"), "modelData", modelName))
+            inference(input_path=musicFilePath)
         else:
-            midFilePath = os.path.join(getResourcesPath("translateOriginalMusic"), fileNameNoEnd)
+            midFilePath = os.path.join(getResourcesPath("translateOriginalMusic"), f"{fileNameNoEnd}_basic_pitch")
 
-        process_midi_to_txt(midFilePath + ".mid", os.path.join(output_dir, f"{fileNameNoEnd}{'_标准'}.txt"),"standard")
-        process_midi_to_txt(midFilePath + ".mid", os.path.join(output_dir, f"{fileNameNoEnd}{'_降半音'}.txt"),"low_harf")
-        process_midi_to_txt(midFilePath + ".mid", os.path.join(output_dir, f"{fileNameNoEnd}{'_降调'}.txt"),"low")
-        process_midi_to_txt(midFilePath + ".mid", os.path.join(output_dir, f"{fileNameNoEnd}{'_升半音'}.txt"),"high_harf")
-        process_midi_to_txt(midFilePath + ".mid", os.path.join(output_dir, f"{fileNameNoEnd}{'_升调'}.txt"),"high")
+        process_midi_to_txt(midFilePath + ".mid", os.path.join(output_dir, f"{fileNameNoEnd}_标准.txt"),"standard")
+        process_midi_to_txt(midFilePath + ".mid", os.path.join(output_dir, f"{fileNameNoEnd}_降半音.txt"),"low_harf")
+        process_midi_to_txt(midFilePath + ".mid", os.path.join(output_dir, f"{fileNameNoEnd}_降调.txt"),"low")
+        process_midi_to_txt(midFilePath + ".mid", os.path.join(output_dir, f"{fileNameNoEnd}_升半音.txt"),"high_harf")
+        process_midi_to_txt(midFilePath + ".mid", os.path.join(output_dir, f"{fileNameNoEnd}_升调.txt"),"high")
         new_file_path = os.path.join(getResourcesPath("translateOriginalMusic"), f"{fileNameNoEnd}_ok.{file.split('.')[-1]}")
         os.rename(os.path.join(getResourcesPath("translateOriginalMusic"), file), new_file_path)
-
         print(f"已将文件 {file} 重命名为 {new_file_path}")
         global_variable.overall_progress = ((idx + 1) / total_files) * 100
-
     global_variable.tran_mid_progress = 100
     global_variable.overall_progress = 100
