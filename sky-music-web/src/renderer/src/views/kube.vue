@@ -7,7 +7,7 @@
       action="http://localhost:9899/fileUpload"
       multiple
       style="width: 100px; height: 34px"
-      accept=".mp3,.mp4,.flac,.mid"
+      accept=".mp3,.flac,.wav,.m4a,.ogg,.mid"
       :show-file-list="false"
       @finish="handleFinish"
     >
@@ -32,17 +32,6 @@
         style="max-width: 50%"
         type="line"
         :percentage="progress.overall_progress"
-        indicator-placement="inside"
-        processing
-      />
-    </div>
-    <div style="width: 100%">
-      <n-gradient-text type="info" style="color: #F2E8C4"> 当前歌曲MID转换 </n-gradient-text>
-      <n-progress
-        color="#F2E8C4"
-        style="max-width: 50%"
-        type="line"
-        :percentage="progress.tran_mid_progress"
         indicator-placement="inside"
         processing
       />
@@ -193,13 +182,12 @@ function handleFinish() {
 let progressInterval: any;
 function getProgress() {
   getData("getProgress").then((res) => {
-    progress.tran_mid_progress = res.tran_mid_progress;
     progress.overall_progress = res.overall_progress;
     now_translate_text.text = res.now_translate_text[0];
     now_translate_text.process = res.now_translate_text[1];
   });
 
-  if (progress.tran_mid_progress == "100.0" && progress.overall_progress == "100.0") {
+  if (progress.overall_progress == "100.0") {
     clearInterval(progressInterval);
   }
 }
