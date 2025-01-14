@@ -33,7 +33,7 @@ rmdir /S /Q "%script_dir%sky-music-web\backend_dist"
 :: 构建 Python 服务器
 cd "%script_dir%sky-music-server"
 call .venv\Scripts\activate
-call pyinstaller --uac-admin -w sky-music-server.py --distpath "%script_dir%sky-music-web\backend_dist" --hidden-import=main --collect-all=sklearn --collect-all=demucs
+call pyinstaller --uac-admin -w sky-music-server.py --distpath "%script_dir%sky-music-web\backend_dist" --hidden-import=main --collect-all=sklearn
 call deactivate
 
 :: 构建 Electron 应用

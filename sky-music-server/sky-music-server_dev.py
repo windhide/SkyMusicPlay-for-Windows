@@ -13,7 +13,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from windhide._global import global_variable
 from windhide.auto.script_to_json import script_to_json
 from windhide.musicToSheet.process_audio import process_directory_with_progress
-from windhide.musicToSheet.vocals_split import split_vocals
 from windhide.playRobot import amd_robot, intel_robot
 from windhide.thread.follow_thread import startThread as follow_thread
 from windhide.thread.hwnd_check_thread import startThread as hwnd_check_thread
@@ -117,8 +116,6 @@ def translate(request: dict):
             except Exception as e:
                 print(f"Error in /translate: {str(e)}")
                 return "Translation failed"
-        case 'split':
-            split_vocals(request["musicPath"])
 
 
 

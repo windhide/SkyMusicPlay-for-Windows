@@ -15,7 +15,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from windhide._global import global_variable
 from windhide.auto.script_to_json import script_to_json
 from windhide.musicToSheet.process_audio import process_directory_with_progress
-from windhide.musicToSheet.vocals_split import split_vocals
 from windhide.playRobot import amd_robot, intel_robot
 from windhide.thread.follow_thread import startThread as follow_thread
 from windhide.thread.frame_alive_thread import monitor_process
@@ -101,8 +100,6 @@ def translate(request: dict):
                 use_gpu=False if request["processor"] == 'cpu' else True,
                 modelName="note_F1=0.9677_pedal_F1=0.9186.pth"
             )
-        case 'split':
-            split_vocals(request["musicPath"])
     return "ok"
 
 
@@ -114,8 +111,6 @@ def translate(request: dict):
                 use_gpu=False if request["processor"] == 'cpu' else True,
                 modelName="note_F1=0.9677_pedal_F1=0.9186.pth"
             )
-        case 'split':
-            split_vocals(request["musicPath"])
 
 @app.post("/config_operate")
 def config_operate(request: dict):
