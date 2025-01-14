@@ -10,7 +10,7 @@ if __name__ == '__main__':
     try:
         predict_and_save(
             [
-                r"D:\Desktop\Dungeon and Fighter - 银色村庄 - silver crown.mp3"
+                r"D:\Desktop\孙燕姿 - 第一天.mp3"
             ],
             output_midi_path,
             True,

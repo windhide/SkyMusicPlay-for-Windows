@@ -8,7 +8,6 @@ set_progress = -0.01 #进度条
 nowPlayMusic = "没有正在播放的歌曲哦"
 # 音乐转换进度条
 overall_progress = 0 #总体进度
-tran_mid_progress = 0 # 转MID进度
 now_translate_text = []
 # 1秒 =1000毫秒
 play_speed = 1 # 倍速

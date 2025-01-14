@@ -11,7 +11,6 @@ def start(request: dict):
                 "messeage": "没检测到存活的光遇窗口"
             }
         global_variable.nowPlayMusic = request["fileName"]
-
         match global_variable.cpu_type:
             case "Intel":
                 intel_robot.playMusic(request["fileName"], request["type"])

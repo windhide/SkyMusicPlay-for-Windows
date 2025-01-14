@@ -66,7 +66,6 @@ def play_operate(request: dict):
 def get_progress():
     return {
         "overall_progress": f"{global_variable.overall_progress:.1f}",
-        "tran_mid_progress": f"{global_variable.tran_mid_progress:.1f}",
         "now_progress": f"{global_variable.now_progress:.1f}",
         "now_translate_text": global_variable.now_translate_text,
         "now_play_music": global_variable.nowPlayMusic
@@ -96,10 +95,7 @@ async def create_upload_files(file: UploadFile):
 def translate(request: dict):
     match request["operate"]:
         case 'translate':
-            process_directory_with_progress(
-                use_gpu=False if request["processor"] == 'cpu' else True,
-                modelName="note_F1=0.9677_pedal_F1=0.9186.pth"
-            )
+            process_directory_with_progress()
     return "ok"
 
 

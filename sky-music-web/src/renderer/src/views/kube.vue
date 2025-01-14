@@ -77,9 +77,7 @@ const music: any = reactive({
   myTranslate: [], // 扒谱的音乐
 });
 const progress: any = reactive({
-  translate_progress: 0,
   overall_progress: 0,
-  tran_mid_progress: 0,
 });
 const now_translate_text = reactive({
   process: "",
@@ -154,6 +152,12 @@ function originalClick(name) {
       handleUpdateValue("translateOriginalMusic");
       message.success("移除成功");
     });
+    sendData("config_operate", {
+      fileName: name.slice(0, name.lastIndexOf('.')).replaceAll("_ok","_basic_pitch"),
+      type: 'translateMID',
+      suffix: ".mid",
+      operate: "drop_file"
+    })
 }
 
 function translateClick(name) {
@@ -166,12 +170,6 @@ function translateClick(name) {
       handleUpdateValue("myTranslate");
       message.success("移除成功");
     });
-    sendData("config_operate", {
-      fileName: name,
-      type: 'translateMID',
-      suffix: '.mid',
-      operate: "drop_file"
-    })
 }
 
 function handleFinish() {

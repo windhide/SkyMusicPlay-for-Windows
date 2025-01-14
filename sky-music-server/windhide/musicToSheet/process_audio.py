@@ -109,6 +109,7 @@ def process_midi_to_txt(input_path, output_path, version, time_merge_threshold=T
     return 100
 
 def process_directory_with_progress(output_dir=getResourcesPath("myTranslate")):
+    global_variable.overall_progress = 0
     os.makedirs(output_dir, exist_ok=True)
     files_to_process = [f for f in os.listdir(getResourcesPath("translateOriginalMusic")) if f.endswith(('.mp3', '.mp4', '.flac', '.ape', '.mid'))]
     total_files = len(files_to_process)
@@ -121,7 +122,6 @@ def process_directory_with_progress(output_dir=getResourcesPath("myTranslate")):
         if "_ok" in file:
             continue
         global_variable.now_translate_text = [f"{idx + 1}/{total_files}", file]
-        global_variable.tran_mid_progress = 0
         fileNameNoEnd = file.rsplit('.', 1)[0]
 
         if not file.endswith(".mid"):
@@ -140,5 +140,4 @@ def process_directory_with_progress(output_dir=getResourcesPath("myTranslate")):
         os.rename(os.path.join(getResourcesPath("translateOriginalMusic"), file), new_file_path)
         print(f"已将文件 {file} 重命名为 {new_file_path}")
         global_variable.overall_progress = ((idx + 1) / total_files) * 100
-    global_variable.tran_mid_progress = 100
     global_variable.overall_progress = 100
