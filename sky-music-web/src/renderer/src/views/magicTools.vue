@@ -102,7 +102,8 @@
         </n-upload>
       </div>
       <n-divider />
-        <n-input-number v-model:value="mathValue" clearable step="0.01" style="margin-top: 20px;" />
+        <n-select v-model:value="selectValue" :options="options" style="width: 15%; margin-top: 20px;" />
+        <n-input-number v-model:value="mathValue" clearable step="0.01" style="margin-top: 20px; margin-left: 20px;" />
         <n-button type="error" dashed style="margin-left: 20px;margin-top: 20px;" @click="checkFile">
           Check
         </n-button>
@@ -127,6 +128,17 @@ const ringColor = {
   not_activate:[{ stroke: '#cde6c7', opacity: 0.2 },{ stroke: '#afdfe4', opacity: 0.2 },{ stroke: '#f3704b', opacity: 0.2 },{ stroke: '#45b97c', opacity: 0.2 },{ stroke: '#33a3dc', opacity: 0.2 }]
 }
 let mathValue = ref(0)
+let selectValue = ref("image")
+const options = [
+  {
+    label: '心火',
+    value: 'image'
+  },
+  {
+    label: '按键',
+    value: 'key'
+  }
+]
 const buttons = [
   {
     color:"#f0dc70",
@@ -184,7 +196,7 @@ function run(value: any){
 
 function checkFile(){
   sendData("test",{
-    operate:'image',
+    operate:selectValue.value,
     conf:mathValue.value
   })
 }

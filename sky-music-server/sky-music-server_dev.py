@@ -21,7 +21,7 @@ from windhide.utils.auto_util import auto_click_fire, shutdown, auto_candles_run
 from windhide.utils.config_util import set_config, get_config, favorite_music, convert_sheet, drop_file
 from windhide.utils.follow_util import set_next_sheet, get_next_sheet
 from windhide.utils.list_util import getTypeMusicList
-from windhide.utils.ocr_screenshot_util import test_model_position
+from windhide.utils.ocr_screenshot_util import test_model_position, test_key_model_position
 from windhide.utils.path_util import getResourcesPath
 from windhide.utils.play_util import start, pause, stop, resume
 
@@ -183,6 +183,8 @@ def test(request: dict):
     match request["operate"]:
         case 'image':
             test_model_position(float(request["conf"]))
+        case 'key':
+            test_key_model_position(float(request["conf"]))
         case 'press':
             match global_variable.cpu_type:
                 case 'Intel':
