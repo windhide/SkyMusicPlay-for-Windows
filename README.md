@@ -6,6 +6,10 @@
 
 小星弹琴软件是一款集多种功能于一体的音乐软件，支持演奏、转谱、谱转PDF、以及跟弹功能，欢迎进群唠嗑呀    [[点我加群]](https://qm.qq.com/q/45VZu0b5Xq)
 
+## 版权声明
+
+本项目采用 Creative Commons Attribution-NonCommercial (CC BY-NC) 许可协议。
+
 ## 项目开发环境
 
 - **Python**：3.11
@@ -37,6 +41,11 @@
 - **Python**
 - **YOLO**
 - **WebSocket**
+
+## 联系方式
+如有任何问题或建议，欢迎通过以下方式与我联系：
+邮箱：[WindHide520@gmail.com]
+GitHub：[https://github.com/windhide]
 
 ## 感谢
 
