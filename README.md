@@ -8,7 +8,7 @@
 
 ## 版权声明
 
-本项目采用 Creative Commons Attribution-NonCommercial (CC BY-NC) 许可协议。
+本项目采用 [Creative Commons Attribution-NonCommercial (CC BY-NC) 许可协议](https://creativecommons.org/licenses/by-nc/4.0/deed.zh-hans)。
 项目引用或代码引用请注明原作者出处，禁止商业用途
 
 ## 项目开发环境
