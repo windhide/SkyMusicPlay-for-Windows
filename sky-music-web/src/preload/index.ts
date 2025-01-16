@@ -35,7 +35,8 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('electron', {
       onMouseDown: (x, y) => ipcRenderer.send('mousedown', { x, y }),
       onMouseMove: (x, y) => ipcRenderer.send('mousemove', { x, y }),
-      onMouseUp: () => ipcRenderer.send('mouseup')
+      onMouseUp: () => ipcRenderer.send('mouseup'),
+      setFollowWindow: (x, y, x2, y2) => ipcRenderer.send('setFollowWindow', { x, y, x2, y2 }),
     })
   } catch (error) {
     console.error(error)
