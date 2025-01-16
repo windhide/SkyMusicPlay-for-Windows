@@ -9,6 +9,7 @@ import win32gui
 from ultralytics import YOLO
 
 from windhide._global import global_variable
+from windhide.playRobot.amd_robot import PostMessageW
 from windhide.utils.path_util import getResourcesPath
 
 # 全局变量，保存模型
@@ -108,6 +109,7 @@ def resetGameFrame():
 def get_window_screenshot():
     """获取指定窗口的截图"""
     # 获取窗口位置和大小
+    PostMessageW(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
     rect = win32gui.GetWindowRect(global_variable._hWnd)
     x1, y1, x2, y2 = rect
     # 截取窗口范围内的图像

@@ -15,7 +15,7 @@ from windhide.auto.script_to_json import script_to_json
 from windhide.musicToSheet.process_audio import process_directory_with_progress
 from windhide.playRobot import amd_robot, intel_robot
 from windhide.thread.follow_thread import startThread as follow_thread
-from windhide.thread.hwnd_check_thread import startThread as hwnd_check_thread
+from windhide.thread.hwnd_check_thread import start_thread as hwnd_check_thread
 from windhide.thread.shortcut_thread import startThread as shortcut_thread
 from windhide.utils.auto_util import auto_click_fire, shutdown, auto_candles_run
 from windhide.utils.config_util import set_config, get_config, favorite_music, convert_sheet, drop_file
