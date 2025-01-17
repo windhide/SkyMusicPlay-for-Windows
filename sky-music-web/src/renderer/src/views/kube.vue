@@ -100,7 +100,7 @@ const originalColumns = [
         NButton,
         {
           size: "medium",
-          text: false,
+          text: true,
           onClick: () => originalClick(row.name),
         },
         {
@@ -129,7 +129,7 @@ const translateColumns = [
         NButton,
         {
           size: "medium",
-          text: false,
+          text: true,
           onClick: () => translateClick(row.name),
         },
         {

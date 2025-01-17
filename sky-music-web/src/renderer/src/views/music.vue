@@ -210,12 +210,7 @@ const musicColumns = [
         NButton,
         {
           size: 'medium',
-          text:
-            music.myFavorite.filter((res) => {
-              return res.name.replaceAll('.mp3').includes(row.name)
-            }).length == 0
-              ? false
-              : true,
+          text: true,
           onClick: () => heartClick(row.name, true)
         },
         {
@@ -249,7 +244,7 @@ const favoritColumns = [
         NButton,
         {
           size: 'medium',
-          text: false,
+          text: true,
           onClick: () => heartClick(row.name, false)
         },
         {
@@ -279,7 +274,7 @@ const myImportColumns = [
         NButton,
         {
           size: 'medium',
-          text: false,
+          text: true,
           onClick: () => deleteClick(row.name)
         },
         {
