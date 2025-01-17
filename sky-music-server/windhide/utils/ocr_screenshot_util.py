@@ -62,6 +62,65 @@ def get_model_position(conf):
     return result_dict
 
 
+# def get_key_position(conf, threshold=10):
+#     image = get_window_screenshot()
+#     model = load_key_model()
+#     results = model(image, conf=conf)  # 替换为你的图片路径
+#     boxes = results[0].boxes  # 检测到的所有框
+#     xyxy = boxes.xyxy.cpu().numpy()  # 获取每个框的绝对坐标 (x1, y1, x2, y2)
+#     all_boxes = []
+#     for box in xyxy:
+#         x1, y1, x2, y2 = box
+#         width = int(x2 - x1)
+#         height = int(y2 - y1)
+#         all_boxes.append({
+#             "left": int(x1),
+#             "top": int(y1),
+#             "right": int(x2),
+#             "bottom": int(y2),
+#             "width": width,
+#             "height": height
+#         })
+#     if all_boxes:
+#         avg_width = int(sum(b["width"] for b in all_boxes) / len(all_boxes))
+#         avg_height = int(sum(b["height"] for b in all_boxes) / len(all_boxes))
+#     else:
+#         avg_width = 0
+#         avg_height = 0
+#     for box in all_boxes:
+#         box["width"] = avg_width
+#         box["height"] = avg_height
+#         box["right"] = box["left"] + avg_width
+#         box["bottom"] = box["top"] + avg_height
+#     result_dict = {}
+#     for box in all_boxes:
+#         y_key = box["top"]  # 使用上边距作为分组依据
+#         added = False
+#         for key in result_dict:
+#             if abs(key - y_key) <= threshold:  # 检查是否属于同一组
+#                 result_dict[key].append(box)
+#                 added = True
+#                 break
+#         if not added:  # 如果没有匹配的组，创建新组
+#             result_dict[y_key] = [box]
+#
+#     sorted_result = {}
+#     sorted_keys = sorted(result_dict)  # 按 y 坐标排序
+#     for idx, key in enumerate(sorted_keys):
+#         group = result_dict[key]
+#         group = sorted(group, key=lambda b: b["left"])
+#         for i in range(1, len(group)):
+#             group[i]["margin-left"] = group[i]["left"] - group[i - 1]["right"]
+#         sorted_result[key] = {
+#             "boxes": group
+#         }
+#         if idx > 0:
+#             prev_key = sorted_keys[idx - 1]
+#             prev_bottom = max(b["bottom"] for b in result_dict[prev_key])  # 上一组的最大 bottom
+#             margin_top = key - prev_bottom
+#             sorted_result[key]["margin-top"] = margin_top
+#     return sorted_result
+
 def get_key_position(conf, threshold=10):
     image = get_window_screenshot()
     model = load_key_model()
@@ -81,17 +140,6 @@ def get_key_position(conf, threshold=10):
             "width": width,
             "height": height
         })
-    if all_boxes:
-        avg_width = int(sum(b["width"] for b in all_boxes) / len(all_boxes))
-        avg_height = int(sum(b["height"] for b in all_boxes) / len(all_boxes))
-    else:
-        avg_width = 0
-        avg_height = 0
-    for box in all_boxes:
-        box["width"] = avg_width
-        box["height"] = avg_height
-        box["right"] = box["left"] + avg_width
-        box["bottom"] = box["top"] + avg_height
     result_dict = {}
     for box in all_boxes:
         y_key = box["top"]  # 使用上边距作为分组依据
@@ -103,22 +151,29 @@ def get_key_position(conf, threshold=10):
                 break
         if not added:  # 如果没有匹配的组，创建新组
             result_dict[y_key] = [box]
-
     sorted_result = {}
     sorted_keys = sorted(result_dict)  # 按 y 坐标排序
     for idx, key in enumerate(sorted_keys):
         group = result_dict[key]
         group = sorted(group, key=lambda b: b["left"])
-        for i in range(1, len(group)):
-            group[i]["margin-left"] = group[i]["left"] - group[i - 1]["right"]
-        sorted_result[key] = {
-            "boxes": group
-        }
+        avg_height = sum(b["height"] for b in group) / len(group)
+        avg_width = sum(b["width"] for b in group) / len(group)
         if idx > 0:
             prev_key = sorted_keys[idx - 1]
             prev_bottom = max(b["bottom"] for b in result_dict[prev_key])  # 上一组的最大 bottom
             margin_top = key - prev_bottom
-            sorted_result[key]["margin-top"] = margin_top
+        else:
+            margin_top = 0
+        avg_margin_left = 0
+        if len(group) > 1:
+            margins = [group[i]["left"] - group[i - 1]["right"] for i in range(1, len(group))]
+            avg_margin_left = sum(margins) / len(margins)
+        sorted_result[key] = {
+            "avg_height": avg_height,
+            "avg_width": avg_width,
+            "avg_margin_top": margin_top,
+            "avg_margin_left": avg_margin_left
+        }
     return sorted_result
 
 
