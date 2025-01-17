@@ -244,6 +244,10 @@ onMounted(() => {
   } else {
     console.error('drag-area element not found')
   }
+
+  if (bronWidth !== 800){
+    fixHandle()
+  }
 })
 </script>
 
