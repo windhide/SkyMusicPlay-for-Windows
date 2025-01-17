@@ -30,11 +30,11 @@ async def script_to_json(content, file_name):
         if event_match:
             event_type = event_match.group(1)
             # 预检查下一行是否有延迟信息
-            delay = "0"
+            delay = 0
             if i + 1 < len(lines):
                 delay_match = delay_pattern.search(lines[i + 1])
                 if delay_match:
-                    delay = delay_match.group(1)
+                    delay = int(delay_match.group(1))
                     i += 1  # 跳过已处理的延迟行
 
             # 处理鼠标事件
@@ -62,11 +62,15 @@ async def script_to_json(content, file_name):
                 i += 1
                 continue  # 跳过无法解析的行
 
-            events.append({
-                "key": key,
-                "type": type_,
-                "delay": delay
-            })
+            # 如果前一个事件与当前事件类型和键值相同，则累加延迟
+            if events and events[-1]['key'] == key and events[-1]['type'] == type_:
+                events[-1]['delay'] += delay
+            else:
+                events.append({
+                    "key": key,
+                    "type": type_,
+                    "delay": delay
+                })
         else:
             # 如果行无法解析，记录下来
             unparsed_lines.append(line)
@@ -78,13 +82,11 @@ async def script_to_json(content, file_name):
         print("无法解析的行：")
         for unparsed in unparsed_lines:
             print(unparsed)
+
     # 按原始文本顺序输出结果
-    filtered_array = []
-    for item in events:
-        if "mouse" not in item["key"]:
-            filtered_array.append(item)
-    output_json = json.dumps(filtered_array, ensure_ascii=False, indent=4)
-    filePath = path.join(getResourcesPath("systemTools"),"scriptTemplate", file_name.replace(".txt","")+".json")
+    output_json = json.dumps(events, ensure_ascii=False, indent=4)
+    filePath = path.join(getResourcesPath("systemTools"), "scriptTemplate", file_name.replace(".txt", "") + ".json")
     with open(filePath, "w", encoding="utf-8") as f:
         f.write(output_json)
-    return filtered_array
+    return events
+
