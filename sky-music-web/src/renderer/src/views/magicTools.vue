@@ -127,7 +127,7 @@ const ringColor = {
   activate:['#cde6c7','#afdfe4','#f3704b','#45b97c','#33a3dc'],
   not_activate:[{ stroke: '#cde6c7', opacity: 0.2 },{ stroke: '#afdfe4', opacity: 0.2 },{ stroke: '#f3704b', opacity: 0.2 },{ stroke: '#45b97c', opacity: 0.2 },{ stroke: '#33a3dc', opacity: 0.2 }]
 }
-let mathValue = ref(0)
+let mathValue = ref(0.5)
 let selectValue = ref("image")
 const options = [
   {
