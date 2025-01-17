@@ -62,12 +62,8 @@
         />
       </n-tab-pane>
       <template #suffix>
-        <n-input
-          v-model:value="searchText"
-          round
-          placeholder="搜索"
-          style="margin-bottom: 5px; width: 25vh"
-        >
+        <n-input v-model:value="searchText" round placeholder="搜索"
+          style="top:-4px;width: 25vh; margin-left: 5px">
           <template #suffix>
             <n-icon :component="Search" />
           </template>
