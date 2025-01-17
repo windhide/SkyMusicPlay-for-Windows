@@ -1,3 +1,4 @@
+import ctypes
 import os
 import shutil
 
@@ -54,11 +55,20 @@ def drop_file(request: dict):
 
 
 def get_game_position():
-    rect = win32gui.GetWindowRect(global_variable._hWnd)
-    # 获取窗口的客户区坐标
-    client_rect = win32gui.GetClientRect(global_variable._hWnd)
-    # 获取窗口边框和标题栏的偏移
-    border_x = rect[2] - rect[0] - client_rect[2]
-    border_y = rect[3] - rect[1] - client_rect[3]
-    # 调整坐标去掉边框和标题栏偏移
-    return (rect[0] + border_x // 2, rect[1] + border_y, rect[2] - border_x // 2, rect[3] - border_y)
+    hwnd = global_variable._hWnd
+    # 获取窗口物理坐标
+    rect = win32gui.GetWindowRect(hwnd)
+    client_rect = win32gui.GetClientRect(hwnd)
+    # 获取窗口 DPI 缩放比例
+    dpi = ctypes.c_uint()
+    ctypes.windll.shcore.GetDpiForWindow(hwnd, ctypes.byref(dpi))
+    scale_factor = dpi.value / 96.0  # DPI 标准比例为 96
+    # 计算边框和标题栏的逻辑偏移
+    border_x = (rect[2] - rect[0] - client_rect[2]) // 2
+    border_y = (rect[3] - rect[1] - client_rect[3] - border_x)
+    # 转换物理坐标为逻辑坐标，去掉边框和标题栏
+    x1 = int((rect[0] + border_x) / scale_factor)
+    y1 = int((rect[1] + border_y) / scale_factor)
+    x2 = int((rect[2] - border_x) / scale_factor)
+    y2 = int((rect[3] - border_y) / scale_factor)
+    return (x1, y1, x2, y2)

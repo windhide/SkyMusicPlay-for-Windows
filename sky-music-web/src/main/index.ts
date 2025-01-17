@@ -12,8 +12,6 @@ let modal: BrowserWindow | null = null;
 let modalWidth:any = 1100
 let modalHeight:any = 600
 app.commandLine.appendSwitch('no-sandbox');
-app.commandLine.appendSwitch("high-dpi-support", "1");
-app.commandLine.appendSwitch("force-device-scale-factor", "1");
 
 function createWindow(): void {
   // Create the browser window.
@@ -101,7 +99,6 @@ function createWindow(): void {
   ipcMain.on('mouseup', () => {
     isMousePressed = false
   })
-
 
 
   ipcMain.on('setFollowWindow', (_event, position:any) => {
