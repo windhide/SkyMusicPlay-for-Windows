@@ -54,15 +54,19 @@ def drop_file(request: dict):
     return 'ok'
 
 
+def get_system_dpi():
+    hdc = ctypes.windll.user32.GetDC(0)  # 获取屏幕设备上下文
+    dpi = ctypes.windll.gdi32.GetDeviceCaps(hdc, 88)  # LOGPIXELSX = 88
+    ctypes.windll.user32.ReleaseDC(0, hdc)  # 释放设备上下文
+    return dpi
+
 def get_game_position():
     hwnd = global_variable._hWnd
     # 获取窗口物理坐标
     rect = win32gui.GetWindowRect(hwnd)
     client_rect = win32gui.GetClientRect(hwnd)
     # 获取窗口 DPI 缩放比例
-    dpi = ctypes.c_uint()
-    ctypes.windll.shcore.GetDpiForWindow(hwnd, ctypes.byref(dpi))
-    scale_factor = dpi.value / 96.0  # DPI 标准比例为 96
+    scale_factor = get_system_dpi() / 96.0  # DPI 标准比例为 96
     # 计算边框和标题栏的逻辑偏移
     border_x = (rect[2] - rect[0] - client_rect[2]) // 2
     border_y = (rect[3] - rect[1] - client_rect[3] - border_x)

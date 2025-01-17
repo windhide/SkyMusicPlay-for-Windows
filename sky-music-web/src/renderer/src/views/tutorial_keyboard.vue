@@ -1,6 +1,6 @@
 <template>
   <div id="father">
-    <n-space style="width: 100%;" align='center' justify='center'>
+    <n-space style="width: 100%;" align='center' justify='center' :size='[0,0]'>
       <n-button
         class="buttonStyle"
         :type="isGhost_Y ? '' : 'primary'"
@@ -37,7 +37,7 @@
         >P</n-button
       >
     </n-space>
-    <n-space class="dynamicSpaceStyles" align='center' justify='center'>
+    <n-space class="dynamicSpaceStyles" align='center' justify='center' :size='[0,0]'>
       <n-button 
         class="buttonStyle"
         :type="isGhost_H ? '' : 'primary'"
@@ -74,7 +74,7 @@
         >;</n-button
       >
     </n-space>
-    <n-space class="dynamicSpaceStyles" align='center' justify='center'>
+    <n-space class="dynamicSpaceStyles" align='center' justify='center' :size='[0,0]'>
       <n-button
         class="buttonStyle"
         :type="isGhost_N ? '' : 'primary'"
@@ -236,7 +236,12 @@ let last_y = 0
 let last_width = 0
 let last_height = 0
 let moveInterval:any = null
+
 onMounted(() => {
+  document.documentElement.style.setProperty('--margin-left', `${0}px`);
+  document.documentElement.style.setProperty('--margin-top', `${0}px`);
+  document.documentElement.style.setProperty('--height', `${0}px`);
+  document.documentElement.style.setProperty('--width', `${0}px`);
   setInterval(()=>{
     sendData("config_operate",{
         operate: 'game_position'
@@ -245,19 +250,36 @@ onMounted(() => {
           const width = x2 - x;
           const height = (y2 - y) * 0.7;
           // 直接设置窗口大小和位置
-          if(x === last_x && y === last_y && x2 === last_width && y2 === last_height){
-            sendData("config_operate",{
-              operate: 'get_key_position',
-              conf: 0.85
-            }).then(postions=>{
-              console.log(postions)
-            })
-          }else{
+          if(x2 !== last_width && y2 !== last_height){
             window.electron.setFollowWindow(x, y, width, height);
             last_x = x
             last_y = y
             last_width = x2
             last_height = y2
+
+            sendData("config_operate",{
+              operate: 'get_key_position',
+              conf: 0.85
+            }).then((positions)=>{
+              let tempKey: any = 999999
+              for (const key in positions) {
+                if (positions.hasOwnProperty(key)) { // 确保排除继承的属性
+                  tempKey = key
+                }
+              }              
+              let height_and_width = (positions[tempKey]['avg_height'] + positions[tempKey]['avg_width']) / 2 * 0.9
+              let margin_left = positions[tempKey]['avg_margin_left'] / 1.38
+              let margin_top = positions[tempKey]['avg_margin_top'] / 1.75
+              console.log({
+                height_and_width,
+                margin_left,
+                margin_top
+              })
+              document.documentElement.style.setProperty('--margin-left', `${margin_left}px`);
+              document.documentElement.style.setProperty('--margin-top', `${margin_top}px`);
+              document.documentElement.style.setProperty('--height', `${height_and_width}px`);
+              document.documentElement.style.setProperty('--width', `${height_and_width}px`);
+            })
           }
       })
   },1000)
@@ -274,23 +296,22 @@ onUnmounted(() => {
   transition: 0.3s; /* 平滑过渡效果 */
 }
 #father {
-  /* 带menu 289 不带315 */
-  /* height: 289px; */
   height: 100vh;
   justify-content: center;
   align-content: center;
 }
 .buttonStyle{
-    height: 84px;
-    width: 84px;
-    font-size: 25px;
+    height: var(--height);
+    width: var(--width);
+    font-size: 0px;
 }
 
 .dynamicButtonStyles{
-    margin-left: 18px;
+    margin-left: var(--margin-left);
+    /*  */
 }
 .dynamicSpaceStyles{
-  margin-top: 35px;
+  margin-top: var(--margin-top);
 }
 
 </style>
