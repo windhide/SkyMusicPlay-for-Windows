@@ -46,9 +46,27 @@ class HeartFireThread(threading.Thread):
             get_fire = results["get_fire"]
             if len(get_fire) != 0:
                 for position in get_fire:
-                    time.sleep(0.3)
+                    time.sleep(0.1)
                     click_window_position(position["x"], position["y"])
+                results = get_model_position(0.3)
+                get_fire = results["get_fire"]
+                for position in get_fire:
+                    time.sleep(0.1)
+                    click_window_position(position["x"], position["y"])
+            #   二次检测
             if len(send_fire) != 0:
+                for position in send_fire:
+                    if not self._running:
+                        break
+                    time.sleep(1)
+                    click_window_position(position["x"], position["y"])
+                    time.sleep(3.5)
+                    key_press("f")
+                    time.sleep(1)
+                    key_press("ESC")
+                # 二次检测
+                results = get_model_position(0.3)
+                send_fire = results["send_fire"]
                 for position in send_fire:
                     if not self._running:
                         break
