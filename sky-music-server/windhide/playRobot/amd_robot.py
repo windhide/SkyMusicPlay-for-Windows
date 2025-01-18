@@ -103,7 +103,7 @@ def stop():
 
 #  点击，按下
 
-def click_window_position(x: int, y: int):
+def mouse_move_to(x: int, y: int):
     # 获取窗口的屏幕位置
     window_rect = win32gui.GetWindowRect(global_variable._hWnd)  # 返回 (left, top, right, bottom)
     window_x, window_y = window_rect[0], window_rect[1]
@@ -111,7 +111,6 @@ def click_window_position(x: int, y: int):
     client_y = window_y + y
     win32gui.SendMessage(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
     pyautogui.moveTo(client_x, client_y, duration=0)
-    pyautogui.click()
 
 #  核心
 def key_press(key: str):
@@ -152,6 +151,7 @@ def key_down(key: str):
         SendMessageW(global_variable._hWnd, WM_KEYDOWN, vk_code, lparam)
 
 def key_up(key: str):
+    set_us_keyboard_layout()
     key = key.lower()
     if key in special_keys:
         vk_code, scan_code = special_keys[key]

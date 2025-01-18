@@ -22,7 +22,7 @@ from windhide.utils.config_util import set_config, get_config, favorite_music, c
     get_game_position
 from windhide.utils.follow_util import set_next_sheet, get_next_sheet
 from windhide.utils.list_util import getTypeMusicList
-from windhide.utils.ocr_screenshot_util import test_model_position, test_key_model_position, get_key_position
+from windhide.utils.ocr_screenshot_util import get_friend_model_position, test_key_model_position, get_key_position
 from windhide.utils.path_util import getResourcesPath
 from windhide.utils.play_util import start, pause, stop, resume
 
@@ -187,7 +187,7 @@ async def create_upload_files(file: UploadFile):
 def test(request: dict):
     match request["operate"]:
         case 'image':
-            test_model_position(float(request["conf"]))
+            return get_friend_model_position(float(request["conf"]), isTest=True)
         case 'key':
             print(get_key_position(float(request["conf"])))
             test_key_model_position(float(request["conf"]))

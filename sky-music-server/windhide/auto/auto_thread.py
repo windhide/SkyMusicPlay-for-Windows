@@ -4,12 +4,12 @@ import time
 import plyer
 
 from windhide._global import global_variable
-from windhide.utils.ocr_screenshot_util import resetGameFrame, get_model_position
+from windhide.utils.ocr_screenshot_util import resetGameFrame, get_friend_model_position
 
 if global_variable.cpu_type == 'Intel':
-    from windhide.playRobot.intel_robot import click_window_position, key_press, mouse_wheel_scroll
+    from windhide.playRobot.intel_robot import mouse_move_to, key_press, mouse_wheel_scroll
 else:
-    from windhide.playRobot.amd_robot import click_window_position, key_press, mouse_wheel_scroll
+    from windhide.playRobot.amd_robot import mouse_move_to, key_press, mouse_wheel_scroll
 
 class HeartFireThread(threading.Thread):
     def __init__(self):
@@ -27,7 +27,7 @@ class HeartFireThread(threading.Thread):
         time.sleep(3)
         # 先判断是不是第一页
         while self._running:
-            friend_button = get_model_position(0.3)["button"]
+            friend_button = get_friend_model_position(0.11)["button"]
             if len(friend_button) >= 2:
                 break
             else:
@@ -40,43 +40,29 @@ class HeartFireThread(threading.Thread):
         while True:
             if not self._running:
                 break
-            results = get_model_position(0.3)
+            results = get_friend_model_position(0.11)
             button = results["button"]
-            send_fire = results["send_fire"]
-            get_fire = results["get_fire"]
-            if len(get_fire) != 0:
-                for position in get_fire:
-                    time.sleep(0.1)
-                    click_window_position(position["x"], position["y"])
-                results = get_model_position(0.3)
-                get_fire = results["get_fire"]
-                for position in get_fire:
-                    time.sleep(0.1)
-                    click_window_position(position["x"], position["y"])
-            #   二次检测
-            if len(send_fire) != 0:
-                for position in send_fire:
+            friend = results["friend"]
+            if len(friend) != 0:
+                for position in friend:
                     if not self._running:
                         break
                     time.sleep(1)
-                    click_window_position(position["x"], position["y"])
-                    time.sleep(3.5)
-                    key_press("f")
-                    time.sleep(1)
-                    key_press("ESC")
-                # 二次检测
-                results = get_model_position(0.3)
-                send_fire = results["send_fire"]
-                for position in send_fire:
-                    if not self._running:
-                        break
-                    time.sleep(1)
-                    click_window_position(position["x"], position["y"])
-                    time.sleep(3.5)
+                    mouse_move_to(position[0], position[1])
+                    key_press("space")
+                    time.sleep(0.5)
+                    key_press("space")
+                    time.sleep(1.5)
+                    # send_single_key_to_window_follow("left")
+                    # 这里改成鼠标移动点击，无法识别方向键
+                    time.sleep(0.8)
+                    key_press("space")
+                    time.sleep(0.8)
                     key_press("f")
                     time.sleep(1)
                     key_press("ESC")
                 # 下一页
+                time.sleep(1.5)
                 key_press("c")
                 time.sleep(3)
             else:
