@@ -1,110 +1,110 @@
 <template>
   <div id="father">
-    <n-space style="width: 100%;" align='center' justify='center' :size='[0,0]'>
+    <n-space style="width: 100%;" align='center' justify='center'>
       <n-button
-        class="buttonStyle"
+        class="dynamicButtonStyles"
         :type="isGhost_Y ? '' : 'primary'"
         :ghost="isGhost_Y"
         :style="!isGhost_Y ? '--n-border: 3px solid #63e2b7' : null"
         >Y</n-button
       >
       <n-button
-        class="dynamicButtonStyles buttonStyle"
+        class="dynamicButtonStyles"
         :type="isGhost_U ? '' : 'primary'"
         :ghost="isGhost_U"
         :style="!isGhost_U ? '--n-border: 3px solid #63e2b7' : null"
         >U</n-button
       >
       <n-button
-        class="dynamicButtonStyles buttonStyle"
+        class="dynamicButtonStyles"
         :type="isGhost_I ? '' : 'primary'"
         :ghost="isGhost_I"
         :style="!isGhost_I ? '--n-border: 3px solid #63e2b7' : null"
         >I</n-button
       >
       <n-button
-        class="dynamicButtonStyles buttonStyle"
+        class="dynamicButtonStyles"
         :type="isGhost_O ? '' : 'primary'"
         :ghost="isGhost_O"
         :style="!isGhost_O ? '--n-border: 3px solid #63e2b7' : null"
         >O</n-button
       >
       <n-button
-        class="dynamicButtonStyles buttonStyle"
+        class="dynamicButtonStyles"
         :type="isGhost_P ? '' : 'primary'"
         :ghost="isGhost_P"
         :style="!isGhost_P ? '--n-border: 3px solid #63e2b7' : null"
         >P</n-button
       >
     </n-space>
-    <n-space class="dynamicSpaceStyles" align='center' justify='center' :size='[0,0]'>
+    <n-space class="dynamicSpaceStyles" align='center' justify='center'>
       <n-button 
-        class="buttonStyle"
+        class="dynamicButtonStyles"
         :type="isGhost_H ? '' : 'primary'"
         :ghost="isGhost_H"
         :style="!isGhost_H ? '--n-border: 3px solid #63e2b7' : null"
         >H</n-button
       >
       <n-button 
-        class="dynamicButtonStyles buttonStyle"
+        class="dynamicButtonStyles"
         :type="isGhost_J ? '' : 'primary'"
         :ghost="isGhost_J"
         :style="!isGhost_J ? '--n-border: 3px solid #63e2b7' : null"
         >J</n-button
       >
       <n-button
-        class="dynamicButtonStyles buttonStyle"
+        class="dynamicButtonStyles"
         :type="isGhost_K ? '' : 'primary'"
         :ghost="isGhost_K"
         :style="!isGhost_K ? '--n-border: 3px solid #63e2b7' : null"
         >K</n-button
       >
       <n-button 
-        class="dynamicButtonStyles buttonStyle"
+        class="dynamicButtonStyles"
         :type="isGhost_L ? '' : 'primary'"
         :ghost="isGhost_L"
         :style="!isGhost_L ? '--n-border: 3px solid #63e2b7' : null"
         >L</n-button
       >
       <n-button
-        class="dynamicButtonStyles buttonStyle"
+        class="dynamicButtonStyles"
         :type="isGhost_LL ? '' : 'primary'"
         :ghost="isGhost_LL"
         :style="!isGhost_LL ? '--n-border: 3px solid #63e2b7' : null"
         >;</n-button
       >
     </n-space>
-    <n-space class="dynamicSpaceStyles" align='center' justify='center' :size='[0,0]'>
+    <n-space class="dynamicSpaceStyles" align='center' justify='center'>
       <n-button
-        class="buttonStyle"
+        class="dynamicButtonStyles"
         :type="isGhost_N ? '' : 'primary'"
         :ghost="isGhost_N"
         :style="!isGhost_N ? '--n-border: 3px solid #63e2b7' : null"
         >N</n-button
       >
       <n-button
-        class="dynamicButtonStyles buttonStyle"
+        class="dynamicButtonStyles"
         :type="isGhost_M ? '' : 'primary'"
         :ghost="isGhost_M"
         :style="!isGhost_M ? '--n-border: 3px solid #63e2b7' : null"
         >M</n-button
       >
       <n-button
-        class="dynamicButtonStyles buttonStyle" 
+        class="dynamicButtonStyles" 
         :type="isGhost_BB ? '' : 'primary'"
         :ghost="isGhost_BB"
         :style="!isGhost_BB ? '--n-border: 3px solid #63e2b7' : null"
         >,</n-button
       >
       <n-button
-        class="dynamicButtonStyles buttonStyle"
+        class="dynamicButtonStyles"
         :type="isGhost_NN ? '' : 'primary'"
         :ghost="isGhost_NN"
         :style="!isGhost_NN ? '--n-border: 3px solid #63e2b7' : null"
         >.</n-button
       >
       <n-button
-        class="dynamicButtonStyles buttonStyle"
+        class="dynamicButtonStyles"
         :type="isGhost_MM ? '' : 'primary'"
         :ghost="isGhost_MM"
         :style="!isGhost_MM ? '--n-border: 3px solid #63e2b7' : null"
@@ -115,7 +115,7 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, onUnmounted, ref } from 'vue'
+import {ref } from 'vue'
 import { sendData } from '@renderer/utils/fetchUtils'
 const isGhost_Y: any = ref(true)
 const isGhost_U: any = ref(true)
@@ -230,65 +230,6 @@ function getNextKey(pass) {
 }
 getNextKey(false)
 
-//  记录上一次坐标如果改动了才进行识别，节约资源
-let last_x = 0
-let last_y = 0
-let last_width = 0
-let last_height = 0
-let moveInterval:any = null
-
-onMounted(() => {
-  document.documentElement.style.setProperty('--margin-left', `${0}px`);
-  document.documentElement.style.setProperty('--margin-top', `${0}px`);
-  document.documentElement.style.setProperty('--height', `${0}px`);
-  document.documentElement.style.setProperty('--width', `${0}px`);
-  setInterval(()=>{
-    sendData("config_operate",{
-        operate: 'game_position'
-      }).then(res=>{
-          const [x, y, x2, y2] = res;
-          const width = x2 - x;
-          const height = (y2 - y) * 0.7;
-          // 直接设置窗口大小和位置
-          if(x2 !== last_width && y2 !== last_height){
-            window.electron.setFollowWindow(x, y, width, height);
-            last_x = x
-            last_y = y
-            last_width = x2
-            last_height = y2
-
-            sendData("config_operate",{
-              operate: 'get_key_position',
-              conf: 0.85
-            }).then((positions)=>{
-              let tempKey: any = 999999
-              for (const key in positions) {
-                if (positions.hasOwnProperty(key)) { // 确保排除继承的属性
-                  tempKey = key
-                }
-              }              
-              let height_and_width = (positions[tempKey]['avg_height'] + positions[tempKey]['avg_width']) / 2 * 0.9
-              let margin_left = positions[tempKey]['avg_margin_left'] / 1.38
-              let margin_top = positions[tempKey]['avg_margin_top'] / 1.75
-              console.log({
-                height_and_width,
-                margin_left,
-                margin_top
-              })
-              document.documentElement.style.setProperty('--margin-left', `${margin_left}px`);
-              document.documentElement.style.setProperty('--margin-top', `${margin_top}px`);
-              document.documentElement.style.setProperty('--height', `${height_and_width}px`);
-              document.documentElement.style.setProperty('--width', `${height_and_width}px`);
-            })
-          }
-      })
-  },1000)
-})
-
-onUnmounted(() => {
-  clearInterval(moveInterval)
-})
-
 </script>
 
 <style scoped>
@@ -296,22 +237,21 @@ onUnmounted(() => {
   transition: 0.3s; /* 平滑过渡效果 */
 }
 #father {
+  /* 带menu 289 不带315 */
+  /* height: 289px; */
   height: 100vh;
   justify-content: center;
   align-content: center;
 }
-.buttonStyle{
-    height: var(--height);
-    width: var(--width);
-    font-size: 0px;
-}
 
 .dynamicButtonStyles{
-    margin-left: var(--margin-left);
-    /*  */
+    height: 140px;
+    width: 140px;
+    margin-left: 33px;
+    font-size: 25px;
 }
 .dynamicSpaceStyles{
-  margin-top: var(--margin-top);
+  margin-top: 54px;
 }
 
 </style>

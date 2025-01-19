@@ -11,6 +11,7 @@ let modal: BrowserWindow | null = null;
 
 let modalWidth:any = 1100
 let modalHeight:any = 600
+
 app.commandLine.appendSwitch('no-sandbox');
 
 function createWindow(): void {
@@ -62,6 +63,8 @@ function createWindow(): void {
     } else if (senderWebContents === modal?.webContents) {
       bounds = modal?.getBounds()
     }
+
+
     if (bounds) {
       isMousePressed = true
       offsetX = cursorPoint.x - bounds.x // 精确鼠标偏移量
@@ -71,6 +74,7 @@ function createWindow(): void {
 
   ipcMain.on('mousemove', (event) => {
     const senderWebContents = event.sender;  // 获取发送消息的 webContents
+
     if (senderWebContents === mainWindow?.webContents) {
       if (isMousePressed && mainWindow) {
         const cursorPoint = screen.getCursorScreenPoint()
@@ -98,18 +102,6 @@ function createWindow(): void {
 
   ipcMain.on('mouseup', () => {
     isMousePressed = false
-  })
-
-
-  ipcMain.on('setFollowWindow', (_event, position:any) => {
-      modalHeight = position["y2"]
-      modalWidth = position["x2"]
-      modal?.setBounds({
-        x:position["x"],
-        y:position["y"],
-        width: modalWidth,
-        height: modalHeight
-      })
   })
 
   ipcMain.on('window-min', (event) => {

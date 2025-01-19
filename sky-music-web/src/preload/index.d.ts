@@ -15,7 +15,6 @@ declare global {
       onMouseDown: (x, y) => void;
       onMouseMove: (x, y) => void;
       onMouseUp: ()=> void;
-      setFollowWindow: (x, y, x2, y2) => void;
   }
   }
 }
