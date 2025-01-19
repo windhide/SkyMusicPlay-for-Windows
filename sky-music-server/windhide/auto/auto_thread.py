@@ -2,6 +2,7 @@ import threading
 import time
 
 import plyer
+from pynput.keyboard import Controller, Key
 
 from windhide._global import global_variable
 from windhide.utils.ocr_screenshot_util import resetGameFrame, get_friend_model_position
@@ -11,6 +12,7 @@ if global_variable.cpu_type == 'Intel':
 else:
     from windhide.playRobot.amd_robot import mouse_move_to, key_press, mouse_wheel_scroll
 
+keyboard = Controller()
 class HeartFireThread(threading.Thread):
     def __init__(self):
         super().__init__()
@@ -50,14 +52,9 @@ class HeartFireThread(threading.Thread):
                     time.sleep(1)
                     mouse_move_to(position[0], position[1])
                     key_press("space")
-                    time.sleep(0.5)
+                    time.sleep(0.2)
                     key_press("space")
                     time.sleep(1.5)
-                    # send_single_key_to_window_follow("left")
-                    # 这里改成鼠标移动点击，无法识别方向键
-                    time.sleep(0.8)
-                    key_press("space")
-                    time.sleep(0.8)
                     key_press("f")
                     time.sleep(1)
                     key_press("ESC")
@@ -89,3 +86,9 @@ class HeartFireThread(threading.Thread):
         with self._lock:
             if not self._running:
                 raise StopIteration("线程已停止")
+
+
+def press_left():
+    keyboard.press(Key.left)
+    time.sleep(0.1)
+    keyboard.release(Key.left)
