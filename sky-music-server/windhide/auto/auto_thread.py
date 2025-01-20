@@ -52,7 +52,7 @@ class HeartFireThread(threading.Thread):
                     time.sleep(1)
                     mouse_move_to(position[0], position[1])
                     key_press("space")
-                    time.sleep(0.2)
+                    time.sleep(0.1)
                     key_press("space")
                     time.sleep(1.5)
                     key_press("f")
