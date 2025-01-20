@@ -428,6 +428,7 @@ async function orderMusicPlay() {
     let type = struct.type
     playBarClickHandler("start", type)
   } else {
+    clearInterval(progressInterval)
     playBarClickHandler("stop","")
     window.api.system_notification("😳", "列表的歌放完咯")
     nowPlayMusic.value = "没有正在播放的歌曲哦"
