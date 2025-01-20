@@ -1,7 +1,6 @@
 import json
 import logging
 import os
-import sys
 import threading
 import time
 import webbrowser
@@ -17,19 +16,15 @@ from windhide.auto.script_to_json import script_to_json
 from windhide.musicToSheet.process_audio import process_directory_with_progress
 from windhide.playRobot import amd_robot, intel_robot
 from windhide.thread.follow_thread import startThread as follow_thread
-from windhide.thread.frame_alive_thread import monitor_process
 from windhide.thread.hwnd_check_thread import start_thread as hwnd_check_thread
 from windhide.thread.shortcut_thread import startThread as shortcut_thread
 from windhide.utils.auto_util import auto_click_fire, shutdown, auto_candles_run
 from windhide.utils.config_util import set_config, get_config, favorite_music, convert_sheet, drop_file
 from windhide.utils.follow_util import set_next_sheet, get_next_sheet
 from windhide.utils.list_util import getTypeMusicList
-from windhide.utils.ocr_screenshot_util import test_model_position
+from windhide.utils.ocr_screenshot_util import get_friend_model_position, test_key_model_position, get_key_position
 from windhide.utils.path_util import getResourcesPath
-from windhide.utils.play_util import start, pause, resume, stop
-
-# 关闭print的输出
-sys.stdout = open(os.devnull, 'w')
+from windhide.utils.play_util import start, pause, stop, resume
 
 # 避开与光遇相同核心运行
 process = psutil.Process(os.getpid())
@@ -42,13 +37,13 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # 允许的源，可根据需求设置特定地址或使用 ["*"] 允许所有
     allow_credentials=True,  # 允许携带认证信息（如 Cookies）
-    allow_methods=["*"],     # 允许的 HTTP 方法（如 GET、POST）
-    allow_headers=["*"],     # 允许的 HTTP 请求头
+    allow_methods=["*"],  # 允许的 HTTP 方法（如 GET、POST）
+    allow_headers=["*"],  # 允许的 HTTP 请求头
 )
 
 @app.get("/")
-async def get_list(listName: str,searchStr: str):
-    return getTypeMusicList(listName,searchStr)
+async def get_list(listName: str, searchStr: str):
+    return getTypeMusicList(listName, searchStr)
 
 @app.post("/play_operate")
 def play_operate(request: dict):
@@ -73,8 +68,6 @@ def get_progress():
 
 @app.post("/fileUpload")
 async def create_upload_files(file: UploadFile):
-    print(file.filename)
-    # 将上传的文件保存到服务本地
     path = os.path.join(getResourcesPath("translateOriginalMusic"), f'{file.filename}')
     with open(path, 'wb') as f:
         for chunk in iter(lambda: file.file.read(1024), b''):
@@ -83,8 +76,6 @@ async def create_upload_files(file: UploadFile):
 
 @app.post("/userMusicUpload")
 async def create_upload_files(file: UploadFile):
-    print(file.filename)
-    # 将上传的文件保存到服务本地
     path = os.path.join(getResourcesPath("myImport"), f'{file.filename}')
     with open(path, 'wb') as f:
         for chunk in iter(lambda: file.file.read(1024), b''):
@@ -99,14 +90,6 @@ def translate(request: dict):
     return "ok"
 
 
-@app.post("/translate")
-def translate(request: dict):
-    match request["operate"]:
-        case 'translate':
-            process_directory_with_progress(
-                use_gpu=False if request["processor"] == 'cpu' else True,
-                modelName="note_F1=0.9677_pedal_F1=0.9186.pth"
-            )
 
 @app.post("/config_operate")
 def config_operate(request: dict):
@@ -121,8 +104,9 @@ def config_operate(request: dict):
             return convert_sheet(request)
         case 'drop_file':
             drop_file(request)
+        case 'get_key_position':
+            return get_key_position(float(request["conf"]))
     return "ok"
-
 
 @app.post("/follow")
 def follow(request: dict):
@@ -153,8 +137,6 @@ def get_update():
         global_variable.isShow = True
         if response.status_code == 200:
             return json.loads(response.text)
-        else:
-            print(f'请求失败，状态码：{response.status_code}')
         return "404"
 
 #  下面放识别相关的调用
@@ -176,7 +158,9 @@ async def create_upload_files(file: UploadFile):
 def test(request: dict):
     match request["operate"]:
         case 'image':
-            test_model_position(float(request["conf"]))
+            return get_friend_model_position(float(request["conf"]), isTest=True)
+        case 'key':
+            test_key_model_position(float(request["conf"]))
         case 'press':
             match global_variable.cpu_type:
                 case 'Intel':
@@ -199,12 +183,6 @@ if __name__ == '__main__':
     shortcut_websocket_thread = threading.Thread(target=shortcut_thread)
     shortcut_websocket_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
     shortcut_websocket_thread.start()
-
-    # 创建监听目标进程的线程
-    target_process = "Sky_Music.exe"
-    process_monitor_thread = threading.Thread(target=monitor_process, args=(target_process,))
-    process_monitor_thread.daemon = True
-    process_monitor_thread.start()
 
     # 创建监听 光遇 窗口的线程
     hwnd_thread = threading.Thread(target=hwnd_check_thread)

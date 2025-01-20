@@ -6,10 +6,7 @@ def start(request: dict):
     try:
         print(f"Starting music: {request['fileName']} of type {request['type']}")
         if global_variable._hWnd is None and global_variable.compatibility_mode is False:
-            return {
-                "statusCode": 8008208820,
-                "messeage": "没检测到存活的光遇窗口"
-            }
+            return
         global_variable.nowPlayMusic = request["fileName"]
         match global_variable.cpu_type:
             case "Intel":
