@@ -54,25 +54,25 @@ def drop_file(request: dict):
     return 'ok'
 
 
-def get_system_dpi():
-    hdc = ctypes.windll.user32.GetDC(0)  # 获取屏幕设备上下文
-    dpi = ctypes.windll.gdi32.GetDeviceCaps(hdc, 88)  # LOGPIXELSX = 88
-    ctypes.windll.user32.ReleaseDC(0, hdc)  # 释放设备上下文
-    return dpi
+# def get_system_dpi():
+#     hdc = ctypes.windll.user32.GetDC(0)  # 获取屏幕设备上下文
+#     dpi = ctypes.windll.gdi32.GetDeviceCaps(hdc, 88)  # LOGPIXELSX = 88
+#     ctypes.windll.user32.ReleaseDC(0, hdc)  # 释放设备上下文
+#     return dpi
 
-def get_game_position():
-    hwnd = global_variable._hWnd
-    # 获取窗口物理坐标
-    rect = win32gui.GetWindowRect(hwnd)
-    client_rect = win32gui.GetClientRect(hwnd)
-    # 获取窗口 DPI 缩放比例
-    scale_factor = get_system_dpi() / 96.0  # DPI 标准比例为 96
-    # 计算边框和标题栏的逻辑偏移
-    border_x = (rect[2] - rect[0] - client_rect[2]) // 2
-    border_y = (rect[3] - rect[1] - client_rect[3] - border_x)
-    # 转换物理坐标为逻辑坐标，去掉边框和标题栏
-    x1 = int((rect[0] + border_x) / scale_factor)
-    y1 = int((rect[1] + border_y) / scale_factor)
-    x2 = int((rect[2] - border_x) / scale_factor)
-    y2 = int((rect[3] - border_y) / scale_factor)
-    return (x1, y1, x2, y2)
+# def get_game_position():
+#     hwnd = global_variable._hWnd
+#     # 获取窗口物理坐标
+#     rect = win32gui.GetWindowRect(hwnd)
+#     client_rect = win32gui.GetClientRect(hwnd)
+#     # 获取窗口 DPI 缩放比例
+#     scale_factor = get_system_dpi() / 96.0  # DPI 标准比例为 96
+#     # 计算边框和标题栏的逻辑偏移
+#     border_x = (rect[2] - rect[0] - client_rect[2]) // 2
+#     border_y = (rect[3] - rect[1] - client_rect[3] - border_x)
+#     # 转换物理坐标为逻辑坐标，去掉边框和标题栏
+#     x1 = int((rect[0] + border_x) / scale_factor)
+#     y1 = int((rect[1] + border_y) / scale_factor)
+#     x2 = int((rect[2] - border_x) / scale_factor)
+#     y2 = int((rect[3] - border_y) / scale_factor)
+#     return (x1, y1, x2, y2)

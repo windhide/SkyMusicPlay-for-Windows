@@ -18,8 +18,7 @@ from windhide.thread.follow_thread import startThread as follow_thread
 from windhide.thread.hwnd_check_thread import start_thread as hwnd_check_thread
 from windhide.thread.shortcut_thread import startThread as shortcut_thread
 from windhide.utils.auto_util import auto_click_fire, shutdown, auto_candles_run
-from windhide.utils.config_util import set_config, get_config, favorite_music, convert_sheet, drop_file, \
-    get_game_position
+from windhide.utils.config_util import set_config, get_config, favorite_music, convert_sheet, drop_file
 from windhide.utils.follow_util import set_next_sheet, get_next_sheet
 from windhide.utils.list_util import getTypeMusicList
 from windhide.utils.ocr_screenshot_util import get_friend_model_position, test_key_model_position, get_key_position
@@ -128,8 +127,6 @@ def config_operate(request: dict):
             return convert_sheet(request)
         case 'drop_file':
             drop_file(request)
-        case 'game_position':
-            return get_game_position()
         case 'get_key_position':
             return get_key_position(float(request["conf"]))
     return "ok"
