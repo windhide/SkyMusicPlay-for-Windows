@@ -405,11 +405,12 @@ async function getProgress() {
     if (selectMode.value === 'order') orderMusicPlay();
     else if (selectMode.value === 'random') randomMusicPlay();
     else if (selectMode.value === 'cycle') cycleMusicPlay();
+  }else{
+    getData('getProgress').then((res) => {
+      progress.value = Number(res.now_progress)
+      nowPlayMusic.value = res.now_play_music
+    })
   }
-  getData('getProgress').then((res) => {
-    progress.value = Number(res.now_progress)
-    nowPlayMusic.value = res.now_play_music
-  })
   return "ok"
 }
 
