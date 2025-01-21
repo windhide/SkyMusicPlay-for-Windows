@@ -1,8 +1,4 @@
-import urllib
-
 from pynput import keyboard
-from websocket_server import WebsocketServer
-
 from windhide.playRobot.amd_robot import send_single_key_to_window_follow, send_multiple_key_to_window_follow
 from windhide.static.global_variable import GlobalVariable
 from windhide.utils import hook_util

@@ -116,8 +116,11 @@ def get_key_position(conf, threshold=10):
             "right": int(x2),
             "bottom": int(y2),
             "width": width,
-            "height": height
+            "height": height,
+            "position_x": int(x1),  # 添加 position_x
+            "position_y": int(y1)  # 添加 position_y
         })
+
     result_dict = {}
     for box in all_boxes:
         y_key = box["top"]  # 使用上边距作为分组依据
@@ -129,29 +132,20 @@ def get_key_position(conf, threshold=10):
                 break
         if not added:  # 如果没有匹配的组，创建新组
             result_dict[y_key] = [box]
+
     sorted_result = {}
     sorted_keys = sorted(result_dict)  # 按 y 坐标排序
     for idx, key in enumerate(sorted_keys):
         group = result_dict[key]
-        group = sorted(group, key=lambda b: b["left"])
-        avg_height = sum(b["height"] for b in group) / len(group)
-        avg_width = sum(b["width"] for b in group) / len(group)
-        if idx > 0:
-            prev_key = sorted_keys[idx - 1]
-            prev_bottom = max(b["bottom"] for b in result_dict[prev_key])  # 上一组的最大 bottom
-            margin_top = key - prev_bottom
-        else:
-            margin_top = 0
-        avg_margin_left = 0
-        if len(group) > 1:
-            margins = [group[i]["left"] - group[i - 1]["right"] for i in range(1, len(group))]
-            avg_margin_left = sum(margins) / len(margins)
-        sorted_result[key] = {
-            "avg_height": avg_height,
-            "avg_width": avg_width,
-            "avg_margin_top": margin_top,
-            "avg_margin_left": avg_margin_left
-        }
+
+        # 不再计算平均值，直接保留每个框的详细信息
+        sorted_result[key] = [{
+            "width": box["width"],
+            "height": box["height"],
+            "position_x": box["position_x"],
+            "position_y": box["position_y"]
+        } for box in group]
+
     return sorted_result
 
 
