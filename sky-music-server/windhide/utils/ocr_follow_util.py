@@ -1,4 +1,5 @@
 import os
+import socket
 import time
 
 from ultralytics import YOLO
@@ -36,6 +37,55 @@ def get_next_sheet(request: dict):
     except IndexError:
         print("空数组")
         return ""
+
+
+box_ids = []
+def get_next_sheet_demo(operator):
+    if len(GlobalVariable.follow_sheet) == 0:
+        return ""
+    try:
+        if operator == "ok":
+            sheet = GlobalVariable.follow_sheet[0]
+            GlobalVariable.nowClientKey = sheet
+            GlobalVariable.follow_sheet = GlobalVariable.follow_sheet[1:]
+            for key in sheet.keys():
+                send_command("draw box1 100 50 200 200")  # 绘制
+            #     demo未补全
+
+            return sheet
+        else:
+            GlobalVariable.nowClientKey = GlobalVariable.follow_sheet[0]
+            return GlobalVariable.follow_sheet[0]
+    except IndexError:
+        print("空数组")
+        return ""
+
+def add_window_key(x, y, positionX, positionY):
+    id = "asd"
+    send_command(f"draw {id} {x} {y} {positionX} {positionY}")  # 绘制
+
+def del_window_key(key):
+    send_command("delete box2")  # 删除第二个方框
+
+def clear_window_key():
+    haveKeys = "asd"
+    for key in haveKeys:
+        send_command(f"delete {key}")
+
+def quit_window():
+    send_command("exit")  # 发送退出指令到服务器
+
+
+def send_command(command):
+    try:
+        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client.connect(("localhost", 12345))  # 连接到服务器
+        client.sendall(command.encode("utf-8"))  # 发送命令
+        print(f"发送命令: {command}")
+    except ConnectionRefusedError:
+        print("无法连接到服务器，请确保服务端已启动。")
+    finally:
+        client.close()
 
 
 def load_key_model():
