@@ -65,7 +65,8 @@ def add_window_key(x, y, positionX, positionY):
     send_command(f"draw {id} {x} {y} {positionX} {positionY}")  # 绘制
 
 def del_window_key(key):
-    send_command("delete box2")  # 删除第二个方框
+    haveKeys = "asd"
+    send_command(f"delete {haveKeys[key]}")  # 删除第二个方框
 
 def clear_window_key():
     haveKeys = "asd"
