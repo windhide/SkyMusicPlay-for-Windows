@@ -4,29 +4,28 @@ import shutil
 
 import win32gui
 
-from windhide._global import global_variable
 from windhide.musicToSheet.music2html import generatorSheetHtml
-from windhide.utils.music_file_transelate import convert_notes_to_delayed_format
-from windhide.utils.path_util import getResourcesPath
+from windhide.static.global_variable import GlobalVariable
+from windhide.utils.play_path_util import getResourcesPath, convert_notes_to_delayed_format
 
 
 def set_config(request: dict):
     match request["name"]:
         case 'delay_interval':
-            global_variable.delay_interval = float(request["value"])
+            GlobalVariable.delay_interval = float(request["value"])
         case 'sustain_time':
-            global_variable.sustain_time = float(request["value"])
+            GlobalVariable.sustain_time = float(request["value"])
         case 'set_progress':
-            global_variable.set_progress = float(request["value"])
+            GlobalVariable.set_progress = float(request["value"])
         case 'play_speed':
-            global_variable.play_speed = float(request["value"])
+            GlobalVariable.play_speed = float(request["value"])
         case 'compatibility_mode':
-            global_variable.compatibility_mode = request["value"]
+            GlobalVariable.compatibility_mode = request["value"]
         case 'is_post_w':
-            global_variable.is_post_w = request["value"]
+            GlobalVariable.is_post_w = request["value"]
 
 def get_config(request: dict):
-    configValue = eval("global_variable." + request["name"])
+    configValue = eval("GlobalVariable." + request["name"])
     return configValue
 
 def favorite_music(request: dict):
@@ -37,8 +36,8 @@ def favorite_music(request: dict):
 
 def convert_sheet(request: dict):
     convert_notes_to_delayed_format(request["fileName"], request["type"])
-    generatorSheetHtml(request["fileName"], list(map(lambda item: item['key'], global_variable.music_sheet)))
-    global_variable.music_sheet = []
+    generatorSheetHtml(request["fileName"], list(map(lambda item: item['key'], GlobalVariable.music_sheet)))
+    GlobalVariable.music_sheet = []
     return "ok"
 
 
@@ -61,7 +60,7 @@ def drop_file(request: dict):
 #     return dpi
 
 # def get_game_position():
-#     hwnd = global_variable._hWnd
+#     hwnd = GlobalVariable.hWnd
 #     # 获取窗口物理坐标
 #     rect = win32gui.GetWindowRect(hwnd)
 #     client_rect = win32gui.GetClientRect(hwnd)

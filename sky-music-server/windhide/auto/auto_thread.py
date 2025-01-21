@@ -4,10 +4,11 @@ import time
 import plyer
 from pynput.keyboard import Controller, Key
 
-from windhide._global import global_variable
-from windhide.utils.ocr_screenshot_util import resetGameFrame, get_friend_model_position
+from windhide.static.global_variable import GlobalVariable
+from windhide.utils.ocr_heart_utils import get_friend_model_position
+from windhide.utils.ocr_normal_utils import resetGameFrame
 
-if global_variable.cpu_type == 'Intel':
+if GlobalVariable.cpu_type == 'Intel':
     from windhide.playRobot.intel_robot import mouse_move_to, key_press, mouse_wheel_scroll
 else:
     from windhide.playRobot.amd_robot import mouse_move_to, key_press, mouse_wheel_scroll
@@ -79,7 +80,7 @@ class HeartFireThread(threading.Thread):
         """安全停止线程"""
         with self._lock:
             self._running = False
-        global_variable.auto_thread = None
+        GlobalVariable.auto_thread = None
 
     def check_running(self):
         """检查线程是否正在运行，若未运行则安全退出"""

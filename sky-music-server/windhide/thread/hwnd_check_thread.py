@@ -1,6 +1,7 @@
 import time
 import pygetwindow as gw
-from windhide._global import global_variable
+
+from windhide.static.global_variable import GlobalVariable
 from windhide.utils import hook_util
 
 hook_util.sout_null()
@@ -25,7 +26,7 @@ def update_window_handle():
     """更新全局窗口句柄"""
     target_titles = ["光·遇", "Sky"]
     window = find_window_by_title(target_titles)
-    global_variable._hWnd = window._hWnd if is_window_alive(window) else None
+    GlobalVariable.hWnd = window._hWnd if is_window_alive(window) else None
 
 def start_thread():
     """后台线程循环更新窗口句柄"""

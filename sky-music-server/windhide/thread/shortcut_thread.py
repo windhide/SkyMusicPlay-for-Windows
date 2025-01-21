@@ -34,11 +34,11 @@ def on_press(key):
         print(f"发生错误: {e}")
 
 # 客户端连接事件处理
-def on_client_connect(client, server):
+def on_client_connect(client):
     print(f"客户端 {client['id']} 已连接")
 
 # 客户端断开事件处理
-def on_client_disconnect(client, server):
+def on_client_disconnect(client):
     print(f"客户端 {client['id']} 已断开连接")
 
 # 启动 WebSocket 服务

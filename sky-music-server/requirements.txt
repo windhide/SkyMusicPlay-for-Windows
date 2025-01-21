@@ -30,3 +30,4 @@ basic-pitch[coreml]
 basic-pitch[tf]
 basic-pitch[onnx]
 coremltools
+scikit-learn==1.5.1

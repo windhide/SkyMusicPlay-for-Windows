@@ -6,10 +6,9 @@ import pyautogui
 import win32con
 import win32gui
 
-from windhide._global import global_variable
-from windhide._global.global_variable import is_post_w
+from windhide.static.global_variable import GlobalVariable
 from windhide.thread.intel_play_thread import ControlledThread
-from windhide.utils.music_file_transelate import convert_notes_to_delayed_format
+from windhide.utils.play_path_util import convert_notes_to_delayed_format
 
 PostMessageW = ctypes.windll.user32.PostMessageW  # 消息队列
 SendMessageW = ctypes.windll.user32.SendMessageW  # 立即处理
@@ -24,27 +23,27 @@ pyautogui.FAILSAFE = False
 def send_single_key_to_window_task(key):
     """发送单个按键，减少延迟"""
     key_down(key)
-    time.sleep(global_variable.sustain_time)
+    time.sleep(GlobalVariable.sustain_time)
     key_up(key)
 
 def send_multiple_key_to_window_task(keys):
     """发送组合按键，减少延迟"""
     for key in keys:
         key_down(key)
-    time.sleep(global_variable.sustain_time)
+    time.sleep(GlobalVariable.sustain_time)
     for key in keys:
         key_up(key)
 
 def send_single_key_to_window(key):
     """发送单个按键（单线程）"""
-    if global_variable.compatibility_mode:
+    if GlobalVariable.compatibility_mode:
         send_single_key_to_window_follow(key)
     else:
         send_single_key_to_window_task(key)
 
 def send_multiple_key_to_window(keys):
     """发送组合按键（单线程）"""
-    if global_variable.compatibility_mode:
+    if GlobalVariable.compatibility_mode:
         send_multiple_key_to_window_follow(keys)
     else:
         send_multiple_key_to_window_task(keys)
@@ -52,53 +51,53 @@ def send_multiple_key_to_window(keys):
 def send_single_key_to_window_follow(key):
     """发送单个按键，减少延迟（单线程）"""
     keyboard.press(key)
-    time.sleep(global_variable.sustain_time)
+    time.sleep(GlobalVariable.sustain_time)
     keyboard.release(key)
 
 def send_multiple_key_to_window_follow(keys):
     """发送组合按键，减少延迟（单线程）"""
     for key in keys:
         keyboard.press(key)
-    time.sleep(global_variable.sustain_time)
+    time.sleep(GlobalVariable.sustain_time)
     for key in keys:
         keyboard.release(key)
 
 def playMusic(fileName, type):
     """优化音乐播放逻辑，只加载乐谱数据一次"""
     convert_notes_to_delayed_format(fileName, type)
-    if global_variable.thread is not None:
+    if GlobalVariable.thread is not None:
         stop()
-    global_variable.thread = ControlledThread()
-    global_variable.thread.start()
+    GlobalVariable.thread = ControlledThread()
+    GlobalVariable.thread.start()
 
 def resume():
     """恢复播放"""
-    if global_variable.thread:
-        global_variable.thread.resume()
+    if GlobalVariable.thread:
+        GlobalVariable.thread.resume()
 
 def pause():
     """暂停播放"""
-    if global_variable.thread:
-        global_variable.thread.pause()
+    if GlobalVariable.thread:
+        GlobalVariable.thread.pause()
 
 def stop():
     """停止播放"""
-    if global_variable.thread:
-        global_variable.thread.stop()
-        global_variable.set_progress = 0
-        global_variable.thread = None
+    if GlobalVariable.thread:
+        GlobalVariable.thread.stop()
+        GlobalVariable.set_progress = 0
+        GlobalVariable.thread = None
 
 # 点击，按下
 def mouse_move_to(x: int, y: int):
     # 获取窗口的屏幕位置
-    window_rect = win32gui.GetWindowRect(global_variable._hWnd)  # 返回 (left, top, right, bottom)
+    window_rect = win32gui.GetWindowRect(GlobalVariable.hWnd)  # 返回 (left, top, right, bottom)
     window_x, window_y = window_rect[0], window_rect[1]
     client_x = window_x + x
     client_y = window_y + y
-    if is_post_w:
-        PostMessageW(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
+    if GlobalVariable.is_post_w:
+        PostMessageW(GlobalVariable.hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
     else:
-        SendMessageW(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
+        SendMessageW(GlobalVariable.hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
     pyautogui.moveTo(client_x, client_y, duration=0)
 
 # 核心
@@ -111,16 +110,16 @@ def key_press(key: str):
         vk_code = VkKeyScanW(ctypes.c_wchar(key))
         scan_code = keyboard.key_to_scan_codes(key)[0] if key != '/' else keyboard.key_to_scan_codes(key)[1]
     lparam = (scan_code << 16) | 1
-    if is_post_w:
-        PostMessageW(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
-        PostMessageW(global_variable._hWnd, WM_KEYDOWN, vk_code, lparam)
+    if GlobalVariable.is_post_w:
+        PostMessageW(GlobalVariable.hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
+        PostMessageW(GlobalVariable.hWnd, WM_KEYDOWN, vk_code, lparam)
         time.sleep(0.01)
-        PostMessageW(global_variable._hWnd, WM_KEYUP, vk_code, lparam)
+        PostMessageW(GlobalVariable.hWnd, WM_KEYUP, vk_code, lparam)
     else:
-        SendMessageW(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
-        SendMessageW(global_variable._hWnd, WM_KEYDOWN, vk_code, lparam)
+        SendMessageW(GlobalVariable.hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
+        SendMessageW(GlobalVariable.hWnd, WM_KEYDOWN, vk_code, lparam)
         time.sleep(0.01)
-        SendMessageW(global_variable._hWnd, WM_KEYUP, vk_code, lparam)
+        SendMessageW(GlobalVariable.hWnd, WM_KEYUP, vk_code, lparam)
 
 def key_down(key: str):
     set_us_keyboard_layout()
@@ -132,12 +131,12 @@ def key_down(key: str):
         vk_code = VkKeyScanW(ctypes.c_wchar(key))
         scan_code = keyboard.key_to_scan_codes(key)[0] if key != '/' else keyboard.key_to_scan_codes(key)[1]
     lparam = (scan_code << 16) | 1
-    if is_post_w:
-        PostMessageW(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
-        PostMessageW(global_variable._hWnd, WM_KEYDOWN, vk_code, lparam)
+    if GlobalVariable.is_post_w:
+        PostMessageW(GlobalVariable.hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
+        PostMessageW(GlobalVariable.hWnd, WM_KEYDOWN, vk_code, lparam)
     else:
-        SendMessageW(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
-        SendMessageW(global_variable._hWnd, WM_KEYDOWN, vk_code, lparam)
+        SendMessageW(GlobalVariable.hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
+        SendMessageW(GlobalVariable.hWnd, WM_KEYDOWN, vk_code, lparam)
 
 def key_up(key: str):
     key = key.lower()
@@ -148,12 +147,12 @@ def key_up(key: str):
         vk_code = VkKeyScanW(ctypes.c_wchar(key))
         scan_code = keyboard.key_to_scan_codes(key)[0] if key != '/' else keyboard.key_to_scan_codes(key)[1]
     lparam = (scan_code << 16) | 0XC0000001
-    if is_post_w:
-        PostMessageW(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
-        PostMessageW(global_variable._hWnd, WM_KEYUP, vk_code, lparam)
+    if GlobalVariable.is_post_w:
+        PostMessageW(GlobalVariable.hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
+        PostMessageW(GlobalVariable.hWnd, WM_KEYUP, vk_code, lparam)
     else:
-        SendMessageW(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
-        SendMessageW(global_variable._hWnd, WM_KEYUP, vk_code, lparam)
+        SendMessageW(GlobalVariable.hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
+        SendMessageW(GlobalVariable.hWnd, WM_KEYUP, vk_code, lparam)
 
 def mouse_wheel_scroll(operator):
     match operator:
@@ -161,14 +160,14 @@ def mouse_wheel_scroll(operator):
             delta =  3000
         case 'down':
             delta = -3000
-    window_rect = win32gui.GetWindowRect(global_variable._hWnd)  # 返回 (left, top, right, bottom)
+    window_rect = win32gui.GetWindowRect(GlobalVariable.hWnd)  # 返回 (left, top, right, bottom)
     # 窗口中心
     window_x, window_y = window_rect[0] + window_rect[0] / 2, window_rect[1] + window_rect[1] / 2
     # 激活窗口
-    if is_post_w:
-        PostMessageW(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
+    if GlobalVariable.is_post_w:
+        PostMessageW(GlobalVariable.hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
     else:
-        SendMessageW(global_variable._hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
+        SendMessageW(GlobalVariable.hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
     pyautogui.moveTo(window_x, window_y)
     pyautogui.scroll(delta)
 

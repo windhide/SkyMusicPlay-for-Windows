@@ -3,8 +3,8 @@ import urllib
 from pynput import keyboard
 from websocket_server import WebsocketServer
 
-from windhide._global import global_variable
 from windhide.playRobot.amd_robot import send_single_key_to_window_follow, send_multiple_key_to_window_follow
+from windhide.static.global_variable import GlobalVariable
 from windhide.utils import hook_util
 
 hook_util.sout_null()
@@ -14,23 +14,23 @@ server = WebsocketServer("127.0.0.1",11451)
 
 # 键盘按键事件处理
 def on_press(key):
-    if global_variable.follow_music != "":
+    if GlobalVariable.follow_music != "":
         print(key)
         try:
             # 仅处理特定的按键
             if key.char in 'yuiophjkl;nm,./-=':
-                if global_variable.isNowAutoPlaying:
+                if GlobalVariable.isNowAutoPlaying:
                     if key.char not in "-":
-                        global_variable.nowRobotKey += key.char
-                    if len(global_variable.nowRobotKey) == len(global_variable.nowClientKey):
-                        global_variable.isNowAutoPlaying = False
-                        global_variable.nowRobotKey = ''
+                        GlobalVariable.nowRobotKey += key.char
+                    if len(GlobalVariable.nowRobotKey) == len(GlobalVariable.nowClientKey):
+                        GlobalVariable.isNowAutoPlaying = False
+                        GlobalVariable.nowRobotKey = ''
                 else:
                     if key.char in "-":
-                        global_variable.isNowAutoPlaying = True
-                        send_single_key_to_window_follow(global_variable.nowClientKey)
+                        GlobalVariable.isNowAutoPlaying = True
+                        send_single_key_to_window_follow(GlobalVariable.nowClientKey)
                     if key.char in "=":
-                        send_multiple_key_to_window_follow(global_variable.nowClientKey)
+                        send_multiple_key_to_window_follow(GlobalVariable.nowClientKey)
                     else:
                         # 向所有客户端发送按键信息
                         server.send_message_to_all(urllib.parse.quote(key.char))
@@ -41,13 +41,13 @@ def on_press(key):
 
 
 # 客户端连接事件处理
-def on_client_connect(client, server):
+def on_client_connect(client):
     print(f"客户端 {client['id']} 已连接")
 
 # 客户端断开事件处理
-def on_client_disconnect(client, server):
-    global_variable.follow_music = ""
-    global_variable.follow_sheet = []
+def on_client_disconnect(client):
+    GlobalVariable.follow_music = ""
+    GlobalVariable.follow_sheet = []
     print(f"客户端 {client['id']} 已断开连接")
 
 # 启动 WebSocket 服务

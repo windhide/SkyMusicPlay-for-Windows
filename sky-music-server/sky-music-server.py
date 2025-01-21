@@ -11,20 +11,18 @@ import uvicorn
 from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
-from windhide._global import global_variable
 from windhide.auto.script_to_json import script_to_json
 from windhide.musicToSheet.process_audio import process_directory_with_progress
 from windhide.playRobot import amd_robot, intel_robot
+from windhide.static.global_variable import GlobalVariable
 from windhide.thread.follow_thread import startThread as follow_thread
 from windhide.thread.hwnd_check_thread import start_thread as hwnd_check_thread
 from windhide.thread.shortcut_thread import startThread as shortcut_thread
 from windhide.utils.auto_util import auto_click_fire, shutdown, auto_candles_run
 from windhide.utils.config_util import set_config, get_config, favorite_music, convert_sheet, drop_file
-from windhide.utils.follow_util import set_next_sheet, get_next_sheet
-from windhide.utils.list_util import getTypeMusicList
-from windhide.utils.ocr_screenshot_util import get_friend_model_position, test_key_model_position, get_key_position
-from windhide.utils.path_util import getResourcesPath
-from windhide.utils.play_util import start, pause, stop, resume
+from windhide.utils.ocr_follow_util import set_next_sheet, get_next_sheet, get_key_position, test_key_model_position
+from windhide.utils.ocr_heart_utils import get_friend_model_position
+from windhide.utils.play_path_util import getResourcesPath, getTypeMusicList, start, pause, resume, stop
 
 # 避开与光遇相同核心运行
 process = psutil.Process(os.getpid())
@@ -60,10 +58,10 @@ def play_operate(request: dict):
 @app.get("/getProgress")
 def get_progress():
     return {
-        "overall_progress": f"{global_variable.overall_progress:.1f}",
-        "now_progress": f"{global_variable.now_progress:.1f}",
-        "now_translate_text": global_variable.now_translate_text,
-        "now_play_music": global_variable.nowPlayMusic
+        "overall_progress": f"{GlobalVariable.overall_progress:.1f}",
+        "now_progress": f"{GlobalVariable.now_progress:.1f}",
+        "now_translate_text": GlobalVariable.now_translate_text,
+        "now_play_music": GlobalVariable.nowPlayMusic
     }
 
 @app.post("/fileUpload")
@@ -132,9 +130,9 @@ def open_files():
 
 @app.get("/update")
 def get_update():
-    if global_variable.isShow is False:
+    if GlobalVariable.isShow is False:
         response = requests.get('https://gitee.com/WindHide/SkyMusicPlay-for-Windows/raw/main/.version')
-        global_variable.isShow = True
+        GlobalVariable.isShow = True
         if response.status_code == 200:
             return json.loads(response.text)
         return "404"
@@ -162,7 +160,7 @@ def test(request: dict):
         case 'key':
             test_key_model_position(float(request["conf"]))
         case 'press':
-            match global_variable.cpu_type:
+            match GlobalVariable.cpu_type:
                 case 'Intel':
                     intel_robot.key_down(request["key"])
                     time.sleep(0.01)
@@ -173,7 +171,7 @@ def test(request: dict):
                     amd_robot.key_up(request["key"])
 
 if __name__ == '__main__':
-    global_variable.isProd = True
+    GlobalVariable.isProd = True
     # 创建监听 WebSocket 的线程
     follow_websocket_thread = threading.Thread(target=follow_thread)
     follow_websocket_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出

@@ -3,7 +3,7 @@ import re
 from os import path
 from charset_normalizer import detect
 
-from windhide.utils.path_util import getResourcesPath
+from windhide.utils.play_path_util import getResourcesPath
 
 
 async def script_to_json(content, file_name):
@@ -15,7 +15,7 @@ async def script_to_json(content, file_name):
     # 定义正则表达式匹配事件和延迟
     event_pattern = re.compile(r"(Key Down|Key Up|Mouse Position|Mouse Event|Mouse Scroll Down) ?.*")
     delay_pattern = re.compile(r"延迟\s*:\s*(\d+)\s*ms")
-    position_pattern = re.compile(r"Mouse Position\s*:\s*X:(\d+)\s*Y:(\d+)")  # 匹配鼠标位置
+    # position_pattern = re.compile(r"Mouse Position\s*:\s*X:(\d+)\s*Y:(\d+)")  # 匹配鼠标位置
 
     # 转换日志为数组
     events = []

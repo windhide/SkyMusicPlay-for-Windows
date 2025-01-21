@@ -1,8 +1,9 @@
 import time
 import threading
 
-from windhide._global import global_variable
-if global_variable.cpu_type == 'Intel':
+from windhide.static.global_variable import GlobalVariable
+
+if GlobalVariable.cpu_type == 'Intel':
     from windhide.playRobot.intel_robot import key_down, key_up, mouse_wheel_scroll
 else:
     from windhide.playRobot.amd_robot import key_down, key_up, mouse_wheel_scroll
@@ -63,4 +64,4 @@ class ControlThread:
     def stop(self):
         self.stop_event.set()  # 设置停止标志
         self.thread.join()  # 等待线程结束
-        global_variable.auto_thread = None
+        GlobalVariable.auto_thread = None
