@@ -1,7 +1,8 @@
 import tkinter as tk
 import socket
 import threading
-import sys  # 用于程序退出
+import sys
+import argparse  # 用于解析命令行参数
 
 
 # 绘制和删除方框的API
@@ -21,6 +22,7 @@ def delete_box_api(canvas, box_id):
 class TransparentBoxWindow:
     def __init__(self, root, width, height, position_x, position_y):
         self.root = root
+        self.port = 12345  # 固定端口为 12345
 
         # 设置 Canvas
         self.canvas = tk.Canvas(root, width=width, height=height, bg="white", highlightthickness=0)
@@ -55,9 +57,9 @@ class TransparentBoxWindow:
     def start_server(self):
         # 创建 Socket 服务器
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server.bind(("localhost", 12345))
+        server.bind(("localhost", self.port))
         server.listen(5)
-        print("服务器已启动，等待连接...")
+        print(f"服务器已启动，监听端口：{self.port}，等待连接...")
 
         while True:
             client, addr = server.accept()
@@ -108,15 +110,55 @@ class TransparentBoxWindow:
         sys.exit(0)  # 强制退出程序
 
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    root.geometry("800x600+100+100")
+# if __name__ == "__main__":
+#     # 解析命令行参数
+#     parser = argparse.ArgumentParser(description="Transparent Box GUI")
+#     parser.add_argument("--width", type=int, default=800, help="Window width")
+#     parser.add_argument("--height", type=int, default=600, help="Window height")
+#     parser.add_argument("--x", type=int, default=100, help="Window position X")
+#     parser.add_argument("--y", type=int, default=100, help="Window position Y")
+#     args = parser.parse_args()
+#
+#     # 获取命令行参数
+#     width = args.width
+#     height = args.height
+#     x = args.x
+#     y = args.y
+#
+#     # 启动程序
+#     root = tk.Tk()
+#     root.geometry(f"{width}x{height}+{x}+{y}")
+#     root.overrideredirect(True)
+#     root.attributes("-transparentcolor", "white")
+#     root.attributes("-topmost", True)
+#
+#     app = TransparentBoxWindow(root, width, height, x, y)
+#     root.mainloop()
 
-    # 设置窗口透明和无边框
+if __name__ == "__main__":
+    import time
+
+    # 解析命令行参数
+    parser = argparse.ArgumentParser(description="Transparent Box GUI")
+    parser.add_argument("--width", type=int, default=800, help="Window width")
+    parser.add_argument("--height", type=int, default=600, help="Window height")
+    parser.add_argument("--x", type=int, default=100, help="Window position X")
+    parser.add_argument("--y", type=int, default=100, help="Window position Y")
+    args = parser.parse_args()
+
+    # 获取命令行参数
+    width = args.width
+    height = args.height
+    x = args.x
+    y = args.y
+
+    # 启动程序
+    root = tk.Tk()
+    root.geometry(f"{width}x{height}+{x}+{y}")
     root.overrideredirect(True)
     root.attributes("-transparentcolor", "white")
-    root.attributes("-topmost", True)  # 窗口置于最上层
+    root.attributes("-topmost", True)
 
-    # 创建主窗口类
-    app = TransparentBoxWindow(root, 800, 600, 100, 100)
+    app = TransparentBoxWindow(root, width, height, x, y)
+    # 运行主窗口循环
     root.mainloop()
