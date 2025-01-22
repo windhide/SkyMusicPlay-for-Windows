@@ -34,6 +34,8 @@ sky-music-web/web2/
 sky-music-web/dist_electron/
 sky-music-web/backend_dist
 sky-music-web/out
+draw-follow-window/build
+draw-follow-window/dist
 web2/
 **/__pycache__/**
 resources/
