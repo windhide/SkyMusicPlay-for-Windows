@@ -120,6 +120,7 @@ def get_key_position(conf, threshold=10):
     # ",": {"position_x": 250, "position_y": 300, "width": ..., "height": ...},
     # ".": {"position_x": 350, "position_y": 300, "width": ..., "height": ...},
     # "/": {"position_x": 450, "position_y": 300, "width": ..., "height": ...}
+    print(f"=>{final_result}")
     return final_result
 
 def test_key_model_position(conf):

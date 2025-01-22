@@ -1,13 +1,11 @@
 import ctypes
-import json
-import os
 
 import cv2
 import numpy as np
 import pyautogui
 import win32con
 import win32gui
-from windhide.playRobot.amd_robot import PostMessageW
+
 from windhide.static.global_variable import GlobalVariable
 
 
@@ -20,7 +18,7 @@ def resetGameFrame():
 def get_window_screenshot():
     """获取指定窗口的截图"""
     # 获取窗口位置和大小
-    PostMessageW(GlobalVariable.window["hWnd"], win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
+    # PostMessageW(GlobalVariable.window["hWnd"], win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
     rect = win32gui.GetWindowRect(GlobalVariable.window["hWnd"])
     x1, y1, x2, y2 = rect
     # 截取窗口范围内的图像
