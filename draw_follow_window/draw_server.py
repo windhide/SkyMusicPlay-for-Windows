@@ -136,31 +136,6 @@ class TransparentBoxWindow:
         sys.exit(0)  # 强制退出程序
 
 
-# if __name__ == "__main__":
-# # 解析命令行参数
-# parser = argparse.ArgumentParser(description="Transparent Box GUI")
-# parser.add_argument("--width", type=int, default=800, help="Window width")  # 窗口宽度
-# parser.add_argument("--height", type=int, default=600, help="Window height")  # 窗口高度
-# parser.add_argument("--x", type=int, default=100, help="Window position X")  # 窗口 X 坐标
-# parser.add_argument("--y", type=int, default=100, help="Window position Y")  # 窗口 Y 坐标
-# args = parser.parse_args()
-#
-# # 获取命令行参数
-# width = args.width
-# height = args.height
-# x = args.x
-# y = args.y
-#
-# # 启动程序
-# root = tk.Tk()
-# root.geometry(f"{width}x{height}+{x}+{y}")  # 设置初始窗口尺寸和位置
-# root.overrideredirect(True)  # 去掉标题栏
-# root.attributes("-transparentcolor", "white")  # 设置透明背景色
-# root.attributes("-topmost", True)  # 窗口置顶
-#
-# app = TransparentBoxWindow(root, width, height, x, y)
-# root.mainloop()
-
 if __name__ == "__main__":
     # 解析命令行参数
     parser = argparse.ArgumentParser(description="Transparent Box GUI")

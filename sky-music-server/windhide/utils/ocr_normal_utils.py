@@ -1,4 +1,7 @@
 import ctypes
+import json
+import os
+
 import cv2
 import numpy as np
 import pyautogui
@@ -9,16 +12,16 @@ from windhide.static.global_variable import GlobalVariable
 
 
 def resetGameFrame():
-    win32gui.ShowWindow(GlobalVariable.hWnd, win32con.SW_RESTORE)  # 先恢复窗口，以防最小化
-    rect = win32gui.GetWindowRect(GlobalVariable.hWnd)
+    win32gui.ShowWindow(GlobalVariable.window["hWnd"], win32con.SW_RESTORE)  # 先恢复窗口，以防最小化
+    rect = win32gui.GetWindowRect(GlobalVariable.window["hWnd"])
     x, y = rect[0], rect[1]  # 保持窗口的左上角位置不变
-    win32gui.MoveWindow(GlobalVariable.hWnd, x, y, 1280, 720, True)
+    win32gui.MoveWindow(GlobalVariable.window["hWnd"], x, y, 1280, 720, True)
 
 def get_window_screenshot():
     """获取指定窗口的截图"""
     # 获取窗口位置和大小
-    PostMessageW(GlobalVariable.hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
-    rect = win32gui.GetWindowRect(GlobalVariable.hWnd)
+    PostMessageW(GlobalVariable.window["hWnd"], win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
+    rect = win32gui.GetWindowRect(GlobalVariable.window["hWnd"])
     x1, y1, x2, y2 = rect
     # 截取窗口范围内的图像
     screenshot = pyautogui.screenshot(region=(x1, y1, x2 - x1, y2 - y1))
@@ -31,7 +34,7 @@ def get_system_dpi():
     return dpi
 
 def get_game_position():
-    hwnd = GlobalVariable.hWnd
+    hwnd = GlobalVariable.window["hWnd"]
     # 获取窗口物理坐标
     rect = win32gui.GetWindowRect(hwnd)
     client_rect = win32gui.GetClientRect(hwnd)

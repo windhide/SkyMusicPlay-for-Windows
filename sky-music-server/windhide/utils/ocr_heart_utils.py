@@ -9,7 +9,7 @@ from matplotlib import pyplot as plt
 from sklearn.cluster import DBSCAN
 from ultralytics import YOLO
 from windhide.static.global_variable import GlobalVariable
-from windhide.utils.play_path_util import getResourcesPath
+from windhide.utils.path_util import getResourcesPath
 
 if GlobalVariable.cpu_type == 'AMD':
     from windhide.playRobot.amd_robot import PostMessageW
@@ -137,11 +137,11 @@ def get_friend_model_position(conf, isTest=False, max_distance=50):
 def get_window_screenshot_friend():
     png_path = os.path.join(getResourcesPath("systemTools"), 'modelData', 'demoScheenshot', 'demo.png')
     saturation_scale = 2.4  # >1增加饱和度，<1降低饱和度
-    PostMessageW(GlobalVariable.hWnd, win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
-    client_rect = win32gui.GetClientRect(GlobalVariable.hWnd)
+    PostMessageW(GlobalVariable.window["hWnd"], win32con.WM_ACTIVATE, win32con.WA_ACTIVE, 0)
+    client_rect = win32gui.GetClientRect(GlobalVariable.window["hWnd"])
     # 将客户区矩形转换为屏幕坐标
-    client_x1, client_y1 = win32gui.ClientToScreen(GlobalVariable.hWnd, (client_rect[0], client_rect[1]))
-    client_x2, client_y2 = win32gui.ClientToScreen(GlobalVariable.hWnd, (client_rect[2], client_rect[3]))
+    client_x1, client_y1 = win32gui.ClientToScreen(GlobalVariable.window["hWnd"], (client_rect[0], client_rect[1]))
+    client_x2, client_y2 = win32gui.ClientToScreen(GlobalVariable.window["hWnd"], (client_rect[2], client_rect[3]))
     # 截取窗口客户区范围内的图像
     screenshot = pyautogui.screenshot(
         region=(client_x1 + 150, client_y1 + 80, client_x2 - client_x1 - 230, client_y2 - client_y1 - 150))

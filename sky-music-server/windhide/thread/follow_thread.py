@@ -41,14 +41,16 @@ def on_press(key):
 
 
 # 客户端连接事件处理
-def on_client_connect(client):
+def on_client_connect(client, server):
     print(f"客户端 {client['id']} 已连接")
+    print(f"{server}")
 
 # 客户端断开事件处理
-def on_client_disconnect(client):
+def on_client_disconnect(client, server):
     GlobalVariable.follow_music = ""
     GlobalVariable.follow_sheet = []
     print(f"客户端 {client['id']} 已断开连接")
+    print(f"{server}")
 
 # 启动 WebSocket 服务
 def startThread():

@@ -3,7 +3,7 @@ import re
 from os import path
 from charset_normalizer import detect
 
-from windhide.utils.play_path_util import getResourcesPath
+from windhide.utils.path_util import getResourcesPath
 
 
 async def script_to_json(content, file_name):

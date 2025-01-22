@@ -1,21 +1,35 @@
 class GlobalVariable:
+    # 窗口相关
+    window = {
+        "hWnd": None,
+        "width": 0,
+        "height": 0,
+        "position_x": 0,
+        "position_y": 0,
+        "is_change": False,
+        "key_position":None
+    }
+    # 运行环境配置
     isProd = False
+    cpu_type = None
+    compatibility_mode = False #是否虚拟机
+    is_post_w = False #是否插队模式
+    # 线程相关
     thread = None
     auto_thread = None
-    cpu_type = None
+    # 乐谱相关
     music_sheet = [] #乐谱
+    # 进度条相关
     now_progress  = 0 #进度条
     set_progress = -0.01 #进度条
     nowPlayMusic = "没有正在播放的歌曲哦"
     # 音乐转换进度条
     overall_progress = 0 #总体进度
     now_translate_text = []
-    # 1秒 =1000毫秒
+    # 演奏相关
     play_speed = 1 # 倍速
     delay_interval = 0  # 0
     sustain_time = 0.01 # 20毫秒
-    compatibility_mode = False #是否虚拟机
-    is_post_w = False #是否虚拟机
     # 跟弹相关
     follow_music = ""
     follow_sheet = []
@@ -23,9 +37,7 @@ class GlobalVariable:
     nowRobotKey = ""
     isNowAutoPlaying = False
     isShow = False
-    # 演奏核心
-    hWnd = None
-    # 乐谱的映射
+    # 乐谱映射
     keyMap = {
         '1Key0':'y', '1Key1':'u', '1Key2':'i', '1Key3':'o', '1Key4':'p',
         '1Key5':'h', '1Key6':'j', '1Key7':'k', '1Key8':'l', '1Key9': ';',

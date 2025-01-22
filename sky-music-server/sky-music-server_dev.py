@@ -19,10 +19,11 @@ from windhide.thread.hwnd_check_thread import start_thread as hwnd_check_thread
 from windhide.thread.shortcut_thread import startThread as shortcut_thread
 from windhide.utils.auto_util import auto_click_fire, shutdown, auto_candles_run
 from windhide.utils.config_util import set_config, get_config, favorite_music, convert_sheet, drop_file
-from windhide.utils.ocr_follow_util import set_next_sheet, get_next_sheet, get_key_position, test_key_model_position
+from windhide.utils.ocr_follow_util import set_next_sheet, get_key_position, test_key_model_position, \
+    open_follow
 from windhide.utils.ocr_heart_utils import get_friend_model_position
-from windhide.utils.play_path_util import getResourcesPath, getTypeMusicList
-from windhide.utils.play_path_util import start, pause, stop, resume
+from windhide.utils.path_util import getTypeMusicList, getResourcesPath
+from windhide.utils.play_util import start, pause, stop, resume
 
 # 避开与光遇相同核心运行
 process = psutil.Process(os.getpid())
@@ -136,8 +137,8 @@ def follow(request: dict):
     match request["operate"]:
         case 'setSheet':
             set_next_sheet(request)
-        case 'nextSheet':
-            return get_next_sheet(request)
+        case 'openFollow':
+            open_follow()
 
 @app.get("/check")
 def check():
@@ -204,17 +205,17 @@ if __name__ == '__main__':
     follow_websocket_thread = threading.Thread(target=follow_thread)
     follow_websocket_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
     follow_websocket_thread.start()
-
+    print("pass 1")
     # 创建监听 快捷键 的线程
     shortcut_websocket_thread = threading.Thread(target=shortcut_thread)
     shortcut_websocket_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
     shortcut_websocket_thread.start()
-
+    print("pass 2")
     # 创建监听 光遇 窗口的线程
     hwnd_thread = threading.Thread(target=hwnd_check_thread)
     hwnd_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
     hwnd_thread.start()
-
+    print("pass 3")
 
     print("Now start service")
     # 启动 FastAPI 服务

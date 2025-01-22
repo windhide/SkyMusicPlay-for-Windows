@@ -1,12 +1,14 @@
 import os
-import socket
+import subprocess
+import threading
 import time
 
 from ultralytics import YOLO
 
 from windhide.static.global_variable import GlobalVariable
-from windhide.utils.ocr_normal_utils import get_window_screenshot
-from windhide.utils.play_path_util import getResourcesPath, convert_notes_to_delayed_format
+from windhide.thread.follow_thread_demo import startThread as follow_thread_demo
+from windhide.utils.ocr_normal_utils import get_window_screenshot, get_game_position
+from windhide.utils.path_util import getResourcesPath, convert_notes_to_delayed_format
 
 global_button_model = None
 
@@ -37,57 +39,6 @@ def get_next_sheet(request: dict):
     except IndexError:
         print("空数组")
         return ""
-
-
-box_ids = []
-def get_next_sheet_demo(operator):
-    if len(GlobalVariable.follow_sheet) == 0:
-        return ""
-    try:
-        if operator == "ok":
-            sheet = GlobalVariable.follow_sheet[0]
-            GlobalVariable.nowClientKey = sheet
-            GlobalVariable.follow_sheet = GlobalVariable.follow_sheet[1:]
-            for key in sheet.keys():
-                send_command("draw box1 100 50 200 200")  # 绘制
-            #     demo未补全
-
-            return sheet
-        else:
-            GlobalVariable.nowClientKey = GlobalVariable.follow_sheet[0]
-            return GlobalVariable.follow_sheet[0]
-    except IndexError:
-        print("空数组")
-        return ""
-
-def add_window_key(x, y, positionX, positionY):
-    id = "asd"
-    send_command(f"draw {id} {x} {y} {positionX} {positionY}")  # 绘制
-
-def del_window_key(key):
-    haveKeys = "asd"
-    send_command(f"delete {haveKeys[key]}")  # 删除第二个方框
-
-def clear_window_key():
-    haveKeys = "asd"
-    for key in haveKeys:
-        send_command(f"delete {key}")
-
-def quit_window():
-    send_command("exit")  # 发送退出指令到服务器
-
-
-def send_command(command):
-    try:
-        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        client.connect(("localhost", 12345))  # 连接到服务器
-        client.sendall(command.encode("utf-8"))  # 发送命令
-        print(f"发送命令: {command}")
-    except ConnectionRefusedError:
-        print("无法连接到服务器，请确保服务端已启动。")
-    finally:
-        client.close()
-
 
 def load_key_model():
     """加载模型并保存在全局变量中"""
@@ -120,34 +71,56 @@ def get_key_position(conf, threshold=10):
             "position_x": int(x1),  # 添加 position_x
             "position_y": int(y1)  # 添加 position_y
         })
-
     result_dict = {}
     for box in all_boxes:
         y_key = box["top"]  # 使用上边距作为分组依据
         added = False
         for key in result_dict:
-            if abs(key - y_key) <= threshold:  # 检查是否属于同一组
+            if abs(key - y_key) <= threshold:
                 result_dict[key].append(box)
                 added = True
                 break
-        if not added:  # 如果没有匹配的组，创建新组
+        if not added:
             result_dict[y_key] = [box]
-
     sorted_result = {}
-    sorted_keys = sorted(result_dict)  # 按 y 坐标排序
-    for idx, key in enumerate(sorted_keys):
+    sorted_keys = sorted(result_dict)
+    for key in sorted_keys:
         group = result_dict[key]
+        sorted_group = sorted(group, key=lambda b: b["position_x"])
 
-        # 不再计算平均值，直接保留每个框的详细信息
         sorted_result[key] = [{
             "width": box["width"],
             "height": box["height"],
             "position_x": box["position_x"],
             "position_y": box["position_y"]
-        } for box in group]
-
-    return sorted_result
-
+        } for box in sorted_group]
+    key_mapping = {
+        0: ["y", "u", "i", "o", "p"],  # 第一组
+        1: ["h", "j", "k", "l", ";"],  # 第二组
+        2: ["n", "m", ",", ".", "/"]  # 第三组
+    }
+    final_result = {}
+    for idx, (group_key, group_boxes) in enumerate(zip(sorted_keys, sorted_result.values())):
+        keys = key_mapping[idx]  # 获取当前分组的键名列表
+        for key_name, box in zip(keys, group_boxes):
+            final_result[key_name] = box  # 使用键名作为最终结果的 key
+    GlobalVariable.window["key_position"] = final_result
+    # "y": {"position_x": 50, "position_y": 100, "width": ..., "height": ...},
+    # "u": {"position_x": 150, "position_y": 100, "width": ..., "height": ...},
+    # "i": {"position_x": 250, "position_y": 100, "width": ..., "height": ...},
+    # "o": {"position_x": 350, "position_y": 100, "width": ..., "height": ...},
+    # "p": {"position_x": 450, "position_y": 100, "width": ..., "height": ...},
+    # "h": {"position_x": 50, "position_y": 200, "width": ..., "height": ...},
+    # "j": {"position_x": 150, "position_y": 200, "width": ..., "height": ...},
+    # "k": {"position_x": 250, "position_y": 200, "width": ..., "height": ...},
+    # "l": {"position_x": 350, "position_y": 200, "width": ..., "height": ...},
+    # ";": {"position_x": 450, "position_y": 200, "width": ..., "height": ...},
+    # "n": {"position_x": 50, "position_y": 300, "width": ..., "height": ...},
+    # "m": {"position_x": 150, "position_y": 300, "width": ..., "height": ...},
+    # ",": {"position_x": 250, "position_y": 300, "width": ..., "height": ...},
+    # ".": {"position_x": 350, "position_y": 300, "width": ..., "height": ...},
+    # "/": {"position_x": 450, "position_y": 300, "width": ..., "height": ...}
+    return final_result
 
 def test_key_model_position(conf):
     time.sleep(1)
@@ -155,3 +128,30 @@ def test_key_model_position(conf):
     model = load_key_model()
     results = model(image, conf=conf)  # 替换为你的图片路径
     results[0].show()
+
+def launch_gui_program(width, height, positionX, positionY):
+    try:
+        process = subprocess.Popen(
+            ["path/to/transparent_box_gui.exe", "--width", width, "--height", height, "--x", positionX, "--y", positionY],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+        print("GUI 程序已启动，PID:", process.pid)
+        return process
+    except Exception as e:
+        print(f"启动 GUI 程序时出错: {e}")
+        return None
+
+def open_follow():
+    position = get_game_position()
+    # 获取窗口左上角的逻辑坐标
+    positionX = position[0]  # x1
+    positionY = position[1]  # y1
+    # 获取窗口宽度和高度
+    width = position[2] - position[0]  # x2 - x1
+    height = position[3] - position[1]  # y2 - y1
+    launch_gui_program(width, height, positionX, positionY)
+
+    follow_thread = threading.Thread(target=follow_thread_demo)
+    follow_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
+    follow_thread.start()
