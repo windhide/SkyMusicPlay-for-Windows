@@ -37,7 +37,6 @@ def on_press(key):
                     else:
                         if key.char in originalKeys:
                             pressedKeys.add(key.char)
-
                         if len(pressedKeys) == len(pressedKeys):
                             originalKeys = set(get_next_sheet_demo("ok"))
                             pressedKeys.clear()

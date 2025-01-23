@@ -50,6 +50,7 @@ def update_window_handle():
         print(f"窗口位置：({current_x}, {current_y})，宽度：{current_width}，高度：{current_height}")
     else:
         GlobalVariable.window["hWnd"] = None
+        print(f"未找到窗口")
 
 def start_thread():
     """后台线程循环更新窗口句柄"""

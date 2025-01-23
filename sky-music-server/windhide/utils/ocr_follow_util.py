@@ -7,6 +7,7 @@ from ultralytics import YOLO
 
 from windhide.static.global_variable import GlobalVariable
 from windhide.thread.follow_thread_demo import startThread as follow_thread_demo
+from windhide.utils.command_util import start_process
 from windhide.utils.ocr_normal_utils import get_window_screenshot, get_game_position
 from windhide.utils.path_util import getResourcesPath, convert_notes_to_delayed_format
 
@@ -130,29 +131,8 @@ def test_key_model_position(conf):
     results = model(image, conf=conf)  # 替换为你的图片路径
     results[0].show()
 
-def launch_gui_program(width, height, positionX, positionY):
-    try:
-        process = subprocess.Popen(
-            ["path/to/transparent_box_gui.exe", "--width", width, "--height", height, "--x", positionX, "--y", positionY],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
-        )
-        print("GUI 程序已启动，PID:", process.pid)
-        return process
-    except Exception as e:
-        print(f"启动 GUI 程序时出错: {e}")
-        return None
-
 def open_follow():
-    position = get_game_position()
-    # 获取窗口左上角的逻辑坐标
-    positionX = position[0]  # x1
-    positionY = position[1]  # y1
-    # 获取窗口宽度和高度
-    width = position[2] - position[0]  # x2 - x1
-    height = position[3] - position[1]  # y2 - y1
-    launch_gui_program(width, height, positionX, positionY)
-
+    start_process()
     follow_thread = threading.Thread(target=follow_thread_demo)
     follow_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
     follow_thread.start()

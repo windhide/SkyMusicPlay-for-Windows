@@ -35,6 +35,7 @@ class GlobalVariable:
     follow_sheet = []
     nowClientKey = ""
     nowRobotKey = ""
+    follow_client = None
     isNowAutoPlaying = False
     isShow = False
     # 乐谱映射
