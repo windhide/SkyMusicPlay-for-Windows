@@ -12,7 +12,7 @@ def start(request: dict):
         print(f"Starting music: {request['fileName']} of type {request['type']}")
         if GlobalVariable.window["hWnd"] is None and GlobalVariable.compatibility_mode is False:
             return
-        GlobalVariable.nowPlayMusic = request["fileName"]
+        GlobalVariable.now_play_music = request["fileName"]
         match GlobalVariable.cpu_type:
             case "Intel":
                 intel_robot.playMusic(request["fileName"], request["type"])
@@ -38,7 +38,7 @@ def pause():
 def stop():
     try:
         print("Stopping music")
-        GlobalVariable.nowPlayMusic = "没有正在播放的歌曲哦"
+        GlobalVariable.now_play_music = "没有正在播放的歌曲哦"
         match GlobalVariable.cpu_type:
             case "Intel":
                 intel_robot.stop()

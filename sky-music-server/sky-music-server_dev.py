@@ -67,7 +67,7 @@ def get_progress():
             "overall_progress": f"{GlobalVariable.overall_progress:.1f}",
             "now_progress": f"{GlobalVariable.now_progress:.1f}",
             "now_translate_text": GlobalVariable.now_translate_text,
-            "now_play_music": GlobalVariable.nowPlayMusic
+            "now_play_music": GlobalVariable.now_play_music
         }
     except Exception as e:
         print(f"Error in /getProgress: {str(e)}")

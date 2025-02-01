@@ -22,7 +22,7 @@ class GlobalVariable:
     # 进度条相关
     now_progress  = 0 #进度条
     set_progress = -0.01 #进度条
-    nowPlayMusic = "没有正在播放的歌曲哦"
+    now_play_music = "没有正在播放的歌曲哦"
     # 音乐转换进度条
     overall_progress = 0 #总体进度
     now_translate_text = []
