@@ -129,6 +129,8 @@ def config_operate(request: dict):
             drop_file(request)
         case 'get_key_position':
             return get_key_position(float(request["conf"]))
+        case 'cpu_type':
+            return True if GlobalVariable.cpu_type == "AMD" else False
     return "ok"
 
 

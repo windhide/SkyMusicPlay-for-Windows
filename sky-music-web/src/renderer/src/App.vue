@@ -28,6 +28,15 @@
                 <p style="color: rgba(94, 104, 81, 0.65);">插队模式</p>
               </template>
           </n-switch>
+          <br>
+          <n-switch size="small" v-model:value="isRunnable" @update:value="RunnableChange" :rail-style="railStyle" v-show="is_compatibility_mode != true"> 
+              <template #checked>
+                <p style="color: rgba(94, 104, 81, 0.65);">多核模式</p>
+              </template>
+              <template #unchecked>
+                <p style="color: rgba(94, 104, 81, 0.65);">单核模式</p>
+              </template>
+          </n-switch>
       </n-popover>
       <n-button text :dashed="fixDashed" size="large" type="warning" style="margin-top: 12px; font-size: 20px; margin-right: 3px;" @click="fixHandle">
         <n-icon size="25px">
@@ -105,6 +114,7 @@ const route = useRoute()
 const collapsed = ref(false)
 const is_compatibility_mode = ref(false)
 const isPostW = ref(true)
+const isRunnable = ref(true)
 function fixHandle() {
   if (fixDashed.value) {
     window.api.setAlwaysOnTop();
@@ -216,6 +226,24 @@ function PostWChange(value: boolean){
     value
   })
 }
+
+function RunnableChange(value: boolean){
+  sendData("config_operate",{
+    operate: "set",
+    name: "cpu_type",
+    value
+  })
+}
+
+function LoadData(){
+  sendData("config_operate",{
+    operate: "cpu_type" 
+  }).then(res=>{
+    isRunnable.value = res
+  })
+}
+
+LoadData()
 
 onMounted(() => {
   const dragArea = document.getElementById('drag-area')

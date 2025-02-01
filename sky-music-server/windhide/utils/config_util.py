@@ -19,6 +19,8 @@ def set_config(request: dict):
             GlobalVariable.compatibility_mode = request["value"]
         case 'is_post_w':
             GlobalVariable.is_post_w = request["value"]
+        case 'cpu_type':
+            GlobalVariable.cpu_type = "AMD" if request["value"] else "Intel"
 
 def get_config(request: dict):
     configValue = eval("GlobalVariable." + request["name"])
