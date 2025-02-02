@@ -38,6 +38,9 @@ class GlobalVariable:
     follow_client = None
     isNowAutoPlaying = False
     isShow = False
+    follow_thread = None  # 跟弹按键处理相关线程
+    exit_flag = False
+    draw_process = None
     # 乐谱映射
     keyMap = {
         '1Key0':'y', '1Key1':'u', '1Key2':'i', '1Key3':'o', '1Key4':'p',

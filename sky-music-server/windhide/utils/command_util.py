@@ -1,7 +1,9 @@
 import socket
 import threading
+
 from windhide.static.global_variable import GlobalVariable
-from windhide.thread.follow_process_thread import run_follow_process
+from windhide.thread.follow_process_thread import run_follow_process, stop_follow_process
+
 # 全局变量，存储客户端连接对象
 GlobalVariable.follow_client = None
 
@@ -38,7 +40,7 @@ def resize_and_reload_key():
         add_window_key(key)
 
 def quit_window():
-    send_command("exit")  # 发送退出指令到服务器
+    stop_follow_process()
     GlobalVariable.follow_client.close()
     GlobalVariable.follow_client = None
 
@@ -50,5 +52,5 @@ def send_command(command):
             GlobalVariable.follow_client.connect(("localhost", 12345))  # 连接到服务器
         GlobalVariable.follow_client.sendall(command.encode("utf-8"))  # 发送命令
         print(f"发送命令: {command}")
-    except ConnectionRefusedError:
-        print("无法连接到服务器，请确保服务端已启动。")
+    except WindowsError:
+        GlobalVariable.exit_flag = False

@@ -1,22 +1,26 @@
 from pynput import keyboard
+
 from windhide.playRobot.amd_robot import send_single_key_to_window_follow, send_multiple_key_to_window_follow
 from windhide.static.global_variable import GlobalVariable
+from windhide.thread.follow_process_thread import stop_follow_process
 from windhide.utils import hook_util
-from windhide.utils.command_util import send_command
+from windhide.utils.command_util import send_command, resize_and_reload_key
 
 hook_util.sout_null()
 
+GlobalVariable.exit_flag = False  # 添加全局退出标志
 
-# 键盘按键事件处理
+
 def on_press(key):
-    global pressedKeys
-    global originalKeys
+    global pressedKeys, originalKeys
+
+    if GlobalVariable.exit_flag:
+        return False  # 终止监听
 
     if GlobalVariable.follow_music != "":
-        print(key)
+        print(f"按键来自代码 -> {key}")
         try:
-            # 仅处理特定的按键
-            if key.char in 'yuiophjkl;nm,./-=q':
+            if hasattr(key, 'char') and key.char in 'yuiophjkl;nm,./-=q':
                 if GlobalVariable.isNowAutoPlaying:
                     if key.char not in "-":
                         GlobalVariable.nowRobotKey += key.char
@@ -29,15 +33,12 @@ def on_press(key):
                         send_single_key_to_window_follow(GlobalVariable.nowClientKey)
                     if key.char in "=":
                         send_multiple_key_to_window_follow(GlobalVariable.nowClientKey)
-
                     if key.char in "q":
-                        #     重置窗口
-
-                        print("重置窗口哇卡哇卡")
+                        resize_and_reload_key()
                     else:
                         if key.char in originalKeys:
                             pressedKeys.add(key.char)
-                        if len(pressedKeys) == len(pressedKeys):
+                        if len(pressedKeys) == len(originalKeys):
                             originalKeys = set(get_next_sheet_demo("ok"))
                             pressedKeys.clear()
 
@@ -46,7 +47,17 @@ def on_press(key):
         except Exception as e:
             print(f"发生错误: {e}")
 
+    # 处理 Esc 退出监听
+    if key == keyboard.Key.esc:
+        print("检测到 Esc 键，退出监听...")
+        GlobalVariable.exit_flag = True  # 设置全局标志
+        stop_follow_process()
+        return False  # 停止监听
+
+
 box_ids = []
+
+
 def get_next_sheet_demo(operator):
     if len(GlobalVariable.follow_sheet) == 0:
         return ""
@@ -57,7 +68,6 @@ def get_next_sheet_demo(operator):
             GlobalVariable.follow_sheet = GlobalVariable.follow_sheet[1:]
             for key in sheet.keys():
                 send_command("draw box1 100 50 200 200")  # 绘制
-            #     demo未补全
             return sheet
         else:
             GlobalVariable.nowClientKey = GlobalVariable.follow_sheet[0]
@@ -72,20 +82,8 @@ originalKeys = set(get_next_sheet_demo("不OK"))
 pressedKeys = set()
 
 
-# 客户端连接事件处理
-def on_client_connect(client, server):
-    print(f"客户端 {client['id']} 已连接")
-    print(f"{server}")
-
-# 客户端断开事件处理
-def on_client_disconnect(client,server):
-    GlobalVariable.follow_music = ""
-    GlobalVariable.follow_sheet = []
-    print(f"客户端 {client['id']} 已断开连接")
-    print(f"{server}")
-
-# 启动 WebSocket 服务
 def startThread():
-     # 启动键盘监听
-     listener = keyboard.Listener(on_press=on_press)
-     listener.start()
+    GlobalVariable.exit_flag = False  # 确保每次启动时标志位重置
+    # 用 with 语句确保退出后线程释放
+    with keyboard.Listener(on_press=on_press) as listener:
+        listener.join()

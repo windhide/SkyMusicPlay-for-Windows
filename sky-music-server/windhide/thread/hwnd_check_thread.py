@@ -1,5 +1,7 @@
 import time
+
 import psutil
+import pywintypes
 import win32gui
 import win32process
 
@@ -10,48 +12,75 @@ from windhide.utils.ocr_follow_util import get_key_position
 hook_util.sout_null()
 
 
-def is_window_alive(hwnd):
+def safe_enum_windows(callback):
+    """
+    封装 EnumWindows 调用，捕获特定异常，防止异常中断调用链。
+    """
     try:
-        title = win32gui.GetWindowText(hwnd)
-        if hwnd and title:
-            return True
-        return False
-    except Exception:
-        return False
+        win32gui.EnumWindows(callback, None)
+    except pywintypes.error as e:
+        # 错误码 2: 系统找不到指定的文件，此处直接忽略
+        if e.args[0] == 2:
+            print(f"[DEBUG] EnumWindows 错误码 2：{e}")
+        else:
+            print(f"[DEBUG] EnumWindows 异常: {e}")
 
 
 def find_window_by_exe(exe_names):
+    """
+    根据 exe 文件名列表查找窗口句柄：
+    遍历所有进程，匹配 exe 名称；对匹配进程，枚举所有窗口，
+    当窗口所属进程 id 与目标进程 id 匹配时，即返回该窗口句柄。
+    """
+    found_hwnd = None
+    # 遍历所有进程
     for proc in psutil.process_iter(['pid', 'name']):
-        if proc.info['name'] in exe_names:
+        proc_name = proc.info.get('name', '')
+        if proc_name in exe_names:
             pid = proc.info['pid']
+            # print(f"[DEBUG] 找到目标进程: {proc_name} (PID: {pid})")
             target_hwnd = None
 
             def enum_callback(hwnd, lParam):
                 nonlocal target_hwnd
-                if win32gui.IsWindowVisible(hwnd):
+                try:
                     _, window_pid = win32process.GetWindowThreadProcessId(hwnd)
+                    # 判断窗口所属进程 id 是否匹配
                     if window_pid == pid:
                         target_hwnd = hwnd
-                        return False
+                        # print(f"[DEBUG] 匹配到窗口句柄: {hwnd} (属于 PID: {window_pid})")
+                        return False  # 找到后停止枚举
+                except pywintypes.error as e:
+                    print(f"[DEBUG] EnumWindows 回调异常: {e}")
                 return True
 
-            win32gui.EnumWindows(enum_callback, None)
+            safe_enum_windows(enum_callback)
             if target_hwnd:
-                return target_hwnd
-    return None
+                found_hwnd = target_hwnd
+                break  # 找到一个符合条件的窗口后退出循环
+            else:
+                print(f"[DEBUG] 进程 {proc_name} (PID: {pid}) 未找到对应窗口。")
+    # if found_hwnd:
+    #     print(f"[DEBUG] 返回窗口句柄: {found_hwnd}")
+    # else:
+    #     print("[DEBUG] 未找到符合条件的窗口句柄。")
+    return found_hwnd
+
 
 def update_window_handle():
-    # 修改目标 exe 列表，根据实际情况填写
+    """
+    根据目标 exe 列表查找窗口句柄，并更新全局变量：
+    当目标 exe 正在运行时，通过窗口句柄获取窗口位置、宽高等信息，
+    并调用 get_key_position 进行键位检测。否则，清空句柄信息。
+    """
     target_exes = ["光·遇.exe", "Sky.exe"]
     hwnd = find_window_by_exe(target_exes)
-    if is_window_alive(hwnd):
-        # 获取窗口矩形：(left, top, right, bottom)
+    if hwnd is not None:
         rect = win32gui.GetWindowRect(hwnd)
         current_x, current_y, right, bottom = rect
         current_width = right - current_x
         current_height = bottom - current_y
 
-        # 更新全局变量
         GlobalVariable.window["hWnd"] = hwnd
         GlobalVariable.window["width"] = current_width
         GlobalVariable.window["height"] = current_height
@@ -64,11 +93,10 @@ def update_window_handle():
         except KeyError:
             print("未知原因")
 
-        # 输出变化信息
-        print(f"窗口位置：({current_x}, {current_y})，宽度：{current_width}，高度：{current_height}")
+        # print(f"窗口位置：({current_x}, {current_y})，宽度：{current_width}，高度：{current_height}")
     else:
         GlobalVariable.window["hWnd"] = None
-        print("未找到窗口")
+        # print("未找到窗口")
 
 
 def start_thread():

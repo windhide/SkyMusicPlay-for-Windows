@@ -1,5 +1,4 @@
 import os
-import subprocess
 import threading
 import time
 
@@ -8,7 +7,7 @@ from ultralytics import YOLO
 from windhide.static.global_variable import GlobalVariable
 from windhide.thread.follow_thread_demo import startThread as follow_thread_demo
 from windhide.utils.command_util import start_process
-from windhide.utils.ocr_normal_utils import get_window_screenshot, get_game_position
+from windhide.utils.ocr_normal_utils import get_window_screenshot
 from windhide.utils.path_util import getResourcesPath, convert_notes_to_delayed_format
 
 global_button_model = None
@@ -133,6 +132,6 @@ def test_key_model_position(conf):
 
 def open_follow():
     start_process()
-    follow_thread = threading.Thread(target=follow_thread_demo)
-    follow_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
-    follow_thread.start()
+    GlobalVariable.follow_thread = threading.Thread(target=follow_thread_demo)
+    GlobalVariable.follow_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
+    GlobalVariable.follow_thread.start()

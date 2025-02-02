@@ -207,17 +207,17 @@ if __name__ == '__main__':
     follow_websocket_thread = threading.Thread(target=follow_thread)
     follow_websocket_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
     follow_websocket_thread.start()
-    print("pass 1")
+    print("pass 跟弹相关Socket")
     # 创建监听 快捷键 的线程
     shortcut_websocket_thread = threading.Thread(target=shortcut_thread)
     shortcut_websocket_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
     shortcut_websocket_thread.start()
-    print("pass 2")
+    print("pass 快捷键相关Socket")
     # 创建监听 光遇 窗口的线程
     hwnd_thread = threading.Thread(target=hwnd_check_thread)
     hwnd_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
     hwnd_thread.start()
-    print("pass 3")
+    print("pass 句柄相关Socket")
 
     print("Now start service")
     # 启动 FastAPI 服务
