@@ -648,7 +648,7 @@ onUnmounted(async () => {
     socket = null
   }
   playBarClickHandler("stop","")
-  await clearPlayInfo()
+  clearPlayInfo()
 })
 </script>
 <style scoped>
