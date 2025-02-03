@@ -101,25 +101,13 @@ def get_key_position(conf, threshold=10):
     }
     final_result = {}
     for idx, (group_key, group_boxes) in enumerate(zip(sorted_keys, sorted_result.values())):
+        if idx == 3:
+            break
+        # 避免越界
         keys = key_mapping[idx]  # 获取当前分组的键名列表
         for key_name, box in zip(keys, group_boxes):
             final_result[key_name] = box  # 使用键名作为最终结果的 key
     GlobalVariable.window["key_position"] = final_result
-    # "y": {"position_x": 50, "position_y": 100, "width": ..., "height": ...},
-    # "u": {"position_x": 150, "position_y": 100, "width": ..., "height": ...},
-    # "i": {"position_x": 250, "position_y": 100, "width": ..., "height": ...},
-    # "o": {"position_x": 350, "position_y": 100, "width": ..., "height": ...},
-    # "p": {"position_x": 450, "position_y": 100, "width": ..., "height": ...},
-    # "h": {"position_x": 50, "position_y": 200, "width": ..., "height": ...},
-    # "j": {"position_x": 150, "position_y": 200, "width": ..., "height": ...},
-    # "k": {"position_x": 250, "position_y": 200, "width": ..., "height": ...},
-    # "l": {"position_x": 350, "position_y": 200, "width": ..., "height": ...},
-    # ";": {"position_x": 450, "position_y": 200, "width": ..., "height": ...},
-    # "n": {"position_x": 50, "position_y": 300, "width": ..., "height": ...},
-    # "m": {"position_x": 150, "position_y": 300, "width": ..., "height": ...},
-    # ",": {"position_x": 250, "position_y": 300, "width": ..., "height": ...},
-    # ".": {"position_x": 350, "position_y": 300, "width": ..., "height": ...},
-    # "/": {"position_x": 450, "position_y": 300, "width": ..., "height": ...}
     print(f"=>{final_result}")
     return final_result
 
