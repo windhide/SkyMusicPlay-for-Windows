@@ -58,11 +58,9 @@ def stop_follow_process():
             print(f"🛑 终止主进程: PID={parent.pid}")
             parent.terminate()
             parent.wait(5)  # 等待最多 5 秒
-
             # 清理全局变量
             GlobalVariable.draw_process = None
             print("✅ draw_server.exe 及其所有子进程已终止")
-
         except psutil.NoSuchProcess:
             print("⚠️ 进程已不存在")
         except Exception as e:

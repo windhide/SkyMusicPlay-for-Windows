@@ -37,13 +37,13 @@ def get_game_position():
     rect = win32gui.GetWindowRect(hwnd)
     client_rect = win32gui.GetClientRect(hwnd)
     # 获取窗口 DPI 缩放比例
-    scale_factor = get_system_dpi() / 96.0  # DPI 标准比例为 96
-    # 计算边框和标题栏的逻辑偏移
     border_x = (rect[2] - rect[0] - client_rect[2]) // 2
     border_y = (rect[3] - rect[1] - client_rect[3] - border_x)
+    GlobalVariable.window_offset_x = border_x
+    GlobalVariable.window_offset_y = border_y
     # 转换物理坐标为逻辑坐标，去掉边框和标题栏
-    x1 = int((rect[0] + border_x) / scale_factor)
-    y1 = int((rect[1] + border_y) / scale_factor)
-    x2 = int((rect[2] - border_x) / scale_factor)
-    y2 = int((rect[3] - border_y) / scale_factor)
+    x1 = int((rect[0] + border_x))
+    y1 = int((rect[1] + border_y))
+    x2 = int((rect[2] - border_x))
+    y2 = int((rect[3] - border_y))
     return x1, y1, x2, y2

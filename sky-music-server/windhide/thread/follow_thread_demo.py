@@ -1,15 +1,18 @@
+import time
+
 from pynput import keyboard
 
 from windhide.playRobot.amd_robot import send_single_key_to_window_follow, send_multiple_key_to_window_follow
 from windhide.static.global_variable import GlobalVariable
-from windhide.thread.follow_process_thread import stop_follow_process
 from windhide.utils import hook_util
-from windhide.utils.command_util import send_command, resize_and_reload_key
+from windhide.utils.command_util import resize_and_reload_key, clear_window_key, add_window_key, \
+    quit_window
 
 hook_util.sout_null()
 
 GlobalVariable.exit_flag = False  # 添加全局退出标志
-
+originalKeys = "None"
+pressedKeys = set()
 
 def on_press(key):
     global pressedKeys, originalKeys
@@ -39,19 +42,19 @@ def on_press(key):
                         if key.char in originalKeys:
                             pressedKeys.add(key.char)
                         if len(pressedKeys) == len(originalKeys):
-                            originalKeys = set(get_next_sheet_demo("ok"))
                             pressedKeys.clear()
+                            originalKeys = set(get_next_sheet_demo("ok"))
 
-        except AttributeError:
-            return
+        except AttributeError as e:
+            print(f"发生错误: {e.__doc__}")
         except Exception as e:
-            print(f"发生错误: {e}")
+            print(f"发生错误: {e.__doc__}")
 
     # 处理 Esc 退出监听
     if key == keyboard.Key.esc:
         print("检测到 Esc 键，退出监听...")
         GlobalVariable.exit_flag = True  # 设置全局标志
-        stop_follow_process()
+        quit_window()
         return False  # 停止监听
 
 
@@ -62,12 +65,16 @@ def get_next_sheet_demo(operator):
     if len(GlobalVariable.follow_sheet) == 0:
         return ""
     try:
-        if operator == "ok":
+        if operator != "load":
+            global originalKeys
+            clear_window_key(originalKeys)
+
+        if operator == "ok" or operator == "load":
             sheet = GlobalVariable.follow_sheet[0]
             GlobalVariable.nowClientKey = sheet
             GlobalVariable.follow_sheet = GlobalVariable.follow_sheet[1:]
-            for key in sheet.keys():
-                send_command("draw box1 100 50 200 200")  # 绘制
+            for key in sheet:
+                add_window_key(key)
             return sheet
         else:
             GlobalVariable.nowClientKey = GlobalVariable.follow_sheet[0]
@@ -77,13 +84,13 @@ def get_next_sheet_demo(operator):
         return ""
 
 
-# 初始化
-originalKeys = set(get_next_sheet_demo("不OK"))
-pressedKeys = set()
 
 
 def startThread():
+    global originalKeys, pressedKeys
+    time.sleep(2)
+    originalKeys = set(get_next_sheet_demo("load"))
+    pressedKeys = set()
     GlobalVariable.exit_flag = False  # 确保每次启动时标志位重置
-    # 用 with 语句确保退出后线程释放
     with keyboard.Listener(on_press=on_press) as listener:
         listener.join()

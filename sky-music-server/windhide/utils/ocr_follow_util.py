@@ -1,3 +1,4 @@
+import logging
 import os
 import threading
 import time
@@ -12,6 +13,7 @@ from windhide.utils.path_util import getResourcesPath, convert_notes_to_delayed_
 
 global_button_model = None
 
+logging.getLogger("ultralytics").setLevel(logging.WARNING)
 
 def set_next_sheet(request: dict):
     try:
@@ -46,11 +48,15 @@ def load_key_model():
     if global_button_model is None:
         button_model_path = os.path.join(getResourcesPath("systemTools"), "modelData", "check_key_model.pt")
         global_button_model = YOLO(button_model_path)  # 加载模型并保存在 global_friend_model 中
-    print("模型加载完成")
+        print("模型加载完成")
     return global_button_model
 
 
 def get_key_position(conf, threshold=10):
+    if GlobalVariable.window["key_position"] != None:
+        if len(GlobalVariable.window["key_position"]) == 15 and not GlobalVariable.window["is_change"]:
+            return GlobalVariable.window["key_position"]
+    print("开始检测按键布局")
     image = get_window_screenshot()
     model = load_key_model()
     results = model(image, conf=conf)  # 替换为你的图片路径
@@ -87,7 +93,6 @@ def get_key_position(conf, threshold=10):
     for key in sorted_keys:
         group = result_dict[key]
         sorted_group = sorted(group, key=lambda b: b["position_x"])
-
         sorted_result[key] = [{
             "width": box["width"],
             "height": box["height"],
@@ -108,7 +113,7 @@ def get_key_position(conf, threshold=10):
         for key_name, box in zip(keys, group_boxes):
             final_result[key_name] = box  # 使用键名作为最终结果的 key
     GlobalVariable.window["key_position"] = final_result
-    print(f"=>{final_result}")
+    # print(f"=>{final_result}")
     return final_result
 
 def test_key_model_position(conf):

@@ -89,12 +89,20 @@ class TransparentBoxWindow:
 
     def handle_client(self, client):
         try:
+            buffer = ""
             while True:
                 data = client.recv(1024).decode("utf-8")
                 if not data:
                     break
-                print(f"收到数据: {data}")
-                self.process_command(data)
+                buffer += data
+                # 按换行符分割命令
+                commands = buffer.split("\n")
+                # 处理完整命令
+                for command in commands[:-1]:  # 最后一个可能是不完整的
+                    print(f"收到命令: {command}")
+                    self.process_command(command)
+                # 将最后一个不完整的命令保留到下一次处理
+                buffer = commands[-1]
         except ConnectionResetError:
             print("客户端断开连接")
         finally:

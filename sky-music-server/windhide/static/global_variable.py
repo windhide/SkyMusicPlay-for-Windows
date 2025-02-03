@@ -41,6 +41,9 @@ class GlobalVariable:
     follow_thread = None  # 跟弹按键处理相关线程
     exit_flag = False
     draw_process = None
+    window_offset_x = 0
+    window_offset_y = 0
+    follow_process = None
     # 乐谱映射
     keyMap = {
         '1Key0':'y', '1Key1':'u', '1Key2':'i', '1Key3':'o', '1Key4':'p',

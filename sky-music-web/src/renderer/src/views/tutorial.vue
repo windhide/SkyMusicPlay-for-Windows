@@ -157,7 +157,10 @@ function followTutorial() {
       type: nowType,
       operate: "setSheet",
     }).then(() => {
-      window.api.open_tutorial();
+      // window.api.open_tutorial();
+      sendData("follow",{
+        "operate": "openFollow"
+      })
     });
   }
 }

@@ -86,13 +86,10 @@ def update_window_handle():
         GlobalVariable.window["height"] = current_height
         GlobalVariable.window["position_x"] = current_x
         GlobalVariable.window["position_y"] = current_y
-        GlobalVariable.window["is_change"] = True
-
-        try:
-            get_key_position(0.5)
-        except KeyError:
-            print("未知原因")
-
+        if GlobalVariable.window["width"] != current_width or GlobalVariable.window["height"] != current_height or \
+                GlobalVariable.window["position_x"] != current_x or GlobalVariable.window["position_y"] != current_y:
+            GlobalVariable.window["is_change"] = True
+        get_key_position(0.5)
         # print(f"窗口位置：({current_x}, {current_y})，宽度：{current_width}，高度：{current_height}")
     else:
         GlobalVariable.window["hWnd"] = None
