@@ -19,7 +19,7 @@ def draw_box_api(canvas, width, height, position_x, position_y):
     return canvas.create_rectangle(
         position_x, position_y,
         position_x + width, position_y + height,
-        outline="pink", width=2
+        outline="#00ffff", width=3
     )
 
 def delete_box_api(canvas, box_id):
@@ -37,7 +37,7 @@ class TransparentBoxWindow:
         self.canvas.pack()
 
         # 绘制红色边框
-        self.draw_red_border(width, height)
+        # self.draw_red_border(width, height)
 
         # 添加关闭按钮
         self.add_close_button()
@@ -158,8 +158,8 @@ class TransparentBoxWindow:
         self.canvas.config(width=width, height=height)
 
         # **清除旧的红色边框，重新绘制**
-        self.canvas.delete("red_border")  # 删除之前的红色边框
-        self.draw_red_border(width, height)
+        # self.canvas.delete("red_border")  # 删除之前的红色边框
+        # self.draw_red_border(width, height)
 
         # **再一次刷新 Tkinter UI，确保所有变化生效**
         self.root.update_idletasks()
