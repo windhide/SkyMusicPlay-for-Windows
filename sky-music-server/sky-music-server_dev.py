@@ -14,7 +14,6 @@ from windhide.auto.script_to_json import script_to_json
 from windhide.musicToSheet.process_audio import process_directory_with_progress
 from windhide.playRobot import amd_robot, intel_robot
 from windhide.static.global_variable import GlobalVariable
-from windhide.thread.follow_thread import startThread as follow_thread
 from windhide.thread.hwnd_check_thread import start_thread as hwnd_check_thread
 from windhide.thread.shortcut_thread import startThread as shortcut_thread
 from windhide.utils.auto_util import auto_click_fire, shutdown, auto_candles_run
@@ -203,10 +202,6 @@ def test(request: dict):
 
 if __name__ == '__main__':
     GlobalVariable.isProd = False
-    # 创建监听 WebSocket 的线程
-    follow_websocket_thread = threading.Thread(target=follow_thread)
-    follow_websocket_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
-    follow_websocket_thread.start()
     print("pass 跟弹相关Socket")
     # 创建监听 快捷键 的线程
     shortcut_websocket_thread = threading.Thread(target=shortcut_thread)

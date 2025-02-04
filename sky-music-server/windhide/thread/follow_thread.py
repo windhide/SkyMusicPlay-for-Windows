@@ -1,9 +1,8 @@
 import time
 
-from keyboard import on_release
 from pynput import keyboard
 
-from windhide.playRobot.amd_robot import send_single_key_to_window_follow, send_multiple_key_to_window_follow
+from windhide.playRobot.amd_robot import send_multiple_key_press, send_multiple_key_release
 from windhide.static.global_variable import GlobalVariable
 from windhide.utils import hook_util
 from windhide.utils.command_util import resize_and_reload_key, clear_window_key, add_window_key, \
@@ -17,10 +16,8 @@ pressedKeys = set()
 
 def on_press(key):
     global pressedKeys, originalKeys
-
     if GlobalVariable.exit_flag:
         return False  # 终止监听
-
     if GlobalVariable.follow_music != "":
         try:
             if hasattr(key, 'char') and key.char in 'yuiophjkl;nm,./-=q':
@@ -33,21 +30,11 @@ def on_press(key):
                 else:
                     if key.char in "-":
                         GlobalVariable.isNowAutoPlaying = True
-                        send_single_key_to_window_follow(GlobalVariable.nowClientKey)
+                        send_multiple_key_press(GlobalVariable.nowClientKey)
                     if key.char in "=":
-                        send_multiple_key_to_window_follow(GlobalVariable.nowClientKey)
+                        send_multiple_key_press(GlobalVariable.nowClientKey)
                     if key.char in "q":
-                        GlobalVariable.window["is_change"] = True
                         resize_and_reload_key()
-                    else:
-                        if key.char in originalKeys:
-                            pressedKeys.add(key.char)
-                        if len(pressedKeys) == len(originalKeys):
-                            pressedKeys.clear()
-                            originalKeys = set(get_next_sheet_demo("ok"))
-
-        except AttributeError as e:
-            print(f"发生错误: {e.__doc__}")
         except Exception as e:
             print(f"发生错误: {e.__doc__}")
 
@@ -55,15 +42,17 @@ def on_press(key):
     if key == keyboard.Key.esc:
         print("检测到 Esc 键，退出监听...")
         GlobalVariable.exit_flag = True  # 设置全局标志
-        quit_window()
+        try:
+            quit_window()
+        except Exception as e:
+            return False
         return False  # 停止监听
 
 
-def on_release(key):
+def key_release(key):
     global pressedKeys, originalKeys
     if GlobalVariable.exit_flag:
         return False  # 终止监听
-
     if GlobalVariable.follow_music != "":
         try:
             if hasattr(key, 'char') and key.char in 'yuiophjkl;nm,./-=q':
@@ -76,11 +65,10 @@ def on_release(key):
                 else:
                     if key.char in "-":
                         GlobalVariable.isNowAutoPlaying = True
-                        send_single_key_to_window_follow(GlobalVariable.nowClientKey)
+                        send_multiple_key_release(GlobalVariable.nowClientKey)
                     if key.char in "=":
-                        send_multiple_key_to_window_follow(GlobalVariable.nowClientKey)
+                        send_multiple_key_release(GlobalVariable.nowClientKey)
                     if key.char in "q":
-                        GlobalVariable.window["is_change"] = True
                         resize_and_reload_key()
                     else:
                         if key.char in originalKeys:
@@ -88,9 +76,6 @@ def on_release(key):
                         if len(pressedKeys) == len(originalKeys):
                             pressedKeys.clear()
                             originalKeys = set(get_next_sheet_demo("ok"))
-
-        except AttributeError as e:
-            print(f"发生错误: {e.__doc__}")
         except Exception as e:
             print(f"发生错误: {e.__doc__}")
 
@@ -98,10 +83,11 @@ def on_release(key):
     if key == keyboard.Key.esc:
         print("检测到 Esc 键，退出监听...")
         GlobalVariable.exit_flag = True  # 设置全局标志
-        quit_window()
+        try:
+            quit_window()
+        except Exception as e:
+            return False
         return False  # 停止监听
-
-
 box_ids = []
 
 
@@ -123,10 +109,8 @@ def get_next_sheet_demo(operator):
         else:
             GlobalVariable.nowClientKey = GlobalVariable.follow_sheet[0]
             return GlobalVariable.follow_sheet[0]
-    except Exception as e:
-        print(f"发生错误 -> {e}")
-        print(f"发生错误 -> {e.__doc__}")
-
+    except IndexError:
+        print("空数组")
         return ""
 
 
@@ -136,5 +120,5 @@ def startThread():
     originalKeys = set(get_next_sheet_demo("load"))
     pressedKeys = set()
     GlobalVariable.exit_flag = False  # 确保每次启动时标志位重置
-    with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
+    with keyboard.Listener(on_press=on_press, on_release=key_release) as listener:
         listener.join()
