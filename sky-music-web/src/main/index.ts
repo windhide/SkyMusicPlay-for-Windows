@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain, screen, Notification } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, screen, Notification, powerSaveBlocker } from 'electron'
 import { join } from 'path'
 import { electronApp, is } from '@electron-toolkit/utils'
 import icon from '../../build/icon.png?asset'
@@ -6,6 +6,7 @@ import { exec } from 'child_process'
 const path = require('path')
 const fs = require('fs');
 const iconv = require('iconv-lite'); // 用于支持多种编码格式
+
 let mainWindow: BrowserWindow | null = null;
 let modal: BrowserWindow | null = null;
 
@@ -13,7 +14,14 @@ let modalWidth:any = 1100
 let modalHeight:any = 600
 
 app.commandLine.appendSwitch('no-sandbox');
-
+// 启动电源保护
+powerSaveBlocker.start('prevent-display-sleep');
+powerSaveBlocker.start('prevent-app-suspension');
+app.commandLine.appendSwitch('enable-gpu-rasterization');  // 强制 GPU 光栅化
+app.commandLine.appendSwitch('ignore-gpu-blacklist');  // 忽略 Electron GPU 黑名单
+app.commandLine.appendSwitch('force-color-profile', 'srgb');  // 统一颜色配置
+// 允许 GPU 但在必要时自动回退到软件渲染
+app.commandLine.appendSwitch('disable-software-rasterizer');
 function createWindow(): void {
   // Create the browser window.
   mainWindow = new BrowserWindow({
