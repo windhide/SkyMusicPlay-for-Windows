@@ -113,7 +113,6 @@ def get_key_position(conf, threshold=10):
         for key_name, box in zip(keys, group_boxes):
             final_result[key_name] = box  # 使用键名作为最终结果的 key
     GlobalVariable.window["key_position"] = final_result
-    # print(f"=>{final_result}")
     return final_result
 
 def test_key_model_position(conf):

@@ -101,4 +101,4 @@ def start_thread():
     """后台线程循环更新窗口句柄"""
     while True:
         update_window_handle()
-        time.sleep(3)
+        time.sleep(2)

@@ -202,7 +202,6 @@ def test(request: dict):
 
 if __name__ == '__main__':
     GlobalVariable.isProd = False
-    print("pass 跟弹相关Socket")
     # 创建监听 快捷键 的线程
     shortcut_websocket_thread = threading.Thread(target=shortcut_thread)
     shortcut_websocket_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
