@@ -17,12 +17,16 @@ def start_process():
     thread.start()
 
 def add_window_key(key):
-    width = GlobalVariable.window['key_position'][key]['width']
-    height = GlobalVariable.window['key_position'][key]['height']
-    position_x = GlobalVariable.window['key_position'][key]['position_x'] - GlobalVariable.window_offset_x
-    position_y = GlobalVariable.window['key_position'][key]['position_y'] - GlobalVariable.window_offset_y
-    key = replace_special_symbols(key)
-    send_command(f"draw {key} {width} {height} {position_x} {position_y} \n")  # 绘制
+    try:
+        width = GlobalVariable.window['key_position'][key]['width']
+        height = GlobalVariable.window['key_position'][key]['height']
+        position_x = GlobalVariable.window['key_position'][key]['position_x'] - GlobalVariable.window_offset_x
+        position_y = GlobalVariable.window['key_position'][key]['position_y'] - GlobalVariable.window_offset_y
+        key = replace_special_symbols(key)
+        send_command(f"draw {key} {width} {height} {position_x} {position_y} \n")  # 绘制
+    except KeyError:
+        print("按键识别不完全，重新调用")
+        resize_and_reload_key()
 
 def del_window_key(key):
     key = replace_special_symbols(key)
