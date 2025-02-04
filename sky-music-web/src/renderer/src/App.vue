@@ -1,5 +1,5 @@
 <template>
-  <n-config-provider :theme="darkTheme" :style="bronWidth === 800 ? '' : 'background-color: rgba(0, 0, 0, 0.5)'">
+  <n-config-provider :theme="darkTheme">
     <n-flex id="drag-area" justify="end" style="position: fixed; z-index: 200; right: 18px" :style="{
       width: collapsed ? '90%' : '80%'
     }">
@@ -44,12 +44,12 @@
           <Pin48Filled v-else />
         </n-icon>
       </n-button>
-      <n-button text type="warning" size="large" style="margin-top: 12px; font-size: 20px;" @click="openFileHandle" v-show="bronWidth === 800">
+      <n-button text type="warning" size="large" style="margin-top: 12px; font-size: 20px;" @click="openFileHandle">
         <n-icon size="25px">
           <ImageOutline />
         </n-icon>
       </n-button>
-      <n-button text type="info" size="large" style="margin-top: 12px; font-size: 25px;" @click="miniHandle" v-show="bronWidth === 800">
+      <n-button text type="info" size="large" style="margin-top: 12px; font-size: 25px;" @click="miniHandle">
           <n-icon>
             <Remove />
           </n-icon>
@@ -60,19 +60,19 @@
           </n-icon>
       </n-button>
     </n-flex>
-    <n-spin :show="show" :size="90" :style="bronWidth === 800 ? 'background-color: black;' : 'background-color: rgba(0, 0, 0, 0)'" stroke="#F2E8C4">
+    <n-spin :show="show" :size="90" stroke="#F2E8C4">
       <n-message-provider>
         <n-dialog-provider>
           <n-space vertical>
-            <n-layout :style="bronWidth === 800 ? '' : 'background-color: rgba(0, 0, 0, 0)'">
-              <n-layout has-sider :style="bronWidth === 800 ? '' : 'background-color: rgba(0, 0, 0, 0)'">
+            <n-layout>
+              <n-layout has-sider>
                 <n-layout-sider v-show="route.fullPath.indexOf('keyboard') == -1" bordered show-trigger
                   collapse-mode="width" :collapsed-width="64" :width="150" :native-scrollbar="false"
                   style="height: 100vh" @update:collapsed="collapsedHandle">
                   <n-menu :collapsed-width="64" :collapsed-icon-size="22" :options="menuOptions"
                     @update:value="clickMenu" />
                 </n-layout-sider>
-                <n-layout :style="bronWidth === 800 ? 'padding: 40px 25px 0px 25px' : 'background-color: rgba(0, 0, 0, 0)'">
+                <n-layout style="padding: 40px 25px 0px 25px">
                   <router-view />
                 </n-layout>
               </n-layout>
@@ -109,7 +109,6 @@ import {
 import router from '@renderer/router'
 
 import { useRoute } from 'vue-router'
-let bronWidth = window.innerWidth
 const route = useRoute()
 const collapsed = ref(false)
 const is_compatibility_mode = ref(false)
@@ -234,7 +233,6 @@ function RunnableChange(value: boolean){
     value
   })
 }
-
 function LoadData(){
   sendData("config_operate",{
     operate: "cpu_type" 
@@ -244,7 +242,6 @@ function LoadData(){
 }
 
 LoadData()
-
 onMounted(() => {
   const dragArea = document.getElementById('drag-area')
   if (dragArea) {
@@ -271,10 +268,6 @@ onMounted(() => {
     })
   } else {
     console.error('drag-area element not found')
-  }
-
-  if (bronWidth !== 800){
-    fixHandle()
   }
 })
 </script>

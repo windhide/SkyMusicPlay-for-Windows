@@ -35,7 +35,7 @@ def clear_window_key(keys):
 
 def resize_and_reload_key():
     position = get_game_position()
-    position_x, position_y = position[0] - GlobalVariable.window_offset_x, position[1] - GlobalVariable.window_offset_y
+    position_x, position_y = position[0], position[1]
     width, height = position[2] - position[0], position[3] - position[1]
     send_command(f"resize {width} {height} {position_x} {position_y} \n")
     clear_window_key(GlobalVariable.nowClientKey)

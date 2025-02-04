@@ -1,9 +1,11 @@
 <template>
   <n-flex align="center">
-    <n-gradient-text :size="20" type="success" style="width: 100%;color:#F2E8C4">
+    <n-gradient-text :size="20" type="success" style="width: 100%; color: #f2e8c4">
       {{ "当前: " + nowPlayMusic + "" }}
     </n-gradient-text>
-    <n-button type="primary" ghost @click="followTutorial" color="#F2E8C4"> 开始跟弹 </n-button>
+    <n-button type="primary" ghost @click="followTutorial" color="#F2E8C4">
+      开始跟弹
+    </n-button>
   </n-flex>
   <n-card style="margin-top: 20px">
     <n-tabs
@@ -62,8 +64,12 @@
         />
       </n-tab-pane>
       <template #suffix>
-        <n-input v-model:value="searchText" round placeholder="搜索"
-          style="top:-4px;width: 25vh; margin-left: 5px">
+        <n-input
+          v-model:value="searchText"
+          round
+          placeholder="搜索"
+          style="top: -4px; width: 25vh; margin-left: 5px"
+        >
           <template #suffix>
             <n-icon :component="Search" />
           </template>
@@ -96,7 +102,7 @@ const musicColumns = [
   {
     title: "歌名",
     key: "name",
-    className: 'th_css'
+    className: "th_css",
   },
 ]; // 音乐列
 
@@ -157,10 +163,9 @@ function followTutorial() {
       type: nowType,
       operate: "setSheet",
     }).then(() => {
-      // window.api.open_tutorial();
-      sendData("follow",{
-        "operate": "openFollow"
-      })
+      sendData("follow", {
+        operate: "openFollow",
+      });
     });
   }
 }
@@ -174,22 +179,22 @@ function getListData(value) {
 </script>
 
 <style scoped>
-:deep(.n-tabs-bar){
-  --n-bar-color: rgb(242,232,196)!important;
+:deep(.n-tabs-bar) {
+  --n-bar-color: rgb(242, 232, 196) !important;
 }
-:deep(.n-tabs){
-    --n-tab-text-color-active: rgb(242,232,196)!important;
-    --n-tab-text-color-hover: rgb(242,232,196)!important;
-    --n-tab-text-color: rgb(221,242,196)!important;
+:deep(.n-tabs) {
+  --n-tab-text-color-active: rgb(242, 232, 196) !important;
+  --n-tab-text-color-hover: rgb(242, 232, 196) !important;
+  --n-tab-text-color: rgb(221, 242, 196) !important;
 }
-.n-input{
+.n-input {
   background-color: rgba(24, 24, 28, 0) !important;
-  border: 1px solid rgba(242,232,196,0.5);
+  border: 1px solid rgba(242, 232, 196, 0.5);
 }
 :deep(.td_css td) {
-  color: rgb(242,232,196) !important;
+  color: rgb(242, 232, 196) !important;
 }
-:deep(.th_css){
-  color: rgb(221,242,196) !important;
+:deep(.th_css) {
+  color: rgb(221, 242, 196) !important;
 }
 </style>

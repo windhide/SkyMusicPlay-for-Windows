@@ -53,7 +53,7 @@ class TransparentBoxWindow:
         self.canvas.create_rectangle(
             border_thickness // 2, border_thickness // 2,
             width - border_thickness // 2, height - border_thickness // 2,
-            outline="red", width=border_thickness
+            outline="red", width=border_thickness, tags="red_border"
         )
 
     def add_close_button(self):
@@ -140,15 +140,40 @@ class TransparentBoxWindow:
             self.exit_program()
 
     def change_window_geometry(self, width, height, position_x, position_y):
-        print("更改窗口尺寸和位置...")
-        # 清除所有已绘制的框
+        print(f"更改窗口尺寸和位置为：{width}x{height}, 坐标: ({position_x}, {position_y})")
+
+        # 先清除所有已绘制的方框
         for tkinter_id in self.boxes.values():
             self.canvas.delete(tkinter_id)
         self.boxes.clear()
 
-        # 更新窗口几何属性
+        # **第一步：仅修改窗口大小**
         self.root.geometry(f"{width}x{height}+{position_x}+{position_y}")
+
+        # **确保 Tkinter 处理完窗口大小调整**
+        self.root.update_idletasks()
+        self.root.update()
+
+        # **第二步：修改 Canvas 大小**
         self.canvas.config(width=width, height=height)
+
+        # **清除旧的红色边框，重新绘制**
+        self.canvas.delete("red_border")  # 删除之前的红色边框
+        self.draw_red_border(width, height)
+
+        # **再一次刷新 Tkinter UI，确保所有变化生效**
+        self.root.update_idletasks()
+        self.root.update()
+
+        # 输出调整后的实际窗口大小
+        actual_width = self.root.winfo_width()
+        actual_height = self.root.winfo_height()
+        print(f"调整后实际窗口尺寸: {actual_width}x{actual_height}")
+
+        # 输出调整后的实际窗口大小
+        actual_width = self.root.winfo_width()
+        actual_height = self.root.winfo_height()
+        print(f"调整后实际窗口尺寸: {actual_width}x{actual_height}")
 
     def exit_program(self):
         self.root.destroy()
