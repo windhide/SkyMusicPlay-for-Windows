@@ -1,5 +1,6 @@
 import socket
 import threading
+import time
 
 from windhide.static.global_variable import GlobalVariable
 from windhide.thread.follow_process_thread import run_follow_process, stop_follow_process
@@ -26,6 +27,8 @@ def add_window_key(key):
         send_command(f"draw {key} {width} {height} {position_x} {position_y} \n")  # 绘制
     except KeyError:
         print("按键识别不完全，重新调用")
+        GlobalVariable.window["is_change"] = True
+        time.sleep(2)
         resize_and_reload_key()
 
 def del_window_key(key):
@@ -38,7 +41,6 @@ def clear_window_key(keys):
         send_command(f"delete {key} \n")
 
 def resize_and_reload_key():
-    GlobalVariable.window["is_change"] = True
     position = get_game_position()
     position_x, position_y = position[0], position[1]
     width, height = position[2] - position[0], position[3] - position[1]
@@ -75,3 +77,6 @@ def send_command(command):
         print("send Command错误", e.__doc__)
     except Exception as e:
         print("send Command错误", e.__doc__)
+        # GlobalVariable.follow_client.shutdown(socket.SHUT_RDWR)  # 关闭套接字的读写
+        # GlobalVariable.follow_client.close()
+        # GlobalVariable.follow_client = None

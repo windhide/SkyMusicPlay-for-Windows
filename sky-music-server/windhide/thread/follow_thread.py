@@ -33,11 +33,8 @@ def on_press(key):
                         send_multiple_key_press(GlobalVariable.nowClientKey)
                     if key.char in "=":
                         send_multiple_key_press(GlobalVariable.nowClientKey)
-                    if key.char in "q":
-                        resize_and_reload_key()
         except Exception as e:
             print(f"发生错误: {e.__doc__} , 开始重新加载")
-            resize_and_reload_key()
 
     # 处理 Esc 退出监听
     if key == keyboard.Key.esc:
@@ -79,7 +76,6 @@ def key_release(key):
                             originalKeys = set(get_next_sheet_demo("ok"))
         except Exception as e:
             print(f"发生错误: {e.__doc__} , 开始重新加载")
-            resize_and_reload_key()
 
     # 处理 Esc 退出监听
     if key == keyboard.Key.esc:
