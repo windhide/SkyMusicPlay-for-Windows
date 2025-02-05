@@ -18,9 +18,6 @@ if (process.contextIsolated) {
       mini: () => {
         ipcRenderer.send('window-min');
       },
-      open_tutorial: () => {
-        ipcRenderer.send('open-tutorial');
-      },
       readFile: async (filePath: string) => {
         return await ipcRenderer.invoke('read-file', filePath); 
       },

@@ -8,10 +8,6 @@ const fs = require('fs');
 const iconv = require('iconv-lite'); // 用于支持多种编码格式
 
 let mainWindow: BrowserWindow | null = null;
-let modal: BrowserWindow | null = null;
-
-let modalWidth:any = 1100
-let modalHeight:any = 600
 
 app.commandLine.appendSwitch('no-sandbox');
 // 启动电源保护
@@ -62,17 +58,9 @@ function createWindow(): void {
   let offsetY = 0
 
   ipcMain.on('mousedown', (_event, { }) => {
-    const senderWebContents = _event.sender;  // 获取发送消息的 webContents
     const cursorPoint = screen.getCursorScreenPoint()
     let bounds:any = null
-
-    if (senderWebContents === mainWindow?.webContents) {
-      bounds = mainWindow?.getBounds()
-    } else if (senderWebContents === modal?.webContents) {
-      bounds = modal?.getBounds()
-    }
-
-
+    bounds = mainWindow?.getBounds()
     if (bounds) {
       isMousePressed = true
       offsetX = cursorPoint.x - bounds.x // 精确鼠标偏移量
@@ -81,31 +69,16 @@ function createWindow(): void {
   })
 
   ipcMain.on('mousemove', (event) => {
-    const senderWebContents = event.sender;  // 获取发送消息的 webContents
-
-    if (senderWebContents === mainWindow?.webContents) {
-      if (isMousePressed && mainWindow) {
-        const cursorPoint = screen.getCursorScreenPoint()
-        // 实时更新窗口位置
-        mainWindow.setBounds({
-          x: cursorPoint.x - offsetX,
-          y: cursorPoint.y - offsetY,
-          width: 800,
-          height: 774
-        })
-      }
-    } else if (senderWebContents === modal?.webContents) {
-      if (isMousePressed && modal) {
-        const cursorPoint = screen.getCursorScreenPoint()
-        // 实时更新窗口位置
-        modal.setBounds({
-          x: cursorPoint.x - offsetX,
-          y: cursorPoint.y - offsetY,
-          width: modalWidth,
-          height: modalHeight
-        })
-      }
-    }
+   if (isMousePressed && mainWindow) {
+     const cursorPoint = screen.getCursorScreenPoint()
+     // 实时更新窗口位置
+     mainWindow.setBounds({
+       x: cursorPoint.x - offsetX,
+       y: cursorPoint.y - offsetY,
+       width: 800,
+       height: 774
+     })
+   }
   })
 
   ipcMain.on('mouseup', () => {
@@ -113,40 +86,20 @@ function createWindow(): void {
   })
 
   ipcMain.on('window-min', (event) => {
-    const senderWebContents = event.sender;  // 获取发送消息的 webContents
-    if (senderWebContents === mainWindow?.webContents) {
-      mainWindow?.minimize()
-    } else if (senderWebContents === modal?.webContents) {
-      modal?.minimize()
-    }
+    mainWindow?.minimize()
   })
 
   ipcMain.on('window-close', (event) => {
-    const senderWebContents = event.sender;  // 获取发送消息的 webContents
-    if (senderWebContents === mainWindow?.webContents) {
-      if (!modal?.isDestroyed()) {
-        modal?.close();
-        modal?.destroy();  // 销毁主窗口
-      }
-      exec("taskkill /f /im Sky_Music.exe")
-      ipcMain.removeAllListeners('mousedown')
-      ipcMain.removeAllListeners('mousemove')
-      ipcMain.removeAllListeners('mouseup')
-      mainWindow?.close()
-      app.quit()
-    } else if (senderWebContents === modal?.webContents) {
-      modal?.close()
-      modal?.destroy();  // 销毁主窗口
-    }
+    exec("taskkill /f /im Sky_Music.exe")
+    ipcMain.removeAllListeners('mousedown')
+    ipcMain.removeAllListeners('mousemove')
+    ipcMain.removeAllListeners('mouseup')
+    mainWindow?.close()
+    app.quit()
   })
 
   ipcMain.on('set-always-on-top', (event) => {
-    const senderWebContents = event.sender;  // 获取发送消息的 webContents
-    if (senderWebContents === mainWindow?.webContents) {
-      mainWindow?.setAlwaysOnTop(!mainWindow?.isAlwaysOnTop())
-    } else if (senderWebContents === modal?.webContents) {
-      modal?.setAlwaysOnTop(!modal?.isAlwaysOnTop())
-    }  
+    mainWindow?.setAlwaysOnTop(!mainWindow?.isAlwaysOnTop())
   })
 
   ipcMain.on('send_system_notification', (_event, title:string, body: string) => {
@@ -183,39 +136,6 @@ function createWindow(): void {
   ipcMain.handle('getVersion', (_event) => {
     return app.getVersion()
   });
-
-
-  ipcMain.on('open-tutorial', () => {
-    let root_path;
-    if (is.dev) {
-      root_path = "http://localhost:5173";
-    } else {
-      root_path = join(__dirname, '../renderer/index.html')
-    };
-    modal = new BrowserWindow({
-      width: modalWidth,
-      height: modalHeight,
-      hasShadow: true, // 阴影 
-      // resizable: false, // 禁止调整窗口大小
-      frame: false,     // 禁用默认的窗口框架（包括菜单和标题栏）=
-      transparent: true,
-      webPreferences: {
-        preload: join(__dirname, '../preload/index.js'),
-        sandbox: false,
-        nodeIntegration: false,
-        contextIsolation: true
-      },
-    });
-    modal.loadURL(root_path);
-    modal.on('resize', () => {
-      console.log('Second window was resized',modal?.getBounds());
-      let tempWidth:any = modal?.getBounds().width;
-      if(Math.abs(modalWidth - tempWidth) > 2){
-        modalWidth = modal?.getBounds().width;
-        modalHeight = modal?.getBounds().height;
-      }
-    });
-  });
 }
 
 app.on('window-all-closed', () => {
@@ -223,7 +143,6 @@ app.on('window-all-closed', () => {
 })
 
 app.whenReady().then(() => {
-  // Set app user model id for windows
   electronApp.setAppUserModelId('com.windhide')
   createWindow()
   let runPath = __dirname.replace("resources\\app.asar\\out\\main","")
