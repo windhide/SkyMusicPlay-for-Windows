@@ -1,18 +1,19 @@
+import logging
 import os
-import subprocess
 import threading
 import time
 
 from ultralytics import YOLO
 
 from windhide.static.global_variable import GlobalVariable
-from windhide.thread.follow_thread_demo import startThread as follow_thread_demo
+from windhide.thread.follow_thread import startThread as follow_thread_demo
 from windhide.utils.command_util import start_process
-from windhide.utils.ocr_normal_utils import get_window_screenshot, get_game_position
+from windhide.utils.ocr_normal_utils import get_window_screenshot
 from windhide.utils.path_util import getResourcesPath, convert_notes_to_delayed_format
 
 global_button_model = None
 
+logging.getLogger("ultralytics").setLevel(logging.WARNING)
 
 def set_next_sheet(request: dict):
     try:
@@ -47,11 +48,15 @@ def load_key_model():
     if global_button_model is None:
         button_model_path = os.path.join(getResourcesPath("systemTools"), "modelData", "check_key_model.pt")
         global_button_model = YOLO(button_model_path)  # 加载模型并保存在 global_friend_model 中
-    print("模型加载完成")
+        print("模型加载完成")
     return global_button_model
 
 
 def get_key_position(conf, threshold=10):
+    if GlobalVariable.window["key_position"] != None:
+        if len(GlobalVariable.window["key_position"]) == 15 and not GlobalVariable.window["is_change"]:
+            return GlobalVariable.window["key_position"]
+    print("开始检测按键布局")
     image = get_window_screenshot()
     model = load_key_model()
     results = model(image, conf=conf)  # 替换为你的图片路径
@@ -88,7 +93,6 @@ def get_key_position(conf, threshold=10):
     for key in sorted_keys:
         group = result_dict[key]
         sorted_group = sorted(group, key=lambda b: b["position_x"])
-
         sorted_result[key] = [{
             "width": box["width"],
             "height": box["height"],
@@ -102,26 +106,13 @@ def get_key_position(conf, threshold=10):
     }
     final_result = {}
     for idx, (group_key, group_boxes) in enumerate(zip(sorted_keys, sorted_result.values())):
+        if idx == 3:
+            break
+        # 避免越界
         keys = key_mapping[idx]  # 获取当前分组的键名列表
         for key_name, box in zip(keys, group_boxes):
             final_result[key_name] = box  # 使用键名作为最终结果的 key
     GlobalVariable.window["key_position"] = final_result
-    # "y": {"position_x": 50, "position_y": 100, "width": ..., "height": ...},
-    # "u": {"position_x": 150, "position_y": 100, "width": ..., "height": ...},
-    # "i": {"position_x": 250, "position_y": 100, "width": ..., "height": ...},
-    # "o": {"position_x": 350, "position_y": 100, "width": ..., "height": ...},
-    # "p": {"position_x": 450, "position_y": 100, "width": ..., "height": ...},
-    # "h": {"position_x": 50, "position_y": 200, "width": ..., "height": ...},
-    # "j": {"position_x": 150, "position_y": 200, "width": ..., "height": ...},
-    # "k": {"position_x": 250, "position_y": 200, "width": ..., "height": ...},
-    # "l": {"position_x": 350, "position_y": 200, "width": ..., "height": ...},
-    # ";": {"position_x": 450, "position_y": 200, "width": ..., "height": ...},
-    # "n": {"position_x": 50, "position_y": 300, "width": ..., "height": ...},
-    # "m": {"position_x": 150, "position_y": 300, "width": ..., "height": ...},
-    # ",": {"position_x": 250, "position_y": 300, "width": ..., "height": ...},
-    # ".": {"position_x": 350, "position_y": 300, "width": ..., "height": ...},
-    # "/": {"position_x": 450, "position_y": 300, "width": ..., "height": ...}
-    print(f"=>{final_result}")
     return final_result
 
 def test_key_model_position(conf):
@@ -133,6 +124,6 @@ def test_key_model_position(conf):
 
 def open_follow():
     start_process()
-    follow_thread = threading.Thread(target=follow_thread_demo)
-    follow_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
-    follow_thread.start()
+    GlobalVariable.follow_thread = threading.Thread(target=follow_thread_demo)
+    GlobalVariable.follow_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
+    GlobalVariable.follow_thread.start()

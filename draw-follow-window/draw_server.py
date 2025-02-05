@@ -2,33 +2,42 @@ import tkinter as tk
 import socket
 import threading
 import sys
-import argparse  # 用于解析命令行参数
+import argparse
+import os
 
+# 针对 Windows 系统设置 DPI Awareness（适用于 Windows 8.1 及以上）
+if os.name == "nt":
+    try:
+        from ctypes import windll
+        windll.shcore.SetProcessDpiAwareness(1)
+    except Exception as e:
+        print("无法设置 DPI Awareness，可能影响窗口几何尺寸的准确性。")
 
-# 绘制和删除方框的API
+# 绘制和删除方框的 API
 def draw_box_api(canvas, width, height, position_x, position_y):
     # 在 Canvas 上绘制一个指定大小和位置的方框
     return canvas.create_rectangle(
         position_x, position_y,
         position_x + width, position_y + height,
-        outline="pink", width=2
+        outline="#00ffff", width=3
     )
-
 
 def delete_box_api(canvas, box_id):
     # 从 Canvas 上删除指定 ID 的方框
     canvas.delete(box_id)
 
-
 # 主窗口类
 class TransparentBoxWindow:
     def __init__(self, root, width, height, position_x, position_y):
         self.root = root
-        self.port = 12345  # 固定端口为 12345
+        self.port = 12345  # 固定端口
 
         # 设置 Canvas
         self.canvas = tk.Canvas(root, width=width, height=height, bg="white", highlightthickness=0)
         self.canvas.pack()
+
+        # 绘制红色边框
+        # self.draw_red_border(width, height)
 
         # 添加关闭按钮
         self.add_close_button()
@@ -39,17 +48,27 @@ class TransparentBoxWindow:
         # 启动 Socket 服务器
         threading.Thread(target=self.start_server, daemon=True).start()
 
+    def draw_red_border(self, width, height, border_thickness=10):
+        """在 Canvas 上绘制一个红色的边框"""
+        self.canvas.create_rectangle(
+            border_thickness // 2, border_thickness // 2,
+            width - border_thickness // 2, height - border_thickness // 2,
+            outline="red", width=border_thickness, tags="red_border"
+        )
+
     def add_close_button(self):
         # 创建关闭按钮
         close_button = tk.Button(
             self.canvas,
             text="X",
-            command=self.exit_program,  # 调用退出程序的方法
-            bg="pink",
-            fg="white",
-            relief="flat"
+            command=self.exit_program,
+            fg="black",
+            bg="aqua",
+            highlightthickness=0,
+            relief="flat",
+            borderwidth=0
         )
-        # 绘制按钮在窗口上
+        # 在 Canvas 上绘制按钮
         self.canvas.create_window(
             750, 10,
             anchor="nw",
@@ -59,34 +78,39 @@ class TransparentBoxWindow:
     def start_server(self):
         # 创建 Socket 服务器
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server.bind(("localhost", self.port))  # 绑定到本地端口
-        server.listen(5)  # 开始监听
+        server.bind(("localhost", self.port))
+        server.listen(5)
         print(f"服务器已启动，监听端口：{self.port}，等待连接...")
 
         while True:
-            client, addr = server.accept()  # 接受客户端连接
+            client, addr = server.accept()
             print(f"收到连接来自 {addr}")
             threading.Thread(target=self.handle_client, args=(client,), daemon=True).start()
 
     def handle_client(self, client):
-        # 处理客户端连接
         try:
+            buffer = ""
             while True:
-                data = client.recv(1024).decode("utf-8")  # 接收数据
+                data = client.recv(1024).decode("utf-8")
                 if not data:
                     break
-                print(f"收到数据: {data}")
-                self.process_command(data)  # 处理指令
+                buffer += data
+                # 按换行符分割命令
+                commands = buffer.split("\n")
+                # 处理完整命令
+                for command in commands[:-1]:  # 最后一个可能是不完整的
+                    print(f"收到命令: {command}")
+                    self.process_command(command)
+                # 将最后一个不完整的命令保留到下一次处理
+                buffer = commands[-1]
         except ConnectionResetError:
             print("客户端断开连接")
         finally:
             client.close()
 
     def process_command(self, command):
-        # 根据客户端发送的指令执行操作
         parts = command.split()
         if parts[0] == "draw":
-            # 绘制方框
             box_id = parts[1]
             width = int(parts[2])
             height = int(parts[3])
@@ -98,7 +122,6 @@ class TransparentBoxWindow:
                 tkinter_id = draw_box_api(self.canvas, width, height, position_x, position_y)
                 self.boxes[box_id] = tkinter_id
         elif parts[0] == "delete":
-            # 删除方框
             box_id = parts[1]
             if box_id in self.boxes:
                 tkinter_id = self.boxes[box_id]
@@ -107,34 +130,54 @@ class TransparentBoxWindow:
             else:
                 print(f"方框 ID {box_id} 不存在，无法删除。")
         elif parts[0] == "resize":
-            # 调整窗口尺寸和位置
             new_width = int(parts[1])
             new_height = int(parts[2])
             new_x = int(parts[3])
             new_y = int(parts[4])
             self.change_window_geometry(new_width, new_height, new_x, new_y)
         elif parts[0] == "exit":
-            # 退出程序
             print("接收到退出指令，正在退出程序...")
             self.exit_program()
 
     def change_window_geometry(self, width, height, position_x, position_y):
-        """更改窗口尺寸和位置，并清除所有已绘制的框"""
-        print("更改窗口尺寸和位置...")
-        # 清除所有已绘制的框
+        print(f"更改窗口尺寸和位置为：{width}x{height}, 坐标: ({position_x}, {position_y})")
+
+        # 先清除所有已绘制的方框
         for tkinter_id in self.boxes.values():
             self.canvas.delete(tkinter_id)
-        self.boxes.clear()  # 清空方框的映射
+        self.boxes.clear()
 
-        # 更新窗口几何属性
+        # **第一步：仅修改窗口大小**
         self.root.geometry(f"{width}x{height}+{position_x}+{position_y}")
-        self.canvas.config(width=width, height=height)  # 更新 Canvas 尺寸
+
+        # **确保 Tkinter 处理完窗口大小调整**
+        self.root.update_idletasks()
+        self.root.update()
+
+        # **第二步：修改 Canvas 大小**
+        self.canvas.config(width=width, height=height)
+
+        # **清除旧的红色边框，重新绘制**
+        # self.canvas.delete("red_border")  # 删除之前的红色边框
+        # self.draw_red_border(width, height)
+
+        # **再一次刷新 Tkinter UI，确保所有变化生效**
+        self.root.update_idletasks()
+        self.root.update()
+
+        # 输出调整后的实际窗口大小
+        actual_width = self.root.winfo_width()
+        actual_height = self.root.winfo_height()
+        print(f"调整后实际窗口尺寸: {actual_width}x{actual_height}")
+
+        # 输出调整后的实际窗口大小
+        actual_width = self.root.winfo_width()
+        actual_height = self.root.winfo_height()
+        print(f"调整后实际窗口尺寸: {actual_width}x{actual_height}")
 
     def exit_program(self):
-        """退出程序并清理资源"""
-        self.root.destroy()  # 关闭 Tkinter 窗口
-        sys.exit(0)  # 强制退出程序
-
+        self.root.destroy()
+        sys.exit(0)
 
 if __name__ == "__main__":
     # 解析命令行参数
@@ -145,18 +188,21 @@ if __name__ == "__main__":
     parser.add_argument("--y", type=int, default=100, help="Window position Y")  # 窗口 Y 坐标
     args = parser.parse_args()
 
-    # 获取命令行参数
     width = args.width
     height = args.height
     x = args.x
     y = args.y
 
-    # 启动程序
     root = tk.Tk()
-    root.geometry(f"{width}x{height}+{x}+{y}")  # 设置初始窗口尺寸和位置
-    root.overrideredirect(True)  # 去掉标题栏
-    root.attributes("-transparentcolor", "white")  # 设置透明背景色
-    root.attributes("-topmost", True)  # 窗口置顶
+    # 尽管已在 Windows 下尝试设置 DPI Awareness，仍保持 scaling 为 1.0
+    root.tk.call('tk', 'scaling', 1.0)
+    # 先设置 geometry，再调用 update_idletasks 确保尺寸生效
+    root.geometry(f"{width}x{height}+{x}+{y}")
+    root.update_idletasks()
+
+    root.overrideredirect(True)
+    root.attributes("-transparentcolor", "white")
+    root.attributes("-topmost", True)
 
     app = TransparentBoxWindow(root, width, height, x, y)
     root.mainloop()

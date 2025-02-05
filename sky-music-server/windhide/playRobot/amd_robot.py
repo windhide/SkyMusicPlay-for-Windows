@@ -37,6 +37,17 @@ def send_multiple_key_to_window_task(keys):
         key_up(key)
 
 
+#  这里是跟弹独立出来的
+def send_multiple_key_press(keys):
+    for key in keys:
+        keyboard.press(key)
+
+
+def send_multiple_key_release(keys):
+    for key in keys:
+        keyboard.release(key)
+
+
 # 现在给模拟器和跟弹在用了
 def send_single_key_to_window_follow(key):
     """发送单个按键，减少延迟"""
