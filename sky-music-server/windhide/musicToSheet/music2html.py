@@ -70,80 +70,67 @@ silence { background-image: url("data:image/svg+xml, %3Csvg xmlns='http://www.w3
 
 
 def generatorSheetHtml(sheet_name, convert_sheet):
-    # tempfile
-    # data = {
-    #     "sheet_name": sheet_name,
-    #     "content": [
-    #         {
-    #             "id": "line-0",
-    #             "instruments": [
-    #                 {
-    #                     "id": "instr-0",
-    #                     "notes": [
-    #                         {"type": "d1", "class": "r1"},
-    #                         {"type": "dmn", "class": "r1"},
-    #                         {"type": "d1", "class": ""}
-    #                     ]
-    #                 }
-    #             ]
-    #         }
-    #     ]
-    # }
-
     context = []
-    instrIndex = 0
-    lineIndex = 0
-    instruments = []
-    struct = {
-        "id": f"line-{lineIndex}",
-        "instruments": []
+    instr_index = 0
+    line_index = 0
+    line_data = {"id": f"line-{line_index}", "instruments": []}
+
+    max_instruments_per_line = 13
+    switch_limit = {13: 11, 11: 13}  # 交替限制
+
+    # 映射按键到音符类型
+    note_mapping = {
+        "y": ("crdm", "r1"),
+        "u": ("dmn", "r1"),
+        "i": ("crc", "r1"),
+        "o": ("dmn", "r1"),
+        "p": ("crc", "r1"),
+
+        "h": ("crc", "r2"),
+        "j": ("dmn", "r2"),
+        "k": ("crdm", "r2"),
+        "l": ("dmn", "r2"),
+        ";": ("crc", "r2"),
+
+        "n": ("crc", "r3"),
+        "m": ("dmn", "r3"),
+        ",": ("crc", "r3"),
+        ".": ("dmn", "r3"),
+        "/": ("crdm", "r3"),
     }
-    indexChangeLine = 13
+
     for index, key in enumerate(convert_sheet):
-        instrument = {
-            "id": f"instr-{instrIndex}",
-            "notes": [
-                {"type": "crdm" if 'y' in key else "d1", "class": "r1" if 'y' in key else ""},
-                {"type": "dmn" if 'u' in key else "d1", "class": "r1" if 'u' in key else ""},
-                {"type": "crc" if 'i' in key else "d1", "class": "r1" if 'i' in key else ""},
-                {"type": "dmn" if 'o' in key else "d1", "class": "r1" if 'o' in key else ""},
-                {"type": "crc" if 'p' in key else "d1", "class": "r1" if 'p' in key else ""},
-
-                {"type": "crc" if 'h' in key else "d2", "class": "r2" if 'h' in key else ""},
-                {"type": "dmn" if 'j' in key else "d2", "class": "r2" if 'j' in key else ""},
-                {"type": "crdm" if 'k' in key else "d2", "class": "r2" if 'k' in key else ""},
-                {"type": "dmn" if 'l' in key else "d2", "class": "r2" if 'l' in key else ""},
-                {"type": "crc" if ';' in key else "d2", "class": "r2" if ';' in key else ""},
-
-                {"type": "crc" if 'n' in key else "d3", "class": "r3" if 'n' in key else ""},
-                {"type": "dmn" if 'm' in key else "d3", "class": "r3" if 'm' in key else ""},
-                {"type": "crc" if ',' in key else "d3", "class": "r3" if ',' in key else ""},
-                {"type": "dmn" if '.' in key else "d3", "class": "r3" if '.' in key else ""},
-                {"type": "crdm" if '/' in key else "d3", "class": "r3" if '/' in key else ""}
-            ]
-        }
-        instrIndex += 1
-        struct["instruments"].append(instrument)
-        if instrIndex == indexChangeLine:
-            if indexChangeLine == 13:
-                indexChangeLine = 11
+        notes = []
+        for char in "yuiophjkl;nm,./":
+            if char in key:
+                note_type, note_class = note_mapping[char]
             else:
-                indexChangeLine = 13
-            instrIndex = 0
-            instruments.append(struct)
-            lineIndex += 1
-            context.append(struct)
-            struct = {
-                "id": f"line-{lineIndex}",
-                "instruments": []
-            }
+                note_type, note_class = "d1", ""  # 默认值
 
-    data = {"sheet_name": sheet_name, "content": context}
+            notes.append({"type": note_type, "class": note_class})
+
+        instrument = {"id": f"instr-{instr_index}", "notes": notes}
+        line_data["instruments"].append(instrument)
+        instr_index += 1
+
+        # 判断是否换行
+        if instr_index == max_instruments_per_line:
+            context.append(line_data)
+            line_index += 1
+            line_data = {"id": f"line-{line_index}", "instruments": []}
+            instr_index = 0
+            max_instruments_per_line = switch_limit[max_instruments_per_line]
+
+    # 处理最后一行
+    if line_data["instruments"]:
+        context.append(line_data)
+
     # 渲染模板
     template = Template(html_template)
-    final_html = template.render(data)
+    final_html = template.render(sheet_name=sheet_name, content=context)
+
     desktop_path = os.path.join(user_desktop_dir(), f"{sheet_name}.html")
-    print(desktop_path)
     with open(desktop_path, "w", encoding="utf-8") as file:
         file.write(final_html)
+
     return "ok"
