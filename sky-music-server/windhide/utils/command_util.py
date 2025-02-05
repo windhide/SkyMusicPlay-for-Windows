@@ -23,7 +23,6 @@ def add_window_key(key):
         height = GlobalVariable.window['key_position'][key]['height']
         position_x = GlobalVariable.window['key_position'][key]['position_x'] - GlobalVariable.window_offset_x
         position_y = GlobalVariable.window['key_position'][key]['position_y'] - GlobalVariable.window_offset_y
-        key = replace_special_symbols(key)
         send_command(f"draw {key} {width} {height} {position_x} {position_y} \n")  # 绘制
     except KeyError:
         print("按键识别不完全，重新调用")
@@ -32,11 +31,9 @@ def add_window_key(key):
         resize_and_reload_key()
 
 def del_window_key(key):
-    key = replace_special_symbols(key)
     send_command(f"delete {key} \n")  # 绘制
 
 def clear_window_key(keys):
-    keys = replace_special_symbols(keys)
     for key in keys:
         send_command(f"delete {key} \n")
 
@@ -55,15 +52,6 @@ def quit_window():
     GlobalVariable.follow_client.close()
     GlobalVariable.follow_client = None
     stop_follow_process()
-
-
-def replace_special_symbols(text):
-    # text =''.join([str(x) for x in text])
-    # text = text.replace(';', 'z')
-    # text = text.replace(',', 'x')
-    # text = text.replace('.', 'c')
-    # text = text.replace('/', 'v')
-    return text
 
 def send_command(command):
     try:
