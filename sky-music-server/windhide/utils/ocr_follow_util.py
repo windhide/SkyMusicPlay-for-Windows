@@ -57,7 +57,12 @@ def get_key_position(conf, threshold=10):
         if len(GlobalVariable.window["key_position"]) == 15 and not GlobalVariable.window["is_change"]:
             return GlobalVariable.window["key_position"]
     print("开始检测按键布局")
-    image = get_window_screenshot()
+    image = None
+    try:
+        image = get_window_screenshot()
+    except Exception as e:
+        print(e)
+
     model = load_key_model()
     results = model(image, conf=conf)  # 替换为你的图片路径
     boxes = results[0].boxes  # 检测到的所有框
@@ -116,8 +121,12 @@ def get_key_position(conf, threshold=10):
     return final_result
 
 def test_key_model_position(conf):
+    image = None
     time.sleep(1)
-    image = get_window_screenshot()
+    try:
+        image = get_window_screenshot()
+    except Exception as e:
+        print(e)
     model = load_key_model()
     results = model(image, conf=conf)  # 替换为你的图片路径
     results[0].show()
