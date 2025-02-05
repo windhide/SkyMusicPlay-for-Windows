@@ -1,4 +1,10 @@
 class GlobalVariable:
+    # 运行环境配置
+    isProd = False
+    cpu_type = None
+    compatibility_mode = False  # 是否虚拟机
+    is_post_w = False  # 是否插队模式
+
     # 窗口相关
     window = {
         "hWnd": None,
@@ -7,29 +13,30 @@ class GlobalVariable:
         "position_x": 0,
         "position_y": 0,
         "is_change": False,
-        "key_position":None
+        "key_position": None
     }
-    # 运行环境配置
-    isProd = False
-    cpu_type = None
-    compatibility_mode = False #是否虚拟机
-    is_post_w = False #是否插队模式
+
     # 线程相关
     thread = None
     auto_thread = None
+
     # 乐谱相关
-    music_sheet = [] #乐谱
+    music_sheet = []  # 乐谱
+
     # 进度条相关
-    now_progress  = 0 #进度条
-    set_progress = -0.01 #进度条
+    now_progress = 0  # 进度条
+    set_progress = -0.01  # 进度条
     now_play_music = "没有正在播放的歌曲哦"
+
     # 音乐转换进度条
-    overall_progress = 0 #总体进度
+    overall_progress = 0  # 总体进度
     now_translate_text = []
+
     # 演奏相关
-    play_speed = 1 # 倍速
+    play_speed = 1  # 倍速
     delay_interval = 0  # 0
-    sustain_time = 0.01 # 20毫秒
+    sustain_time = 0.01  # 20毫秒
+
     # 跟弹相关
     follow_music = ""
     follow_sheet = []
