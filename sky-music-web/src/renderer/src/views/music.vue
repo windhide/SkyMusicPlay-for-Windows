@@ -155,7 +155,13 @@ import {
   CloudUploadOutline
 } from '@vicons/ionicons5'
 import { useStore } from 'vuex'
+
+// ---------------------------------------------------
+// 响应式状态和常量定义
+// ---------------------------------------------------
 const message = useMessage()
+const store = useStore()
+
 const music: any = reactive({
   // 音乐列表
   systemMusic: [], // 原版音乐
@@ -164,8 +170,9 @@ const music: any = reactive({
   myFavorite: [], // 我的最爱
   musicList: [] // 我的最爱
 })
+
 const nowSelectMusic = ref('没有歌曲') // 当前选中歌曲
-const nowPlayMusic = ref('没有歌曲') // 当前选中歌曲
+const nowPlayMusic = ref('没有歌曲') // 当前播放歌曲名称
 let nowType = 'systemMusic'
 let progressInterval: any = 0
 let socket
@@ -176,9 +183,9 @@ const sustainStatus = ref('system')
 const isPlay = ref(false)
 const active = ref(false)
 const placement = ref<DrawerPlacement>('left')
-const store = useStore()
 const selectMode = ref("order")
-let cycleMusic:any = {}
+let cycleMusic: any = {}
+
 const modeColumns = [
   {
     label: '顺序',
@@ -193,6 +200,7 @@ const modeColumns = [
     value: 'cycle'
   }
 ]
+
 const musicColumns = [
   {
     title: '歌名',
@@ -225,7 +233,7 @@ const musicColumns = [
       )
     }
   }
-] // 音乐列
+]
 
 const favoritColumns = [
   {
@@ -255,7 +263,7 @@ const favoritColumns = [
       )
     }
   }
-] // 音乐列
+]
 
 const myImportColumns = [
   {
@@ -285,7 +293,7 @@ const myImportColumns = [
       )
     }
   }
-] // 音乐列
+]
 
 const musicListColumns = [
   {
@@ -294,15 +302,20 @@ const musicListColumns = [
     resizable: true,
     className: 'th_css'
   }
-] // 音乐列
+]
 
 const progress = ref(0.0) // 播放进度条
 const playSpeed = ref(1) // 播放速度
 const delaySpeed: any = ref(0.01) // 延迟设置
 const sustainSpeed: any = ref(0.01) // 延音设置
 
+let clickTimeout: any = null
 
-let clickTimeout: any = null;
+// ---------------------------------------------------
+// 事件处理函数和工具函数
+// ---------------------------------------------------
+
+// 单击/双击选择音乐
 const MusicSelect = (row: RowData) => {
   return {
     onClick: () => {
@@ -321,6 +334,7 @@ const MusicSelect = (row: RowData) => {
   }
 };
 
+// 播放列表项点击（用于删除播放列表项）
 const musicListSelect = (row: RowData, rowIndex: number) => {
   console.log(row)
   return {
@@ -331,17 +345,19 @@ const musicListSelect = (row: RowData, rowIndex: number) => {
   }
 };
 
+// 刷新播放列表
 function reloadMusicList() {
   active.value = !active.value;
   music.musicList = store.getters.getPlayList
 }
 
-
+// 开始进度条追踪
 function startProgressTracking() {
   if (progressInterval) return;
   progressInterval = setInterval(getProgress, 1000);
 }
 
+// 停止进度条追踪
 function stopProgressTracking() {
   if (progressInterval) {
     clearInterval(progressInterval);
@@ -349,11 +365,13 @@ function stopProgressTracking() {
   }
 }
 
+// 清空播放列表
 function clearPlayList() {
   store.commit('clearPlayList')
   music.musicList = store.getters.getPlayList
 }
 
+// 播放条点击处理函数
 const playBarClickHandler = async (status: String, type: String) => {
   stopProgressTracking();
 
@@ -407,12 +425,14 @@ const playBarClickHandler = async (status: String, type: String) => {
   nowState.value = status;
 };
 
+// 拖动进度条开始（暂停播放）
 function drag_progress_start() {
   sendData('play_operate',{"operate":"pause"}).then(() => {
     clearInterval(progressInterval)
   })
-
 }
+
+// 拖动进度条结束（恢复播放）
 function drag_progress_end() {
   clearInterval(progressInterval);
   setConfig('set_progress', progress.value / 100)
@@ -421,7 +441,7 @@ function drag_progress_end() {
   })
 }
 
-
+// 获取播放进度
 async function getProgress() {
   try {
     // 如果当前状态为暂停或停止，则不更新进度
@@ -456,13 +476,13 @@ async function getProgress() {
   return "ok";
 }
 
-
+// 随机播放
 function randomMusicPlay() {
   nowSelectMusic.value = music.systemMusic[Math.floor(Math.random() * (music.systemMusic.length))].name
   playBarClickHandler("start", 'systemMusic')
-  
 }
 
+// 顺序播放
 async function orderMusicPlay() {
   let struct = store.getters.getNextPlayMusic
   if (struct != null && struct != undefined) {
@@ -478,24 +498,109 @@ async function orderMusicPlay() {
   }
 }
 
+// 循环播放
 function cycleMusicPlay() {
   nowSelectMusic.value = cycleMusic?.fileName
   playBarClickHandler("start", cycleMusic?.type)
 }
 
-handleUpdateValue('myFavorite')
-handleUpdateValue('systemMusic')
-
+// 更新数据（如收藏、系统音乐、导入音乐、扒谱音乐）
 function handleUpdateValue(value: string) {
   searchText.value = ''
   getListData(value)
 }
 
+// 处理抽屉切换前动作
 function handleBeforeLeave(name: string) {
   nowType = name
   return true
 }
 
+// 清除播放信息（停止定时器、重置状态）
+function clearPlayInfo() {
+  // 先清除轮询定时器
+  stopProgressTracking();
+  nowSelectMusic.value = '没有歌曲';
+  nowPlayMusic.value = '没有正在播放的歌曲哦';
+  nowState.value = 'stop';
+  progress.value = 0;
+  // 确保其他状态同步更新（如 statusbar，确保 statusbar 在当前上下文中有效）
+  statusbar[0] = true;
+  statusbar[1] = false;
+  isPlay.value = false;
+}
+
+// 收藏点击处理
+function heartClick(name, state) {
+  if (state) {
+    sendData('config_operate', {
+      fileName: name,
+      type: nowType,
+      operate: 'favorite_music'
+    }).then(() => {
+      handleUpdateValue('myFavorite')
+      handleUpdateValue('systemMusic')
+      handleUpdateValue('myImport')
+      handleUpdateValue('myTranslate')
+      message.success('收藏成功')
+    })
+  } else {
+    sendData('config_operate', {
+      fileName: name,
+      type: 'myFavorite',
+      operate: "drop_file"
+    }).then(() => {
+      handleUpdateValue('myFavorite')
+      handleUpdateValue('systemMusic')
+      handleUpdateValue('myImport')
+      handleUpdateValue('myTranslate')
+      message.success('移除成功')
+    })
+  }
+}
+
+// 删除点击处理
+function deleteClick(name) {
+  sendData('config_operate', {
+    fileName: name,
+    type: 'myImport',
+    operate: "drop_file"
+  }).then(() => {
+    handleUpdateValue('myFavorite')
+    handleUpdateValue('systemMusic')
+    handleUpdateValue('myImport')
+    handleUpdateValue('myTranslate')
+    message.success('删除成功')
+  })
+}
+
+// 文件上传完成后的处理
+function handleFinish({ file: _file, event: _event }) {
+  handleUpdateValue('myImport')
+}
+
+// 文件上传前处理
+function beforeFileUpload(file) {
+  return window.api.readFile(file.file.file.path).then(res => {
+    if (res) {
+      message.success("谱子👉" + file.file.file.name + "完成导入")
+    } else {
+      message.error("谱子👉" + file.file.file.name + "导入失败")
+    }
+    return res;
+  })
+}
+
+// 获取列表数据
+function getListData(value) {
+  getList(value, searchText.value).then((_res) => {
+    eval('music.' + value + '=_res')
+  })
+}
+
+// ---------------------------------------------------
+// 监听器（watch）
+// ---------------------------------------------------
 watch(searchText, () => {
   getListData('myFavorite')
   getListData('systemMusic')
@@ -546,90 +651,13 @@ watch(delaySpeed, () => {
 watch(sustainSpeed, () => {
   setConfig('sustain_time', sustainSpeed.value)
 })
-
 watch(playSpeed, () => {
   setConfig('play_speed', playSpeed.value)
 })
 
-function clearPlayInfo() {
-  // 先清除轮询定时器
-  stopProgressTracking();
-  nowSelectMusic.value = '没有歌曲';
-  nowPlayMusic.value = '没有正在播放的歌曲哦';
-  nowState.value = 'stop';
-  progress.value = 0;
-  // 确保其他状态同步更新（如 statusbar，确保 statusbar 在当前上下文中有效）
-  statusbar[0] = true;
-  statusbar[1] = false;
-  isPlay.value = false;
-}
-
-
-//  收藏点击
-function heartClick(name, state) {
-  if (state) {
-    sendData('config_operate', {
-      fileName: name,
-      type: nowType,
-      operate: 'favorite_music'
-    }).then(() => {
-      handleUpdateValue('myFavorite')
-      handleUpdateValue('systemMusic')
-      handleUpdateValue('myImport')
-      handleUpdateValue('myTranslate')
-      message.success('收藏成功')
-    })
-  } else {
-    sendData('config_operate', {
-      fileName: name,
-      type: 'myFavorite',
-      operate: "drop_file"
-    }).then(() => {
-      handleUpdateValue('myFavorite')
-      handleUpdateValue('systemMusic')
-      handleUpdateValue('myImport')
-      handleUpdateValue('myTranslate')
-      message.success('移除成功')
-    })
-  }
-}
-
-// 删除点击
-function deleteClick(name) {
-  sendData('config_operate', {
-    fileName: name,
-    type: 'myImport',
-    operate: "drop_file"
-  }).then(() => {
-    handleUpdateValue('myFavorite')
-    handleUpdateValue('systemMusic')
-    handleUpdateValue('myImport')
-    handleUpdateValue('myTranslate')
-    message.success('删除成功')
-  })
-}
-
-function handleFinish({ file: _file, event: _event }) {
-  handleUpdateValue('myImport')
-}
-
-function beforeFileUpload(file) {
-  return window.api.readFile(file.file.file.path).then(res => {
-    if (res) {
-      message.success("谱子👉" + file.file.file.name + "完成导入")
-    } else {
-      message.error("谱子👉" + file.file.file.name + "导入失败")
-    }
-    return res;
-  })
-}
-
-function getListData(value) {
-  getList(value, searchText.value).then((_res) => {
-    eval('music.' + value + '=_res')
-  })
-}
-
+// ---------------------------------------------------
+// WebSocket 初始化及相关处理
+// ---------------------------------------------------
 function initWebSocket() {
   socket = new WebSocket('ws://127.0.0.1:11452')
   // 添加 WebSocket 事件监听
@@ -671,32 +699,35 @@ function initWebSocket() {
       window.api.system_notification("🛑", "停止")
       playBarClickHandler('stop', '')
     }
-
     if (key === 'F2') {
       window.api.system_notification("⏩", "下一首")
       playBarClickHandler('next', '')
     }
-
   }
   socket.onclose = () => {
     console.log('WebSocket 已断开')
   }
-
   socket.onerror = (error) => {
     console.error('WebSocket 出现错误', error)
   }
 }
 
+handleUpdateValue('systemMusic')
 initWebSocket()
+
+// ---------------------------------------------------
+// 组件销毁时的清理工作
+// ---------------------------------------------------
 onUnmounted(async () => {
   if (socket) {
     socket.close()
     socket = null
   }
-  playBarClickHandler("stop","")
+  playBarClickHandler("stop", "")
   clearPlayInfo()
 })
 </script>
+
 <style scoped>
 :deep(.n-slider-rail__fill){
   --n-fill-color-hover: rgb(242,232,196) !important;
