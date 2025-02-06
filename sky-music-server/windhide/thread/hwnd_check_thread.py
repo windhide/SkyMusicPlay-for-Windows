@@ -49,13 +49,11 @@ def find_window_by_exe(exe_names):
 
 def update_window_handle():
     """查找窗口句柄，并更新全局变量"""
-    target_exes = ["光·遇.exe", "Sky.exe"]
+    target_exes = ["Sky.exe"]
     hwnd = find_window_by_exe(target_exes)
-
     if hwnd:
         left, top, right, bottom = win32gui.GetWindowRect(hwnd)
         width, height = right - left, bottom - top
-
         window = GlobalVariable.window
         window["hWnd"], window["width"], window["height"] = hwnd, width, height
         window["position_x"], window["position_y"] = left, top
@@ -68,11 +66,9 @@ def update_window_handle():
             window["position_y"] != top,
         ]):
             window["is_change"] = True
-
         get_key_position(0.45)
     else:
         GlobalVariable.window["hWnd"] = None
-
 
 def start_thread():
     """后台线程循环更新窗口句柄"""

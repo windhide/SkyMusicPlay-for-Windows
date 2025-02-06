@@ -132,7 +132,6 @@ def config_operate(request: dict):
             return True if GlobalVariable.cpu_type == "AMD" else False
     return "ok"
 
-
 @app.post("/follow")
 def follow(request: dict):
     match request["operate"]:

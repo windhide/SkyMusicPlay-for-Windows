@@ -205,6 +205,7 @@ let checkInterval = setInterval(() => {
     if (res === undefined) return
     show.value = !res
     clearInterval(checkInterval)
+    LoadData()
     router.push({ name: 'home', query: { show: 1 } });
   });
 }, 500)
@@ -240,7 +241,6 @@ function LoadData(){
   })
 }
 
-LoadData()
 onMounted(() => {
   const dragArea = document.getElementById('drag-area')
   if (dragArea) {
