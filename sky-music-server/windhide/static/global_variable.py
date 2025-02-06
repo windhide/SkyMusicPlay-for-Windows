@@ -44,7 +44,6 @@ class GlobalVariable:
     nowRobotKey = ""
     follow_client = None
     isNowAutoPlaying = False
-    isShow = False
     follow_thread = None  # 跟弹按键处理相关线程
     exit_flag = False
     draw_process = None

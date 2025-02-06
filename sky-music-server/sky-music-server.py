@@ -133,12 +133,10 @@ def open_files():
 
 @app.get("/update")
 def get_update():
-    if GlobalVariable.isShow is False:
-        response = requests.get('https://gitee.com/WindHide/SkyMusicPlay-for-Windows/raw/main/.version')
-        GlobalVariable.isShow = True
-        if response.status_code == 200:
-            return json.loads(response.text)
-        return "404"
+   response = requests.get('https://gitee.com/WindHide/SkyMusicPlay-for-Windows/raw/main/.version')
+   if response.status_code == 200:
+       return json.loads(response.text)
+   return "404"
 
 #  下面放识别相关的调用
 @app.post("/auto")
