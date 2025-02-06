@@ -96,7 +96,6 @@ async function checkForUpdates(): Promise<void> {
     const clientVersion: string = await window.api.getVersion();
     const cloudVersion: any = await getData("update");
     if (!cloudVersion) {
-      clearInterval(updateInterval);
       return;
     }
     const clientVersionNum = Number(clientVersion.match(/\d/g)?.join("") || 0);
