@@ -58,7 +58,7 @@
       <n-divider />
       <div style="flex: 0 0 100%;" class="father">
         <n-button type="warning" ghost @click="autoClickFire">
-          自动点火（站在星盘上，确保游戏出现了G，再点本按钮）
+          自动点火（站在星盘上，确保游戏出现了按钮G快捷键，再点本按钮）
         </n-button>
       </div>
       <div class="father" v-for="button in buttons">
@@ -67,7 +67,7 @@
           v-if="button.value != 'developer'">
           {{ button.context }}
         </n-button>
-        <n-upload v-else action="http://localhost:9899/autoScriptUpload" style="margin-top:20px" accept=".txt"
+        <n-upload v-else action="http://localhost:9899/autoScriptUpload" style="margin-top:20px; margin-left: 15px;" accept=".txt"
           :show-file-list="false">
           <n-button type="info" dashed :color=button.color> {{ button.context }}</n-button>
         </n-upload>
@@ -106,6 +106,11 @@ const options = [
 ]
 const buttons = [
   {
+    color:"#afdfe4",
+    context:"孩子不懂事Q着玩的",
+    value: "alwaysQ"
+  },
+  {
     color:"#fe6673",
     context:"开发者自定义",
     value: "developer"
@@ -113,13 +118,27 @@ const buttons = [
     color:"#ff0000",
     context:"终止线程",
     value: "shutdown"
-  }
+  },
 ]
 
 function run(value: any){
   console.log(value)
   if (value == 'shutdown'){
     shutdown()
+  }
+  if (value == 'alwaysQ'){
+    for ( let i = 0 ; i <= 30; i++){
+      keypress('Q')
+      keypress('Q')
+      keypress('Q')
+      keypress('Q')
+      keypress('Q')
+      keypress('Q')
+      keypress('Q')
+      keypress('Q')
+      keypress('Q')
+      keypress('Q')
+    }
   }
 }
 
@@ -166,6 +185,6 @@ function shutdown(){
     font-size: 20px;
 }
 .dynamicSpaceStyles{
-  margin-top: 5px;
+  margin-top: 10px;
 }
 </style>
