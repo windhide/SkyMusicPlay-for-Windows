@@ -335,55 +335,77 @@ function reloadMusicList() {
   active.value = !active.value;
   music.musicList = store.getters.getPlayList
 }
+
+
+function startProgressTracking() {
+  if (progressInterval) return;
+  progressInterval = setInterval(getProgress, 1000);
+}
+
+function stopProgressTracking() {
+  if (progressInterval) {
+    clearInterval(progressInterval);
+    progressInterval = 0;
+  }
+}
+
 function clearPlayList() {
   store.commit('clearPlayList')
   music.musicList = store.getters.getPlayList
 }
 
 const playBarClickHandler = async (status: String, type: String) => {
+  stopProgressTracking();
+
   if (status === 'resume') {
     if (nowState.value == 'stop') {
-      message.info("双击歌曲播放！")
-      return
+      message.info("双击歌曲播放！");
+      return;
     }
-    sendData('play_operate',{"operate":"resume"})
+    sendData('play_operate', { "operate": "resume" });
     isPlay.value = true;
-    progressInterval = setInterval(getProgress, 1000)
+    startProgressTracking();
   }
-  if (status === 'pause') {
-    sendData('play_operate',{"operate":"pause"})
+  else if (status === 'pause') {
+    sendData('play_operate', { "operate": "pause" });
     isPlay.value = false;
-    clearInterval(progressInterval)
-    progressInterval = 0
+    stopProgressTracking();
   }
-  if (status === 'stop') {
-    sendData('play_operate',{"operate":"stop"})
-    await clearPlayInfo()
+  else if (status === 'stop') {
+    sendData('play_operate', { "operate": "stop" });
+    await clearPlayInfo();
   }
-  if (status === 'start') {
+  else if (status === 'start') {
     setTimeout(() => {
       sendData('play_operate', {
         fileName: nowSelectMusic.value,
         type: type != "" ? type : nowType,
         operate: "start"
-      }).then(()=>{
-        progress.value = 0
+      }).then(() => {
+        progress.value = 0;
         cycleMusic = {
           fileName: nowSelectMusic.value,
           type: type != "" ? type : nowType,
-        }
-      })
-      message.success('开始')
+        };
+      });
+      message.success('开始');
       isPlay.value = true;
-      progressInterval = setInterval(getProgress, 1000)
-    })
+      startProgressTracking();
+    });
   }
-  if (status === 'next') {
-    progress.value = 100
-    return
+  else if (status === 'next') {
+    // 直接调用下一首逻辑，不依赖 progress.value = 100 触发
+    if (selectMode.value === 'order') {
+      orderMusicPlay();
+    } else if (selectMode.value === 'random') {
+      randomMusicPlay();
+    } else if (selectMode.value === 'cycle') {
+      cycleMusicPlay();
+    }
+    return;
   }
-  nowState.value = status
-}
+  nowState.value = status;
+};
 
 function drag_progress_start() {
   sendData('play_operate',{"operate":"pause"}).then(() => {
@@ -392,6 +414,7 @@ function drag_progress_start() {
 
 }
 function drag_progress_end() {
+  clearInterval(progressInterval);
   setConfig('set_progress', progress.value / 100)
   sendData('play_operate',{"operate":"resume"}).then(() => {
     progressInterval = setInterval(getProgress, 1000)
@@ -400,18 +423,37 @@ function drag_progress_end() {
 
 
 async function getProgress() {
-  if (progress.value == 100) {
-    await clearPlayInfo();
-    if (selectMode.value === 'order') orderMusicPlay();
-    else if (selectMode.value === 'random') randomMusicPlay();
-    else if (selectMode.value === 'cycle') cycleMusicPlay();
-  }else{
-    getData('getProgress').then((res) => {
-      progress.value = Number(res.now_progress)
-      nowPlayMusic.value = res.now_play_music
-    })
+  try {
+    // 如果当前状态为暂停或停止，则不更新进度
+    if (nowState.value === 'pause' || nowState.value === 'stop') {
+      return "paused_or_stopped";
+    }
+    // 当进度达到或超过 100 时，认为本曲播放完毕
+    if (progress.value >= 100) {
+      // 停止定时器，防止重复调用
+      stopProgressTracking();
+      clearPlayInfo();
+      // 根据不同播放模式，延时调度下一曲
+      if (selectMode.value === 'order') {
+        setTimeout(orderMusicPlay, 500);
+      } else if (selectMode.value === 'random') {
+        setTimeout(randomMusicPlay, 500);
+      } else if (selectMode.value === 'cycle') {
+        setTimeout(cycleMusicPlay, 500);
+      }
+    } else {
+      // 请求最新进度数据
+      const res = await getData('getProgress');
+      if (res && res.now_progress !== undefined) {
+        // 更新进度，转换为数字
+        progress.value = Number(res.now_progress);
+        nowPlayMusic.value = res.now_play_music || '未知歌曲';
+      }
+    }
+  } catch (error) {
+    console.error('getProgress 出错：', error);
   }
-  return "ok"
+  return "ok";
 }
 
 
@@ -430,7 +472,8 @@ async function orderMusicPlay() {
   } else {
     clearInterval(progressInterval)
     playBarClickHandler("stop","")
-    window.api.system_notification("😳", "列表的歌放完咯")
+    console.log("叽里呱啦")
+    setTimeout(()=>{window.api.system_notification("😳", "列表的歌放完咯")},1000)
     nowPlayMusic.value = "没有正在播放的歌曲哦"
   }
 }
@@ -508,16 +551,19 @@ watch(playSpeed, () => {
   setConfig('play_speed', playSpeed.value)
 })
 
-async function clearPlayInfo() {
-  await clearInterval(progressInterval)
-  nowSelectMusic.value = '没有歌曲'
-  nowPlayMusic.value = "没有正在播放的歌曲哦"
-  nowState.value = 'stop'
-  progress.value = 0
-  statusbar[0] = true
-  statusbar[1] = false
+function clearPlayInfo() {
+  // 先清除轮询定时器
+  stopProgressTracking();
+  nowSelectMusic.value = '没有歌曲';
+  nowPlayMusic.value = '没有正在播放的歌曲哦';
+  nowState.value = 'stop';
+  progress.value = 0;
+  // 确保其他状态同步更新（如 statusbar，确保 statusbar 在当前上下文中有效）
+  statusbar[0] = true;
+  statusbar[1] = false;
   isPlay.value = false;
 }
+
 
 //  收藏点击
 function heartClick(name, state) {
