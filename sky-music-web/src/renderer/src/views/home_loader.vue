@@ -34,102 +34,17 @@
         transition: `all .3s ${themeVars.cubicBezierEaseInOut}`,
       }"
     />
-    <n-divider>
-      <n-gradient-text type="info" :size="25" style="color:#F2C9C4"> 
-        <n-button ghost color="#F2C9C4"  @click="openUrl('https://windhide.netlify.app')"  style="font-size: 20px">
-          查看教使用教程
-        </n-button> 
-      </n-gradient-text>
-    </n-divider>
-    <n-button type="info" color="#F2C9C4" text  @click="openUrl('https://github.com/windhide/SkyMusicPlay-for-Windows/pulls')"  style="font-size: 30px">
-      <n-icon>
-        <GitPullRequest />
-      </n-icon>
-    </n-button>
-    <n-button type="info" color="#F2E8C4" text  @click="openUrl('https://github.com/windhide/SkyMusicPlay-for-Windows')" style="margin-left: 20px; font-size: 30px">
-      <n-icon>
-        <LogoGithub />
-      </n-icon>
-    </n-button>
-    <n-button type="info" color="#DDF2C4" text  @click="openUrl('https://github.com/windhide/SkyMusicPlay-for-Windows/issues/new')" style="margin-left: 20px; font-size: 30px">
-      <n-icon>
-        <Build />
-      </n-icon>
-    </n-button>
-    <n-button type="info" color="#DDF2C4" text  @click="checkForUpdates()" style="margin-left: 20px; font-size: 30px">
-      <n-icon>
-        <CloudDownloadSharp />
-      </n-icon>
-    </n-button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useThemeVars, useDialog } from "naive-ui";
 import { GitPullRequest, LogoGithub, Build, CloudDownloadSharp } from "@vicons/ionicons5";
-import { sendData, getData } from "@renderer/utils/fetchUtils";
-import { useMessage } from 'naive-ui'
-import { useRoute } from 'vue-router';
-import { onMounted } from 'vue'
 
-const route = useRoute();
 const themeVars = useThemeVars();
-const dialog = useDialog();
-const message = useMessage()
 const headText = "如果您觉得好用可以赏我一杯咖啡☕";
 const text = "欢迎使用本软件，本软件完全免费，如果您是买的本软件就是被骗了";
 const patterns = ["完全免费", "被骗了", "咖啡☕"];
-
-/**
- * 打开指定链接
- * @param url 链接地址
- */
-function openUrl(url: string): void {
-  getData(`openBrowser?url=${url}`);
-}
-
-/**
- * 检查是否有更新
- */
-async function checkForUpdates(): Promise<void> {
-  try {
-    const clientVersion: string = await window.api.getVersion();
-    const cloudVersion: any = await getData("update");
-    if (!cloudVersion) {
-      clearInterval(updateInterval);
-      return;
-    }
-    const clientVersionNum = Number(clientVersion.match(/\d/g)?.join("") || 0);
-    const cloudVersionNum = Number(cloudVersion.version.match(/\d/g)?.join("") || 0);
-    if (cloudVersionNum > clientVersionNum) {
-      dialog.success({
-        title: cloudVersion.title,
-        content: cloudVersion.content
-          ?.replaceAll("\\n", "\n")
-          .replaceAll("\\t", "\t"),
-        positiveText: cloudVersion.positiveText,
-        negativeText: cloudVersion.negativeText,
-        contentStyle: { whiteSpace: "pre-wrap" },
-        onPositiveClick: () => {
-          openUrl(cloudVersion.downloadUrl);
-        },
-        onNegativeClick: () => {
-        }
-      });
-    }else{
-      message.success("当前已经是最新版了");
-    }
-  } catch (error) {
-    message.info("更新检测错误");
-  }
-}
-
-onMounted(()=>{
-  console.log("params", route.query)
-  if ( route.query.show === "1"){
-    checkForUpdates()
-  }
-})
 </script>
 
 <style scoped>

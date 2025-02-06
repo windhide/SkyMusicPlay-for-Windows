@@ -125,20 +125,20 @@ function fixHandle() {
 }
 
 function railStyle({ focused, checked }){
-        const style: CSSProperties = {}
-        if (checked) {
-          style.background = '#F2C9C4'
-          if (focused) {
-            style.boxShadow = '0 0 0 2px #F2C9C440'
-          }
-        }
-        else {
-          style.background = '#F2E8C4'
-          if (focused) {
-            style.boxShadow = '0 0 0 2px #F2E8C440'
-          }
-        }
-        return style
+  const style: CSSProperties = {}
+  if (checked) {
+    style.background = '#F2C9C4'
+    if (focused) {
+      style.boxShadow = '0 0 0 2px #F2C9C440'
+    }
+  }
+  else {
+    style.background = '#F2E8C4'
+    if (focused) {
+      style.boxShadow = '0 0 0 2px #F2E8C440'
+    }
+  }
+  return style
 }
 
 function openFileHandle() {
@@ -200,13 +200,12 @@ const clickMenu = (key: string) => {
   router.push({ name: key });
 };
 
-router.push({ name: 'home' });
-
 let checkInterval = setInterval(() => {
   getData("check").then(res => {
     if (res === undefined) return
     show.value = !res
     clearInterval(checkInterval)
+    router.push({ name: 'home', query: { show: 1 } });
   });
 }, 500)
 
