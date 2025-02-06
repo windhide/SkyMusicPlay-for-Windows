@@ -14,7 +14,6 @@
           </n-icon-wrapper>
         </template>
       </n-slider>
-    
     <n-row gutter="12">
         <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('resume', '')" v-show="!isPlay" color="#F2C9C4">
           <template #icon>
@@ -30,20 +29,70 @@
             </n-icon>
           </template>
         </n-button>
-        <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('next', '')" color="#F2C9C4"class='actionButton'>
+        <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('next', '')" color="#F2C9C4" class='actionButton'>
           <template #icon>
             <n-icon size="25px">
               <PlaySkipForward />
             </n-icon>
           </template>
         </n-button>
-        <n-button quaternary circle type="info" size="large" @click="reloadMusicList()" color="#F2C9C4"class='actionButton'>
-          <template #icon>
-            <n-icon size="25px">
-              <Settings48Filled />
-            </n-icon>
+        <n-popover placement="bottom-start" trigger="click" style="width: 450px; --n-color: rgba(47,47,55,1); border-radius: 10px;">
+          <template #trigger>
+            <n-button quaternary circle type="info" size="large" color="#F2C9C4" class='actionButton'>
+              <template #icon>
+                <n-icon size="25px">
+                  <Settings48Filled />
+                </n-icon>
+              </template>
+            </n-button>
           </template>
-        </n-button>
+          <n-row gutter="26">
+            <n-col :span="15">
+              <n-gradient-text type="info" :size="13" style="color: #F2C9C4; display: block;">间隔延迟</n-gradient-text>
+              <n-radio-group v-model:value="delayStatus" name="radiogroup" style="margin-top: 5px; margin-bottom: 5px">
+                <n-space>
+                  <n-radio key="system" value="system" style="color: red;">系统自带</n-radio>
+                  <n-radio key="random" value="random">随机</n-radio>
+                  <n-radio key="custom" value="custom">自定义</n-radio>
+                </n-space>
+              </n-radio-group>
+            </n-col>
+            <n-col v-show="delayStatus == 'custom'" :span="5" style="margin-left: -40px; margin-top: 25px;">
+              <n-input-number step="0.01" v-model:value="delaySpeed" size="tiny" :min="0" :max="2" placeholder="间隔" />
+            </n-col>
+            <n-col v-show="delayStatus == 'random'" :span="11" style="margin-left: -40px; margin-top: 25px;">
+              <n-input-number step="0.01" v-model:value="delayRandomStart" size="tiny" :min="0" :max="2" placeholder="间隔" style="width: 80px; float: inline-start;" />
+              <span style="margin-left: 9px;">&nbsp;-&nbsp;</span>
+              <n-input-number step="0.01" v-model:value="delayRandomEnd" size="tiny" :min="0" :max="2" placeholder="间隔" style="width: 80px; float: inline-end;"/>
+            </n-col>
+          </n-row>
+          <n-row gutter="26">
+            <n-col :span="15">
+              <n-gradient-text type="info" :size="13" style="color: #F2C9C4; display: block;">延音设置</n-gradient-text>
+              <n-radio-group v-model:value="sustainStatus" name="radiogroup" style="margin-top: 5px; margin-bottom: 5px">
+                <n-space>
+                  <n-radio key="system" value="system">系统自带</n-radio>
+                  <n-radio key="random" value="random">随机</n-radio>
+                  <n-radio key="custom" value="custom">自定义</n-radio>
+                </n-space>
+              </n-radio-group>
+            </n-col>
+            <n-col v-show="sustainStatus == 'custom'" :span="5" style="margin-left: -40px; margin-top: 25px;">
+              <n-input-number step="0.01" v-model:value="sustainSpeed" size="tiny" :min="0" :max="2" placeholder="延音" />
+            </n-col>
+            <n-col v-show="sustainStatus == 'random'" :span="11" style="margin-left: -40px; margin-top: 25px;">
+              <n-input-number step="0.01" v-model:value="sustainRandomStart" size="tiny" :min="0" :max="2" placeholder="延音" style="width: 80px; float: inline-start;"  />
+              <span style="margin-left: 9px;">&nbsp;-&nbsp;</span>
+              <n-input-number step="0.01" v-model:value="sustainRandomEnd" size="tiny" :min="0" :max="2" placeholder="延音" style="width: 80px; float: inline-end;"  />
+            </n-col>
+          </n-row>
+          <n-row gutter="12">
+            <n-col :span="5">
+              <n-gradient-text type="info" :size="13" style="color: #F2C9C4; display: block;">倍速</n-gradient-text>
+              <n-input-number step="0.1" v-model:value="playSpeed" size="tiny" :min="0.25" :max="5" placeholder="倍速" style="margin-top: 5px;" />
+            </n-col>
+          </n-row>
+        </n-popover>
         <n-button quaternary circle type="info" size="large" @click="reloadMusicList()" color="#F2C9C4" class='actionButton'>
           <template #icon>
             <n-icon size="25px">
@@ -68,44 +117,6 @@
             </template>
           </n-button>
         </n-upload>
-    </n-row>
-    <n-row gutter="12">
-      <n-col :span="15">
-        <n-gradient-text type="info" :size="13" style="color: #F2C9C4"> 间隔延迟s&nbsp;&nbsp;&nbsp; </n-gradient-text>
-        <n-radio-group v-model:value="delayStatus" name="radiogroup">
-          <n-space>
-            <n-radio key="system" value="system" style="color: red;">系统自带</n-radio>
-            <n-radio key="random" value="random">随机</n-radio>
-            <n-radio key="custom" value="custom">自定义</n-radio>
-          </n-space>
-        </n-radio-group>
-      </n-col>
-      <n-col v-show="delayStatus == 'custom'" :span="9" style="margin-left: -50px">
-        <n-input-number step="0.01" v-model:value="delaySpeed" size="tiny" :min="0" :max="2" placeholder="输入间隔延迟" />
-      </n-col>
-    </n-row>
-    <n-row gutter="12">
-      <n-col :span="15">
-        <n-gradient-text type="info" :size="13" style="color: #F2C9C4"> 延音设置s&nbsp;&nbsp;&nbsp; </n-gradient-text>
-        <n-radio-group v-model:value="sustainStatus" name="radiogroup">
-          <n-space>
-            <n-radio key="system" value="system">系统自带</n-radio>
-            <n-radio key="random" value="random">随机</n-radio>
-            <n-radio key="custom" value="custom">自定义</n-radio>
-          </n-space>
-        </n-radio-group>
-      </n-col>
-      <n-col v-show="sustainStatus == 'custom'" :span="9" style="margin-left: -50px">
-        <n-input-number step="0.01" v-model:value="sustainSpeed" size="tiny" :min="0" :max="2" placeholder="输入延音持续" />
-      </n-col>
-    </n-row>
-    <n-row gutter="12">
-      <n-col :span="3">
-        <n-gradient-text type="info" :size="13" style="color: #F2C9C4"> 倍速设置-&nbsp;&nbsp;&nbsp; </n-gradient-text>
-      </n-col>
-      <n-col :span="0" style="margin-left: -1.2%">
-        <n-input-number step="0.1" v-model:value="playSpeed" size="tiny" :min="0.25" :max="5" placeholder="输入倍速速度" />
-      </n-col>
     </n-row>
   </n-flex>
   <n-card style="margin-top: 15px;">
@@ -321,7 +332,10 @@ const progress = ref(0.0) // 播放进度条
 const playSpeed = ref(1) // 播放速度
 const delaySpeed: any = ref(0.01) // 延迟设置
 const sustainSpeed: any = ref(0.01) // 延音设置
-
+const sustainRandomStart: any = ref(0.5)
+const sustainRandomEnd: any = ref(1.5)
+const delayRandomStart: any = ref(0.01)
+const delayRandomEnd: any = ref(0.06)
 let clickTimeout: any = null
 
 // ---------------------------------------------------
@@ -630,7 +644,7 @@ watch(delayStatus, () => {
       break
     case 'random':
       randomInterval = setInterval(() => {
-        delaySpeed.value = (Math.random() * (0.06 - 0.01) + 0.01).toFixed(3)
+        delaySpeed.value = (Math.random() * (delayRandomEnd.value - delayRandomStart.value) + delayRandomStart.value).toFixed(3)
       }, 1000)
       break
     case 'custom':
@@ -649,7 +663,7 @@ watch(sustainStatus, () => {
       break
     case 'random':
       sustainInterval = setInterval(() => {
-        sustainSpeed.value = (Math.random() * (1.5 - 0.5) + 0.5).toFixed(3)
+        sustainSpeed.value = (Math.random() * (sustainRandomEnd.value - sustainRandomStart.value) + sustainRandomStart.value).toFixed(3)
       }, 1000)
       break
     case 'custom':

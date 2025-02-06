@@ -3,7 +3,7 @@
     <n-flex id="drag-area" justify="end" style="position: fixed; z-index: 200; right: 18px" :style="{
       width: collapsed ? '90%' : '80%'
     }">
-      <n-popover style="border-radius: 17px;" trigger="click">
+      <n-popover style="border-radius: 17px; --n-color: rgba(47,47,55,1)" trigger="click">
         <template #trigger>
           <n-button text size="large" type="warning" style="margin-top: 12px; font-size: 20px;" :round="false"> 
             <n-icon size="25px">
