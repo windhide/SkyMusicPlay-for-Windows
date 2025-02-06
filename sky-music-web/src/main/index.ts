@@ -58,6 +58,7 @@ function createWindow(): void {
   let offsetY = 0
 
   ipcMain.on('mousedown', (_event, { }) => {
+    console.log(_event)
     const cursorPoint = screen.getCursorScreenPoint()
     let bounds:any = null
     bounds = mainWindow?.getBounds()
@@ -69,6 +70,7 @@ function createWindow(): void {
   })
 
   ipcMain.on('mousemove', (event) => {
+    console.log(event)
    if (isMousePressed && mainWindow) {
      const cursorPoint = screen.getCursorScreenPoint()
      // 实时更新窗口位置
@@ -86,10 +88,12 @@ function createWindow(): void {
   })
 
   ipcMain.on('window-min', (event) => {
+    console.log(event)
     mainWindow?.minimize()
   })
 
   ipcMain.on('window-close', (event) => {
+    console.log(event)
     exec("taskkill /f /im Sky_Music.exe")
     ipcMain.removeAllListeners('mousedown')
     ipcMain.removeAllListeners('mousemove')
@@ -99,6 +103,7 @@ function createWindow(): void {
   })
 
   ipcMain.on('set-always-on-top', (event) => {
+    console.log(event)
     mainWindow?.setAlwaysOnTop(!mainWindow?.isAlwaysOnTop())
   })
 

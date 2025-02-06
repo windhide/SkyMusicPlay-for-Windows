@@ -73,6 +73,12 @@ const message = useMessage();
 const processFlag = ref(false);
 const progressInterval = ref<number | null>(null);
 
+
+function handleFinish() {
+  reloadTable()
+  message.success('OK~')
+}
+
 const music = reactive({
   translateOriginalMusic: [], // 导入的音乐
   myTranslate: [], // 扒谱的音乐
@@ -195,7 +201,7 @@ async function getProgress() {
     now_translate_text.text = res.now_translate_text?.[0] || "";
     now_translate_text.process = res.now_translate_text?.[1] || "";
 
-    if (progress.overall_progress === "100.0") {
+    if (""+progress.overall_progress === "100.0") {
       if (progressInterval.value) {
         clearInterval(progressInterval.value);
         progressInterval.value = null;
@@ -243,7 +249,7 @@ function reloadTable() {
 watch(
   () => progress.overall_progress,
   () => {
-    if (progress.overall_progress === "100.0") {
+    if (""+progress.overall_progress === "100.0") {
       reloadTable();
     }
   }
