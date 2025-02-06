@@ -1,5 +1,5 @@
 <template>
-  <n-flex align="center">
+  <n-flex align="center" style="margin-left: 6px;">
     <n-gradient-text :size="20" type="success" style="width: 100%; color:#F2C9C4">
       {{ '播&nbsp&nbsp&nbsp放: ' + nowPlayMusic + '' }}
     </n-gradient-text>
@@ -14,51 +14,61 @@
           </n-icon-wrapper>
         </template>
       </n-slider>
-    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('resume', '')" v-show="!isPlay" color="#F2C9C4">
-      <template #icon>
-        <n-icon>
-          <Play />
-        </n-icon>
-      </template>
-    </n-button>
-    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('pause', '')" v-show="isPlay" color="#F2C9C4">
-      <template #icon>
-        <n-icon>
-          <Pause />
-        </n-icon>
-      </template>
-    </n-button>
-    <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('next', '')" color="#F2C9C4">
-      <template #icon>
-        <n-icon>
-          <PlaySkipForward />
-        </n-icon>
-      </template>
-    </n-button>
-    <n-button quaternary circle type="info" size="large" @click="reloadMusicList()" color="#F2C9C4">
-      <template #icon>
-        <n-icon>
-          <SparklesOutline />
-        </n-icon>
-      </template>
-    </n-button>
-    <n-popselect v-model:value="selectMode" :options="modeColumns">
-      <n-button circle dashed color="#F2C9C4">
-        <template #icon>
-          <n-icon v-if="selectMode == 'order'"><List /></n-icon>
-          <n-icon v-if="selectMode == 'random'"><ShuffleOutline /></n-icon>
-          <n-icon v-if="selectMode == 'cycle'"><Sync /></n-icon>
-        </template>
-      </n-button>
-    </n-popselect>
-    <n-upload action="http://localhost:9899/userMusicUpload" multiple accept=".txt" style="width: 20px; margin-left: 8px;"
-      :show-file-list="false" @finish="handleFinish" @before-upload="beforeFileUpload">
-      <n-button type="info" ghost circle dashed color="#F2C9C4">
-        <template #icon>
-          <n-icon><CloudUploadOutline /></n-icon>
-        </template>
-      </n-button>
-    </n-upload>
+    
+    <n-row gutter="12">
+        <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('resume', '')" v-show="!isPlay" color="#F2C9C4">
+          <template #icon>
+            <n-icon size="25px">
+              <Play />
+            </n-icon>
+          </template>
+        </n-button>
+        <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('pause', '')" v-show="isPlay" color="#F2C9C4"class='actionButton'>
+          <template #icon>
+            <n-icon size="25px">
+              <Pause />
+            </n-icon>
+          </template>
+        </n-button>
+        <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('next', '')" color="#F2C9C4"class='actionButton'>
+          <template #icon>
+            <n-icon size="25px">
+              <PlaySkipForward />
+            </n-icon>
+          </template>
+        </n-button>
+        <n-button quaternary circle type="info" size="large" @click="reloadMusicList()" color="#F2C9C4"class='actionButton'>
+          <template #icon>
+            <n-icon size="25px">
+              <Settings48Filled />
+            </n-icon>
+          </template>
+        </n-button>
+        <n-button quaternary circle type="info" size="large" @click="reloadMusicList()" color="#F2C9C4" class='actionButton'>
+          <template #icon>
+            <n-icon size="25px">
+              <BookStar24Filled />
+            </n-icon>
+          </template>
+        </n-button>
+        <n-popselect v-model:value="selectMode" :options="modeColumns" style="height:100%">
+          <n-button quaternary circle color="#F2C9C4" size="large" class='actionButton'>
+            <template #icon>
+              <n-icon v-if="selectMode == 'order'" size="25px"><List /></n-icon>
+              <n-icon v-if="selectMode == 'random'" size="25px"><ShuffleOutline /></n-icon>
+              <n-icon v-if="selectMode == 'cycle'" size="25px"><Sync /></n-icon>
+            </template>
+          </n-button>
+        </n-popselect>
+        <n-upload action="http://localhost:9899/userMusicUpload" multiple accept=".txt" style="width: 20px;"
+          :show-file-list="false" @finish="handleFinish" @before-upload="beforeFileUpload">
+          <n-button type="info" quaternary circle  size="large" color="#F2C9C4" class='actionButton'>
+            <template #icon>
+              <n-icon size="25px"><CloudArrowUp32Filled /></n-icon>
+            </template>
+          </n-button>
+        </n-upload>
+    </n-row>
     <n-row gutter="12">
       <n-col :span="15">
         <n-gradient-text type="info" :size="13" style="color: #F2C9C4"> 间隔延迟s&nbsp;&nbsp;&nbsp; </n-gradient-text>
@@ -150,10 +160,13 @@ import {
   PlaySkipForward,
   Pause,
   PawSharp,
-  Sync,
-  SparklesOutline,
-  CloudUploadOutline
+  Sync
 } from '@vicons/ionicons5'
+import {
+  Settings48Filled,
+  BookStar24Filled,
+  CloudArrowUp32Filled
+} from '@vicons/fluent'
 import { useStore } from 'vuex'
 
 // ---------------------------------------------------
@@ -764,5 +777,9 @@ onUnmounted(async () => {
 }
 :deep(.th_css){
   color: rgb(221,242,196) !important;
+}
+
+.actionButton{
+  margin-left: 20px;
 }
 </style>
