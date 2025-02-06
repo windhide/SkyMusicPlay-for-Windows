@@ -37,7 +37,7 @@
     <n-divider>
       <n-gradient-text type="info" :size="25" style="color:#F2C9C4"> 
         <n-button ghost color="#F2C9C4"  @click="openUrl('https://windhide.netlify.app')"  style="font-size: 20px">
-          查看教使用教程
+          查看教程
         </n-button> 
       </n-gradient-text>
     </n-divider>
