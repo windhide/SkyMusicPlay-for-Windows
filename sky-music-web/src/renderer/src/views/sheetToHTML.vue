@@ -21,7 +21,7 @@
           :min-row-height="48"
           :max-height="300"
           :virtual-scroll="music.systemMusic?.length > 7"
-          :row-props="systemMusicSelect"
+          :row-props="selectMusic"
           row-class-name="td_css"
         />
       </n-tab-pane>
@@ -33,7 +33,7 @@
           :min-row-height="48"
           :max-height="300"
           :virtual-scroll="music.myImport?.length > 7"
-          :row-props="myImportMusicSelect"
+          :row-props="selectMusic"
           row-class-name="td_css"
         />
       </n-tab-pane>
@@ -45,7 +45,7 @@
           :min-row-height="48"
           :max-height="300"
           :virtual-scroll="music.myTranslate?.length > 7"
-          :row-props="myTranslateMusicSelect"
+          :row-props="selectMusic"
           row-class-name="td_css"
         />
       </n-tab-pane>
@@ -57,7 +57,7 @@
           :min-row-height="48"
           :max-height="300"
           :virtual-scroll="music.myFavorite?.length > 7"
-          :row-props="myFavoriteMusicSelect"
+          :row-props="selectMusic"
           row-class-name="td_css"
         />
       </n-tab-pane>
@@ -79,87 +79,102 @@ import { RowData } from 'naive-ui/es/data-table/src/interface'
 import { reactive, ref, watch } from 'vue'
 import { useMessage } from 'naive-ui'
 import { Search } from '@vicons/ionicons5'
-const messeage = useMessage()
-const music: any = reactive({
-  // 音乐列表
-  systemMusic: [], // 原版音乐
-  myImport: [], // 导入的音乐
-  myTranslate: [], // 扒谱的音乐
+
+const message = useMessage()
+
+// 音乐列表
+const music = reactive({
+  systemMusic: [],
+  myImport: [],
+  myTranslate: [],
   myFavorite: []
 })
-const nowPlayMusic = ref('没有歌曲') // 当前选中歌曲
-let nowType = 'systemMusic'
+
+// 当前选中歌曲
+const nowPlayMusic = ref('没有歌曲')
+
+// 当前音乐类型
+const nowType = ref<'systemMusic' | 'myImport' | 'myTranslate' | 'myFavorite'>('systemMusic')
+
+// 搜索文本
 const searchText = ref('')
-const musicColumns = [
-  {
-    title: '歌名',
-    key: 'name',
-    className: 'th_css'
-  }
-] // 音乐列
+
+// 进程标记
 const processFlag = ref(false)
-const systemMusicSelect = (row: RowData) => {
-  return {
-    onClick: () => {
-      nowPlayMusic.value = row.name
-    }
+
+// 音乐列表列定义
+const musicColumns = [
+  { title: '歌名', key: 'name', className: 'th_css' }
+]
+
+// 选中音乐
+const selectMusic = (row: RowData) => ({
+  onClick: () => {
+    nowPlayMusic.value = row.name
   }
-}
-const myImportMusicSelect = (row: RowData) => {
-  return {
-    onClick: () => {
-      nowPlayMusic.value = row.name
-    }
-  }
-}
-const myTranslateMusicSelect = (row: RowData) => {
-  return {
-    onClick: () => {
-      nowPlayMusic.value = row.name
-    }
-  }
-}
-const myFavoriteMusicSelect = (row: RowData) => {
-  return {
-    onClick: () => {
-      nowPlayMusic.value = row.name
-    }
-  }
+})
+
+/**
+ * 更新音乐列表数据
+ */
+async function handleUpdateValue(value: keyof typeof music) {
+  searchText.value = '' // 清空搜索
+  await getListData(value)
 }
 
-function handleUpdateValue(value: string) {
-  searchText.value = ''
-  getListData(value)
-}
+/**
+ * 监听搜索框变化，仅更新当前音乐类型的列表
+ */
+watch(searchText, async () => {
+  await getListData(nowType.value)
+})
 
-function handleBeforeLeave(name: string) {
-  nowType = name
+/**
+ * 切换音乐类型
+ */
+function handleBeforeLeave(name: keyof typeof music) {
+  nowType.value = name
   return true
 }
 
-watch(searchText, () => {
-  getListData('systemMusic')
-  getListData('myImport')
-  getListData('myTranslate')
-  getListData('myFavorite')
-})
-
+/**
+ * 发送扒谱转换请求
+ */
 async function transfer() {
-  sendData('config_operate', {
+  if (nowPlayMusic.value === '没有歌曲') {
+    message.warning('请先选择一首歌曲')
+    return
+  }
+
+  try {
+    await sendData('config_operate', {
       fileName: nowPlayMusic.value,
-      type: nowType,
+      type: nowType.value,
       operate: 'convert_sheet'
-    }).then(()=>{
-      messeage.success("已保存在桌面")
     })
+    message.success('已保存在桌面')
+  } catch (error) {
+    console.error('转换失败:', error)
+    message.error('转换失败，请重试')
+  }
 }
+
+/**
+ * 获取音乐列表数据
+ */
+async function getListData(value: keyof typeof music) {
+  try {
+    const res = await getList(value, searchText.value)
+    music[value] = res
+  } catch (error) {
+    console.error(`获取 ${value} 失败:`, error)
+  }
+}
+
+// 初始化加载系统音乐
 handleUpdateValue('systemMusic')
-function getListData(value) {
-  getList(value, searchText.value).then((_res) => {
-    eval('music.' + value + '=_res')
-  })
-}
 </script>
+
 
 <style scoped>
 :deep(.n-tabs-bar){

@@ -27,9 +27,9 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/tutorial.vue')
   },
   {
-    path: '/sheetPdf',
-    name: 'sheetPdf',
-    component: () => import('../views/sheetToPDF.vue')
+    path: '/sheetToHTML',
+    name: 'sheetToHTML',
+    component: () => import('../views/sheetToHTML.vue')
   },
   {
     path: '/magicTools',

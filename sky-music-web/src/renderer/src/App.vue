@@ -186,7 +186,7 @@ const menuOptions = [
   },
   {
     label: "生成乐谱",
-    key: "sheetPdf",
+    key: "sheetToHTML",
     icon: renderIcon(Library),
   },
   {
