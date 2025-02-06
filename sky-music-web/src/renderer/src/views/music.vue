@@ -123,19 +123,19 @@
     <n-tabs type="bar" animated size="small" @update:value="handleUpdateValue" @before-leave="handleBeforeLeave">
       <n-tab-pane name="systemMusic" tab="自带歌曲">
         <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :min-row-height="48"
-          :max-height="300" :virtual-scroll="music.systemMusic?.length > 7" :row-props="MusicSelect" row-class-name="td_css" />
+          :max-height="430" :virtual-scroll="music.systemMusic?.length > 7" :row-props="MusicSelect" row-class-name="td_css" />
       </n-tab-pane>
       <n-tab-pane name="myImport" tab="导入歌曲">
         <n-data-table :columns="myImportColumns" :data="music.myImport" :bordered="false" :min-row-height="48"
-          :max-height="300" :virtual-scroll="music.myImport?.length > 7" :row-props="MusicSelect"  row-class-name="td_css" />
+        :max-height="430" :virtual-scroll="music.myImport?.length > 7" :row-props="MusicSelect"  row-class-name="td_css" />
       </n-tab-pane>
       <n-tab-pane name="myTranslate" tab="转换歌曲">
         <n-data-table :columns="musicColumns" :data="music.myTranslate" :bordered="false" :min-row-height="48"
-          :max-height="300" :virtual-scroll="music.myTranslate?.length > 7" :row-props="MusicSelect" row-class-name="td_css"  />
+        :max-height="430" :virtual-scroll="music.myTranslate?.length > 7" :row-props="MusicSelect" row-class-name="td_css"  />
       </n-tab-pane>
       <n-tab-pane name="myFavorite" tab="收藏">
         <n-data-table :columns="favoritColumns" :data="music.myFavorite" :bordered="false" :min-row-height="48"
-          :max-height="300" :virtual-scroll="music.myFavorite?.length > 7" :row-props="MusicSelect"  row-class-name="td_css" />
+        :max-height="430" :virtual-scroll="music.myFavorite?.length > 7" :row-props="MusicSelect"  row-class-name="td_css" />
       </n-tab-pane>
       <template #suffix>
         <n-input v-model:value="searchText" round placeholder="搜索"

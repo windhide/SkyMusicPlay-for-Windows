@@ -45,7 +45,7 @@
           :columns="originalColumns"
           :data="music.translateOriginalMusic"
           :bordered="false"
-          :max-height="330"
+          :max-height="380"
           :scroll-x="100"
           row-class-name="td_css"
         />
@@ -55,7 +55,7 @@
           :columns="translateColumns"
           :data="music.myTranslate"
           :bordered="false"
-          :max-height="300"
+          :max-height="380"
           :scroll-x="100"
           row-class-name="td_css"
         />
