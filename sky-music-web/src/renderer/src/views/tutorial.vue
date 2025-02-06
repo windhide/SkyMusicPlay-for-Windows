@@ -23,7 +23,7 @@
           :min-row-height="48"
           :max-height="300"
           :virtual-scroll="music.systemMusic?.length > 7"
-          :row-props="systemMusicSelect"
+          :row-props="MusicSelect"
           row-class-name="td_css"
         />
       </n-tab-pane>
@@ -35,7 +35,7 @@
           :min-row-height="48"
           :max-height="300"
           :virtual-scroll="music.myImport?.length > 7"
-          :row-props="myImportMusicSelect"
+          :row-props="MusicSelect"
           row-class-name="td_css"
         />
       </n-tab-pane>
@@ -47,7 +47,7 @@
           :min-row-height="48"
           :max-height="300"
           :virtual-scroll="music.myTranslate?.length > 7"
-          :row-props="myTranslateMusicSelect"
+          :row-props="MusicSelect"
           row-class-name="td_css"
         />
       </n-tab-pane>
@@ -59,7 +59,7 @@
           :min-row-height="48"
           :max-height="300"
           :virtual-scroll="music.myFavorite?.length > 7"
-          :row-props="myFavoriteMusicSelect"
+          :row-props="MusicSelect"
           row-class-name="td_css"
         />
       </n-tab-pane>
@@ -106,21 +106,7 @@ const musicColumns = [
   },
 ]; // 音乐列
 
-const systemMusicSelect = (row: RowData) => {
-  return {
-    onClick: () => {
-      nowPlayMusic.value = row.name;
-    },
-  };
-};
-const myImportMusicSelect = (row: RowData) => {
-  return {
-    onClick: () => {
-      nowPlayMusic.value = row.name;
-    },
-  };
-};
-const myTranslateMusicSelect = (row: RowData) => {
+const MusicSelect = (row: RowData) => {
   return {
     onClick: () => {
       nowPlayMusic.value = row.name;
@@ -137,14 +123,6 @@ function handleBeforeLeave(name: string) {
   nowType = name;
   return true;
 }
-
-const myFavoriteMusicSelect = (row: RowData) => {
-  return {
-    onClick: () => {
-      nowPlayMusic.value = row.name;
-    },
-  };
-};
 
 watch(searchText, () => {
   getListData("systemMusic");
