@@ -68,17 +68,20 @@
 import { getData, sendData, getList } from "@renderer/utils/fetchUtils";
 import { h, reactive, ref, watch } from "vue";
 import { NButton, useMessage } from "naive-ui";
+
 const message = useMessage();
 const processFlag = ref(false);
+const progressInterval = ref<number | null>(null);
 
-const music: any = reactive({
-  // 音乐列表
+const music = reactive({
   translateOriginalMusic: [], // 导入的音乐
   myTranslate: [], // 扒谱的音乐
 });
-const progress: any = reactive({
+
+const progress = reactive({
   overall_progress: 0,
 });
+
 const now_translate_text = reactive({
   process: "",
   text: "",
@@ -88,13 +91,13 @@ const originalColumns = [
   {
     title: "歌名",
     key: "name",
-    className: 'th_css'
+    className: "th_css",
   },
   {
     title: "操作",
     key: "operation",
     width: 100,
-    className: 'th_css',
+    className: "th_css",
     render(row) {
       return h(
         NButton,
@@ -103,27 +106,23 @@ const originalColumns = [
           text: true,
           onClick: () => originalClick(row.name),
         },
-        {
-          default: () => {
-            return "❌";
-          },
-        }
+        { default: () => "❌" }
       );
     },
   },
-]; // 音乐列
+];
 
 const translateColumns = [
   {
     title: "歌名",
     key: "name",
-    className: 'th_css'
+    className: "th_css",
   },
   {
     title: "操作",
     key: "operation",
     width: 100,
-    className: 'th_css',
+    className: "th_css",
     render(row) {
       return h(
         NButton,
@@ -132,96 +131,138 @@ const translateColumns = [
           text: true,
           onClick: () => translateClick(row.name),
         },
-        {
-          default: () => {
-            return "❌";
-          },
-        }
+        { default: () => "❌" }
       );
     },
   },
-]; // 音乐列
+];
 
-function originalClick(name) {
-    sendData("config_operate", {
-      fileName: name.slice(0, name.lastIndexOf('.')),
-      type: 'translateOriginalMusic',
-      suffix: name.match(/(\.[^.]*)$/)[0],
-      operate: "drop_file"
-    }).then(() => {
-      handleUpdateValue("translateOriginalMusic");
-      message.success("移除成功");
+/**
+ * 处理原始音乐删除
+ */
+async function originalClick(name: string) {
+  try {
+    const baseName = name.slice(0, name.lastIndexOf("."));
+    const suffix = name.match(/(\.[^.]*)$/)?.[0] || "";
+
+    await sendData("config_operate", {
+      fileName: baseName,
+      type: "translateOriginalMusic",
+      suffix,
+      operate: "drop_file",
     });
-    sendData("config_operate", {
-      fileName: name.slice(0, name.lastIndexOf('.')).replaceAll("_ok","_basic_pitch"),
-      type: 'translateMID',
+
+    await sendData("config_operate", {
+      fileName: baseName.replace("_ok", "_basic_pitch"),
+      type: "translateMID",
       suffix: ".mid",
-      operate: "drop_file"
-    })
-}
-
-function translateClick(name) {
-    sendData("config_operate", {
-      fileName: name,
-      type: 'myTranslate',
-      operate: "drop_file"
-    }).then(() => {
-      handleUpdateValue("translateOriginalMusic");
-      handleUpdateValue("myTranslate");
-      message.success("移除成功");
+      operate: "drop_file",
     });
-}
 
-function handleFinish() {
-  reloadTable();
-  message.success("OK~");
-}
-
-let progressInterval: any;
-function getProgress() {
-  getData("getProgress").then((res) => {
-    progress.overall_progress = res.overall_progress;
-    now_translate_text.text = res.now_translate_text[0];
-    now_translate_text.process = res.now_translate_text[1];
-  });
-
-  if (progress.overall_progress == "100.0") {
-    clearInterval(progressInterval);
+    handleUpdateValue("translateOriginalMusic");
+    message.success("移除成功");
+  } catch (error) {
+    console.error("删除失败:", error);
   }
 }
 
-function handleStartTranslate() {
-  if (processFlag.value) return;
-  progressInterval = setInterval(getProgress, 1000);
-  processFlag.value = true;
-  message.success("开始转换");
-  sendData("translate", {
-    operate: "translate",
-  })
-    .then(() => {
-      reloadTable();
-      message.success("转换完成");
-    })
-    .finally(() => {
-      processFlag.value = false;
+/**
+ * 处理扒谱音乐删除
+ */
+async function translateClick(name: string) {
+  try {
+    await sendData("config_operate", {
+      fileName: name,
+      type: "myTranslate",
+      operate: "drop_file",
     });
+
+    handleUpdateValue("translateOriginalMusic");
+    handleUpdateValue("myTranslate");
+    message.success("移除成功");
+  } catch (error) {
+    console.error("删除失败:", error);
+  }
 }
 
+/**
+ * 获取转换进度
+ */
+async function getProgress() {
+  try {
+    const res = await getData("getProgress");
+    progress.overall_progress = res.overall_progress;
+    now_translate_text.text = res.now_translate_text?.[0] || "";
+    now_translate_text.process = res.now_translate_text?.[1] || "";
+
+    if (progress.overall_progress === "100.0") {
+      if (progressInterval.value) {
+        clearInterval(progressInterval.value);
+        progressInterval.value = null;
+      }
+    }
+  } catch (error) {
+    console.error("获取进度失败:", error);
+  }
+}
+
+/**
+ * 开始扒谱转换
+ */
+async function handleStartTranslate() {
+  if (processFlag.value) return;
+  processFlag.value = true;
+  message.success("开始转换");
+
+  if (!progressInterval.value) {
+    progressInterval.value = setInterval(getProgress, 1000) as unknown as number;
+  }
+
+  try {
+    await sendData("translate", { operate: "translate" });
+    reloadTable();
+    message.success("转换完成");
+  } catch (error) {
+    console.error("转换失败:", error);
+  } finally {
+    processFlag.value = false;
+  }
+}
+
+/**
+ * 重新加载表格数据
+ */
 function reloadTable() {
   handleUpdateValue("myTranslate");
   handleUpdateValue("translateOriginalMusic");
 }
 
-reloadTable();
-watch(progress.overall_progress.value, () => reloadTable());
+/**
+ * 监听进度变化，自动更新表格
+ */
+watch(
+  () => progress.overall_progress,
+  () => {
+    if (progress.overall_progress === "100.0") {
+      reloadTable();
+    }
+  }
+);
 
-function handleUpdateValue(value: string) {
-  getList(value, "").then((_res) => {
-    eval("music." + value + "=_res");
-  });
+/**
+ * 更新音乐列表数据
+ */
+async function handleUpdateValue(value: keyof typeof music) {
+  try {
+    const res = await getList(value, "");
+    music[value] = res;
+  } catch (error) {
+    console.error(`获取 ${value} 失败:`, error);
+  }
 }
-</script>
 
+reloadTable();
+</script>
 <style scoped>
 :deep(.n-tabs-bar){
   --n-bar-color: rgb(242,232,196)!important;
