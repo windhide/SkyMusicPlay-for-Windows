@@ -54,9 +54,24 @@ def quit_window():
     GlobalVariable.follow_client = None
     stop_follow_process()
 
+def wait_for_server(host, port, max_retries=30, delay=2):
+    """等待服务器启动并可连接"""
+    retries = 0
+    while retries < max_retries:
+        try:
+            with socket.create_connection((host, port), timeout=1) as sock:
+                return True  # 服务器已启动
+        except (ConnectionRefusedError, OSError):
+            retries += 1
+            time.sleep(delay)
+    return False  # 超时
+
 def send_command(command):
     try:
         if GlobalVariable.follow_client is None:
+            if not wait_for_server("localhost", 12345):
+                print("无法连接到 draw_server.exe，超时退出。")
+                return
             GlobalVariable.follow_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             GlobalVariable.follow_client.connect(("localhost", 12345))  # 连接到服务器
         GlobalVariable.follow_client.send(command.encode("utf-8"))

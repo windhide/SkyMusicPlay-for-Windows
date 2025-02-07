@@ -86,8 +86,6 @@ def key_release(key):
         except Exception as e:
             return False
         return False  # 停止监听
-box_ids = []
-
 
 def get_next_sheet_demo(operator):
     if len(GlobalVariable.follow_sheet) == 0:
