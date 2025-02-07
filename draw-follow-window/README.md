@@ -1,5 +1,5 @@
 ```shell
-  pyinstaller --onefile --uac-admin  draw_server.py
+  pyinstaller  --onefile --uac-admin -w draw_server.py
 ```
 
 ```shell
