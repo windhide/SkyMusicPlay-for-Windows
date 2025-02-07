@@ -16,6 +16,7 @@ powerSaveBlocker.start('prevent-app-suspension');
 app.commandLine.appendSwitch('enable-gpu-rasterization');  // 强制 GPU 光栅化
 app.commandLine.appendSwitch('ignore-gpu-blacklist');  // 忽略 Electron GPU 黑名单
 app.commandLine.appendSwitch('force-color-profile', 'srgb');  // 统一颜色配置
+app.commandLine.appendSwitch('disable-background-timer-throttling'); // 关闭后台定时器节流
 // 允许 GPU 但在必要时自动回退到软件渲染
 app.commandLine.appendSwitch('disable-software-rasterizer');
 function createWindow(): void {
