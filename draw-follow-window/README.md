@@ -1,5 +1,6 @@
 ```shell
-  pyinstaller  --onefile --uac-admin -w draw_server.py
+  pyinstaller --onefile --noconsole --clean --strip --name draw_server draw_server.py
+
 ```
 
 ```shell
