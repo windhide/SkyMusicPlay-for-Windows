@@ -22,7 +22,7 @@
             </n-icon>
           </template>
         </n-button>
-        <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('pause', '')" v-show="isPlay" color="#F2C9C4"class='actionButton'>
+        <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('pause', '')" v-show="isPlay" color="#F2C9C4">
           <template #icon>
             <n-icon size="25px">
               <Pause />
