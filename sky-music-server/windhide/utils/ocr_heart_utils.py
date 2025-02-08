@@ -8,6 +8,7 @@ import win32gui
 from matplotlib import pyplot as plt
 from sklearn.cluster import DBSCAN
 from ultralytics import YOLO
+
 from windhide.static.global_variable import GlobalVariable
 from windhide.utils.path_util import getResourcesPath
 
@@ -144,7 +145,7 @@ def get_window_screenshot_friend():
     client_x2, client_y2 = win32gui.ClientToScreen(GlobalVariable.window["hWnd"], (client_rect[2], client_rect[3]))
     # 截取窗口客户区范围内的图像
     screenshot = pyautogui.screenshot(
-        region=(client_x1 + 150, client_y1 + 80, client_x2 - client_x1 - 230, client_y2 - client_y1 - 150))
+        region=(client_x1 + 150, client_y1 + 80, client_x2 - client_x1 - 400, client_y2 - client_y1 - 150))
     _, s_channel, _ = cv2.split(cv2.cvtColor(np.array(screenshot), cv2.COLOR_BGR2HSV))
     d = np.clip(s_channel * saturation_scale, 0, 255).astype(np.uint8)
     cv2.imwrite(png_path, d)
