@@ -5,7 +5,6 @@ import numpy as np
 import pyautogui
 import win32con
 import win32gui
-from matplotlib import pyplot as plt
 from sklearn.cluster import DBSCAN
 from ultralytics import YOLO
 
@@ -129,9 +128,7 @@ def get_friend_model_position(conf, isTest=False, max_distance=50):
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
 
     if isTest:
-        plt.imshow(cv2.cvtColor(image_with_boxes, cv2.COLOR_BGR2RGB))
-        plt.axis('off')  # 不显示坐标轴
-        plt.show()
+        results[0].show()
 
     return result_dict
 
@@ -145,9 +142,9 @@ def get_window_screenshot_friend():
     client_x2, client_y2 = win32gui.ClientToScreen(GlobalVariable.window["hWnd"], (client_rect[2], client_rect[3]))
     # 截取窗口客户区范围内的图像
     screenshot = pyautogui.screenshot(
-        region=(client_x1 + 150, client_y1 + 80, client_x2 - client_x1 - 400, client_y2 - client_y1 - 150))
+        region=(client_x1 + 150, client_y1 + 80, client_x2 - client_x1 - 240, client_y2 - client_y1 - 150))
     _, s_channel, _ = cv2.split(cv2.cvtColor(np.array(screenshot), cv2.COLOR_BGR2HSV))
-    d = np.clip(s_channel * saturation_scale, 0, 255).astype(np.uint8)
+    d = np.clip(s_channel * saturation_scale, 0, 220).astype(np.uint8)
     cv2.imwrite(png_path, d)
     image = cv2.imread(png_path)
     return image
