@@ -1,7 +1,6 @@
 import time
-
 import psutil
-import pywintypes
+import uiautomation as auto
 import win32gui
 import win32process
 
@@ -12,21 +11,21 @@ from windhide.utils.ocr_follow_util import get_key_position
 hook_util.sout_null()
 
 
-def safe_enum_windows(callback):
-    """封装 EnumWindows 调用，捕获特定异常，防止异常中断调用链"""
-    try:
-        win32gui.EnumWindows(callback, None)
-    except pywintypes.error as e:
-        if e.args[0] == 2:  # 系统找不到指定文件，忽略
-            print(f"[DEBUG] EnumWindows 错误码 2：{e}")
-        else:
-            print(f"[DEBUG] EnumWindows 异常: {e}")
-
-
-def find_window_by_exe(exe_names):
-    """根据 exe 名称列表查找窗口句柄"""
+def find_window_by_uiautomation(exe_name):
     for proc in psutil.process_iter(['pid', 'name']):
-        if proc.info['name'] in exe_names:
+        if proc.info['name'].lower() == exe_name.lower():
+            pid = proc.info['pid']
+            print(f"找到 {exe_name} 进程, PID: {pid}")
+
+            window = auto.WindowControl(searchDepth=1, ProcessId=pid)
+            if window.Exists(0):
+                print(f"找到窗口: {window.Name}")
+                return window
+    return None
+
+def find_window_by_win32(exe_name):
+    for proc in psutil.process_iter(['pid', 'name']):
+        if proc.info['name'].lower() == exe_name.lower():
             pid = proc.info['pid']
             target_hwnd = None
 
@@ -37,28 +36,30 @@ def find_window_by_exe(exe_names):
                     if window_pid == pid:
                         target_hwnd = hwnd
                         return False  # 停止枚举
-                except pywintypes.error as e:
-                    print(f"[DEBUG] EnumWindows 回调异常: {e}")
+                except:
+                    pass
                 return True
-
-            safe_enum_windows(enum_callback)
-            if target_hwnd:
-                return target_hwnd
+            win32gui.EnumWindows(enum_callback, None)
+            return target_hwnd
     return None
 
-
 def update_window_handle():
-    """查找窗口句柄，并更新全局变量"""
-    target_exes = ["Sky.exe"]
-    hwnd = find_window_by_exe(target_exes)
-    if hwnd:
-        left, top, right, bottom = win32gui.GetWindowRect(hwnd)
+    target_exe = "Sky.exe"
+    window = find_window_by_uiautomation(target_exe)
+
+    if window:
+        hwnd = window.NativeWindowHandle
+        left, top, right, bottom = window.BoundingRectangle
         width, height = right - left, bottom - top
+    else:
+        hwnd = find_window_by_win32(target_exe)
+        if hwnd:
+            left, top, right, bottom = win32gui.GetWindowRect(hwnd)
+            width, height = right - left, bottom - top
+    if hwnd:
         window = GlobalVariable.window
         window["hWnd"], window["width"], window["height"] = hwnd, width, height
         window["position_x"], window["position_y"] = left, top
-
-        # 仅在窗口信息发生变化时设置 is_change
         if any([
             window["width"] != width,
             window["height"] != height,
