@@ -1,17 +1,14 @@
 import time
 import traceback
 
-import psutil
 import pywintypes
 import win32gui
-import win32process
 
 from windhide.static.global_variable import GlobalVariable
 from windhide.utils import hook_util
 from windhide.utils.ocr_follow_util import get_key_position
 
 hook_util.sout_null()
-
 
 def safe_enum_windows(callback):
     """封装 EnumWindows 调用，捕获特定异常，防止异常中断调用链"""
@@ -34,45 +31,15 @@ def safe_enum_windows(callback):
             traceback.print_exc()  # 打印堆栈跟踪
 
 
-def find_window_by_exe(exe_names):
-    """根据 exe 名称列表查找窗口句柄"""
-    for proc in psutil.process_iter(['pid', 'name']):
-        if proc.info['name'] in exe_names:
-            print(proc)
-            pid = proc.info['pid']
-            target_hwnd = None
-            def enum_callback(hwnd, _):
-                nonlocal target_hwnd
-                try:
-                    _, window_pid = win32process.GetWindowThreadProcessId(hwnd)
-                    if window_pid == pid:
-                        target_hwnd = hwnd
-                        return False  # 停止枚举
-                except pywintypes.error as e:
-                    print(f"[DEBUG] EnumWindows 回调异常: {e}")
-                return True
-
-            # 重试机制，允许等待一段时间再进行枚举
-            retries = 100
-            while retries > 0 and not target_hwnd:
-                safe_enum_windows(enum_callback)
-                if not target_hwnd:
-                    print(f"[DEBUG] 未找到句柄，正在重试...剩余重试次数: {retries}")
-                    time.sleep(1)  # 暂停1秒后重试
-                    retries -= 1
-
-            if target_hwnd:
-                print(f"[DEBUG] 找到目标窗口句柄: {target_hwnd}")
-                return target_hwnd
-            else:
-                print(f"[DEBUG] 未找到目标窗口句柄")
-    return None
-
+def find_window_by_class(class_name):
+    """根据窗口类名查找窗口句柄"""
+    hwnd = win32gui.FindWindow(class_name, None)
+    return hwnd
 
 def update_window_handle():
     """查找窗口句柄，并更新全局变量"""
-    target_exes = ["Sky.exe"]
-    hwnd = find_window_by_exe(target_exes)
+    class_name = "TgcMainWindow"
+    hwnd = find_window_by_class(class_name)
     if hwnd:
         left, top, right, bottom = win32gui.GetWindowRect(hwnd)
         width, height = right - left, bottom - top
