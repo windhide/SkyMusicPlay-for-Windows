@@ -107,6 +107,7 @@ def stop():
     """停止播放"""
     if GlobalVariable.thread:
         GlobalVariable.thread.stop()
+        GlobalVariable.thread.join()
         GlobalVariable.set_progress = 0
         GlobalVariable.thread = None
 
