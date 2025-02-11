@@ -22,6 +22,7 @@ librosa==0.10.2.post1
 audioread==3.0.1
 mido==1.3.3
 pretty_midi
+elevate
 pywin32
 python-multipart
 pyinstaller

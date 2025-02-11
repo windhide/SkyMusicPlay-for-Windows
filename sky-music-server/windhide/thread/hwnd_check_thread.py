@@ -38,9 +38,9 @@ def find_window_by_exe(exe_names):
     """根据 exe 名称列表查找窗口句柄"""
     for proc in psutil.process_iter(['pid', 'name']):
         if proc.info['name'] in exe_names:
+            print(proc)
             pid = proc.info['pid']
             target_hwnd = None
-
             def enum_callback(hwnd, _):
                 nonlocal target_hwnd
                 try:
@@ -53,7 +53,7 @@ def find_window_by_exe(exe_names):
                 return True
 
             # 重试机制，允许等待一段时间再进行枚举
-            retries = 3
+            retries = 100
             while retries > 0 and not target_hwnd:
                 safe_enum_windows(enum_callback)
                 if not target_hwnd:

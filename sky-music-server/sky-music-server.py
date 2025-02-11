@@ -8,6 +8,7 @@ import webbrowser
 import psutil
 import requests
 import uvicorn
+from elevate import elevate
 from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -20,12 +21,13 @@ from windhide.thread.hwnd_check_thread import start_thread as hwnd_check_thread
 from windhide.thread.shortcut_thread import startThread as shortcut_thread
 from windhide.utils.auto_util import auto_click_fire, shutdown, auto_candles_run
 from windhide.utils.config_util import set_config, get_config, favorite_music, convert_sheet, drop_file
-from windhide.utils.ocr_follow_util import set_next_sheet, get_next_sheet, get_key_position, test_key_model_position, \
+from windhide.utils.ocr_follow_util import set_next_sheet, get_key_position, test_key_model_position, \
     open_follow
 from windhide.utils.ocr_heart_utils import get_friend_model_position
 from windhide.utils.path_util import getTypeMusicList, getResourcesPath
 from windhide.utils.play_util import start, pause, resume, stop
 
+elevate()
 # 避开与光遇相同核心运行
 process = psutil.Process(os.getpid())
 all_cores = list(range(psutil.cpu_count()))
