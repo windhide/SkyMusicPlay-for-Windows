@@ -100,7 +100,7 @@ def process_directory_with_progress(output_dir=getResourcesPath("myTranslate")):
         if not file.endswith(".mid"):
             inference(input_path=musicFilePath)
         else:
-            midFilePath = os.path.join(getResourcesPath("translateOriginalMusic"), f"{fileNameNoEnd}_basic_pitch")
+            midFilePath = os.path.join(getResourcesPath("translateOriginalMusic"), f"{fileNameNoEnd}")
 
         for version in ["high", "high_harf", "standard", "low", "low_harf"]:
             process_midi_to_txt(midFilePath + ".mid", os.path.join(output_dir, f"{fileNameNoEnd}_{version}.txt"),
