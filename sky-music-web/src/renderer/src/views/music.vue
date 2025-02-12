@@ -533,7 +533,6 @@ function cycleMusicPlay() {
 
 // 更新数据（如收藏、系统音乐、导入音乐、扒谱音乐）
 function handleUpdateValue(value: string) {
-  searchText.value = ''
   getListData(value)
 }
 
@@ -738,6 +737,8 @@ function initWebSocket() {
     console.error('WebSocket 出现错误', error)
   }
 }
+
+handleUpdateValue('myFavorite')
 
 handleUpdateValue('systemMusic')
 initWebSocket()

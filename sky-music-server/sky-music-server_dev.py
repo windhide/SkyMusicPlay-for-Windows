@@ -7,7 +7,6 @@ import webbrowser
 import psutil
 import requests
 import uvicorn
-from elevate import elevate
 from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -25,7 +24,6 @@ from windhide.utils.ocr_heart_utils import get_friend_model_position
 from windhide.utils.path_util import getTypeMusicList, getResourcesPath
 from windhide.utils.play_util import start, pause, stop, resume
 
-elevate()
 # 避开与光遇相同核心运行
 process = psutil.Process(os.getpid())
 all_cores = list(range(psutil.cpu_count()))
