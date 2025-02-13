@@ -81,7 +81,7 @@ def process_directory_with_progress(output_dir=getResourcesPath("myTranslate")):
     GlobalVariable.overall_progress = 0
     os.makedirs(output_dir, exist_ok=True)
     files_to_process = [f for f in os.listdir(getResourcesPath("translateOriginalMusic"))
-                        if f.endswith(('.mp3', '.mp4', '.flac', '.ape', '.mid'))]
+                        if f.endswith(('.mp3', '.ogg', '.wav', '.flac', '.mid', '.m4a'))]
     total_files = len(files_to_process)
 
     if not total_files:
