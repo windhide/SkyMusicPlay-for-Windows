@@ -130,19 +130,19 @@
     <n-tabs type="bar" animated size="small" @update:value="handleUpdateValue" @before-leave="handleBeforeLeave" :value="tabsNumber">
       <n-tab-pane name="systemMusic" tab="自带歌曲">
         <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :min-row-height="48" ref="systemMusic"
-          :max-height="430" :virtual-scroll="music.systemMusic?.length > 7" :row-props="MusicSelect" row-class-name="td_css" />
+          :max-height="430" :virtual-scroll="music.systemMusic?.length > 7" :row-props="MusicSelect" :row-class-name="rowClassName" />
       </n-tab-pane>
       <n-tab-pane name="myImport" tab="导入歌曲" ref="myImport">
         <n-data-table :columns="myImportColumns" :data="music.myImport" :bordered="false" :min-row-height="48" ref="myImport"
-        :max-height="430" :virtual-scroll="music.myImport?.length > 7" :row-props="MusicSelect"  row-class-name="td_css" />
+        :max-height="430" :virtual-scroll="music.myImport?.length > 7" :row-props="MusicSelect"  :row-class-name="rowClassName" />
       </n-tab-pane>
       <n-tab-pane name="myTranslate" tab="转换歌曲" ref="myTranslate">
         <n-data-table :columns="musicColumns" :data="music.myTranslate" :bordered="false" :min-row-height="48" ref="myTranslate"
-        :max-height="430" :virtual-scroll="music.myTranslate?.length > 7" :row-props="MusicSelect" row-class-name="td_css"  />
+        :max-height="430" :virtual-scroll="music.myTranslate?.length > 7" :row-props="MusicSelect" :row-class-name="rowClassName"  />
       </n-tab-pane>
       <n-tab-pane name="myFavorite" tab="收藏" ref="myFavorite">
         <n-data-table :columns="favoritColumns" :data="music.myFavorite" :bordered="false" :min-row-height="48" ref="myFavorite"
-        :max-height="430" :virtual-scroll="music.myFavorite?.length > 7" :row-props="MusicSelect"  row-class-name="td_css" />
+        :max-height="430" :virtual-scroll="music.myFavorite?.length > 7" :row-props="MusicSelect"  :row-class-name="rowClassName" />
       </n-tab-pane>
       <template #suffix>
         <n-input v-model:value="searchText" round placeholder="搜索"
@@ -636,8 +636,8 @@ function beforeFileUpload(file) {
 }
 
 // 获取列表数据
-function getListData(value) {
-  getList(value, searchText.value).then((_res) => {
+async function getListData(value) {
+  await getList(value, searchText.value).then((_res) => {
     eval('music.' + value + '=_res')
   })
 }
@@ -699,7 +699,6 @@ watch(playSpeed, () => {
   setConfig('play_speed', playSpeed.value)
 })
 
-
 const systemMusic = ref<DataTableInst>()
 const myImport = ref<DataTableInst>()
 const myTranslate = ref<DataTableInst>()
@@ -707,23 +706,24 @@ const myFavorite  = ref<DataTableInst>()
 const tabsNumber = ref("systemMusic")
 function locationNowPlayMusic(){
   searchText.value = ""
-  getListData('myFavorite')
-  getListData('systemMusic')
-  getListData('myImport')
-  getListData('myTranslate')
-
-  let index = eval("music." + tabsNumber.value + ".findIndex(item => item.name === nowPlayMusic.value)")
-
-  if (index === -1){
-    message.error("没得啊孩子，真的没得😭")
-    return
-  }
-        
-  if (index <= 8 || index >= eval("music." + tabsNumber.value + ".length - 8")){
-      eval(tabsNumber.value+".value?.scrollTo({index,behavior: 'smooth'})")
+  Promise.all([getListData('myFavorite'), getListData('systemMusic'), getListData('myImport'), getListData('myTranslate')]).then(function(){
+    let index = eval("music." + tabsNumber.value + ".findIndex(item => item.name === nowPlayMusic.value)")
+    if (index === -1){
+      message.error("没得啊孩子，真的没得😭，切别的分类再试试吧")
       return
+    }
+    eval(`music.${tabsNumber.value}[${index}].position = true`)
+    eval(`${tabsNumber.value}.value?.scrollTo({index, behavior: 'smooth',})`)
+    setTimeout(() => {
+      eval(`music.${tabsNumber.value}[${index}].position = false`)
+    }, 5000);
+  });
+}
+function rowClassName(row: RowData) {
+  if (row?.position) {
+    return 'table_position'
   }
-  eval(tabsNumber.value+".value?.scrollTo({index, behavior: 'smooth',})");
+  return 'td_css'
 }
 
 // ---------------------------------------------------
@@ -837,6 +837,10 @@ onUnmounted(async () => {
 }
 :deep(.th_css){
   color: rgb(221,242,196) !important;
+}
+
+:deep(.table_position td) {
+  color: #ea66a6 !important;
 }
 
 .actionButton{
