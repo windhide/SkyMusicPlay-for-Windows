@@ -142,7 +142,9 @@ function railStyle({ focused, checked }){
 }
 
 function openFileHandle() {
-  getData('openFiles')
+  sendData('openFiles',{
+      "operate":"images"
+  })
 }
 
 function miniHandle() {

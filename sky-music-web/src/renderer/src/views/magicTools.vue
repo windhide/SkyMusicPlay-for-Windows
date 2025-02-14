@@ -63,7 +63,7 @@
       </div>
       <div class="father" v-for="button in buttons">
         <n-button dashed :color=button.color @click="run(button.value)"
-          :style="{ marginTop: '20px', marginLeft: button.value === 'all' ? '0' : '15px' }"
+          :style="{ marginTop: '20px', marginLeft: button.value === 'alwaysQ' ? '0' : '15px' }"
           v-if="button.value != 'developer'">
           {{ button.context }}
         </n-button>
@@ -79,7 +79,13 @@
           Check
         </n-button>
     </div>
-    
+    <n-divider />
+    <div class="father" v-for="button in fileButtons">
+        <n-button dashed :color=button.color @click="openFileHandle(button.value)"
+          :style="{ marginTop: '20px', marginLeft: button.value === 'all' ? '0' : '15px' }">
+          {{ button.context }}
+        </n-button>
+      </div>
   </div>
 </template>
 
@@ -119,6 +125,34 @@ const buttons = [
     context:"终止线程",
     value: "shutdown"
   },
+]
+
+const fileButtons = [
+  {
+    color:"#afdfe4",
+    context:"系统的音乐",
+    value: "systemMusic"
+  },
+  {
+    color:"#45b97c",
+    context:"导入的音乐",
+    value: "myImport"
+  },
+  {
+    color:"#ea66a6",
+    context:"转换的音乐",
+    value: "myTranslate"
+  },
+  {
+    color:"#ef4136",
+    context:"收藏的音乐",
+    value: "myFavorite"
+  },
+  {
+    color:"#9b95c9",
+    context:"转谱的MIDI",
+    value: "translateMID"
+  }
 ]
 
 function run(value: any){
@@ -169,6 +203,14 @@ function shutdown(){
     "operate":"shutdown"
   })
 }
+
+function openFileHandle(type) {
+  sendData('openFiles',{
+      "operate":"files",
+      "type":type
+  })
+}
+
 </script>
 
 <style scoped>

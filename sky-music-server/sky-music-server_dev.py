@@ -149,10 +149,15 @@ def open_browser(url: str):
     webbrowser.open(url)
     return 'ok'
 
-@app.get('/openFiles')
-def open_files():
-    appdata_path = os.getenv('APPDATA')
-    os.startfile(os.path.join(appdata_path, 'ThatGameCompany', 'com.netease.sky', 'images'))
+@app.post('/openFiles')
+def open_files(request: dict):
+    match request["operate"]:
+        case 'images':
+            appdata_path = os.getenv('APPDATA')
+            os.startfile(os.path.join(appdata_path, 'ThatGameCompany', 'com.netease.sky', 'images'))
+        case 'files':
+            os.startfile(os.path.join(getResourcesPath(None), request["type"]))
+
 
 @app.get("/update")
 def get_update():
