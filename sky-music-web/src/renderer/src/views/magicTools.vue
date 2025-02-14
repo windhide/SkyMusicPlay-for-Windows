@@ -56,33 +56,35 @@
         </n-space>
       </div>
       <n-divider />
-      <div style="flex: 0 0 100%;" class="father">
-        <n-button type="warning" ghost @click="autoClickFire">
-          自动点火（站在星盘上，确保游戏出现了按钮G快捷键，再点本按钮）
-        </n-button>
-      </div>
       <div class="father" v-for="button in buttons">
         <n-button dashed :color=button.color @click="run(button.value)"
-          :style="{ marginTop: '20px', marginLeft: button.value === 'alwaysQ' ? '0' : '15px' }"
-          v-if="button.value != 'developer'">
+          :style="{ marginTop: '10px', marginLeft: button.value === 'autoFire' ? '0px' : '15px' }"
+          v-if="button.value != 'developer' && button">
           {{ button.context }}
         </n-button>
-        <n-upload v-else action="http://localhost:9899/autoScriptUpload" style="margin-top:20px; margin-left: 15px;" accept=".txt"
+        <n-upload v-else action="http://localhost:9899/autoScriptUpload" style="margin-top:10px; margin-left: 15px;" accept=".txt"
           :show-file-list="false">
           <n-button type="info" dashed :color=button.color> {{ button.context }}</n-button>
         </n-upload>
       </div>
-      <div style="width:100%" />
-      <n-select v-model:value="selectValue" :options="options" style="width: 15%; margin-top: 20px;" />
-        <n-input-number v-model:value="mathValue" clearable step="0.01" style="margin-top: 20px; margin-left: 20px;" />
-        <n-button type="error" dashed style="margin-left: 20px;margin-top: 20px;" @click="checkFile">
+      <n-input-group class="father" style="margin-top: 20px;">
+        <n-select v-model:value="selectValue" :options="options" style="width: 15%;" />
+        <n-input-number v-model:value="mathValue" clearable step="0.01" style=" margin-left: 20px; width: 20%;" />
+        <n-button type="error" dashed style="margin-left: 20px;" @click="checkFile">
           Check
         </n-button>
+        <n-input-number style="margin-left: 10px !important; width: 30%;" v-model:value="QCount" />
+        <n-button type="primary" @click="run('alwaysQ')" dashed >
+          狠狠的叫
+        </n-button>
+      </n-input-group>
+      <n-input-group  style="flex: 0 0 100%; margin-top: 10px;" class="father">
+      </n-input-group>
     </div>
     <n-divider />
     <div class="father" v-for="button in fileButtons">
         <n-button dashed :color=button.color @click="openFileHandle(button.value)"
-          :style="{ marginTop: '20px', marginLeft: button.value === 'all' ? '0' : '15px' }">
+          :style="{ marginTop: '20px', marginLeft: button.value === 'systemMusic' ? '0' : '15px' }">
           {{ button.context }}
         </n-button>
       </div>
@@ -100,6 +102,7 @@ const headText3 = "🚫模拟器玩家禁止使用下面的所有功能🚫";
 const patterns = ["谨慎使用🌶", "不涉及内存修改🌶", "此处功能仅供学习交流，严禁用于商业用途，请于24小时内删除", "🚫模拟器玩家禁止使用下面的所有功能🚫"];
 let mathValue = ref(0.5)
 let selectValue = ref("image")
+const QCount = ref(300)
 const options = [
   {
     label: '心火',
@@ -112,9 +115,9 @@ const options = [
 ]
 const buttons = [
   {
-    color:"#afdfe4",
-    context:"孩子不懂事Q着玩的",
-    value: "alwaysQ"
+    color:"#F2C97D",
+    context:"自动点火",
+    value: "autoFire"
   },
   {
     color:"#fe6673",
@@ -157,22 +160,18 @@ const fileButtons = [
 
 function run(value: any){
   console.log(value)
-  if (value == 'shutdown'){
-    shutdown()
-  }
-  if (value == 'alwaysQ'){
-    for ( let i = 0 ; i <= 30; i++){
-      keypress('Q')
-      keypress('Q')
-      keypress('Q')
-      keypress('Q')
-      keypress('Q')
-      keypress('Q')
-      keypress('Q')
-      keypress('Q')
-      keypress('Q')
-      keypress('Q')
-    }
+  switch(value){
+    case 'shutdown':
+      shutdown()
+      break;
+    case 'alwaysQ':
+      for ( let i = 0 ; i <= QCount.value; i++){
+        keypress('Q')
+      }
+      break;
+    case 'autoFire':
+      autoClickFire()
+      break;
   }
 }
 
