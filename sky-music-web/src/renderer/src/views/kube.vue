@@ -66,12 +66,12 @@
 
 <script lang="ts" setup>
 import { getData, sendData, getList } from "@renderer/utils/fetchUtils";
-import { h, reactive, ref, watch } from "vue";
+import { h, onUnmounted, reactive, ref, watch } from "vue";
 import { NButton, useMessage } from "naive-ui";
 
 const message = useMessage();
 const processFlag = ref(false);
-const progressInterval = ref<number | null>(null);
+let progressInterval:any = null
 
 
 function handleFinish() {
@@ -202,9 +202,9 @@ async function getProgress() {
     now_translate_text.process = res.now_translate_text?.[1] || "";
 
     if (""+progress.overall_progress === "100.0") {
-      if (progressInterval.value) {
-        clearInterval(progressInterval.value);
-        progressInterval.value = null;
+      if (progressInterval) {
+        clearInterval(progressInterval);
+        progressInterval = null;
       }
     }
   } catch (error) {
@@ -220,8 +220,8 @@ async function handleStartTranslate() {
   processFlag.value = true;
   message.success("开始转换");
 
-  if (!progressInterval.value) {
-    progressInterval.value = setInterval(getProgress, 1000) as unknown as number;
+  if (!progressInterval) {
+    progressInterval = setInterval(getProgress, 1000) as unknown as number;
   }
 
   try {
@@ -268,6 +268,11 @@ async function handleUpdateValue(value: keyof typeof music) {
 }
 
 reloadTable();
+
+onUnmounted(function(){
+  clearInterval(progressInterval);
+})
+
 </script>
 <style scoped>
 :deep(.n-tabs-bar){
