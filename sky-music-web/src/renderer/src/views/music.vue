@@ -109,7 +109,7 @@
             </template>
           </n-button>
         </n-popselect>
-        <n-upload action="http://localhost:9899/userMusicUpload" multiple accept=".txt" style="width: 20px;"
+        <n-upload action="http://localhost:9899/userMusicUpload" multiple accept=".txt" style="width: 60px;"
           :show-file-list="false" @finish="handleFinish" @before-upload="beforeFileUpload">
           <n-button type="info" quaternary circle  size="large" color="#F2C9C4" class='actionButton'>
             <template #icon>
@@ -117,24 +117,31 @@
             </template>
           </n-button>
         </n-upload>
+        <n-button quaternary circle type="info" size="large" @click="locationNowPlayMusic()" color="#F2C9C4" class='actionButton'>
+          <template #icon>
+            <n-icon size="25px">
+              <Location28Filled />
+            </n-icon>
+          </template>
+        </n-button>
     </n-row>
   </n-flex>
   <n-card style="margin-top: 15px;">
-    <n-tabs type="bar" animated size="small" @update:value="handleUpdateValue" @before-leave="handleBeforeLeave">
+    <n-tabs type="bar" animated size="small" @update:value="handleUpdateValue" @before-leave="handleBeforeLeave" :value="tabsNumber">
       <n-tab-pane name="systemMusic" tab="自带歌曲">
-        <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :min-row-height="48"
+        <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :min-row-height="48" ref="systemMusic"
           :max-height="430" :virtual-scroll="music.systemMusic?.length > 7" :row-props="MusicSelect" row-class-name="td_css" />
       </n-tab-pane>
-      <n-tab-pane name="myImport" tab="导入歌曲">
-        <n-data-table :columns="myImportColumns" :data="music.myImport" :bordered="false" :min-row-height="48"
+      <n-tab-pane name="myImport" tab="导入歌曲" ref="myImport">
+        <n-data-table :columns="myImportColumns" :data="music.myImport" :bordered="false" :min-row-height="48" ref="myImport"
         :max-height="430" :virtual-scroll="music.myImport?.length > 7" :row-props="MusicSelect"  row-class-name="td_css" />
       </n-tab-pane>
-      <n-tab-pane name="myTranslate" tab="转换歌曲">
-        <n-data-table :columns="musicColumns" :data="music.myTranslate" :bordered="false" :min-row-height="48"
+      <n-tab-pane name="myTranslate" tab="转换歌曲" ref="myTranslate">
+        <n-data-table :columns="musicColumns" :data="music.myTranslate" :bordered="false" :min-row-height="48" ref="myTranslate"
         :max-height="430" :virtual-scroll="music.myTranslate?.length > 7" :row-props="MusicSelect" row-class-name="td_css"  />
       </n-tab-pane>
-      <n-tab-pane name="myFavorite" tab="收藏">
-        <n-data-table :columns="favoritColumns" :data="music.myFavorite" :bordered="false" :min-row-height="48"
+      <n-tab-pane name="myFavorite" tab="收藏" ref="myFavorite">
+        <n-data-table :columns="favoritColumns" :data="music.myFavorite" :bordered="false" :min-row-height="48" ref="myFavorite"
         :max-height="430" :virtual-scroll="music.myFavorite?.length > 7" :row-props="MusicSelect"  row-class-name="td_css" />
       </n-tab-pane>
       <template #suffix>
@@ -160,7 +167,7 @@
 <script lang="ts" setup>
 import { getData, sendData, getList, setConfig } from '@renderer/utils/fetchUtils'
 
-import { RowData } from 'naive-ui/es/data-table/src/interface'
+import { DataTableInst, RowData } from 'naive-ui/es/data-table/src/interface'
 import { h, onUnmounted, reactive, ref, watch } from 'vue'
 import { NButton, useMessage, DrawerPlacement } from 'naive-ui'
 import {
@@ -176,7 +183,8 @@ import {
 import {
   Settings48Filled,
   BookStar24Filled,
-  CloudArrowUp32Filled
+  CloudArrowUp32Filled,
+  Location28Filled
 } from '@vicons/fluent'
 import { useStore } from 'vuex'
 
@@ -230,12 +238,15 @@ const musicColumns = [
     title: '歌名',
     key: 'name',
     resizable: true,
-    className: 'th_css'
+    className: 'th_css',
+    ellipsis: {
+      tooltip: true
+    }
   },
   {
     title: '操作',
     key: 'operation',
-    width: 100,
+    width: 60,
     className: 'th_css',
     render(row) {
       return h(
@@ -264,12 +275,15 @@ const favoritColumns = [
     title: '歌名',
     key: 'name',
     resizable: true,
-    className: 'th_css'
+    className: 'th_css',
+    ellipsis: {
+      tooltip: true
+    }
   },
   {
     title: '操作',
     key: 'operation',
-    width: 100,
+    width: 60,
     className: 'th_css',
     render(row) {
       return h(
@@ -294,12 +308,15 @@ const myImportColumns = [
     title: '歌名',
     key: 'name',
     resizable: true,
-    className: 'th_css'
+    className: 'th_css',
+    ellipsis: {
+      tooltip: true
+    }
   },
   {
     title: '操作',
     key: 'operation',
-    width: 100,
+    width: 60,
     className: 'th_css',
     render(row) {
       return h(
@@ -533,6 +550,7 @@ function cycleMusicPlay() {
 
 // 更新数据（如收藏、系统音乐、导入音乐、扒谱音乐）
 function handleUpdateValue(value: string) {
+  tabsNumber.value = value
   getListData(value)
 }
 
@@ -680,6 +698,33 @@ watch(sustainSpeed, () => {
 watch(playSpeed, () => {
   setConfig('play_speed', playSpeed.value)
 })
+
+
+const systemMusic = ref<DataTableInst>()
+const myImport = ref<DataTableInst>()
+const myTranslate = ref<DataTableInst>()
+const myFavorite  = ref<DataTableInst>()
+const tabsNumber = ref("systemMusic")
+function locationNowPlayMusic(){
+  searchText.value = ""
+  getListData('myFavorite')
+  getListData('systemMusic')
+  getListData('myImport')
+  getListData('myTranslate')
+
+  let index = eval("music." + tabsNumber.value + ".findIndex(item => item.name === nowPlayMusic.value)")
+
+  if (index === -1){
+    message.error("没得啊孩子，真的没得😭")
+    return
+  }
+        
+  if (index <= 8 || index >= eval("music." + tabsNumber.value + ".length - 8")){
+      eval(tabsNumber.value+".value?.scrollTo({index,behavior: 'smooth'})")
+      return
+  }
+  eval(tabsNumber.value+".value?.scrollTo({index, behavior: 'smooth',})");
+}
 
 // ---------------------------------------------------
 // WebSocket 初始化及相关处理
