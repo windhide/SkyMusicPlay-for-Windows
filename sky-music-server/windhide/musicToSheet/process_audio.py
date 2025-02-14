@@ -41,7 +41,9 @@ def process_midi_to_txt(input_path, output_path, version):
     for instrument in midi.instruments:
         if not instrument.is_drum:
             for note in instrument.notes:
-                pitch, time = note.pitch, int(note.start * 1000)
+                pitch, time, velocity= note.pitch, int(note.start * 1000), note.velocity
+                if velocity < 50:
+                    continue
                 if pitch in note_to_key[version]:
                     notes.append({'time': time, 'key': note_to_key[version][pitch]})
                 elif pitch in special_note_mapping[version]:
