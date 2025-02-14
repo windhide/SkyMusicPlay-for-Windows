@@ -67,7 +67,7 @@
 <script setup lang="ts">
 import { useThemeVars, useDialog } from "naive-ui";
 import { GitPullRequest, LogoGithub, Build, CloudDownloadSharp } from "@vicons/ionicons5";
-import { sendData, getData } from "@renderer/utils/fetchUtils";
+import { getData } from "@renderer/utils/fetchUtils";
 import { useMessage } from 'naive-ui'
 import { useRoute } from 'vue-router';
 import { onMounted } from 'vue'
