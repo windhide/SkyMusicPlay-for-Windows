@@ -36,6 +36,7 @@ call .venv\Scripts\activate
 call pyinstaller --uac-admin -w sky-music-server.py --distpath "%script_dir%sky-music-web\backend_dist" --hidden-import=main --collect-all=sklearn --collect-all=basic_pitch
 call deactivate
 
+copy "%script_dir%ffmpeg.exe" "%script_dir%sky-music-web\dist\win-unpacked\backend_dist\sky-music-server\ffmpeg.exe"
 :: 构建 Electron 应用
 cd "%script_dir%sky-music-web"
 call npm run build:win
