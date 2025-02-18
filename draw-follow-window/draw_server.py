@@ -9,9 +9,11 @@ import os
 if os.name == "nt":
     try:
         from ctypes import windll
+
         windll.shcore.SetProcessDpiAwareness(1)
     except Exception as e:
         print("无法设置 DPI Awareness，可能影响窗口几何尺寸的准确性。")
+
 
 # 绘制和删除方框的 API
 def draw_box_api(canvas, width, height, position_x, position_y):
@@ -22,9 +24,33 @@ def draw_box_api(canvas, width, height, position_x, position_y):
         outline="#00ffff", width=3
     )
 
+
 def delete_box_api(canvas, box_id):
     # 从 Canvas 上删除指定 ID 的方框
     canvas.delete(box_id)
+
+
+def shrink_and_delete_box(canvas, box_id, step=10):
+    """逐渐缩小并删除方框"""
+    if step <= 0:
+        canvas.delete(box_id)  # 删除方框
+        return
+
+    # 获取当前方框的坐标和尺寸
+    coords = canvas.coords(box_id)
+    width = coords[2] - coords[0]
+    height = coords[3] - coords[1]
+
+    # 计算缩小后的新尺寸
+    new_width = width * (step / 10)
+    new_height = height * (step / 10)
+
+    # 重新绘制缩小后的方框
+    canvas.coords(box_id, coords[0], coords[1], coords[0] + new_width, coords[1] + new_height)
+
+    # 在 30ms 后继续缩小
+    canvas.after(30, shrink_and_delete_box, canvas, box_id, step - 1)
+
 
 # 主窗口类
 class TransparentBoxWindow:
@@ -125,7 +151,7 @@ class TransparentBoxWindow:
             box_id = parts[1]
             if box_id in self.boxes:
                 tkinter_id = self.boxes[box_id]
-                delete_box_api(self.canvas, tkinter_id)
+                shrink_and_delete_box(self.canvas, tkinter_id)  # 使用渐变消失效果
                 del self.boxes[box_id]
             else:
                 print(f"方框 ID {box_id} 不存在，无法删除。")
@@ -178,6 +204,7 @@ class TransparentBoxWindow:
     def exit_program(self):
         self.root.destroy()
         sys.exit(0)
+
 
 if __name__ == "__main__":
     # 解析命令行参数
