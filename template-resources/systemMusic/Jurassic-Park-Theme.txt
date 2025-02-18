@@ -1,0 +1,383 @@
+[
+	{
+		"name": "Jurassic-Park-Theme",
+		"bpm": 610,
+		"bitsPerPage": 16,
+		"pitchLevel": 0,
+		"helpText": "\n    After the download:\n    1/ go to https://sky-music.herokuapp.com\n    2/ Press 'manage recordings'\n    3/ Import the text file\n    4/ Listen to your song being played!\n    ",
+		"songNotes": [
+			{
+				"key": "1Key7",
+				"time": 700
+			},
+			{
+				"key": "1Key6",
+				"time": 1200
+			},
+			{
+				"key": "1Key0",
+				"time": 1700
+			},
+			{
+				"key": "1Key2",
+				"time": 1700
+			},
+			{
+				"key": "1Key7",
+				"time": 1700
+			},
+			{
+				"key": "1Key7",
+				"time": 2700
+			},
+			{
+				"key": "1Key6",
+				"time": 3200
+			},
+			{
+				"key": "1Key1",
+				"time": 3700
+			},
+			{
+				"key": "1Key3",
+				"time": 3700
+			},
+			{
+				"key": "1Key7",
+				"time": 3700
+			},
+			{
+				"key": "1Key7",
+				"time": 4700
+			},
+			{
+				"key": "1Key6",
+				"time": 5200
+			},
+			{
+				"key": "1Key2",
+				"time": 5700
+			},
+			{
+				"key": "1Key4",
+				"time": 5700
+			},
+			{
+				"key": "1Key7",
+				"time": 5700
+			},
+			{
+				"key": "1Key8",
+				"time": 6700
+			},
+			{
+				"key": "1Key8",
+				"time": 7200
+			},
+			{
+				"key": "1Key10",
+				"time": 8200
+			},
+			{
+				"key": "1Key3",
+				"time": 8700
+			},
+			{
+				"key": "1Key7",
+				"time": 8700
+			},
+			{
+				"key": "1Key2",
+				"time": 9700
+			},
+			{
+				"key": "1Key4",
+				"time": 9700
+			},
+			{
+				"key": "1Key9",
+				"time": 10700
+			},
+			{
+				"key": "1Key7",
+				"time": 11200
+			},
+			{
+				"key": "1Key1",
+				"time": 11700
+			},
+			{
+				"key": "1Key3",
+				"time": 11700
+			},
+			{
+				"key": "1Key8",
+				"time": 11700
+			},
+			{
+				"key": "1Key6",
+				"time": 12700
+			},
+			{
+				"key": "1Key4",
+				"time": 13200
+			},
+			{
+				"key": "1Key9",
+				"time": 14200
+			},
+			{
+				"key": "1Key7",
+				"time": 14700
+			},
+			{
+				"key": "1Key1",
+				"time": 15200
+			},
+			{
+				"key": "1Key3",
+				"time": 15200
+			},
+			{
+				"key": "1Key8",
+				"time": 15200
+			},
+			{
+				"key": "1Key6",
+				"time": 16200
+			},
+			{
+				"key": "1Key4",
+				"time": 16700
+			},
+			{
+				"key": "1Key11",
+				"time": 17700
+			},
+			{
+				"key": "1Key7",
+				"time": 18200
+			},
+			{
+				"key": "1Key3",
+				"time": 18700
+			},
+			{
+				"key": "1Key7",
+				"time": 18700
+			},
+			{
+				"key": "1Key10",
+				"time": 18700
+			},
+			{
+				"key": "1Key9",
+				"time": 19200
+			},
+			{
+				"key": "1Key9",
+				"time": 19700
+			},
+			{
+				"key": "1Key8",
+				"time": 20700
+			},
+			{
+				"key": "1Key4",
+				"time": 21200
+			},
+			{
+				"key": "1Key8",
+				"time": 21200
+			},
+			{
+				"key": "1Key14",
+				"time": 24700
+			},
+			{
+				"key": "1Key13",
+				"time": 25200
+			},
+			{
+				"key": "1Key0",
+				"time": 25700
+			},
+			{
+				"key": "1Key2",
+				"time": 25700
+			},
+			{
+				"key": "1Key14",
+				"time": 25700
+			},
+			{
+				"key": "1Key11",
+				"time": 26200
+			},
+			{
+				"key": "1Key3",
+				"time": 26700
+			},
+			{
+				"key": "1Key7",
+				"time": 26700
+			},
+			{
+				"key": "1Key10",
+				"time": 26700
+			},
+			{
+				"key": "1Key14",
+				"time": 27200
+			},
+			{
+				"key": "1Key13",
+				"time": 27700
+			},
+			{
+				"key": "1Key0",
+				"time": 28200
+			},
+			{
+				"key": "1Key2",
+				"time": 28200
+			},
+			{
+				"key": "1Key14",
+				"time": 28200
+			},
+			{
+				"key": "1Key11",
+				"time": 28700
+			},
+			{
+				"key": "1Key3",
+				"time": 29200
+			},
+			{
+				"key": "1Key7",
+				"time": 29200
+			},
+			{
+				"key": "1Key10",
+				"time": 29200
+			},
+			{
+				"key": "1Key14",
+				"time": 29700
+			},
+			{
+				"key": "1Key13",
+				"time": 30200
+			},
+			{
+				"key": "1Key0",
+				"time": 30700
+			},
+			{
+				"key": "1Key2",
+				"time": 30700
+			},
+			{
+				"key": "1Key13",
+				"time": 30700
+			},
+			{
+				"key": "1Key14",
+				"time": 31200
+			},
+			{
+				"key": "1Key11",
+				"time": 32200
+			},
+			{
+				"key": "1Key7",
+				"time": 32700
+			},
+			{
+				"key": "1Key3",
+				"time": 33200
+			},
+			{
+				"key": "1Key7",
+				"time": 33200
+			},
+			{
+				"key": "1Key10",
+				"time": 33200
+			},
+			{
+				"key": "1Key4",
+				"time": 34200
+			},
+			{
+				"key": "1Key8",
+				"time": 34200
+			},
+			{
+				"key": "1Key11",
+				"time": 34200
+			},
+			{
+				"key": "1Key7",
+				"time": 37200
+			},
+			{
+				"key": "1Key6",
+				"time": 37700
+			},
+			{
+				"key": "1Key0",
+				"time": 38200
+			},
+			{
+				"key": "1Key2",
+				"time": 38200
+			},
+			{
+				"key": "1Key7",
+				"time": 38200
+			},
+			{
+				"key": "1Key0",
+				"time": 39200
+			},
+			{
+				"key": "1Key2",
+				"time": 39700
+			},
+			{
+				"key": "1Key4",
+				"time": 40200
+			},
+			{
+				"key": "1Key7",
+				"time": 40700
+			},
+			{
+				"key": "1Key9",
+				"time": 41200
+			},
+			{
+				"key": "1Key11",
+				"time": 41700
+			},
+			{
+				"key": "1Key14",
+				"time": 42200
+			},
+			{
+				"key": "1Key9",
+				"time": 42700
+			},
+			{
+				"key": "1Key11",
+				"time": 43200
+			},
+			{
+				"key": "1Key14",
+				"time": 43700
+			}
+		]
+	}
+]

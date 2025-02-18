@@ -1,0 +1,79 @@
+[
+	{
+		"name": "Drunken Sailor",
+		"bpm": 120,
+		"bitsPerPage": 16,
+		"pitchLevel": 0,
+		"helpText": "\n    After the download:\n    1/ go to https://sky-music.herokuapp.com\n    2/ Press 'manage recordings'\n    3/ Import the text file\n    4/ Listen to your song being played!\n    ",
+		"songNotes": [
+			{
+				"key": "1Key5",
+				"time": 700
+			},
+			{
+				"key": "1Key1",
+				"time": 1200
+			},
+			{
+				"key": "1Key3",
+				"time": 1700
+			},
+			{
+				"key": "1Key5",
+				"time": 2200
+			},
+			{
+				"key": "1Key4",
+				"time": 2700
+			},
+			{
+				"key": "1Key0",
+				"time": 3200
+			},
+			{
+				"key": "1Key2",
+				"time": 3700
+			},
+			{
+				"key": "1Key4",
+				"time": 4200
+			},
+			{
+				"key": "1Key5",
+				"time": 4700
+			},
+			{
+				"key": "1Key6",
+				"time": 5200
+			},
+			{
+				"key": "1Key7",
+				"time": 5700
+			},
+			{
+				"key": "1Key8",
+				"time": 6200
+			},
+			{
+				"key": "1Key7",
+				"time": 6700
+			},
+			{
+				"key": "1Key5",
+				"time": 7200
+			},
+			{
+				"key": "1Key4",
+				"time": 7700
+			},
+			{
+				"key": "1Key2",
+				"time": 8200
+			},
+			{
+				"key": "1Key1",
+				"time": 8700
+			}
+		]
+	}
+]
