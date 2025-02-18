@@ -18,9 +18,10 @@ win:
   icon: build/icon.ico
   requestedExecutionLevel: 'requireAdministrator'
 nsis:
-  artifactName: ${name}-${version}-setup.${ext}
-  shortcutName: ${productName}
-  uninstallDisplayName: ${productName}
+  artifactName: 小星弹琴软件v${version}_x64_windows.${ext}
+  shortcutName: "小星弹琴软件"
+  uninstallDisplayName: '卸载 Uninstaller'
+  perMachine: true
   installerIcon: build/icon.ico
   uninstallerIcon: build/icon.ico
   installerHeaderIcon: build/icon.ico
@@ -28,6 +29,7 @@ nsis:
   allowToChangeInstallationDirectory: true  # 允许用户选择安装目录
   createDesktopShortcut: true  # 允许创建桌面快捷方式
   createStartMenuShortcut: true  # 允许创建开始菜单快捷方式
+  deleteAppDataOnUninstall: true
 extraFiles:
   - from: ".\\backend_dist"
     to: ".\\backend_dist"
