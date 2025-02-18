@@ -583,9 +583,7 @@ function heartClick(name, state) {
       operate: 'favorite_music'
     }).then(() => {
       handleUpdateValue('myFavorite')
-      handleUpdateValue('systemMusic')
-      handleUpdateValue('myImport')
-      handleUpdateValue('myTranslate')
+      handleUpdateValue(nowType)
       message.success('收藏成功')
     })
   } else {
@@ -595,9 +593,6 @@ function heartClick(name, state) {
       operate: "drop_file"
     }).then(() => {
       handleUpdateValue('myFavorite')
-      handleUpdateValue('systemMusic')
-      handleUpdateValue('myImport')
-      handleUpdateValue('myTranslate')
       message.success('移除成功')
     })
   }
@@ -610,10 +605,7 @@ function deleteClick(name) {
     type: 'myImport',
     operate: "drop_file"
   }).then(() => {
-    handleUpdateValue('myFavorite')
-    handleUpdateValue('systemMusic')
     handleUpdateValue('myImport')
-    handleUpdateValue('myTranslate')
     message.success('删除成功')
   })
 }
