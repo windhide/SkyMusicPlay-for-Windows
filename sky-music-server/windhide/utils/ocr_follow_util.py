@@ -53,7 +53,7 @@ def load_key_model():
 
 
 def get_key_position(conf, threshold=10):
-    if GlobalVariable.window["key_position"] != None:
+    if GlobalVariable.window["key_position"] is not None:
         if len(GlobalVariable.window["key_position"]) == 15 and not GlobalVariable.window["is_change"]:
             return GlobalVariable.window["key_position"]
     print("开始检测按键布局")
