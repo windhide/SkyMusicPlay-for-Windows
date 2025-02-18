@@ -840,7 +840,7 @@ onUnmounted(async () => {
 }
 
 :deep(.table_position td) {
-  color: #ea66a6 !important;
+  background-color: rgba(242, 201, 196, 0.507) !important;
 }
 
 .actionButton{
