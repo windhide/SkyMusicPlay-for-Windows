@@ -19,6 +19,7 @@ class GlobalVariable:
     # 线程相关
     thread = None
     auto_thread = None
+    task_queue = None
 
     # 乐谱相关
     music_sheet = []  # 乐谱

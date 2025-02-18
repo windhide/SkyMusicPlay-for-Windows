@@ -8,19 +8,7 @@ def detect_encoding(file_path):
         return chardet.detect(raw_data)['encoding']  # 直接返回编码
 
 def start(request: dict):
-    try:
-        print(f"Starting music: {request['fileName']} of type {request['type']}")
-        if GlobalVariable.window["hWnd"] is None and GlobalVariable.compatibility_mode is False:
-            return
-        GlobalVariable.now_play_music = request["fileName"]
-        match GlobalVariable.cpu_type:
-            case "Intel":
-                intel_robot.playMusic(request["fileName"], request["type"])
-            case "AMD":
-                amd_robot.playMusic(request["fileName"], request["type"])
-    except Exception as e:
-        print(f"Error in /start: {str(e)}")
-
+    GlobalVariable.task_queue.put(request)  # 将请求放入队列
 
 def pause():
     try:
