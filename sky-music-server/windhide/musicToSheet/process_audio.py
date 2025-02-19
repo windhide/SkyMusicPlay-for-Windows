@@ -17,7 +17,7 @@ special_note_mapping = {'standard':{86:81,88:83,89:84,},'low_harf':{79:74,81:76,
 
 # 根据 BPM 动态调整时间合并阈值
 def get_dynamic_time_merge_threshold(bpm):
-    return max(10, min(50, int(60000 / bpm / 4)))  # 限制阈值在 10-50ms 之间
+    return max(20, min(80, int(60000 / bpm / 4)))  # 限制阈值在 10-50ms 之间
 
 
 # 15 个音符与键盘按键的映射
