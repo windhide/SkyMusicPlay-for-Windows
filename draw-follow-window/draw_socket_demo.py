@@ -21,7 +21,7 @@ send_command("draw box2 150 100 300 300\n")  # 绘制第二个方框
 time.sleep(1)  # 等待 1 秒
 
 # 调整窗口尺寸和位置，同时清空所有已绘制的方框
-# send_command("resize 2560 1080 50 10\n")  # 更改窗口为 1000x800 大小，位置 (50, 50)
+send_command("resize 2560 1080 50 10\n")  # 更改窗口为 1000x800 大小，位置 (50, 50)
 # time.sleep(2)  # 等待 2 秒
 
 send_command("draw box2 150 100 1000 1000\n")  # 绘制第二个方框

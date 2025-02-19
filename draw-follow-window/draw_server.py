@@ -65,9 +65,6 @@ class TransparentBoxWindow:
         # 绘制红色边框
         # self.draw_red_border(width, height)
 
-        # 添加关闭按钮
-        self.add_close_button()
-
         # 存储用户自定义 ID 与 Tkinter 方框 ID 的映射
         self.boxes = {}
 
@@ -80,25 +77,6 @@ class TransparentBoxWindow:
             border_thickness // 2, border_thickness // 2,
             width - border_thickness // 2, height - border_thickness // 2,
             outline="red", width=border_thickness, tags="red_border"
-        )
-
-    def add_close_button(self):
-        # 创建关闭按钮
-        close_button = tk.Button(
-            self.canvas,
-            text="X",
-            command=self.exit_program,
-            fg="black",
-            bg="aqua",
-            highlightthickness=0,
-            relief="flat",
-            borderwidth=0
-        )
-        # 在 Canvas 上绘制按钮
-        self.canvas.create_window(
-            750, 10,
-            anchor="nw",
-            window=close_button
         )
 
     def start_server(self):
