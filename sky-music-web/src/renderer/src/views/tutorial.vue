@@ -17,7 +17,7 @@
     >
       <n-tab-pane name="systemMusic" tab="自带歌曲">
         <n-data-table
-          :columns="musicColumns"
+          :columns="musicSystemColumns"
           :data="music.systemMusic"
           :bordered="false"
           :min-row-height="48"
@@ -53,7 +53,7 @@
       </n-tab-pane>
       <n-tab-pane name="myFavorite" tab="收藏">
         <n-data-table
-          :columns="musicColumns"
+          :columns="favoritColumns"
           :data="music.myFavorite"
           :bordered="false"
           :min-row-height="48"
@@ -82,8 +82,8 @@
 <script lang="ts" setup>
 import { getList, sendData } from "@renderer/utils/fetchUtils";
 import { RowData } from "naive-ui/es/data-table/src/interface";
-import { reactive, ref, watch } from "vue";
-import { useMessage } from "naive-ui";
+import { h, reactive, ref, watch } from "vue";
+import { useMessage, NButton } from "naive-ui";
 import { Search } from "@vicons/ionicons5";
 
 const message = useMessage();
@@ -105,6 +105,100 @@ const musicColumns = [
     className: "th_css",
   },
 ]; // 音乐列
+
+const musicSystemColumns = [
+  {
+    title: '歌名',
+    key: 'name',
+    resizable: true,
+    className: 'th_css',
+    ellipsis: {
+      tooltip: true
+    }
+  },
+  {
+    title: '操作',
+    key: 'operation',
+    width: 60,
+    className: 'th_css',
+    render(row) {
+      return h(
+        NButton,
+        {
+          size: 'medium',
+          text: true,
+          onClick: () => heartClick(row.name, true)
+        },
+        {
+          default: () => {
+            return music.myFavorite.filter((res) => {
+              return res.name.replaceAll('.mp3').includes(row.name)
+            }).length == 0
+              ? '❤'
+              : null
+          }
+        }
+      )
+    }
+  }
+]
+
+const favoritColumns = [
+  {
+    title: '歌名',
+    key: 'name',
+    resizable: true,
+    className: 'th_css',
+    ellipsis: {
+      tooltip: true
+    }
+  },
+  {
+    title: '操作',
+    key: 'operation',
+    width: 60,
+    className: 'th_css',
+    render(row) {
+      return h(
+        NButton,
+        {
+          size: 'medium',
+          text: true,
+          onClick: () => heartClick(row.name, false)
+        },
+        {
+          default: () => {
+            return '💔'
+          }
+        }
+      )
+    }
+  }
+]
+
+// 收藏点击处理
+function heartClick(name, state) {
+  if (state) {
+    sendData('config_operate', {
+      fileName: name,
+      type: nowType,
+      operate: 'favorite_music'
+    }).then(() => {
+      handleUpdateValue('myFavorite')
+      handleUpdateValue(nowType)
+      message.success('收藏成功')
+    })
+  } else {
+    sendData('config_operate', {
+      fileName: name,
+      type: 'myFavorite',
+      operate: "drop_file"
+    }).then(() => {
+      handleUpdateValue('myFavorite')
+      message.success('移除成功')
+    })
+  }
+}
 
 const MusicSelect = (row: RowData) => {
   return {
@@ -147,6 +241,7 @@ function followTutorial() {
     });
   }
 }
+handleUpdateValue("myFavorite");
 handleUpdateValue("systemMusic");
 
 function getListData(value) {
