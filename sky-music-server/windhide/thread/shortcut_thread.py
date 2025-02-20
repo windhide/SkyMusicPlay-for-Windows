@@ -3,32 +3,33 @@ import urllib
 from pynput import keyboard
 from websocket_server import WebsocketServer
 
+from windhide.static.global_variable import GlobalVariable
 from windhide.utils import hook_util
 
 hook_util.sout_null()
 
 server = WebsocketServer("127.0.0.1", 11452)
 
-# 按键映射
-key_mappings = {
-    keyboard.Key.f2: "F2",
-    keyboard.Key.f5: "F5",
-    keyboard.Key.f6: "F6",
-    keyboard.Key.f7: "F7",
-    keyboard.Key.f8: "F8"
-}
+
+def get_key_string(key):
+    if hasattr(key, "char") and key.char is not None:  # 处理普通字符按键
+        return key.char
+    elif hasattr(key, "name"):  # 处理特殊按键
+        return key.name
+    else:
+        return str(key)  # 兜底方案，转换为字符串
+
 
 # 键盘按键事件处理
 def on_press(key):
-    if key in key_mappings:
-        key_name = key_mappings[key]
-        print(f"按键 {key_name} 被触发")
+    key = get_key_string(key)
+    print(f"{key}")
+    if key in GlobalVariable.shortcutStruct["music_key"]["string"]:
+        print(f"按键 {key} 被触发")
         try:
-            server.send_message_to_all(urllib.parse.quote(key_name))
+            server.send_message_to_all(urllib.parse.quote(key))
         except Exception as e:
             print(f"发送消息时发生错误: {e}")
-
-
 # 客户端事件处理
 def on_client_connect(client, server):
     print(f"客户端 {client['id']} 已连接")

@@ -1,3 +1,6 @@
+from pynput import keyboard
+
+
 class GlobalVariable:
     # 运行环境配置
     isProd = False
@@ -16,6 +19,25 @@ class GlobalVariable:
         "key_position": None
     }
 
+    # 快捷键相关
+    shortcutStruct = {
+        "follow_key":{
+            "tap_key": "yuiophjkl;nm,./",
+            "string": "-=q",
+            "repeat": "-",
+            "repeat_next": '=',
+            "resize": "q",
+            "exit": "esc",
+        },
+        "music_key":{
+            "string": "f2f5f6f7f8",
+            "next": "f2",
+            "start": "f5",
+            "resume": "f6",
+            "pause": "f7",
+            "stop": "f8"
+        }
+    }
     # 线程相关
     thread = None
     auto_thread = None

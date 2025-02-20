@@ -22,6 +22,7 @@
     "@vicons/fluent": "^0.13.0",
     "@vicons/ionicons5": "^0.12.0",
     "electron-updater": "^6.1.7",
+    "hotkeys-js": "^3.13.9",
     "html2canvas": "^1.4.1",
     "iconv-lite": "^0.6.3",
     "naive-ui": "^2.41.0",

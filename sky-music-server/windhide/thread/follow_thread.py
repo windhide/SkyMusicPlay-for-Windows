@@ -14,24 +14,33 @@ GlobalVariable.exit_flag = False  # 添加全局退出标志
 originalKeys = "None"
 pressedKeys = set()
 
+def get_key_string(key):
+    if hasattr(key, "char") and key.char is not None:  # 处理普通字符按键
+        return key.char
+    elif hasattr(key, "name"):  # 处理特殊按键
+        return key.name
+    else:
+        return str(key)  # 兜底方案，转换为字符串
+
 def on_press(key):
     global pressedKeys, originalKeys
     if GlobalVariable.exit_flag:
         return False  # 终止监听
     if GlobalVariable.follow_music != "":
         try:
-            if hasattr(key, 'char') and key.char in 'yuiophjkl;nm,./-=q':
+            key = key.get_key_string(key)
+            if key in GlobalVariable.shortcutStruct["follow_key"]["string"] or key in GlobalVariable.shortcutStruct["follow_key"]["tap_key"]:
                 if GlobalVariable.isNowAutoPlaying:
-                    if key.char not in "-":
-                        GlobalVariable.nowRobotKey += key.char
+                    if key not in GlobalVariable.shortcutStruct["follow_key"]["repeat"]:
+                        GlobalVariable.nowRobotKey += key
                     if len(GlobalVariable.nowRobotKey) == len(GlobalVariable.nowClientKey):
                         GlobalVariable.isNowAutoPlaying = False
                         GlobalVariable.nowRobotKey = ''
                 else:
-                    if key.char in "-":
+                    if key in GlobalVariable.shortcutStruct["follow_key"]["repeat"]:
                         GlobalVariable.isNowAutoPlaying = True
                         send_multiple_key_press(GlobalVariable.nowClientKey)
-                    if key.char in "=":
+                    if key in GlobalVariable.shortcutStruct["follow_key"]["repeat_next"]:
                         send_multiple_key_press(GlobalVariable.nowClientKey)
         except Exception as e:
             print(f"发生错误: {e.__doc__} , 开始重新加载")
@@ -53,24 +62,25 @@ def key_release(key):
         return False  # 终止监听
     if GlobalVariable.follow_music != "":
         try:
-            if hasattr(key, 'char') and key.char in 'yuiophjkl;nm,./-=q':
+            key = get_key_string(key)
+            if key in GlobalVariable.shortcutStruct["follow_key"]["string"] or key in GlobalVariable.shortcutStruct["follow_key"]["tap_key"]:
                 if GlobalVariable.isNowAutoPlaying:
-                    if key.char not in "-":
-                        GlobalVariable.nowRobotKey += key.char
+                    if key not in GlobalVariable.shortcutStruct["follow_key"]["repeat"]:
+                        GlobalVariable.nowRobotKey += key
                     if len(GlobalVariable.nowRobotKey) == len(GlobalVariable.nowClientKey):
                         GlobalVariable.isNowAutoPlaying = False
                         GlobalVariable.nowRobotKey = ''
                 else:
-                    if key.char in "-":
+                    if key in GlobalVariable.shortcutStruct["follow_key"]["repeat"]:
                         GlobalVariable.isNowAutoPlaying = True
                         send_multiple_key_release(GlobalVariable.nowClientKey)
-                    if key.char in "=":
+                    if key in GlobalVariable.shortcutStruct["follow_key"]["repeat_next"]:
                         send_multiple_key_release(GlobalVariable.nowClientKey)
-                    if key.char in "q":
+                    if key in GlobalVariable.shortcutStruct["follow_key"]["resize"]:
                         resize_and_reload_key()
                     else:
-                        if key.char in originalKeys:
-                            pressedKeys.add(key.char)
+                        if key in originalKeys:
+                            pressedKeys.add(key)
                         if len(pressedKeys) == len(originalKeys):
                             pressedKeys.clear()
                             originalKeys = set(get_next_sheet_demo("ok"))
@@ -78,7 +88,7 @@ def key_release(key):
             print(f"发生错误: {e.__doc__} , 开始重新加载")
 
     # 处理 Esc 退出监听
-    if key == keyboard.Key.esc:
+    if key == GlobalVariable.shortcutStruct["follow_key"]["exit"]:
         print("检测到 Esc 键，退出监听...")
         GlobalVariable.exit_flag = True  # 设置全局标志
         try:

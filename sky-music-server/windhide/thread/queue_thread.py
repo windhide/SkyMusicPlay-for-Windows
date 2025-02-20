@@ -4,7 +4,6 @@ from windhide.static.global_variable import GlobalVariable
 
 def music_start_tasks():
     while True:
-        print("?")
         request = GlobalVariable.task_queue.get()  # 从队列中取出任务
         try:
             print(f"Starting music: {request['fileName']} of type {request['type']}")

@@ -2052,6 +2052,11 @@ hosted-git-info@^4.1.0:
   dependencies:
     lru-cache "^6.0.0"
 
+hotkeys-js@^3.13.9:
+  version "3.13.9"
+  resolved "https://registry.npmmirror.com/hotkeys-js/-/hotkeys-js-3.13.9.tgz"
+  integrity sha512-3TRCj9u9KUH6cKo25w4KIdBfdBfNRjfUwrljCLDC2XhmPDG0SjAZFcFZekpUZFmXzfYoGhFDcdx2gX/vUVtztQ==
+
 html2canvas@^1.4.1:
   version "1.4.1"
   resolved "https://registry.npmmirror.com/html2canvas/-/html2canvas-1.4.1.tgz"

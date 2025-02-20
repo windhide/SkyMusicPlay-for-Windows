@@ -38,7 +38,7 @@
               </template>
           </n-switch>
       </n-popover>
-      <n-button text :dashed="fixDashed" size="large" type="warning" style="margin-top: 12px; font-size: 20px; margin-right: 3px;" @click="fixHandle">
+      <n-button text :dashed="fixDashed" size="large" type="warning" style="margin-top: 12px; font-size: 20px;" @click="fixHandle">
         <n-icon size="25px">
           <Pin48Regular v-if="fixDashed" />
           <Pin48Filled v-else />
@@ -51,7 +51,7 @@
       </n-button>
       <n-button text type="info" size="large" style="margin-top: 12px; font-size: 25px;" @click="miniHandle">
           <n-icon>
-            <Remove />
+            <RemoveSharp />
           </n-icon>
       </n-button>
       <n-button text type="error" size="large" style="margin-top: 12px; font-size: 25px;" @click="closeHandle">
@@ -97,14 +97,16 @@ import {
   GameController,
   Library,
   Close,
-  Remove,
+  RemoveSharp,
   Flask,
-  ImageOutline
+  ImageOutline,
+  SettingsSharp
 } from '@vicons/ionicons5'
 import {
   Pin48Regular,
   Pin48Filled,
-  Settings48Regular
+  Settings48Regular,
+  BookInformation24Regular
 } from '@vicons/fluent'
 import router from '@renderer/router'
 
@@ -195,6 +197,11 @@ const menuOptions = [
     label: "开发者功能",
     key: "magicTools",
     icon: renderIcon(Flask),
+  },
+  {
+    label: "快捷键设置",
+    key: "shortcut",
+    icon: renderIcon(SettingsSharp),
   }
 ];
 

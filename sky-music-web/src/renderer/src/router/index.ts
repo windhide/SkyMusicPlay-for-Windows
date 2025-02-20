@@ -35,6 +35,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/magicTools',
     name: 'magicTools',
     component: () => import('../views/magicTools.vue')
+  },
+  {
+    path: '/shortcut',
+    name: 'shortcut',
+    component: () => import('../views/shortcutKeys.vue')
   }
 ]
 

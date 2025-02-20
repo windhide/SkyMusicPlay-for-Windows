@@ -217,6 +217,7 @@ const active = ref(false)
 const placement = ref<DrawerPlacement>('left')
 const selectMode = ref("order")
 let cycleMusic: any = {}
+let shortcutKeys = {} // 快捷键按键
 
 const modeColumns = [
   {
@@ -344,6 +345,7 @@ const musicListColumns = [
     className: 'th_css'
   }
 ]
+
 
 const progress = ref(0.0) // 播放进度条
 const playSpeed = ref(1) // 播放速度
@@ -729,7 +731,7 @@ function initWebSocket() {
   }
   socket.onmessage = (event) => {
     const key = decodeURIComponent(event.data).trim() // 获取按下的按键
-    if (key === 'F5') {
+    if (key === shortcutKeys["start"]) {
       if (nowState.value != 'stop') {
         window.api.system_notification("🍎", "仅停止状态下允许开始")
       } else {
@@ -742,7 +744,7 @@ function initWebSocket() {
         }
       }
     }
-    if (key === 'F6') {
+    if (key === shortcutKeys["resume"]) {
       if (nowState.value === 'pause') {
         window.api.system_notification("▶", "继续")
         playBarClickHandler('resume', '')
@@ -750,7 +752,7 @@ function initWebSocket() {
         window.api.system_notification("🍎", "仅暂停状态下允许继续")
       }
     }
-    if (key === 'F7') {
+    if (key === shortcutKeys["pause"]) {
       if (isPlay.value) {
         window.api.system_notification("⏸", "暂停")
         playBarClickHandler('pause', '')
@@ -758,11 +760,11 @@ function initWebSocket() {
         window.api.system_notification("🍎", "仅正在播放时允许暂停")
       }
     }
-    if (key === 'F8') {
+    if (key === shortcutKeys["stop"]) {
       window.api.system_notification("🛑", "停止")
       playBarClickHandler('stop', '')
     }
-    if (key === 'F2') {
+    if (key === shortcutKeys["next"]) {
       window.api.system_notification("⏩", "下一首")
       playBarClickHandler('next', '')
     }
@@ -776,8 +778,13 @@ function initWebSocket() {
 }
 
 handleUpdateValue('myFavorite')
-
 handleUpdateValue('systemMusic')
+sendData("config_operate",{
+    "operate": "get",
+    "name": "shortcutStruct"
+}).then(res=>{
+  shortcutKeys = res["music_key"]
+})
 initWebSocket()
 
 // ---------------------------------------------------
