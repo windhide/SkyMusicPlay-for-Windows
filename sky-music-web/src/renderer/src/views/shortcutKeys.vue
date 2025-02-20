@@ -9,8 +9,11 @@
       background: '#F2C9C4',
       transition: `all .3s ${themeVars.cubicBezierEaseInOut}`,
     }" />
+    <n-button type="primary" color="#f58f98" style="flex-basis: 15%; margin-top: 20px;" ghost @click="resetKeyToDefault()">
+        重置快捷键
+    </n-button>
     <n-divider style="color: #F2C9C4;">音乐快捷键</n-divider>
-    <div v-for="shortcut in musicShortcut">
+    <div v-for="shortcut in musicShortcut" style="margin-right: auto;">
       <n-input-group style="margin-top: 20px">
         <n-button type="primary" text style="width: 100px;" color="#DDF2C4">
           {{ shortcut.name }}
@@ -20,7 +23,7 @@
       </n-input-group>
     </div>
     <n-divider style="color: #F2C9C4;">跟弹快捷键</n-divider>
-    <div v-for="shortcut in followShortcut">
+    <div v-for="shortcut in followShortcut" style="margin-right: auto;">
       <n-input-group style="margin-top: 20px">
         <n-button type="primary" text style="width: 100px;" color="#DDF2C4">
           {{ shortcut.name }}
@@ -41,7 +44,7 @@ import hotkeys from 'hotkeys-js';
 
 const themeVars = useThemeVars();
 const message = useMessage()
-const headText = "快捷键为本次运行生效，重启软件需要重新设置，如不适应请尽快适应之";
+const headText = "快捷键为本次运行生效，重启软件需要重新设置，如不适应请尽快适应";
 const patterns = ["本次运行", "重新", "重启", "尽快适应"];
 
 const musicShortcut=[{ name: "播放", label: "start",},{ name: "继续", label: "resume",},{ name: "暂停", label: "pause",},{ name: "停止", label: "stop",},{ name: "下一首", label: "next",}]
@@ -153,6 +156,14 @@ function checkDuplicates(shortcutObj) {
   }
   const uniqueKeys = new Set(keys);
   return uniqueKeys.size === keys.length;
+}
+
+function resetKeyToDefault(){
+  sendData("config_operate", { "operate": "set", "name": "shortcutStruct", "value":{ "follow_key":{ "tap_key": "yuiophjkl;nm,./", "string": "-=q", "repeat": "-", "repeat_next": '=', "resize": "q", "exit": "esc",}, "music_key":{ "string": "f2f5f6f7f8", "next": "f2", "start": "f5", "resume": "f6", "pause": "f7", "stop": "f8"}}
+  }).then(()=>{
+    getShortcutKeys()
+    message.success("已重置快捷键")
+  })
 }
 
 onMounted(() => {
