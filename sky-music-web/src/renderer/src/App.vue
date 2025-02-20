@@ -105,8 +105,7 @@ import {
 import {
   Pin48Regular,
   Pin48Filled,
-  Settings48Regular,
-  BookInformation24Regular
+  Settings48Regular
 } from '@vicons/fluent'
 import router from '@renderer/router'
 
