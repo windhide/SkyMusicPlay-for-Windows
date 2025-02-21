@@ -42,7 +42,7 @@ def convert_notes_to_delayed_format(fileName, type):
     if combined_keys:
         result.append({"key": combined_keys, "delay": 0})  # 最后条目的延迟为0
     GlobalVariable.music_sheet = result
-
+    
 def getResourcesPath(file):
     nowPath = os.path.dirname(os.path.abspath(__file__))
     resources_path = os.path.dirname(os.path.dirname(nowPath))

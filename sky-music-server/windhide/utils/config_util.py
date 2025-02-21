@@ -23,9 +23,10 @@ def set_config(request: dict):
             GlobalVariable.cpu_type = "AMD" if request["value"] else "Intel"
         case 'shortcutStruct':
             GlobalVariable.shortcutStruct = request["value"]
+        case 'keyMap':
+            GlobalVariable.keyMap = request["value"]
 
 def get_config(request: dict):
-    print(GlobalVariable.shortcutStruct)
     configValue = eval("GlobalVariable." + request["name"])
     return configValue
 

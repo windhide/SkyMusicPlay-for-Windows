@@ -19,7 +19,7 @@
         <n-button type="primary" text style="width: 100px;" color="#DDF2C4">
           {{ shortcut.name }}
         </n-button>
-        <n-input v-model:value="shortcutKey['music_key'][shortcut.label]" readonly @blur="handleBlur()"
+        <n-input v-model:value="shortcutKey['music_key'][shortcut.label]" readonly @blur="handleBlur()" placeholder="" 
           @focus="handleFocus('music_key', shortcut.label)" />
       </n-input-group>
     </div>
@@ -29,7 +29,7 @@
         <n-button type="primary" text style="width: 100px;" color="#DDF2C4">
           {{ shortcut.name }}
         </n-button>
-        <n-input v-model:value="shortcutKey['follow_key'][shortcut.label]" readonly @blur="handleBlur()"
+        <n-input v-model:value="shortcutKey['follow_key'][shortcut.label]" readonly @blur="handleBlur()" placeholder="" 
           @focus="handleFocus('follow_key', shortcut.label)" />
       </n-input-group>
     </div>

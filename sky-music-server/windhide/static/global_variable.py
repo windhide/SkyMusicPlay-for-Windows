@@ -75,13 +75,12 @@ class GlobalVariable:
     follow_process = None
 
     # 乐谱映射
-    keyMap = {}
-    sky_key_map = {
-        'Key0':'y', 'Key1':'u', 'Key2':'i', 'Key3':'o', 'Key4':'p',
-        'Key5':'h', 'Key6':'j', 'Key7':'k', 'Key8':'l', 'Key9': ';',
-        'Key10':'n', 'Key11':'m', 'Key12':',', 'Key13':'.', 'Key14':'/'
+    keyMap = {
+        'Key-14': '', 'Key-13': '', 'Key-12': '', 'Key-11': '', 'Key-10': '', 'Key-9': '', 'Key-8': '',
+        'Key-7': '', 'Key-6': '', 'Key-5': '', 'Key-4': '', 'Key-3': '', 'Key-2': '', 'Key-1': '',
+        'Key0': 'y', 'Key1': 'u', 'Key2': 'i', 'Key3': 'o', 'Key4': 'p', 'Key5': 'h', 'Key6': 'j',
+        'Key7': 'k', 'Key8': 'l', 'Key9': ';', 'Key10': 'n', 'Key11': 'm', 'Key12': ',', 'Key13': '.',
+        'Key14': '/', 'Key15': '', 'Key16': '', 'Key17': '', 'Key18': '', 'Key19': '', 'Key20': '',
+        'Key21': '', 'Key22': '', 'Key23': '', 'Key24': '', 'Key25': '', 'Key26': '', 'Key27': '',
+        'Key28': ''
     }
-    customize_key_map = {
-
-    }
-
