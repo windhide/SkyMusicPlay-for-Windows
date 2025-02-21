@@ -9,7 +9,8 @@
       background: '#F2C9C4',
       transition: `all .3s ${themeVars.cubicBezierEaseInOut}`,
     }" />
-    <n-button type="primary" color="#f58f98" style=" flex-basis: 25%; margin-top: 20px;" ghost @click="resetKeyToDefault()">
+    <div style="flex-basis: 100%;" />
+    <n-button type="primary" color="#f58f98" style="margin-top: 20px;" ghost @click="resetKeyToDefault()">
         重 置 快 捷 键
     </n-button>
     <n-divider style="color: #F2C9C4;">音乐快捷键</n-divider>

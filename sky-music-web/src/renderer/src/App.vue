@@ -95,12 +95,12 @@ import {
   Home,
   MusicalNotes,
   GameController,
-  Library,
   Close,
   RemoveSharp,
   Flask,
   ImageOutline,
-  SettingsSharp
+  SettingsOutline,
+  PlanetOutline
 } from '@vicons/ionicons5'
 import {
   Pin48Regular,
@@ -173,29 +173,34 @@ const menuOptions = [
     icon: renderIcon(Home),
   },
   {
-    label: "音乐",
+    label: "演奏",
     key: "music",
     icon: renderIcon(MusicalNotes),
   },
   {
-    label: "跟弹和乐谱",
+    label: "跟弹",
     key: "tutorial",
     icon: renderIcon(GameController),
   },
   {
-    label: "音乐扒谱",
+    label: "扒谱",
     key: "kube",
     icon: renderIcon(CubeSharp),
   },
   {
-    label: "开发者功能",
+    label: "开发者",
     key: "magicTools",
     icon: renderIcon(Flask),
   },
   {
-    label: "快捷键设置",
+    label: "快捷键",
     key: "shortcut",
-    icon: renderIcon(SettingsSharp),
+    icon: renderIcon(PlanetOutline),
+  },
+  {
+    label: "设置",
+    key: "shortcut",
+    icon: renderIcon(SettingsOutline),
   }
 ];
 
