@@ -3,9 +3,10 @@
     <n-gradient-text :size="20" type="success" style="width: 100%; color: #f2e8c4">
       {{ "当前: " + nowPlayMusic + "" }}
     </n-gradient-text>
-    <n-button type="primary" ghost @click="followTutorial" color="#F2E8C4">
+    <n-button type="primary" ghost @click="followTutorial" color="#F2C9C4">
       开始跟弹
     </n-button>
+    <n-button type="primary" ghost :loading="processFlag" @click="transfer" color="#F2E8C4"> 保存可视化乐谱到桌面</n-button>
   </n-flex>
   <n-card style="margin-top: 20px">
     <n-tabs
@@ -105,6 +106,33 @@ const musicColumns = [
     className: "th_css",
   },
 ]; // 音乐列
+
+
+// 进程标记
+const processFlag = ref(false)
+
+/**
+ * 发送扒谱转换请求
+ */
+ async function transfer() {
+  if (nowPlayMusic.value === '没有歌曲') {
+    message.warning('请先选择一首歌曲')
+    return
+  }
+
+  try {
+    await sendData('config_operate', {
+      fileName: nowPlayMusic.value,
+      type: nowType,
+      operate: 'convert_sheet'
+    })
+    message.success('已保存在桌面')
+  } catch (error) {
+    console.error('转换失败:', error)
+    message.error('转换失败，请重试')
+  }
+}
+
 
 const musicSystemColumns = [
   {

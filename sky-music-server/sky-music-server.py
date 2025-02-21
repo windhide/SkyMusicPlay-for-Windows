@@ -203,6 +203,8 @@ if __name__ == '__main__':
     task_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
     task_thread.start()
 
+    GlobalVariable.keyMap = GlobalVariable.sky_key_map
+
     # 启动 FastAPI 服务
     try:
         uvicorn.run(app, host="localhost", port=9899, log_level="debug")

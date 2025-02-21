@@ -178,7 +178,7 @@ const menuOptions = [
     icon: renderIcon(MusicalNotes),
   },
   {
-    label: "跟弹",
+    label: "跟弹和乐谱",
     key: "tutorial",
     icon: renderIcon(GameController),
   },
@@ -186,11 +186,6 @@ const menuOptions = [
     label: "音乐扒谱",
     key: "kube",
     icon: renderIcon(CubeSharp),
-  },
-  {
-    label: "生成乐谱",
-    key: "sheetToHTML",
-    icon: renderIcon(Library),
   },
   {
     label: "开发者功能",
