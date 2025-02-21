@@ -44,13 +44,18 @@
         transition: `all .3s ${themeVars.cubicBezierEaseInOut}`,
       }"
     />
-    <n-divider>
-      <n-gradient-text type="info" :size="25" style="color:#F2C9C4"> 
-        <n-button ghost color="#F2C9C4"  @click="openUrl('https://windhide.netlify.app')"  style="font-size: 20px">
-          查看教程
-        </n-button> 
-      </n-gradient-text>
-    </n-divider>
+      
+    <div style="flex-basis: 100%; margin-top: 20px;"  />
+    <n-button ghost color="#F2C9C4"  @click="openUrl('https://windhide.netlify.app')"  style="font-size: 18px;">
+      看教程
+    </n-button> 
+    <n-button ghost color="#A3F6EC"  @click="openUrl('https://qm.qq.com/q/KxkCQdS7OA')"  style="font-size: 18px; margin-left: 20px;">
+      加Q群
+    </n-button> 
+    <n-button ghost color="#D0BDF4"  @click="openUrl('https://pd.qq.com/s/9boevqcwu')"  style="font-size: 18px; margin-left: 20px;">
+      加频道
+    </n-button> 
+    <div style="flex-basis: 100%; margin-top: 20px;" />
     <n-button type="info" color="#F2C9C4" text  @click="openUrl('https://github.com/windhide/SkyMusicPlay-for-Windows/pulls')"  style="font-size: 30px">
       <n-icon>
         <GitPullRequest />

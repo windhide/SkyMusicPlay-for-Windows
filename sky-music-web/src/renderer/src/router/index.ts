@@ -27,11 +27,6 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/tutorial.vue')
   },
   {
-    path: '/sheetToHTML',
-    name: 'sheetToHTML',
-    component: () => import('../views/sheetToHTML.vue')
-  },
-  {
     path: '/magicTools',
     name: 'magicTools',
     component: () => import('../views/magicTools.vue')
@@ -40,6 +35,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/shortcut',
     name: 'shortcut',
     component: () => import('../views/shortcutKeys.vue')
+  },
+  {
+    path: '/setting',
+    name: 'setting',
+    component: () => import('../views/setting.vue')
   }
 ]
 

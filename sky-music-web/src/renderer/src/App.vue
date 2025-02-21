@@ -199,7 +199,7 @@ const menuOptions = [
   },
   {
     label: "设置",
-    key: "shortcut",
+    key: "setting",
     icon: renderIcon(SettingsOutline),
   }
 ];
