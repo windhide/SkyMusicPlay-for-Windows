@@ -28,7 +28,7 @@ def on_press(key):
         return False  # 终止监听
     if GlobalVariable.follow_music != "":
         try:
-            key = key.get_key_string(key)
+            key = get_key_string(key)
             if key in GlobalVariable.shortcutStruct["follow_key"]["string"] or key in GlobalVariable.shortcutStruct["follow_key"]["tap_key"]:
                 if GlobalVariable.isNowAutoPlaying:
                     if key not in GlobalVariable.shortcutStruct["follow_key"]["repeat"]:
