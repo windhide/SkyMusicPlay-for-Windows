@@ -1,8 +1,8 @@
 {
-    "version": "2.3.0",
+    "version": "2.3.1",
     "title": "更新啦🔔",
-    "content": "🍉新版本v2.3.0\\n🍊更新群-1007672060\\n🥝 更新日志\\n\\t⭐ 新增自定义快捷键功能\\n\\t⭐ 新增谱按键更改功能，允许适配更多游戏，但后台发送仅限光遇，其他游戏请用兼容模式\\n\\t⭐ 首页样式更改\\n\\t⭐ 菜单栏文本调整\\n\\t⭐ 跟弹加了e点点小动画\\n\\t🛠 修复缩小菜单栏快捷键位按钮位置错误问题\\n\\t🛠 生成乐谱合并到跟弹界面\\n\\t🛠 移除跟弹的关闭按钮\\n\\t🛠 转谱微调合并阈值\\n\\t🛠 跟弹自带歌曲加个收藏操作\\n\\t🛠 修复播放界面错误跳转表格问题\\n\\t🛠 播放加入队列，避免多次调用带来的线程紊乱\\n\\t🛠 定位当前播放的歌曲样式调整，更显眼了\\n\\t🗑 drop Improper sheet",
-    "downloadUrl": "https://github.com/windhide/SkyMusicPlay-for-Windows/releases/download/v2.3.0/v2.3.0_x64_windows.exe",
+    "content": "🍉新版本v2.3.1\\n🍊更新群-1007672060\\n🥝 更新日志\\n\\t🛠 转谱修复错误的范围映射\\n\\t🛠 跟弹步过功能不演奏问题修复",
+    "downloadUrl": "https://github.com/windhide/SkyMusicPlay-for-Windows/releases/download/v2.3.1/v2.3.1_x64_windows.exe",
     "positiveText": "太好了我马上去更新❤",
     "negativeText": "朕知道了，退下吧。😭"
 }
