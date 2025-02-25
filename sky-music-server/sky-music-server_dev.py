@@ -107,7 +107,7 @@ def translate(request: dict):
     match request["operate"]:
         case 'translate':
             try:
-                process_directory_with_progress()
+                process_directory_with_progress(request["value"])
                 return "ok"
             except Exception as e:
                 print(f"Error in /translate: {str(e)}")

@@ -88,7 +88,7 @@ async def create_upload_files(file: UploadFile):
 def translate(request: dict):
     match request["operate"]:
         case 'translate':
-            process_directory_with_progress()
+            process_directory_with_progress(request["value"])
     return "ok"
 
 
