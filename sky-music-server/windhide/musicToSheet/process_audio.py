@@ -16,7 +16,8 @@ special_note_mapping = {'standard':{86:81,88:83,89:84,},'low_harf':{74:69,76:71,
 
 # 根据 BPM 动态调整时间合并阈值
 def get_dynamic_time_merge_threshold(bpm):
-    return max(20, min(80, int(60000 / bpm / 4)))  # 限制阈值在 10-50ms 之间
+    # return max(20, min(80, int(60000 / bpm / 4)))  # 限制阈值在 10-50ms 之间
+    return 0
 
 
 # 15 个音符与键盘按键的映射
@@ -41,7 +42,7 @@ def process_midi_to_txt(input_path, output_path, version):
         if not instrument.is_drum:
             for note in instrument.notes:
                 pitch, time, velocity= note.pitch, int(note.start * 1000), note.velocity
-                if velocity < 50:
+                if velocity < 10:
                     continue
                 if pitch in note_to_key[version]:
                     notes.append({'time': time, 'key': note_to_key[version][pitch]})
@@ -61,7 +62,7 @@ def process_midi_to_txt(input_path, output_path, version):
 
     merged_notes.extend({'time': last_time, 'key': k} for k in merge_keys(temp_keys))
     output = [{
-        "name": os.path.basename(input_path),
+        "name": os.path.basename(input_path) + version,
         "author": "skyMusic-WindHide",
         "transcribedBy": "WindHide'System",
         "bpm": bpm,
