@@ -16,6 +16,15 @@
     <n-button type="primary" ghost :loading="processFlag" @click="handleStartTranslate" style="margin-left: 25px;" color="#F2E8C4">
       step2.开始转换
     </n-button>
+    <n-checkbox-group v-model:value="chooseType" style="margin-left: 1px;">
+      <n-space item-style="display: flex;">
+        <n-checkbox value="2" label="光遇范围_2组音阶" />
+        <n-checkbox value="3" label="3组音阶" />
+        <n-checkbox value="4" label="4组音阶" />
+        <n-checkbox value="5" label="5组音阶" />
+        <n-checkbox value="6" label="6组音阶" />
+      </n-space>
+    </n-checkbox-group>
     <n-divider style="margin:0px"/>
     <n-gradient-text type="info" :size="18" style="color: #F2C9C4">
       当前任务
@@ -67,12 +76,12 @@
 <script lang="ts" setup>
 import { getData, sendData, getList } from "@renderer/utils/fetchUtils";
 import { h, onUnmounted, reactive, ref, watch } from "vue";
-import { NButton, useMessage } from "naive-ui";
+import { NButton, NTag, useMessage } from "naive-ui";
 
 const message = useMessage();
 const processFlag = ref(false);
 let progressInterval:any = null
-
+let chooseType:any = ref(['2'])
 
 function handleFinish() {
   reloadTable()
@@ -225,7 +234,7 @@ async function handleStartTranslate() {
   }
 
   try {
-    await sendData("translate", { operate: "translate" });
+    await sendData("translate", { operate: "translate", value: chooseType.value.join() });
     reloadTable();
     message.success("转换完成");
   } catch (error) {
@@ -292,5 +301,11 @@ onUnmounted(function(){
 }
 :deep(.th_css){
   color: rgb(221,242,196) !important;
+}
+:deep(.n-checkbox){
+  --n-color-checked: rgb(242,232,196)!important;
+  --n-border-checked: 1px solid #F2C9C4 !important;
+  --n-border-focus: 1px solid #F2C9C4 !important;
+  --n-text-color: #F2C9C4 !important;
 }
 </style>
