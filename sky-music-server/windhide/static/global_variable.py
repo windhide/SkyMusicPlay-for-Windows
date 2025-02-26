@@ -54,6 +54,9 @@ class GlobalVariable:
     # 音乐转换进度条
     overall_progress = 0  # 总体进度
     now_translate_text = []
+    merge_min = 20
+    merge_max = 30
+    velocity_filter = 10
 
     # 演奏相关
     play_speed = 1  # 倍速

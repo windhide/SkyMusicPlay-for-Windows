@@ -16,14 +16,30 @@
     <n-button type="primary" ghost :loading="processFlag" @click="handleStartTranslate" style="margin-left: 25px;" color="#F2E8C4">
       step2.开始转换
     </n-button>
+
+    <div style="flex-basis: 100%;" />
+    <n-gradient-text  gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))">
+      力度过滤(低于毫秒)：
+    </n-gradient-text>
+    <n-input-number v-model:value="velocity_filter" style="flex-basis: 20%;" />
+
+    <div style="flex-basis: 100%;" />
+    <n-gradient-text  gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))">
+      动态合并阈值范围划分（动态取决于bmp计算）
+    </n-gradient-text>
+    <n-input-number v-model:value="merge_min" style="flex-basis: 20%;"/>
+    <n-gradient-text  gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))">
+      -
+    </n-gradient-text>
+    <n-input-number v-model:value="merge_max" style="flex-basis: 20%;"/>
     <n-checkbox-group v-model:value="chooseType" style="margin-left: 1px;">
-      <n-space item-style="display: flex;">
-        <n-checkbox value="2" label="光遇范围_2组音阶" />
-        <n-checkbox value="3" label="3组音阶" />
-        <n-checkbox value="4" label="4组音阶" />
-        <n-checkbox value="5" label="5组音阶" />
-        <n-checkbox value="6" label="6组音阶" />
-      </n-space>
+        <n-space item-style="display: flex;">
+          <n-checkbox value="2" label="光遇范围_2组音阶" />
+          <n-checkbox value="3" label="3组音阶" />
+          <n-checkbox value="4" label="4组音阶" />
+          <n-checkbox value="5" label="5组音阶" />
+          <n-checkbox value="6" label="6组音阶" />
+        </n-space>
     </n-checkbox-group>
     <n-divider style="margin:0px"/>
     <n-gradient-text type="info" :size="18" style="color: #F2C9C4">
@@ -74,14 +90,26 @@
 </template>
 
 <script lang="ts" setup>
-import { getData, sendData, getList } from "@renderer/utils/fetchUtils";
+import { getData, sendData, getList, setConfig } from "@renderer/utils/fetchUtils";
 import { h, onUnmounted, reactive, ref, watch } from "vue";
-import { NButton, NTag, useMessage } from "naive-ui";
+import { NButton, useMessage } from "naive-ui";
 
 const message = useMessage();
 const processFlag = ref(false);
 let progressInterval:any = null
 let chooseType:any = ref(['2'])
+
+let merge_min = ref(20)
+let merge_max = ref(30)
+let velocity_filter = ref(10)
+
+
+watch(merge_min, ()=>{ setConfig('merge_min', merge_min.value)})
+watch(merge_max, ()=>{ setConfig('merge_max', merge_max.value)})
+watch(velocity_filter, ()=>{ setConfig('velocity_filter', velocity_filter.value)})
+sendData("config_operate",{ "operate": "get", "name": "merge_min"}).then(res=>{ merge_min.value=res})
+sendData("config_operate",{ "operate": "get", "name": "merge_max"}).then(res=>{ merge_max.value=res})
+sendData("config_operate",{ "operate": "get", "name": "velocity_filter"}).then(res=>{ velocity_filter.value=res})
 
 function handleFinish() {
   reloadTable()

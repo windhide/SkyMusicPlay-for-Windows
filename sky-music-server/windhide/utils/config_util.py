@@ -25,6 +25,12 @@ def set_config(request: dict):
             GlobalVariable.shortcutStruct = request["value"]
         case 'keyMap':
             GlobalVariable.keyMap = request["value"]
+        case 'merge_min':
+            GlobalVariable.merge_min = int(request["value"])
+        case 'merge_max':
+            GlobalVariable.merge_max = int(request["value"])
+        case 'velocity_filter':
+            GlobalVariable.velocity_filter = int(request["value"])
 
 def get_config(request: dict):
     configValue = eval("GlobalVariable." + request["name"])

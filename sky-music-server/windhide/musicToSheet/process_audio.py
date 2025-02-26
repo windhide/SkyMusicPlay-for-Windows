@@ -15,8 +15,7 @@ special_note_mapping = {'C_c¹':{62:57,64:59,65:60,},'c_c²':{74:69,76:71,77:72,
 
 # 根据 BPM 动态调整时间合并阈值
 def get_dynamic_time_merge_threshold(bpm):
-    # return max(20, min(80, int(60000 / bpm / 4)))  # 限制阈值在 10-50ms 之间
-    return 0
+    return max(GlobalVariable.merge_min, min(GlobalVariable.merge_max, int(60000 / bpm / 4)))  # 限制阈值在 范围区间
 
 # 15 个音符与键盘按键的映射
 def get_bpm_from_midi(midi_file_path):
@@ -40,7 +39,7 @@ def process_midi_to_txt(input_path, output_path, version):
         if not instrument.is_drum:
             for note in instrument.notes:
                 pitch, time, velocity= note.pitch, int(note.start * 1000), note.velocity
-                if velocity < 10:
+                if velocity < GlobalVariable.velocity_filter:
                     continue
                 if pitch in note_to_key[version]:
                     notes.append({'time': time, 'key': note_to_key[version][pitch]})

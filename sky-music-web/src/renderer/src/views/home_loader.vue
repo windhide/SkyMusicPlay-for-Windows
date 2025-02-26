@@ -39,7 +39,6 @@
 
 <script setup lang="ts">
 import { useThemeVars, useDialog } from "naive-ui";
-import { GitPullRequest, LogoGithub, Build, CloudDownloadSharp } from "@vicons/ionicons5";
 
 const themeVars = useThemeVars();
 const headText = "如果您觉得好用可以赏我一杯咖啡☕";
