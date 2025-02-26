@@ -1,11 +1,22 @@
 <template>
-  <n-config-provider :theme="darkTheme" style="background-color: rgba(0, 0, 0, 0)">
-    <n-flex id="drag-area" justify="end" style="position: fixed; z-index: 200; right: 18px" :style="{
-      width: collapsed ? '90%' : '80%'
-    }">
+  <n-config-provider :theme="darkTheme" :style="{ opacity : transparency_number}" >
+    <n-flex id="drag-area" justify="end" style="position: fixed; z-index: 200; right: 18px" :style="{ width: collapsed ? '90%' : '80%'}">
       <n-popover style="border-radius: 17px; --n-color: rgba(47,47,55,1)" trigger="click">
         <template #trigger>
-          <n-button text size="large" type="warning" style="margin-top: 12px; font-size: 20px;" :round="false"> 
+          <n-button text size="large" color="#A3F6EC" style="margin-top: 12px; font-size: 20px;" :round="false"> 
+            <n-icon size="25px">
+              <ColorPaletteOutline />
+            </n-icon> 
+          </n-button>
+        </template>
+        <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))">透明度 </n-gradient-text>
+        <n-slider v-model:value="transparency_number" :step="0.01" :max="1" :min="0" style="width: 200px;"/>
+        <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))">背景颜色 </n-gradient-text>
+        <n-color-picker :show-alpha="false" v-model:value="colorPick"/>
+      </n-popover>
+      <n-popover style="border-radius: 17px; --n-color: rgba(47,47,55,1)" trigger="click">
+        <template #trigger>
+          <n-button text size="large" color="#D0BDF4" style="margin-top: 12px; font-size: 20px;" :round="false"> 
             <n-icon size="25px">
               <Settings48Regular />
             </n-icon> 
@@ -13,32 +24,32 @@
         </template>
         <n-switch size="small" v-model:value="is_compatibility_mode" @update:value="CompatibilityModeChange" :rail-style="railStyle"> 
             <template #checked>
-              <p style="color: rgba(94, 104, 81, 0.65);">兼容模式</p>
+              <p style="color: rgba(94, 104, 81, 0.75);">兼容模式</p>
             </template>
             <template #unchecked>
-              <p style="color: rgba(94, 104, 81, 0.65);">后台模式</p>
+              <p style="color: rgba(94, 104, 81, 0.75);">后台模式</p>
             </template>
           </n-switch> 
           <br>
           <n-switch size="small" v-model:value="isPostW" @update:value="PostWChange" :rail-style="railStyle" v-show="is_compatibility_mode != true"> 
               <template #checked>
-                <p style="color: rgba(94, 104, 81, 0.65);">队列模式</p>
+                <p style="color: rgba(94, 104, 81, 0.75);">队列模式</p>
               </template>
               <template #unchecked>
-                <p style="color: rgba(94, 104, 81, 0.65);">插队模式</p>
+                <p style="color: rgba(94, 104, 81, 0.75);">插队模式</p>
               </template>
           </n-switch>
           <br>
           <n-switch size="small" v-model:value="isRunnable" @update:value="RunnableChange" :rail-style="railStyle" v-show="is_compatibility_mode != true"> 
               <template #checked>
-                <p style="color: rgba(94, 104, 81, 0.65);">多核模式</p>
+                <p style="color: rgba(94, 104, 81, 0.75);">多核模式</p>
               </template>
               <template #unchecked>
-                <p style="color: rgba(94, 104, 81, 0.65);">单核模式</p>
+                <p style="color: rgba(94, 104, 81, 0.75);">单核模式</p>
               </template>
           </n-switch>
       </n-popover>
-      <n-button text :dashed="fixDashed" size="large" type="warning" style="margin-top: 12px; font-size: 20px;" @click="fixHandle">
+      <n-button text :dashed="fixDashed" size="large" color="#F2C9C4" style="margin-top: 12px; font-size: 20px;" @click="fixHandle">
         <n-icon size="25px">
           <Pin48Regular v-if="fixDashed" />
           <Pin48Filled v-else />
@@ -66,13 +77,22 @@
           <n-space vertical>
             <n-layout>
               <n-layout has-sider>
-                <n-layout-sider v-show="route.fullPath.indexOf('keyboard') == -1" bordered show-trigger
-                  collapse-mode="width" :collapsed-width="64" :width="150" :native-scrollbar="false"
-                  style="height: 100vh" @update:collapsed="collapsedHandle">
+                <n-layout-sider  v-show="route.fullPath.indexOf('keyboard') == -1" bordered show-trigger 
+                  collapse-mode="width" :collapsed-width="64" :width="150" :native-scrollbar="false" @update:collapsed="collapsedHandle"
+                  :style="{
+                    height: '100vh',
+                    backgroundColor: colorPick+ ' !important'
+                  }"
+                  >
                   <n-menu :collapsed-width="64" :collapsed-icon-size="22" :options="menuOptions"
                     @update:value="clickMenu" />
                 </n-layout-sider>
-                <n-layout style="padding: 30px 25px 0px 25px">
+                <n-layout 
+                :style="{
+                  padding: '30px 25px 0px 25px',
+                  backgroundColor: colorPick+' !important'
+                }"
+                >
                   <router-view />
                 </n-layout>
               </n-layout>
@@ -100,7 +120,8 @@ import {
   Flask,
   ImageOutline,
   SettingsOutline,
-  PlanetOutline
+  PlanetOutline,
+  ColorPaletteOutline
 } from '@vicons/ionicons5'
 import {
   Pin48Regular,
@@ -115,6 +136,10 @@ const collapsed = ref(false)
 const is_compatibility_mode = ref(false)
 const isPostW = ref(true)
 const isRunnable = ref(true)
+const transparency_number = ref(1.00)
+const colorPick = ref("#101014")
+
+
 function fixHandle() {
   if (fixDashed.value) {
     window.api.setAlwaysOnTop();
@@ -299,5 +324,15 @@ onMounted(() => {
   --n-item-text-color: rgba(221,242,196, 0.82) !important;
   --n-item-text-color-hover: rgb(242,201,196) !important;
   color: rgba(94, 104, 81, 0.82);
+}
+:deep(.n-slider-rail__fill){
+  --n-fill-color-hover: #A3F6EC !important;
+  background-color: #A3F6EC !important;
+}
+</style>
+
+<style>
+.n-card {
+  background-color: rgba(242, 201, 196, 0) !important;
 }
 </style>

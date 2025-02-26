@@ -126,23 +126,47 @@
         </n-button>
     </n-row>
   </n-flex>
-  <n-card style="margin-top: 15px;">
+  <n-card style="margin-left: -16px;" :bordered="false">
     <n-tabs type="bar" animated size="small" @update:value="handleUpdateValue" @before-leave="handleBeforeLeave" :value="tabsNumber">
       <n-tab-pane name="systemMusic" tab="自带歌曲">
         <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :min-row-height="48" ref="systemMusic"
-          :max-height="430" :virtual-scroll="music.systemMusic?.length > 7" :row-props="MusicSelect" :row-class-name="rowClassName" />
+          :max-height="430" :virtual-scroll="music.systemMusic?.length > 7" :row-props="MusicSelect" :row-class-name="rowClassName" 
+          style="
+            --n-td-color: rgba(57, 57, 62, 0);
+            --n-th-color-hover: rgba(57, 57, 62, 0);
+            --n-th-color: rgba(57, 57, 62, 0);
+            --n-td-color-hover: rgba(0, 0, 0, 0.2);
+          "/>
       </n-tab-pane>
       <n-tab-pane name="myImport" tab="导入歌曲" ref="myImport">
         <n-data-table :columns="myImportColumns" :data="music.myImport" :bordered="false" :min-row-height="48" ref="myImport"
-        :max-height="430" :virtual-scroll="music.myImport?.length > 7" :row-props="MusicSelect"  :row-class-name="rowClassName" />
+        :max-height="430" :virtual-scroll="music.myImport?.length > 7" :row-props="MusicSelect"  :row-class-name="rowClassName"
+        style="
+            --n-td-color: rgba(57, 57, 62, 0);
+            --n-th-color-hover: rgba(57, 57, 62, 0);
+            --n-th-color: rgba(57, 57, 62, 0);
+            --n-td-color-hover: rgba(0, 0, 0, 0.2);
+          "/>
       </n-tab-pane>
       <n-tab-pane name="myTranslate" tab="转换歌曲" ref="myTranslate">
         <n-data-table :columns="musicColumns" :data="music.myTranslate" :bordered="false" :min-row-height="48" ref="myTranslate"
-        :max-height="430" :virtual-scroll="music.myTranslate?.length > 7" :row-props="MusicSelect" :row-class-name="rowClassName"  />
+        :max-height="430" :virtual-scroll="music.myTranslate?.length > 7" :row-props="MusicSelect" :row-class-name="rowClassName" 
+        style="
+            --n-td-color: rgba(57, 57, 62, 0);
+            --n-th-color-hover: rgba(57, 57, 62, 0);
+            --n-th-color: rgba(57, 57, 62, 0);
+            --n-td-color-hover: rgba(0, 0, 0, 0.2);
+          "/>
       </n-tab-pane>
       <n-tab-pane name="myFavorite" tab="收藏" ref="myFavorite">
         <n-data-table :columns="favoritColumns" :data="music.myFavorite" :bordered="false" :min-row-height="48" ref="myFavorite"
-        :max-height="430" :virtual-scroll="music.myFavorite?.length > 7" :row-props="MusicSelect"  :row-class-name="rowClassName" />
+        :max-height="430" :virtual-scroll="music.myFavorite?.length > 7" :row-props="MusicSelect"  :row-class-name="rowClassName"
+        style="
+            --n-td-color: rgba(57, 57, 62, 0);
+            --n-th-color-hover: rgba(57, 57, 62, 0);
+            --n-th-color: rgba(57, 57, 62, 0);
+            --n-td-color-hover: rgba(0, 0, 0, 0.2);
+          "/>
       </n-tab-pane>
       <template #suffix>
         <n-input v-model:value="searchText" round placeholder="搜索"

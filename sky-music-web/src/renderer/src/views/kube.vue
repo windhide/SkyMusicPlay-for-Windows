@@ -16,13 +16,11 @@
     <n-button type="primary" ghost :loading="processFlag" @click="handleStartTranslate" style="margin-left: 25px;" color="#F2E8C4">
       step2.开始转换
     </n-button>
-
     <div style="flex-basis: 100%;" />
     <n-gradient-text  gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))">
       力度过滤(低于毫秒)：
     </n-gradient-text>
     <n-input-number v-model:value="velocity_filter" style="flex-basis: 20%;" />
-
     <div style="flex-basis: 100%;" />
     <n-gradient-text  gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))">
       动态合并阈值范围划分（动态取决于bmp计算）
@@ -32,7 +30,7 @@
       -
     </n-gradient-text>
     <n-input-number v-model:value="merge_max" style="flex-basis: 20%;"/>
-    <n-checkbox-group v-model:value="chooseType" style="margin-left: 1px;">
+    <n-checkbox-group v-model:value="chooseType" style="margin-left: 1px; margin-top: 5px;">
         <n-space item-style="display: flex;">
           <n-checkbox value="2" label="光遇范围_2组音阶" />
           <n-checkbox value="3" label="3组音阶" />
@@ -42,48 +40,49 @@
         </n-space>
     </n-checkbox-group>
     <n-divider style="margin:0px"/>
-    <n-gradient-text type="info" :size="18" style="color: #F2C9C4">
-      当前任务
-      {{
-        now_translate_text.process == undefined && now_translate_text.text == undefined
-          ? "已完成"
-          : now_translate_text.process + " " + now_translate_text.text
-      }}
-    </n-gradient-text>
-    <div style="width: 100%">
-      <n-gradient-text type="info" style="color: #F2C9C4"> 总体进度 </n-gradient-text>
-      <n-progress
-        color="#F2C9C4"
-        style="max-width: 50%"
-        type="line"
-        :percentage="progress.overall_progress"
-        indicator-placement="inside"
-        processing
-      />
-    </div>
+    <div style="flex-basis: 100%;" />
+    <n-gradient-text type="info" style="color: #F2C9C4; flex-basis: 10%"> 转换进度 </n-gradient-text>
+    <n-progress
+      color="#F2C9C4"
+      style="flex-basis: 80%"
+      type="line"
+      :percentage="progress.overall_progress"
+      indicator-placement="inside"
+      processing
+    />
   </n-flex>
 
-  <n-card style="margin-top: 20px">
+  <n-card style="margin-left: -22px;" :bordered="false">
     <n-tabs type="line" animated @update:value="handleUpdateValue">
       <n-tab-pane name="translateOriginalMusic" tab="未转换歌曲">
         <n-data-table
           :columns="originalColumns"
           :data="music.translateOriginalMusic"
           :bordered="false"
-          :max-height="380"
+          :max-height="290"
           :scroll-x="100"
           row-class-name="td_css"
-        />
+          style="
+            --n-td-color: rgba(57, 57, 62, 0);
+            --n-th-color-hover: rgba(57, 57, 62, 0);
+            --n-th-color: rgba(57, 57, 62, 0);
+            --n-td-color-hover: rgba(0, 0, 0, 0.2);
+          "/>
       </n-tab-pane>
       <n-tab-pane name="myTranslate" tab="已转换歌曲">
         <n-data-table
           :columns="translateColumns"
           :data="music.myTranslate"
           :bordered="false"
-          :max-height="380"
+          :max-height="290"
           :scroll-x="100"
           row-class-name="td_css"
-        />
+          style="
+            --n-td-color: rgba(57, 57, 62, 0);
+            --n-th-color-hover: rgba(57, 57, 62, 0);
+            --n-th-color: rgba(57, 57, 62, 0);
+            --n-td-color-hover: rgba(0, 0, 0, 0.2);
+          "/>
       </n-tab-pane>
     </n-tabs>
   </n-card>

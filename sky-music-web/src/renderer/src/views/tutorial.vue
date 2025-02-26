@@ -8,7 +8,7 @@
     </n-button>
     <n-button type="primary" ghost :loading="processFlag" @click="transfer" color="#F2E8C4"> 保存可视化乐谱到桌面</n-button>
   </n-flex>
-  <n-card style="margin-top: 20px">
+  <n-card  style="margin-left: -22px;" :bordered="false">
     <n-tabs
       type="bar"
       animated
@@ -26,7 +26,12 @@
           :virtual-scroll="music.systemMusic?.length > 7"
           :row-props="MusicSelect"
           row-class-name="td_css"
-        />
+          style="
+            --n-td-color: rgba(57, 57, 62, 0);
+            --n-th-color-hover: rgba(57, 57, 62, 0);
+            --n-th-color: rgba(57, 57, 62, 0);
+            --n-td-color-hover: rgba(0, 0, 0, 0.2);
+          "/>
       </n-tab-pane>
       <n-tab-pane name="myImport" tab="导入歌曲">
         <n-data-table
@@ -38,7 +43,12 @@
           :virtual-scroll="music.myImport?.length > 7"
           :row-props="MusicSelect"
           row-class-name="td_css"
-        />
+          style="
+            --n-td-color: rgba(57, 57, 62, 0);
+            --n-th-color-hover: rgba(57, 57, 62, 0);
+            --n-th-color: rgba(57, 57, 62, 0);
+            --n-td-color-hover: rgba(0, 0, 0, 0.2);
+          "/>
       </n-tab-pane>
       <n-tab-pane name="myTranslate" tab="转换歌曲">
         <n-data-table
@@ -50,7 +60,12 @@
           :virtual-scroll="music.myTranslate?.length > 7"
           :row-props="MusicSelect"
           row-class-name="td_css"
-        />
+          style="
+            --n-td-color: rgba(57, 57, 62, 0);
+            --n-th-color-hover: rgba(57, 57, 62, 0);
+            --n-th-color: rgba(57, 57, 62, 0);
+            --n-td-color-hover: rgba(0, 0, 0, 0.2);
+          "/>
       </n-tab-pane>
       <n-tab-pane name="myFavorite" tab="收藏">
         <n-data-table
@@ -62,7 +77,12 @@
           :virtual-scroll="music.myFavorite?.length > 7"
           :row-props="MusicSelect"
           row-class-name="td_css"
-        />
+          style="
+            --n-td-color: rgba(57, 57, 62, 0);
+            --n-th-color-hover: rgba(57, 57, 62, 0);
+            --n-th-color: rgba(57, 57, 62, 0);
+            --n-td-color-hover: rgba(0, 0, 0, 0.2);
+          "/>
       </n-tab-pane>
       <template #suffix>
         <n-input
