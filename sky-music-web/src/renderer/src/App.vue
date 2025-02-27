@@ -119,8 +119,8 @@ import {
   RemoveSharp,
   Flask,
   ImageOutline,
-  SettingsOutline,
-  PlanetOutline,
+  Settings,
+  PlanetSharp,
   ColorPaletteOutline
 } from '@vicons/ionicons5'
 import {
@@ -220,12 +220,12 @@ const menuOptions = [
   {
     label: "快捷键",
     key: "shortcut",
-    icon: renderIcon(PlanetOutline),
+    icon: renderIcon(PlanetSharp),
   },
   {
     label: "设置",
     key: "setting",
-    icon: renderIcon(SettingsOutline),
+    icon: renderIcon(Settings),
   }
 ];
 
