@@ -20,6 +20,7 @@ from windhide.thread.queue_thread import music_start_tasks
 from windhide.thread.shortcut_thread import startThread as shortcut_thread
 from windhide.utils.auto_util import auto_click_fire, shutdown, auto_candles_run
 from windhide.utils.config_util import set_config, get_config, favorite_music, convert_sheet, drop_file
+from windhide.utils.hwnd_utils import get_running_apps, get_running_apps_by_struct
 from windhide.utils.ocr_follow_util import set_next_sheet, get_key_position, test_key_model_position, \
     open_follow
 from windhide.utils.ocr_heart_utils import get_friend_model_position
@@ -132,6 +133,18 @@ def config_operate(request: dict):
             return get_key_position(float(request["conf"]))
         case 'cpu_type':
             return True if GlobalVariable.cpu_type == "AMD" else False
+        case 'hwnd_get':
+            return  get_running_apps()
+        case 'hwnd_get_now':
+            if GlobalVariable.window["hWnd"] is None:
+                return "Nothing here"
+            else:
+                return GlobalVariable.hwnd_title
+        case 'hwnd_set':
+            if request["value"] == 'reset':
+                GlobalVariable.is_custom_hwnd = False
+            else:
+                return get_running_apps_by_struct(request["value"])
     return "ok"
 
 @app.post("/follow")

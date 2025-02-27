@@ -40,6 +40,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/setting',
     name: 'setting',
     component: () => import('../views/setting.vue')
+  },
+  {
+    path: '/hwndHandle',
+    name: 'hwndHandle',
+    component: () => import('../views/hwndHandle.vue')
   }
 ]
 

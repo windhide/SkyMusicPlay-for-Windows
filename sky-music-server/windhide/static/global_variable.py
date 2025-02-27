@@ -9,6 +9,9 @@ class GlobalVariable:
     is_post_w = False  # 是否插队模式
 
     # 窗口相关
+    is_custom_hwnd = False
+    hwnd_title = "Sky.exe"
+    hwnd_select_struct = {}
     window = {
         "hWnd": None,
         "width": 0,

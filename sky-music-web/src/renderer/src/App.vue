@@ -121,7 +121,8 @@ import {
   ImageOutline,
   Settings,
   PlanetSharp,
-  ColorPaletteOutline
+  ColorPaletteOutline,
+  PulseSharp
 } from '@vicons/ionicons5'
 import {
   Pin48Regular,
@@ -226,6 +227,11 @@ const menuOptions = [
     label: "设置",
     key: "setting",
     icon: renderIcon(Settings),
+  },
+  {
+    label: "句柄",
+    key: "hwndHandle",
+    icon: renderIcon(PulseSharp),
   }
 ];
 
