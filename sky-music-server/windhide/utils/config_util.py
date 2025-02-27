@@ -1,5 +1,6 @@
 import os
 import shutil
+
 from windhide.musicToSheet.music2html import generatorSheetHtml
 from windhide.static.global_variable import GlobalVariable
 from windhide.utils.path_util import getResourcesPath, convert_notes_to_delayed_format

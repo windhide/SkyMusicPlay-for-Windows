@@ -1,6 +1,3 @@
-from pynput import keyboard
-
-
 class GlobalVariable:
     # 运行环境配置
     isProd = False

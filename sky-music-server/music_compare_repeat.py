@@ -1,7 +1,7 @@
+import difflib
+import hashlib
 import os
 import shutil
-import hashlib
-import difflib
 from collections import defaultdict
 
 

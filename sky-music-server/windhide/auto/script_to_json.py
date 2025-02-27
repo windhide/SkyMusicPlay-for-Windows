@@ -1,6 +1,7 @@
 import json
 import re
 from os import path
+
 from charset_normalizer import detect
 
 from windhide.utils.path_util import getResourcesPath

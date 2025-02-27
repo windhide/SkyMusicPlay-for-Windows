@@ -1,6 +1,8 @@
 import chardet
+
 from windhide.playRobot import intel_robot, amd_robot
 from windhide.static.global_variable import GlobalVariable
+
 
 def detect_encoding(file_path):
     with open(file_path, 'rb') as file:

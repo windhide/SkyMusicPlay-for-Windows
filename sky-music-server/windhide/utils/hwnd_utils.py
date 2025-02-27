@@ -1,7 +1,9 @@
+import os
+
 import psutil
 import win32gui
 import win32process
-import os
+
 from windhide.static.global_variable import GlobalVariable
 
 

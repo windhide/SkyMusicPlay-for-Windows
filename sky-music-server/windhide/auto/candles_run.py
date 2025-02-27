@@ -1,5 +1,5 @@
-import time
 import threading
+import time
 
 from windhide.static.global_variable import GlobalVariable
 
