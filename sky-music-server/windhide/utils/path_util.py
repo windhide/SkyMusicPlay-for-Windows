@@ -1,13 +1,14 @@
-import os
 import json
+import os
 import re
 
 import chardet
+
 from windhide.static.global_variable import GlobalVariable
 
 
 def matchKey(key):
-    match = re.search(r'(Key\d+)', key)
+    match = re.search(r'(Key-?\d+)', key)
     return match.group(1)
 
 def convert_notes_to_delayed_format(fileName, type):
