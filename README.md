@@ -1,7 +1,7 @@
 ﻿# SkyMusicPlay-for-Windows
 
 <p align="center">
-  <a href="https://github.com/windhide/SkyMusicPlay-for-Windows"><img src="https://pic1.imgdb.cn/item/67bfcd95d0e0a243d4067e7a.png" width="256" height="256" alt="SkyMusicPlay-for-Windows"></a>
+  <a href="https://github.com/windhide/SkyMusicPlay-for-Windows"><img src="https://files.superbed.cc/store/images/7e/7a/67bfcd95d0e0a243d4067e7a.png" width="256" height="256" alt="SkyMusicPlay-for-Windows"></a>
 <h1 align = "center">星星弹琴软件</h1>
 <div align = "center">
         <a href="https://docs.sayu-bot.com/" target="_blank">教程文档</a> &nbsp; · &nbsp;
