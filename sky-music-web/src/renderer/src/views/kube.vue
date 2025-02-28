@@ -104,7 +104,7 @@
 
 <script lang="ts" setup>
 import { getData, sendData, getList, setConfig } from "@renderer/utils/fetchUtils";
-import { h, onUnmounted, reactive, ref, watch } from "vue";
+import { h, onUnmounted, reactive, ref, watch, CSSProperties } from "vue";
 import { NButton, useMessage } from "naive-ui";
 
 const message = useMessage();
