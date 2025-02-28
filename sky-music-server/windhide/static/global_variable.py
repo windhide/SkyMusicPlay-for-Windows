@@ -57,6 +57,7 @@ class GlobalVariable:
     merge_min = 20
     merge_max = 30
     velocity_filter = 10
+    is_singular = True
 
     # 演奏相关
     play_speed = 1  # 倍速

@@ -32,6 +32,8 @@ def set_config(request: dict):
             GlobalVariable.merge_max = int(request["value"])
         case 'velocity_filter':
             GlobalVariable.velocity_filter = int(request["value"])
+        case 'is_singular':
+            GlobalVariable.is_singular = request["value"]
 
 def get_config(request: dict):
     configValue = eval("GlobalVariable." + request["name"])

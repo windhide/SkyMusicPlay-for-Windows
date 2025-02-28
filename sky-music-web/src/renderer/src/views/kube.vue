@@ -16,6 +16,20 @@
     <n-button type="primary" ghost :loading="processFlag" @click="handleStartTranslate" style="margin-left: 25px;" color="#F2E8C4">
       step2.开始转换
     </n-button>
+    <n-switch size="medium" v-model:value="isSingular" @update:value="singularChange" :rail-style="railStyle" :round="false"> 
+        <template #checked-icon>
+          🤔
+        </template>
+        <template #unchecked-icon>
+          🧐
+        </template>
+        <template #checked>
+          <p style="color: rgba(94, 104, 81, 1);">单数键</p>
+        </template>
+        <template #unchecked>
+          <p style="color: rgba(94, 104, 81, 1);">双数键</p>
+        </template>
+    </n-switch>
     <div style="flex-basis: 100%;" />
     <n-gradient-text  gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))">
       力度过滤(低于毫秒)：
@@ -97,6 +111,7 @@ const message = useMessage();
 const processFlag = ref(false);
 let progressInterval:any = null
 let chooseType:any = ref(['2'])
+let isSingular = ref(true)
 
 let merge_min = ref(20)
 let merge_max = ref(30)
@@ -179,6 +194,32 @@ const translateColumns = [
   },
 ];
 
+function railStyle({ focused, checked }){
+  const style: CSSProperties = {}
+  if (checked) {
+    style.background = '#F2C9C4'
+    if (focused) {
+      style.boxShadow = '0 0 0 2px #F2C9C440'
+    }
+  }
+  else {
+    style.background = '#F2E8C4'
+    if (focused) {
+      style.boxShadow = '0 0 0 2px #F2E8C440'
+    }
+  }
+  return style
+}
+
+
+function singularChange(value: boolean){
+  sendData("config_operate",{
+    operate: "set",
+    name: "is_singular",
+    value
+  })
+}
+
 /**
  * 处理原始音乐删除
  */
@@ -186,7 +227,6 @@ async function originalClick(name: string) {
   try {
     const baseName = name.slice(0, name.lastIndexOf("."));
     const suffix = name.match(/(\.[^.]*)$/)?.[0] || "";
-
     await sendData("config_operate", {
       fileName: baseName,
       type: "translateOriginalMusic",
