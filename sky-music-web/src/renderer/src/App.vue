@@ -22,7 +22,7 @@
             </n-icon> 
           </n-button>
         </template>
-        <n-switch size="small" v-model:value="is_compatibility_mode" @update:value="CompatibilityModeChange" :rail-style="railStyle"> 
+        <n-switch size="small" v-model:value="is_compatibility_mode" @update:value="CompatibilityModeChange" :rail-style="railStyle" :round="false"> 
             <template #checked>
               <p style="color: rgba(94, 104, 81, 0.75);">兼容模式</p>
             </template>
@@ -31,7 +31,7 @@
             </template>
           </n-switch> 
           <br>
-          <n-switch size="small" v-model:value="isPostW" @update:value="PostWChange" :rail-style="railStyle" v-show="is_compatibility_mode != true"> 
+          <n-switch size="small" v-model:value="isPostW" @update:value="PostWChange" :rail-style="railStyle" v-show="is_compatibility_mode != true" :round="false"> 
               <template #checked>
                 <p style="color: rgba(94, 104, 81, 0.75);">队列模式</p>
               </template>
@@ -40,7 +40,7 @@
               </template>
           </n-switch>
           <br>
-          <n-switch size="small" v-model:value="isRunnable" @update:value="RunnableChange" :rail-style="railStyle" v-show="is_compatibility_mode != true"> 
+          <n-switch size="small" v-model:value="isRunnable" @update:value="RunnableChange" :rail-style="railStyle" v-show="is_compatibility_mode != true" :round="false"> 
               <template #checked>
                 <p style="color: rgba(94, 104, 81, 0.75);">多核模式</p>
               </template>
@@ -84,15 +84,15 @@
                     backgroundColor: colorPick+ ' !important'
                   }"
                   >
-                  <n-menu :collapsed-width="64" :collapsed-icon-size="22" :options="menuOptions"
+                  <n-menu :collapsed-width="64" :collapsed-icon-size="25" :options="menuOptions"
                     @update:value="clickMenu" />
                 </n-layout-sider>
-                <n-layout 
-                :style="{
-                  padding: '30px 25px 0px 25px',
-                  backgroundColor: colorPick+' !important'
-                }"
-                >
+                  <n-layout 
+                  :style="{
+                    padding: '30px 25px 0px 25px',
+                    backgroundColor: colorPick+' !important'
+                  }"
+                  >
                   <router-view />
                 </n-layout>
               </n-layout>
@@ -214,14 +214,13 @@ const menuOptions = [
     icon: renderIcon(CubeSharp),
   },
   {
-    label: "开发者",
-    key: "magicTools",
-    icon: renderIcon(Flask),
-  },
-  {
     label: "快捷键",
     key: "shortcut",
     icon: renderIcon(PlanetSharp),
+  },
+  {
+    key: "kube",
+    type: "divider"
   },
   {
     label: "设置",
@@ -232,7 +231,12 @@ const menuOptions = [
     label: "句柄",
     key: "hwndHandle",
     icon: renderIcon(PulseSharp),
-  }
+  },
+  {
+    label: "开发者",
+    key: "magicTools",
+    icon: renderIcon(Flask),
+  },
 ];
 
 const clickMenu = (key: string) => {
@@ -325,6 +329,7 @@ onMounted(() => {
   --n-item-icon-color-collapsed: rgba(255, 255, 255, 0.9);
   --n-item-color-active: rgba(242,232,196,0.15) !important;
   --n-item-color-active-hover: rgba(242,232,196,0.3) !important;
+  --n-item-icon-color-collapsed: rgba(221,242,196, 0.82) !important;
 }
 :deep(.n-menu-item-content){
   --n-item-text-color: rgba(221,242,196, 0.82) !important;
@@ -340,5 +345,9 @@ onMounted(() => {
 <style>
 .n-card {
   background-color: rgba(242, 201, 196, 0) !important;
+}
+.n-menu-divider {
+  margin-bottom: 370px;
+  background-color: rgba(242, 201, 196, 0);
 }
 </style>
