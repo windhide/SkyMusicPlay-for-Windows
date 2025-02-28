@@ -40,12 +40,12 @@
           from: 'rgb(242,201,196)',
           to: 'rgb(221,242,196)',
         }"
-        id="WindHide"
+        id="hwnd"
       >
       Now Hwnd > {{ nowHwnd == null ? 'nothing here' : nowHwnd }}
     </n-gradient-text>
     <n-data-table :columns="hwndColumns" :data="hwndColumnsList" :bordered="false" :min-row-height="48" ref="systemMusic"
-          :max-height="430" :virtual-scroll="hwndColumnsList?.length > 7" row-class-name="td_css"
+          :max-height="475" :virtual-scroll="hwndColumnsList?.length > 7" row-class-name="td_css"
           style="
             --n-td-color: rgba(57, 57, 62, 0);
             --n-th-color-hover: rgba(57, 57, 62, 0);
@@ -176,6 +176,12 @@ onUnmounted(() => {
   margin-bottom: 9px;
 }
 
+#hwnd {
+  font-size: 20px;
+  font-weight: bolder;
+  font-family: "Shrikhand";
+  margin-bottom: 9px;
+}
 #father {
   margin-top: 10px;
   display: flex;
