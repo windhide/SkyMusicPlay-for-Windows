@@ -24,10 +24,10 @@ class HeartFireThread(threading.Thread):
         """线程启动后执行的主逻辑"""
         self._running = True
         resetGameFrame()
-        mouse_wheel_scroll("down")
+        # mouse_wheel_scroll("down")
+        # time.sleep(2)
+        # key_press("g")
         time.sleep(2)
-        key_press("g")
-        time.sleep(3)
         # 先判断是不是第一页
         while self._running:
             friend_button = get_friend_model_position(0.5)["button"]
