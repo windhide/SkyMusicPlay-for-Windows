@@ -23,14 +23,14 @@ pyautogui.FAILSAFE = False
 def send_single_key_to_window_task(key):
     """发送单个按键，减少延迟"""
     key_down(key)
-    time.sleep(GlobalVariable.sustain_time)
+    time.sleep(GlobalVariable.duration)
     key_up(key)
 
 def send_multiple_key_to_window_task(keys):
     """发送组合按键，减少延迟"""
     for key in keys:
         key_down(key)
-    time.sleep(GlobalVariable.sustain_time)
+    time.sleep(GlobalVariable.duration)
     for key in keys:
         key_up(key)
 
@@ -51,14 +51,14 @@ def send_multiple_key_to_window(keys):
 def send_single_key_to_window_follow(key):
     """发送单个按键，减少延迟（单线程）"""
     keyboard.press(key)
-    time.sleep(GlobalVariable.sustain_time)
+    time.sleep(GlobalVariable.duration)
     keyboard.release(key)
 
 def send_multiple_key_to_window_follow(keys):
     """发送组合按键，减少延迟（单线程）"""
     for key in keys:
         keyboard.press(key)
-    time.sleep(GlobalVariable.sustain_time)
+    time.sleep(GlobalVariable.duration)
     for key in keys:
         keyboard.release(key)
 

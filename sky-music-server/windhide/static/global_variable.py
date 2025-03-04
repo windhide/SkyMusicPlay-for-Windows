@@ -62,7 +62,7 @@ class GlobalVariable:
     # 演奏相关
     play_speed = 1  # 倍速
     delay_interval = 0  # 0
-    sustain_time = 0.01  # 20毫秒
+    duration = 0.01  # 20毫秒
 
     # 跟弹相关
     follow_music = ""

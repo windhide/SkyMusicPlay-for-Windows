@@ -69,7 +69,7 @@
           <n-row gutter="26">
             <n-col :span="15">
               <n-gradient-text type="info" :size="13" style="color: #F2C9C4; display: block;">延音设置</n-gradient-text>
-              <n-radio-group v-model:value="sustainStatus" name="radiogroup" style="margin-top: 5px; margin-bottom: 5px">
+              <n-radio-group v-model:value="durationStatus" name="radiogroup" style="margin-top: 5px; margin-bottom: 5px">
                 <n-space>
                   <n-radio key="system" value="system">系统自带</n-radio>
                   <n-radio key="random" value="random">随机</n-radio>
@@ -77,13 +77,13 @@
                 </n-space>
               </n-radio-group>
             </n-col>
-            <n-col v-show="sustainStatus == 'custom'" :span="5" style="margin-left: -40px; margin-top: 25px;">
-              <n-input-number step="0.01" v-model:value="sustainSpeed" size="tiny" :min="0" :max="2" placeholder="延音" />
+            <n-col v-show="durationStatus == 'custom'" :span="5" style="margin-left: -40px; margin-top: 25px;">
+              <n-input-number step="0.01" v-model:value="durationSpeed" size="tiny" :min="0" :max="2" placeholder="延音" />
             </n-col>
-            <n-col v-show="sustainStatus == 'random'" :span="11" style="margin-left: -40px; margin-top: 25px;">
-              <n-input-number step="0.01" v-model:value="sustainRandomStart" size="tiny" :min="0" :max="2" placeholder="延音" style="width: 80px; float: inline-start;"  />
+            <n-col v-show="durationStatus == 'random'" :span="11" style="margin-left: -40px; margin-top: 25px;">
+              <n-input-number step="0.01" v-model:value="durationRandomStart" size="tiny" :min="0" :max="2" placeholder="延音" style="width: 80px; float: inline-start;"  />
               <span style="margin-left: 9px;">&nbsp;-&nbsp;</span>
-              <n-input-number step="0.01" v-model:value="sustainRandomEnd" size="tiny" :min="0" :max="2" placeholder="延音" style="width: 80px; float: inline-end;"  />
+              <n-input-number step="0.01" v-model:value="durationRandomEnd" size="tiny" :min="0" :max="2" placeholder="延音" style="width: 80px; float: inline-end;"  />
             </n-col>
           </n-row>
           <n-row gutter="12">
@@ -235,7 +235,7 @@ let socket
 const searchText = ref('')
 const nowState: any = ref('stop') // 当前播放状态
 const delayStatus = ref('system')
-const sustainStatus = ref('system')
+const durationStatus = ref('system')
 const isPlay = ref(false)
 const active = ref(false)
 const placement = ref<DrawerPlacement>('left')
@@ -374,9 +374,9 @@ const musicListColumns = [
 const progress = ref(0.0) // 播放进度条
 const playSpeed = ref(1) // 播放速度
 const delaySpeed: any = ref(0.01) // 延迟设置
-const sustainSpeed: any = ref(0.01) // 延音设置
-const sustainRandomStart: any = ref(0.5)
-const sustainRandomEnd: any = ref(1.5)
+const durationSpeed: any = ref(0.01) // 延音设置
+const durationRandomStart: any = ref(0.5)
+const durationRandomEnd: any = ref(1.5)
 const delayRandomStart: any = ref(0.01)
 const delayRandomEnd: any = ref(0.06)
 let clickTimeout: any = null
@@ -689,20 +689,20 @@ watch(delayStatus, () => {
   }
 })
 
-let sustainInterval: any = null
-watch(sustainStatus, () => {
-  switch (sustainStatus.value) {
+let durationInterval: any = null
+watch(durationStatus, () => {
+  switch (durationStatus.value) {
     case 'system':
-      sustainSpeed.value = 0.01
-      clearInterval(sustainInterval)
+      durationSpeed.value = 0.01
+      clearInterval(durationInterval)
       break
     case 'random':
-      sustainInterval = setInterval(() => {
-        sustainSpeed.value = (Math.random() * (sustainRandomEnd.value - sustainRandomStart.value) + sustainRandomStart.value).toFixed(3)
+      durationInterval = setInterval(() => {
+        durationSpeed.value = (Math.random() * (durationRandomEnd.value - durationRandomStart.value) + durationRandomStart.value).toFixed(3)
       }, 1000)
       break
     case 'custom':
-      clearInterval(sustainInterval)
+      clearInterval(durationInterval)
       break
   }
 })
@@ -710,8 +710,8 @@ watch(sustainStatus, () => {
 watch(delaySpeed, () => {
   setConfig('delay_interval', delaySpeed.value)
 })
-watch(sustainSpeed, () => {
-  setConfig('sustain_time', sustainSpeed.value)
+watch(durationSpeed, () => {
+  setConfig('duration_time', durationSpeed.value)
 })
 watch(playSpeed, () => {
   setConfig('play_speed', playSpeed.value)

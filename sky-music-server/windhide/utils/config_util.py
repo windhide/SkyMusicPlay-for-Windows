@@ -10,8 +10,8 @@ def set_config(request: dict):
     match request["name"]:
         case 'delay_interval':
             GlobalVariable.delay_interval = float(request["value"])
-        case 'sustain_time':
-            GlobalVariable.sustain_time = float(request["value"])
+        case 'duration':
+            GlobalVariable.duration = float(request["value"])
         case 'set_progress':
             GlobalVariable.set_progress = float(request["value"])
         case 'play_speed':
