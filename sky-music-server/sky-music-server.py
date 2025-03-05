@@ -12,7 +12,6 @@ import uvicorn
 from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
-from windhide.auto.script_to_json import script_to_json
 from windhide.musicToSheet.process_audio import process_directory_with_progress
 from windhide.playRobot import amd_robot, intel_robot
 from windhide.static.global_variable import GlobalVariable
@@ -20,7 +19,7 @@ from windhide.thread.frame_alive_thread import monitor_process
 from windhide.thread.hwnd_check_thread import start_thread as hwnd_check_thread
 from windhide.thread.queue_thread import music_start_tasks
 from windhide.thread.shortcut_thread import startThread as shortcut_thread
-from windhide.utils.auto_util import auto_click_fire, shutdown, auto_candles_run
+from windhide.utils.auto_util import auto_click_fire, shutdown
 from windhide.utils.config_util import set_config, get_config, favorite_music, convert_sheet, drop_file
 from windhide.utils.hwnd_utils import get_running_apps, get_running_apps_by_struct
 from windhide.utils.ocr_follow_util import set_next_sheet, get_key_position, test_key_model_position, \
@@ -166,12 +165,6 @@ def auto(request: dict):
             auto_click_fire()
         case 'shutdown':
             shutdown()
-
-@app.post("/autoScriptUpload")
-async def create_upload_files(file: UploadFile):
-    json = await script_to_json(await file.read(),file.filename)
-    await auto_candles_run("developer", json)
-    return "ok"
 
 @app.post("/test")
 def test(request: dict):
