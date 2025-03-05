@@ -114,7 +114,7 @@ def config_operate(request: dict):
             return  get_running_apps()
         case 'hwnd_get_now':
             if GlobalVariable.window["hWnd"] is None:
-                return "Nothing here"
+                return "Nothing"
             else:
                 return GlobalVariable.hwnd_title
         case 'hwnd_set':

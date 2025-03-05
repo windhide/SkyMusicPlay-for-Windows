@@ -7,7 +7,7 @@
       }"
       id="WindHide"
     >
-    ! ! ! W A R N I N G ! ! !
+    W A R N I N G
   </n-gradient-text>
     <n-highlight style="margin-bottom: 5px; color: #DDF2C4;" :text="headText" :patterns="patterns" :highlight-style="{
       padding: '0 6px',
@@ -42,7 +42,7 @@
         }"
         id="hwnd"
       >
-      Now Hwnd > {{ nowHwnd == null ? 'nothing here' : nowHwnd }}
+      Now Hwnd > {{ nowHwnd == null ? 'Nothing' : nowHwnd }}
     </n-gradient-text>
     <n-data-table :columns="hwndColumns" :data="hwndColumnsList" :bordered="false" :min-row-height="48" ref="systemMusic"
           :max-height="475" :virtual-scroll="hwndColumnsList?.length > 7" row-class-name="td_css"
