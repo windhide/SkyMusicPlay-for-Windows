@@ -34,6 +34,10 @@ def set_config(request: dict):
             GlobalVariable.velocity_filter = int(request["value"])
         case 'is_singular':
             GlobalVariable.is_singular = request["value"]
+        case 'semitone_switch':
+            GlobalVariable.semitone_switch = request["value"]
+        case 'detail_switch':
+            GlobalVariable.detail_switch = request["value"]
 
 def get_config(request: dict):
     configValue = eval("GlobalVariable." + request["name"])

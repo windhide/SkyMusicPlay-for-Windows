@@ -43,10 +43,10 @@ def process_midi_to_txt(input_path, output_path, version):
                     continue
                 if pitch in note_to_key[version]:
                     notes.append({'time': time, 'key': note_to_key[version][pitch]})
-                elif pitch in extra_note_to_key[version]:
+                elif GlobalVariable.semitone_switch is True and pitch in extra_note_to_key[version]:
                     for extra_key in extra_note_to_key[version][pitch]:
                         notes.append({'time': time, 'key': extra_key})
-                elif pitch in special_note_mapping[version]:
+                elif GlobalVariable.detail_switch is True and pitch in special_note_mapping[version]:
                     notes.append({'time': time, 'key': note_to_key[version][special_note_mapping[version][pitch]]})
 
     notes.sort(key=lambda x: x['time'])

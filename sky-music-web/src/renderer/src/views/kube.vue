@@ -11,10 +11,17 @@
       :show-file-list="false"
       @finish="handleFinish"
     >
-    <n-button type="info" ghost  color="#F2C9C4"> step1.选择音乐 </n-button>
+    <n-button type="info" ghost  color="#F2C9C4"> 选择音乐 
+      <template #icon>
+        <n-icon size="25px"><CloudArrowUp32Filled /></n-icon>
+      </template>
+    </n-button>
     </n-upload>
-    <n-button type="primary" ghost :loading="processFlag" @click="handleStartTranslate" style="margin-left: 25px;" color="#F2E8C4">
-      step2.开始转换
+    <n-button type="primary" ghost :loading="processFlag" @click="handleStartTranslate" style="margin-left: 7px;" color="#F2E8C4">
+      开始转换
+      <template #icon>
+        <n-icon size="25px"><ArrowSync24Regular /></n-icon>
+      </template>
     </n-button>
     <n-switch size="medium" v-model:value="isSingular" @update:value="singularChange" :rail-style="railStyle" :round="false"> 
         <template #checked-icon>
@@ -28,6 +35,34 @@
         </template>
         <template #unchecked>
           <p style="color: rgba(94, 104, 81, 1);">双数键</p>
+        </template>
+    </n-switch>
+    <n-switch size="medium" v-model:value="semitone_switch" @update:value="semitoneChange" :rail-style="railStyle" :round="false"> 
+        <template #checked-icon>
+          🤔
+        </template>
+        <template #unchecked-icon>
+          🧐
+        </template>
+        <template #checked>
+          <p style="color: rgba(94, 104, 81, 1);">含半音转换</p>
+        </template>
+        <template #unchecked>
+          <p style="color: rgba(94, 104, 81, 1);">仅全音转换</p>
+        </template>
+    </n-switch>
+    <n-switch size="medium" v-model:value="detail_switch" @update:value="detailChange" :rail-style="railStyle" :round="false"> 
+        <template #checked-icon>
+          🤔
+        </template>
+        <template #unchecked-icon>
+          🧐
+        </template>
+        <template #checked>
+          <p style="color: rgba(94, 104, 81, 1);">超3音变调</p>
+        </template>
+        <template #unchecked>
+          <p style="color: rgba(94, 104, 81, 1);">仅范围转换</p>
         </template>
     </n-switch>
     <div style="flex-basis: 100%;" />
@@ -106,12 +141,21 @@
 import { getData, sendData, getList, setConfig } from "@renderer/utils/fetchUtils";
 import { h, onUnmounted, reactive, ref, watch, CSSProperties } from "vue";
 import { NButton, useMessage } from "naive-ui";
+import {
+  Sync
+} from '@vicons/ionicons5'
+import {
+  CloudArrowUp32Filled,
+  ArrowSync24Regular
+} from '@vicons/fluent'
 
 const message = useMessage();
 const processFlag = ref(false);
 let progressInterval:any = null
 let chooseType:any = ref(['2'])
 let isSingular = ref(true)
+let semitone_switch = ref(true)
+let detail_switch = ref(true)
 
 let merge_min = ref(20)
 let merge_max = ref(30)
@@ -216,6 +260,20 @@ function singularChange(value: boolean){
   sendData("config_operate",{
     operate: "set",
     name: "is_singular",
+    value
+  })
+}
+function detailChange(value: boolean){
+  sendData("config_operate",{
+    operate: "set",
+    name: "detail_switch",
+    value
+  })
+}
+function semitoneChange(value: boolean){
+  sendData("config_operate",{
+    operate: "set",
+    name: "semitone_switch",
     value
   })
 }
@@ -344,6 +402,12 @@ async function handleUpdateValue(value: keyof typeof music) {
 }
 
 reloadTable();
+
+sendData("config_operate",{ operate: "get", name: "detail_switch"}).then(res=>{ detail_switch.value=res})
+sendData("config_operate",{ operate: "get", name: "semitone_switch"}).then(res=>{ semitone_switch.value=res})
+sendData("config_operate",{ operate: "get", name: "velocity_filter"}).then(res=>{ velocity_filter.value=res})
+sendData("config_operate",{ operate: "get", name: "merge_max"}).then(res=>{ merge_max.value=res})
+sendData("config_operate",{ operate: "get", name: "merge_min"}).then(res=>{ merge_min.value=res})
 
 onUnmounted(function(){
   clearInterval(progressInterval);
