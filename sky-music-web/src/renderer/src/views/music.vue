@@ -711,7 +711,7 @@ watch(delaySpeed, () => {
   setConfig('delay_interval', delaySpeed.value)
 })
 watch(durationSpeed, () => {
-  setConfig('duration_time', durationSpeed.value)
+  setConfig('duration', durationSpeed.value)
 })
 watch(playSpeed, () => {
   setConfig('play_speed', playSpeed.value)
