@@ -110,11 +110,15 @@ async function checkForUpdates(): Promise<void> {
   try {
     const clientVersion: string = await window.api.getVersion();
     const cloudVersion: any = await getData("update");
-    if (!cloudVersion) {
-      return;
-    }
+    if (!cloudVersion) return;
     const clientVersionNum = Number(clientVersion.match(/\d/g)?.join("") || 0);
     const cloudVersionNum = Number(cloudVersion.version.match(/\d/g)?.join("") || 0);
+
+    if (cloudVersionNum === 404) {
+      message.info("无法检测软件新版本，尝试下修复网络呢");
+      return;
+    }
+
     if (cloudVersionNum > clientVersionNum) {
       dialog.success({
         title: cloudVersion.title,
