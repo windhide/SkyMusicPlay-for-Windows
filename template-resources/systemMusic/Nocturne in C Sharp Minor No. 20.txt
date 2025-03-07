@@ -1,0 +1,82 @@
+[
+    {
+        "name": "Nocturne in C Sharp Minor No. 20",
+        "author": "crack for WindHide",
+        "transcribedBy": "WindHide crack",
+        "bpm": 800,
+        "bitsPerPage": 15,
+        "pitchLevel": 0,
+        "isComposed": true,
+        "songNotes": [
+            {
+                "time": 600,
+                "key": "4Key0"
+            },
+            {
+                "time": 600,
+                "key": "4Key2"
+            },
+            {
+                "time": 600,
+                "key": "4Key4"
+            },
+            {
+                "time": 600,
+                "key": "4Key7"
+            },
+            {
+                "time": 1875,
+                "key": "3Key0"
+            },
+            {
+                "time": 1875,
+                "key": "3Key4"
+            },
+            {
+                "time": 1875,
+                "key": "3Key6"
+            },
+            {
+                "time": 2250,
+                "key": "2Key3"
+            },
+            {
+                "time": 2250,
+                "key": "2Key5"
+            },
+            {
+                "time": 3225,
+                "key": "3Key0"
+            },
+            {
+                "time": 3225,
+                "key": "3Key2"
+            },
+            {
+                "time": 3225,
+                "key": "3Key5"
+            },
+            {
+                "time": 3600,
+                "key": "2Key2"
+            },
+            {
+                "time": 3600,
+                "key": "2Key4"
+            },
+            {
+                "time": 4800,
+                "key": "3Key0"
+            },
+            {
+                "time": 4800,
+                "key": "3Key2"
+            },
+            {
+                "time": 4800,
+                "key": "3Key5"
+            }
+        ],
+        "isEncrypted": false
+    }
+]
