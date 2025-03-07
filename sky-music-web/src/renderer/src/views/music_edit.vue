@@ -123,8 +123,12 @@ const playNowColumn = () =>{
 }
 const saveSheet = () =>{
   console.log("保存音乐文件")
+  console.log(notes.value)
+  console.log(durationNotes.value)
+  saveFile(fileName.value,"")
 }
 
+const saveFile=(filename, content)=>{ const blob=new Blob([content],{ type: "text/plain"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=filename; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href);}
 function handleUploadSheet(options:{ file: any; fileList: UploadFileInfo[]}) {
   window.api.readFile(options?.file?.file?.path, true).then((res:any) => {
     if (res != false) {
