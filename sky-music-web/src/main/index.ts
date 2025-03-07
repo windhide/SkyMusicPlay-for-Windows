@@ -57,7 +57,9 @@ function createWindow(): void {
   let isMousePressed = false
   let offsetX = 0
   let offsetY = 0
-
+  let nowHeight = 774
+  let nowWidth = 800
+  
   ipcMain.on('mousedown', (_event, { }) => {
     console.log(_event)
     const cursorPoint = screen.getCursorScreenPoint()
@@ -78,8 +80,8 @@ function createWindow(): void {
      mainWindow.setBounds({
        x: cursorPoint.x - offsetX,
        y: cursorPoint.y - offsetY,
-       width: 800,
-       height: 774
+       width: nowWidth,
+       height: nowHeight
      })
    }
   })
@@ -114,6 +116,22 @@ function createWindow(): void {
     setTimeout(()=>{
       notification.close()
     },1500)
+  })
+
+  
+  ipcMain.on('window_size', (_event, height:number, width: number) => {
+    console.log(_event)
+    let bounds:any = null
+    bounds = mainWindow?.getBounds()
+    
+    nowHeight = height === 0 ? 774 : height
+    nowWidth = width === 0 ? 800 : width
+    mainWindow?.setBounds({
+      x: bounds.x,
+      y: bounds.y,
+      width:nowWidth,
+      height:nowHeight
+    })
   })
   
   ipcMain.handle('read-file', async (_event, filePath:string) => {

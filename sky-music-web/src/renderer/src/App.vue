@@ -127,7 +127,8 @@ import {
 import {
   Pin48Regular,
   Pin48Filled,
-  Settings48Regular
+  Settings48Regular,
+  Compose24Filled
 } from '@vicons/fluent'
 import router from '@renderer/router'
 
@@ -217,6 +218,11 @@ const menuOptions = [
     label: "快捷键",
     key: "shortcut",
     icon: renderIcon(PlanetSharp),
+  },
+  {
+    label: "乐谱编辑",
+    key: "musicEdit",
+    icon: renderIcon(Compose24Filled),
   },
   {
     key: "kube",
@@ -347,7 +353,7 @@ onMounted(() => {
   background-color: rgba(242, 201, 196, 0) !important;
 }
 .n-menu-divider {
-  margin-bottom: 370px;
+  margin-bottom: 320px;
   background-color: rgba(242, 201, 196, 0);
 }
 </style>

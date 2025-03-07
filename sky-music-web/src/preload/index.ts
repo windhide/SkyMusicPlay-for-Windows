@@ -24,8 +24,11 @@ if (process.contextIsolated) {
       getVersion: () => {
         return ipcRenderer.invoke('getVersion'); 
       },
-        system_notification: async (title,body) => {
+      system_notification: async (title,body) => {
         ipcRenderer.send('send_system_notification', title, body); 
+      },
+      window_size: (height:number, width: number) => {
+        ipcRenderer.send('window_size', height, width); 
       },
     });// 用于向主进程发送拖动事件
     contextBridge.exposeInMainWorld('electron', {

@@ -45,6 +45,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/hwndHandle',
     name: 'hwndHandle',
     component: () => import('../views/hwndHandle.vue')
+  },
+  {
+    path: '/musicEdit',
+    name: 'musicEdit',
+    component: () => import('../views/music_edit.vue')
   }
 ]
 
