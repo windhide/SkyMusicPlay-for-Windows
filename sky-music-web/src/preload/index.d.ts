@@ -6,7 +6,7 @@ declare global {
       setAlwaysOnTop: () => void;
       close: () => void;
       mini: () => void;
-      async readFile: (filePath:string) => any;
+      async readFile: (filePath:string, needData: boolean) => any;
       system_notification: (title,body) => void;
       getVersion: () => any;
       window_size: (height:number, width: number) => void;

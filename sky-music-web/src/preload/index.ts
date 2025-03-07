@@ -18,8 +18,8 @@ if (process.contextIsolated) {
       mini: () => {
         ipcRenderer.send('window-min');
       },
-      readFile: async (filePath: string) => {
-        return await ipcRenderer.invoke('read-file', filePath); 
+      readFile: async (filePath: string, needData: boolean) => {
+        return await ipcRenderer.invoke('read-file', filePath, needData); 
       },
       getVersion: () => {
         return ipcRenderer.invoke('getVersion'); 

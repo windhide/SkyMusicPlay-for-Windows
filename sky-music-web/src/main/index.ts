@@ -134,7 +134,7 @@ function createWindow(): void {
     })
   })
   
-  ipcMain.handle('read-file', async (_event, filePath:string) => {
+  ipcMain.handle('read-file', async (_event, filePath:string, needData: boolean) => {
     try {
       let fileContent = await fs.promises.readFile(filePath, 'utf8');
       const encodingList = ['utf8', 'utf16le', 'gbk']; // 支持的编码
@@ -149,6 +149,9 @@ function createWindow(): void {
           // 如果解析失败，继续尝试下一个编码
           fileContent = undefined;
         }
+      }
+      if (needData){
+        return JSON.parse(fileContent)
       }
       return fileContent.includes("songNotes")
     } catch (err) {

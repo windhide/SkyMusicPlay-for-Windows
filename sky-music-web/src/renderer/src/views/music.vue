@@ -643,7 +643,7 @@ function handleFinish({ file: _file, event: _event }) {
 
 // 文件上传前处理
 function beforeFileUpload(file) {
-  return window.api.readFile(file.file.file.path).then(res => {
+  return window.api.readFile(file.file.file.path, false).then(res => {
     if (res) {
       message.success("谱子👉" + file.file.file.name + "完成导入")
     } else {
