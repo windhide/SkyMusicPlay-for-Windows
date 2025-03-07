@@ -59,7 +59,7 @@
       <n-gradient-text  gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))" style="margin-top: 5px;">
         按键激活
       </n-gradient-text>
-      <n-switch :round="false" :rail-style="railStyle"  style="flex-basis: 43%;"/>
+      <n-switch :round="false" :rail-style="railStyle"  style="flex-basis: 43%; margin-top: 5px;"/>
     </n-flex>
   </div>
 </template>
