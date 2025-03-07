@@ -33,7 +33,7 @@
   </n-flex>
   <n-slider v-model:value="progress" :step="1" @update:value="updateProgress" :min="1" :max="notes.length"  style="margin-bottom: 8px;" />
   <n-flex v-for="(row, index) in keys" :key="index" justify="center">
-    <div v-for="(item, idx) in row" :key="idx">
+    <div v-for="(item, idx) in row" :key="idx" style="margin-top: 8px;">
       <n-button  color="#F2C9C4" style="height:75px; width: 75px;" :dashed="!item.active" @contextmenu="handleContextMenu">
         <template #icon>
           <n-icon v-if="item.type === 'cr'" :size="65" :component="cr" />
@@ -44,7 +44,7 @@
     </div>
     <div style="flex-basis: 100%;" />
   </n-flex>
-  <div style="margin-left: 920px; margin-top: -248px; width: 415px; height: 200px;">
+  <div style="margin-left: 920px; margin-top: -260px; width: 415px; height: 200px;">
     <n-flex>
       <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))" style="margin-top: 5px;">
         长按间隔（秒）
@@ -250,7 +250,7 @@ const nextColumn = () => {
 const insertEmptyColumn = () => {
   notes.value.splice(currentColumn.value, 0, []);
   // 同步插入空的文字列
-  customTexts.splice(currentColumn.value, 0, ['Do', 'Re', 'Mi', 'Fa', 'So', 'La', 'Ti', 'do', 're', 'mi', 'fa', 'so', 'la', 'ti', '♪']);
+  customTexts.splice(currentColumn.value, 0, ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '']);
   // 更新进度条最大值
   progress.value = currentColumn.value + 1;
   drawCanvas();
@@ -324,7 +324,6 @@ onUnmounted(() => {
 <style scoped>
 .midi-editor {
   display: flex;
-  margin-top:20px;
   height: 380px;
   overflow: hidden;
   background: transparent
