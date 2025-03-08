@@ -20,7 +20,6 @@ def pause():
                 intel_robot.pause()
             case "AMD":
                 amd_robot.pause()
-
     except Exception as e:
         print(f"Error in /pause: {str(e)}")
 

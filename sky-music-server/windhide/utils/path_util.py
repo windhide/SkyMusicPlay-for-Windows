@@ -43,7 +43,31 @@ def convert_notes_to_delayed_format(fileName, type):
     if combined_keys:
         result.append({"key": combined_keys, "delay": 0})  # 最后条目的延迟为0
     GlobalVariable.music_sheet = result
-    
+
+
+def convert_json_to_play(text):
+    song_notes = json.load(text)
+    result = []
+    combined_keys = ""  # 按键累积
+    combined_time = None  # 当前时间
+    for i, note in enumerate(song_notes):
+        current_time = note["time"]
+        key = note["key"]
+        # 处理新时间点
+        if current_time != combined_time:
+            if combined_keys:
+                next_time = song_notes[i]["time"] if i < len(song_notes) else current_time
+                delay = next_time - combined_time
+                result.append({"key": combined_keys, "delay": delay})
+            combined_time = current_time
+            combined_keys = GlobalVariable.keyMap.get(matchKey(key), '')  # 获取按键，默认空字符串
+        else:
+            combined_keys += GlobalVariable.keyMap.get(matchKey(key), '')  # 如果时间相同，合并按键
+    if combined_keys:
+        result.append({"key": combined_keys, "delay": 0})  # 最后条目的延迟为0
+    GlobalVariable.music_sheet = result
+
+
 def getResourcesPath(file):
     nowPath = os.path.dirname(os.path.abspath(__file__))
     resources_path = os.path.dirname(os.path.dirname(nowPath))

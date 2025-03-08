@@ -8,7 +8,7 @@ import win32gui
 
 from windhide.static.global_variable import GlobalVariable
 from windhide.thread.intel_play_thread import ControlledThread
-from windhide.utils.path_util import convert_notes_to_delayed_format
+from windhide.utils.path_util import convert_notes_to_delayed_format, convert_json_to_play
 
 PostMessageW = ctypes.windll.user32.PostMessageW  # 消息队列
 SendMessageW = ctypes.windll.user32.SendMessageW  # 立即处理
@@ -65,6 +65,14 @@ def send_multiple_key_to_window_follow(keys):
 def playMusic(fileName, type):
     """优化音乐播放逻辑，只加载乐谱数据一次"""
     convert_notes_to_delayed_format(fileName, type)
+    if GlobalVariable.thread is not None:
+        stop()
+    GlobalVariable.thread = ControlledThread()
+    GlobalVariable.thread.start()
+
+def playMusic_edit(text):
+    """优化音乐播放逻辑，只加载乐谱数据一次"""
+    convert_json_to_play(text)
     if GlobalVariable.thread is not None:
         stop()
     GlobalVariable.thread = ControlledThread()
