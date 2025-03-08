@@ -64,7 +64,7 @@
       <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))" style="margin-top: 5px;">
         歌曲名字
       </n-gradient-text>
-      <n-input v-model:value="fileName" type="textarea" placeholder="歌曲名字/文件名字" style="flex-basis: 57%;" :autosize="{ minRows: 1, maxRows: 4 }"/>
+      <n-input v-model:value="fileName" type="textarea" placeholder="歌曲名字/文件名字" style="flex-basis: 58%;" :autosize="{ minRows: 1, maxRows: 4 }"/>
     </n-flex>
   </div>
 </template>
