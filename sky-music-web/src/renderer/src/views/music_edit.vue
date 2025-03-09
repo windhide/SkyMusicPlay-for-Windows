@@ -1,5 +1,4 @@
 <template>
-  <n-dropdown :x="xRef" :y="yRef" :options="options" :show="showDropdownRef" :on-clickoutside="onClickoutside"  @select="handleSelect" />
   <div class="midi-editor">
     <n-layout>
       <n-layout-content class="midi-content">
@@ -54,12 +53,14 @@
       <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))" style="margin-top: 5px;">
         长按间隔（ms）
       </n-gradient-text>
-      <n-input-number v-model:value="downDuration" style="flex-basis: 40%; margin-left: 28px;" :step="0.01"/>
+      <n-skeleton v-if="noSelectButton" :sharp="false" size="medium" style="flex-basis: 40%; margin-left: 28px;" />
+      <n-input-number v-else v-model:value="downDuration" style="flex-basis: 40%; margin-left: 28px;" :step="0.01"/>
       <div style="flex-basis: 100%;" />
       <n-gradient-text  gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))" style="margin-top: 5px;">
         列后等待延迟（ms）
       </n-gradient-text>
-      <n-input-number v-model:value="columnAfterDuration" style="flex-basis: 40%;" :step="0.01" />
+      <n-skeleton v-if="noSelectButton" :sharp="false" size="medium" style="flex-basis: 40%;" />
+      <n-input-number v-else v-model:value="columnAfterDuration" style="flex-basis: 40%;" :step="0.01" />
       <div style="flex-basis: 100%;" />
       <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))" style="margin-top: 5px;">
         歌曲名字
@@ -80,31 +81,31 @@ import { sendData } from "@renderer/utils/fetchUtils";
 
 const midiCanvas = ref(null);
 const isPlaying = ref(false)
-const showDropdownRef = ref(false)
-const xRef = ref(0)
-const yRef = ref(0)
-const options=[ { label: '修改长按间隔', key: 'duration'}]
 const fileName = ref("")
 const columnAfterDuration = ref(0)
 const downDuration = ref(0)
 const nowButton = ref(-1)
+const noSelectButton = ref(true)
 
 function handleContextMenu(e: MouseEvent, buttonIdx){ 
   e.preventDefault(); 
-  showDropdownRef.value=false; 
-  nextTick().then(()=>{ 
-    showDropdownRef.value=true; 
-    xRef.value=e.clientX; 
-    yRef.value=e.clientY;
-  })
-  console.log(buttonIdx)
-  nowButton.value = buttonIdx
-}
-function onClickoutside(){ showDropdownRef.value=false;}
-function handleSelect(key: string | number) {
-  console.log("handleSelect",key)
-  showDropdownRef.value = false
   downDuration.value = Number(durationNotes.value[progress.value -1][nowButton.value])
+  let row = Math.floor(buttonIdx / 5);
+  let col = (buttonIdx) % 5;
+  let item = keys.value[row][col]
+  const index = row + col * 5;
+  const progressIndex = progress.value - 1;
+  if (item.active) {
+    notes.value[progressIndex].push(index + 1);
+    durationNotes.value[progressIndex][index] = item.duration ? item.duration : 0;
+    noSelectButton.value = false
+  } else {
+    notes.value[progressIndex] = notes.value[progressIndex].filter(res => res !== index + 1);
+    durationNotes.value[progressIndex][index] = 0;
+    noSelectButton.value = true
+  }
+  nowButton.value = buttonIdx
+  syncKeysAreaToCanvas();
 }
 
 const keys=ref([ [ {key: "0", type:"dmcr", duration:0, active: false}, {key: "1", type:"dm", duration:0, active: false}, {key: "2", type:"cr", duration:0, active: false}, {key: "3", type:"dm", duration:0, active: false}, {key: "4", type:"cr", duration:0, active: false}, ], [ {key: "5", type:"cr", duration:0, active: false}, {key: "6", type:"dm", duration:0, active: false}, {key: "7", type:"dmcr", duration:0, active: false}, {key: "8", type:"dm", duration:0, active: false}, {key: "9", type:"cr", duration:0, active: false}, ], [ {key: "10", type:"cr", duration:0, active: false}, {key: "11", type:"dm", duration:0, active: false}, {key: "12", type:"cr", duration:0, active: false}, {key: "13", type:"dm", duration:0, active: false}, {key: "14", type:"dmcr", duration:0, active: false}, ]
@@ -197,7 +198,7 @@ watch(progress, syncCanvasToKeysArea)
 watch(columnAfterDuration, ()=>{ timeNotes.value[progress.value - 1] = columnAfterDuration.value })
 watch(downDuration, ()=>{durationNotes.value[progress.value - 1][nowButton.value] = downDuration.value; drawCanvas() })
 watch(nowButton, ()=>{
-  handleSelect("?")
+  downDuration.value = Number(durationNotes.value[progress.value -1][nowButton.value])
 })
 function syncCanvasToKeysArea() {
   keys.value=[ ["dmcr", "dm", "cr", "dm", "cr"], ["cr", "dm", "dmcr", "dm", "cr"], ["cr", "dm", "cr", "dm", "dmcr"] ].map((row, rowIndex)=>row.map((type, colIndex)=>({ key: String(rowIndex * 5 + colIndex), type, duration: 0, active: false})) );
@@ -219,9 +220,11 @@ function handleButtonClick(item, column, row) {
   if (item.active) {
     notes.value[progressIndex].push(index + 1);
     durationNotes.value[progressIndex][index] = item.duration ? item.duration : 0;
+    noSelectButton.value = false
   } else {
     notes.value[progressIndex] = notes.value[progressIndex].filter(res => res !== index + 1);
     durationNotes.value[progressIndex][index] = 0;
+    noSelectButton.value = true
   }
   syncKeysAreaToCanvas();
   nowButton.value = column * 5 + row
