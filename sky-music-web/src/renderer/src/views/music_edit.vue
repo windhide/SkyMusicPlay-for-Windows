@@ -90,9 +90,9 @@ const nowButton = ref(-1)
 const keys=ref([ [ {key: "0", type:"dmcr", duration:0, active: false}, {key: "1", type:"dm", duration:0, active: false}, {key: "2", type:"cr", duration:0, active: false}, {key: "3", type:"dm", duration:0, active: false}, {key: "4", type:"cr", duration:0, active: false}, ], [ {key: "5", type:"cr", duration:0, active: false}, {key: "6", type:"dm", duration:0, active: false}, {key: "7", type:"dmcr", duration:0, active: false}, {key: "8", type:"dm", duration:0, active: false}, {key: "9", type:"cr", duration:0, active: false}, ], [ {key: "10", type:"cr", duration:0, active: false}, {key: "11", type:"dm", duration:0, active: false}, {key: "12", type:"cr", duration:0, active: false}, {key: "13", type:"dm", duration:0, active: false}, {key: "14", type:"dmcr", duration:0, active: false}, ]
 ])
 // 自定义显示文字
-const durationNotes = ref<number[]>([]); // 长按表
-const notes = ref<number[][]>([]); // 谱表
-const timeNotes = ref<number[]>([]); // 延迟表
+const durationNotes = ref<number[]>([0]); // 长按表
+const notes = ref<number[][]>([[]]); // 谱表
+const timeNotes = ref<number[]>([0]); // 延迟表
 const progress = ref(1);
 const canvasWidth = 1200;
 const canvasHeight = 300;
@@ -103,59 +103,97 @@ const intervalId:any = ref(null);
 const currentColumn = ref(0); // 当前列的索引
 const message = useMessage()
 
-const drawCanvas = () => { 
-  const canvas: any = midiCanvas.value; 
-  if (!canvas) return; 
-  const ctx = canvas.getContext("2d"); 
-  const viewportCenter = canvasWidth / 2; 
-  const currentX = currentColumn.value * columnSize; 
-  let offsetX = 0; 
-  if (currentX > viewportCenter) { 
-    offsetX = viewportCenter - currentX; 
-  } 
-  ctx.clearRect(0, 0, canvasWidth, canvasHeight); 
-  ctx.save(); 
-  ctx.translate(offsetX, 0); 
-  ctx.strokeStyle = "rgba(85, 85, 85, 0)"; 
-  for (let x = 0; x < canvasWidth - offsetX; x += gridSize) { 
-    ctx.beginPath(); ctx.moveTo(x, 0); 
-    ctx.lineTo(x, canvasHeight); ctx.stroke(); 
-  } 
-  for (let y = 0; y < canvasHeight; y += gridSize) { 
-    ctx.beginPath(); ctx.moveTo(0, y); 
-    ctx.lineTo(canvasWidth - offsetX, y); 
-    ctx.stroke(); 
-  } 
-  ctx.strokeStyle = "rgba(136, 136, 136, 0.7)"; 
-  ctx.lineWidth = 2; 
-  for (let x = 0; x < canvasWidth - offsetX; x += columnSize) { 
-    ctx.beginPath(); ctx.moveTo(x, 0); 
-    ctx.lineTo(x, canvasHeight); ctx.stroke(); 
-  } 
-  ctx.lineWidth = 1; 
-  ctx.fillStyle = "#F2C9C4"; 
-  notes.value.forEach((column, columnIndex) => { 
-    column.forEach(row => { const y = (row - 1) * (canvasHeight / 15); 
-      const x = columnIndex * columnSize + 1; 
-      const rectWidth = columnSize - 2; 
-      const rectHeight = canvasHeight / 15 - 2; 
-      ctx.beginPath(); 
-      ctx.moveTo(x + cornerRadius, y); 
-      ctx.lineTo(x + rectWidth - cornerRadius, y); 
-      ctx.quadraticCurveTo(x + rectWidth, y, x + rectWidth, y + cornerRadius); 
-      ctx.lineTo(x + rectWidth, y + rectHeight - cornerRadius); 
-      ctx.quadraticCurveTo(x + rectWidth, y + rectHeight, x + rectWidth - cornerRadius, y + rectHeight); 
-      ctx.lineTo(x + cornerRadius, y + rectHeight); 
-      ctx.quadraticCurveTo(x, y + rectHeight, x, y + rectHeight - cornerRadius); 
-      ctx.lineTo(x, y + cornerRadius); ctx.quadraticCurveTo(x, y, x + cornerRadius, y); 
-      ctx.fill(); 
-      ctx.fillStyle = "#000000"; 
-      ctx.font = "12px Arial"; 
-      ctx.textAlign = "center"; 
-      ctx.textBaseline = "middle"; 
-      if (columnIndex < durationNotes.value.length && row - 1 < durationNotes.value.length) { 
-        ctx.fillText(durationNotes.value[columnIndex], x + rectWidth / 2, y + rectHeight / 2); 
-      } ctx.fillStyle = "#F2C9C4"; }); }); ctx.restore(); ctx.fillStyle = "rgba(155, 149, 201, 0.5)"; const highlightX = currentX > viewportCenter ? viewportCenter : currentX; ctx.fillRect(highlightX, 0, columnSize, canvasHeight); };
+const drawCanvas = () => {
+  const canvas: any = midiCanvas.value;
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const viewportCenter = canvasWidth / 2;
+  const currentX = currentColumn.value * columnSize;
+  let offsetX = 0;
+  if (currentX > viewportCenter) {
+    offsetX = viewportCenter - currentX;
+  }
+  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+  ctx.save();
+  ctx.translate(offsetX, 0);
+  ctx.strokeStyle = "rgba(85, 85, 85, 0)";
+  
+  // 绘制网格
+  for (let x = 0; x < canvasWidth - offsetX; x += gridSize) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, canvasHeight);
+    ctx.stroke();
+  }
+  for (let y = 0; y < canvasHeight; y += gridSize) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(canvasWidth - offsetX, y);
+    ctx.stroke();
+  }
+  
+  // 绘制列线
+  ctx.strokeStyle = "rgba(136, 136, 136, 0.7)";
+  ctx.lineWidth = 2;
+  for (let x = 0; x < canvasWidth - offsetX; x += columnSize) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, canvasHeight);
+    ctx.stroke();
+  }
+  
+  ctx.lineWidth = 1;
+  ctx.fillStyle = "#F2C9C4";
+  
+  // 绘制音符
+  notes.value.forEach((column, columnIndex) => {
+    column.forEach(row => {
+      const y = (row - 1) * (canvasHeight / 15);
+      const x = columnIndex * columnSize + 1;
+      const rectWidth = columnSize - 2;
+      const rectHeight = canvasHeight / 15 - 2;
+      
+      ctx.beginPath();
+      ctx.moveTo(x + cornerRadius, y);
+      ctx.lineTo(x + rectWidth - cornerRadius, y);
+      ctx.quadraticCurveTo(x + rectWidth, y, x + rectWidth, y + cornerRadius);
+      ctx.lineTo(x + rectWidth, y + rectHeight - cornerRadius);
+      ctx.quadraticCurveTo(x + rectWidth, y + rectHeight, x + rectWidth - cornerRadius, y + rectHeight);
+      ctx.lineTo(x + cornerRadius, y + rectHeight);
+      ctx.quadraticCurveTo(x, y + rectHeight, x, y + rectHeight - cornerRadius);
+      ctx.lineTo(x, y + cornerRadius);
+      ctx.quadraticCurveTo(x, y, x + cornerRadius, y);
+      ctx.fill();
+      
+      ctx.fillStyle = "#000000";
+      ctx.font = "12px Arial";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      // 计算当前列应该显示的 durationNotes
+      let textToDisplay = "";
+      if (durationNotes.value.length === 1) {
+        // 只有一个值，应用到所有这一列的格子
+        textToDisplay = String(durationNotes.value[0]);  // 确保 0 也能正确显示
+      } else if (columnIndex < durationNotes.value.length) {
+        // 多个值时，按列索引显示
+        textToDisplay = String(durationNotes.value[columnIndex]);
+      }
+
+      // 在当前列的所有音符上显示相应的 durationNotes 值
+      ctx.fillText(textToDisplay, x + rectWidth / 2, y + rectHeight / 2);
+
+      ctx.fillStyle = "#F2C9C4";
+    });
+  });
+  
+  ctx.restore();
+  
+  // 高亮当前列
+  ctx.fillStyle = "rgba(155, 149, 201, 0.5)";
+  const highlightX = currentX > viewportCenter ? viewportCenter : currentX;
+  ctx.fillRect(highlightX, 0, columnSize, canvasHeight);
+};
 
 const previousColumn=()=>{ if (currentColumn.value >0){ currentColumn.value--; progress.value=currentColumn.value + 1; drawCanvas();playNowColumn();}};
 const nextColumn=()=>{ if (currentColumn.value < notes.value.length - 1){ currentColumn.value++; progress.value=currentColumn.value + 1; drawCanvas();playNowColumn();}};
@@ -176,10 +214,20 @@ const playNowColumn = () => {
   return Number(time)
 };
 const saveSheet = () =>{
-  console.log("保存音乐文件")
-  console.log(notes.value)
-  console.log(durationNotes.value)
-  saveFile(fileName.value,"")
+  const templateMusicFormat = [
+    {
+        "name": fileName.value,
+        "author": "edit by SkyMusic",
+        "transcribedBy": "WindHide's Music SoftWare",
+        "bpm": 0,
+        "bitsPerPage": 15,
+        "pitchLevel": 0,
+        "isComposed": true,
+        "songNotes": getSheetToMemory(0),
+        "isEncrypted": false,
+    }
+  ]
+  saveFile(fileName.value,JSON.stringify(templateMusicFormat))
 }
 
 const saveFile=(filename, content)=>{ const blob=new Blob([content],{ type: "text/plain"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=filename; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href);}
@@ -193,47 +241,40 @@ async function handleUploadSheet(options: { file: any; fileList: UploadFileInfo[
     message.success("谱子加载成功");
     fileName.value = res[0]?.name || "未知文件";
     const songNotes = res[0]?.songNotes || [];
-    const processedNotes = precessSongNotes(songNotes);
-    const newNotes: number[][] = [];
-    const newDurationNotes: number[] = [];
-    const newTimeNotes: number[] = [];
-    processedNotes.forEach(element => {
-      const durationNote = Array(15).fill(0); // 预填充 15 个 0
-      const parsedKeys = element.key
-        .replace("Key", "")
-        .split("Key")
-        .map(part => {
-          const keyIndex = parseInt(part, 10);
-          durationNote[keyIndex] = element.duration || 0;
-          return keyIndex + 1;
+    notes.value = [];
+    durationNotes.value = [];
+    timeNotes.value = [];
+    let groupDemo:any = Object.values(
+        songNotes.reduce((acc, note) => {
+            if (!acc[note.time]) {
+                acc[note.time] = { time: note.time, keys: [], duration:note.duration || 0 };
+            }
+            acc[note.time].keys.push(note.key);
+            return acc;
+        }, {})
+    )
+    groupDemo.forEach((item:any,index)=>{
+        let note:any = []
+        item.keys.forEach(key => {
+          note.push(Number(key.match(/(Key-?\d+)/)[0].replace("Key","")) + 1);
         });
-      newNotes.push(parsedKeys);
-      newDurationNotes.push(element.duration);
-      newTimeNotes.push(element.delay);
-    });
-    notes.value = newNotes;
-    durationNotes.value = newDurationNotes;
-    timeNotes.value = newTimeNotes;
-    progress.value = 1;
+        notes.value.push(note)
+        durationNotes.value.push(item.duration)
+        timeNotes.value.push(groupDemo[index + 1] ? groupDemo[index + 1].time - item.time : 0)
+    })
     syncCanvasToKeysArea()
     drawCanvas()
+    currentColumn.value = 0;
+    progress.value = 1;
   } catch (error) {
     message.error("谱子加载失败");
     console.error(error);
   }
+  console.log(notes.value,durationNotes.value,timeNotes.value)
 }
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
-// async function sleep(ms) {
-//     const start = performance.now();
-//     while (performance.now() - start < ms) {
-//         // 在这里进行非阻塞等待，可以考虑使用 Promise.resolve().then 来产生微任务
-//         await Promise.resolve().then;
-//     }
-// }
-
-const precessSongNotes=(song_notes:any)=>{ let result:any=[]; let combined_time=-1; let combined_keys=''; for (let i=0; i < song_notes.length; i++){ let note=song_notes[i]; let current_time=note.time; let key=note.key; let duration=note?.duration || 0; if (current_time !==combined_time){ if (combined_keys){ let next_time=(i < song_notes.length - 1) ? song_notes[i + 1].time : current_time; let delay=next_time - combined_time; result.push({ key: combined_keys, delay, duration});} combined_time=current_time; combined_keys=key.match(/(Key-?\d+)/)[0];} else{ combined_keys +=key.match(/(Key-?\d+)/)[0];}} if (combined_keys){ result.push({ key: combined_keys, delay: 0, duration: 0});} return result}
 
 let isFirst = true
 const play = async () => { 
@@ -246,7 +287,6 @@ const play = async () => {
   intervalId.value = true; 
   let inWhileColumn = currentColumn.value
   while (inWhileColumn < notes.value.length && intervalId.value) {
-    const start = performance.now();
     inWhileColumn++; 
     if (isFirst){
       playNowColumn()
@@ -254,12 +294,8 @@ const play = async () => {
     }else{
       nextColumn()
     }
-    let shoudSleeptime = (timeNotes.value[progress.value - 1] - 10) < 0 ? 0 : timeNotes.value[progress.value - 1] - 10
-    shoudSleeptime = durationNotes.value[progress.value - 1] > shoudSleeptime ? durationNotes.value[progress.value - 1] : shoudSleeptime
-    await sleep(shoudSleeptime);
+    await sleep(timeNotes.value[progress.value - 1]);
     const end = performance.now();
-    console.log("应该sleep的时间",shoudSleeptime)
-    console.log(`实际sleep的时间",${(end - start).toFixed(3)} ms`)
   }
   intervalId.value = null;
   isPlaying.value = false;
@@ -288,16 +324,22 @@ const reverse = async () => {
     }else{
       previousColumn()
     }
-    await sleep((timeNotes.value[progress.value - 2] - 10) < 0 ? 0 : timeNotes.value[progress.value - 2] - 10);
-    console.log("sleep",(timeNotes.value[progress.value - 2] - 10) < 0 ? 0 : timeNotes.value[progress.value - 2] - 10)
+    await sleep(timeNotes.value[progress.value - 2]);
   }
   intervalId.value = null;
   isPlaying.value = false;
   isFirst = true;
 };
 const deleteCurrentColumn=()=>{ notes.value.splice(currentColumn.value, 1); durationNotes.value.splice(currentColumn.value, 0); if (currentColumn.value >=notes.value.length){ currentColumn.value=notes.value.length - 1;} progress.value=currentColumn.value + 1; drawCanvas();};
-const insertEmptyColumn=()=>{ notes.value.splice(currentColumn.value, 0, []); durationNotes.value.splice(currentColumn.value, 0, 0); progress.value=currentColumn.value + 1; drawCanvas();};
-const updateProgress=()=>{ currentColumn.value=progress.value - 1; drawCanvas();};
+const insertEmptyColumn = () => {
+  const insertIndex = currentColumn.value + 1; // 计算插入位置
+  notes.value.splice(insertIndex, 0, []); // 在光标后插入空列
+  durationNotes.value.splice(insertIndex, 0, 0); // 插入默认时长 0
+  timeNotes.value.splice(insertIndex, 0, 0); // 插入默认时间差 0
+  progress.value = insertIndex + 1; // 更新进度
+  drawCanvas(); // 重新绘制
+  console.log(notes.value,durationNotes.value,timeNotes.value)
+};const updateProgress=()=>{ currentColumn.value=progress.value - 1; drawCanvas();};
 watch(progress, syncCanvasToKeysArea)
 watch(columnAfterDuration, ()=>{ timeNotes.value[progress.value - 1] = columnAfterDuration.value })
 watch(columnDownDuration, ()=>{durationNotes.value[progress.value - 1] = columnDownDuration.value; drawCanvas() })
@@ -307,7 +349,7 @@ watch(nowButton, ()=>{
 function syncCanvasToKeysArea() {
   keys.value=[ ["dmcr", "dm", "cr", "dm", "cr"], ["cr", "dm", "dmcr", "dm", "cr"], ["cr", "dm", "cr", "dm", "dmcr"] ].map((row, rowIndex)=>row.map((type, colIndex)=>({ key: String(rowIndex * 5 + colIndex), type, duration: 0, active: false})) );
   if (notes.value.length == 0) return;
-  notes.value[progress.value - 1].forEach(res => {
+  notes.value[progress.value - 1]?.forEach(res => {
     if (res >= 1 && res <= 15) {
       let row = Math.floor((res - 1) / 5);
       let col = (res - 1) % 5;
@@ -329,12 +371,25 @@ function handleButtonClick(item, column, row) {
     notes.value[progressIndex] = notes.value[progressIndex].filter(res => res !== index + 1);
     durationNotes.value[progressIndex] = 0;
   }
-  syncKeysAreaToCanvas();
+  drawCanvas()
   nowButton.value = column * 5 + row
 }
 
-function syncKeysAreaToCanvas(){
-  drawCanvas()
+function getSheetToMemory(startIdx) {
+  let demoSongNotes: any = [];
+  let sumTimestamp = 0;
+  for (let index = startIdx; index < notes.value.length; index++) {
+    for (let j = 0; j < notes.value[index].length; j++) {
+      let row = notes.value[index][j];
+      demoSongNotes.push({
+        time: sumTimestamp,
+        key: `${notes.value[index].length}Key${row - 1}`,
+        duration: Number(durationNotes.value[index]) || 0
+      });
+    }
+    sumTimestamp += timeNotes.value[index];
+  }
+  return demoSongNotes
 }
 
 onMounted(()=>{ window.api.window_size(774,1500); const canvas:any=midiCanvas.value; if (canvas){ canvas.width=canvasWidth; canvas.height=canvasHeight; drawCanvas()}});
@@ -363,7 +418,6 @@ onUnmounted(()=>{ pause(); window.api.window_size(0,0);});
 :deep(.n-layout){
   background: transparent !important;
 }
-
 
 :deep(.n-input){
   --n-border-hover: 1px solid rgb(242,232,196)!important;
