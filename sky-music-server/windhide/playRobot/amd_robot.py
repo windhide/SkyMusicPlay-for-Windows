@@ -22,17 +22,17 @@ WM_KEYDOWN = 0x100
 WM_KEYUP = 0x101
 pyautogui.FAILSAFE = False
 
-def send_single_key_to_window_task(key):
+def send_single_key_to_window_task(key, duration):
     """发送单个按键，减少延迟"""
     key_down(key)
-    time.sleep(GlobalVariable.duration)
+    time.sleep(duration/1000 + GlobalVariable.duration)
     key_up(key)
 
-def send_multiple_key_to_window_task(keys):
+def send_multiple_key_to_window_task(keys, duration):
     """发送组合按键，减少延迟"""
     for key in keys:
         key_down(key)
-    time.sleep(GlobalVariable.duration)
+    time.sleep(duration/1000 + GlobalVariable.duration)
     for key in keys:
         key_up(key)
 
@@ -49,18 +49,18 @@ def send_multiple_key_release(keys):
 
 
 # 现在给模拟器和跟弹在用了
-def send_single_key_to_window_follow(key):
+def send_single_key_to_window_follow(key, duration):
     """发送单个按键，减少延迟"""
     keyboard.press(key)
-    time.sleep(GlobalVariable.duration)
+    time.sleep(duration/1000 + GlobalVariable.duration)
     keyboard.release(key)
 
  # 现在给模拟器和跟弹在用了
-def send_multiple_key_to_window_follow(keys):
+def send_multiple_key_to_window_follow(keys, duration):
     """发送组合按键，减少延迟"""
     for key in keys:
         keyboard.press(key)
-    time.sleep(GlobalVariable.duration)
+    time.sleep(duration/1000 + GlobalVariable.duration)
     for key in keys:
         keyboard.release(key)
 
@@ -71,19 +71,19 @@ def execute_in_thread(target, *args, **kwargs):
     thread.start()
     return thread
 
-def send_single_key_to_window(key):
+def send_single_key_to_window(key, duration):
     """发送单个按键（新线程中执行）"""
     if GlobalVariable.compatibility_mode:
-        execute_in_thread(send_single_key_to_window_follow, key)
+        execute_in_thread(send_single_key_to_window_follow, key,duration)
     else:
-        execute_in_thread(send_single_key_to_window_task, key)
+        execute_in_thread(send_single_key_to_window_task, key,duration)
 
-def send_multiple_key_to_window(keys):
+def send_multiple_key_to_window(keys, duration):
     """发送组合按键（新线程中执行）"""
     if GlobalVariable.compatibility_mode:
-        execute_in_thread(send_multiple_key_to_window_follow, keys)
+        execute_in_thread(send_multiple_key_to_window_follow, keys,duration)
     else:
-        execute_in_thread(send_multiple_key_to_window_task, keys)
+        execute_in_thread(send_multiple_key_to_window_task, keys,duration)
 
 def playMusic(fileName, type):
     """优化音乐播放逻辑，只加载乐谱数据一次"""

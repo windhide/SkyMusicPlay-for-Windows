@@ -33,12 +33,13 @@ class ControlledThread:
             sheet = local_music_sheet[index]
             keys = sheet["key"]
             delay = sheet["delay"] / GlobalVariable.play_speed
-
-            GlobalVariable.now_progress = (index / total_length) * 100
-
+            if total_length == 0:
+                GlobalVariable.now_progress = 100
+            else:
+                GlobalVariable.now_progress = (index / total_length) * 100
             if keys:
                 (intel_robot.send_single_key_to_window if len(keys) == 1
-                 else intel_robot.send_multiple_key_to_window)(keys)
+                 else intel_robot.send_multiple_key_to_window)(keys, sheet["duration"] if "duration" in sheet else 0)
 
             time.sleep(delay / 1000 + GlobalVariable.delay_interval)
             index += 1

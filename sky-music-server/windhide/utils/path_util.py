@@ -27,13 +27,13 @@ def convert_notes_to_delayed_format(fileName, type):
     for i, note in enumerate(song_notes):
         current_time = note["time"]
         key = note["key"]
-
         # 处理新时间点
         if current_time != combined_time:
             if combined_keys:
                 next_time = song_notes[i]["time"] if i < len(song_notes) else current_time
                 delay = next_time - combined_time
-                result.append({"key": combined_keys, "delay": delay})
+                result.append({"key": combined_keys, "delay": delay, "duration": note["duration"] if "duration" in note else 0})
+
 
             combined_time = current_time
             combined_keys = GlobalVariable.keyMap.get(matchKey(key), '')  # 获取按键，默认空字符串
@@ -41,12 +41,11 @@ def convert_notes_to_delayed_format(fileName, type):
             combined_keys += GlobalVariable.keyMap.get(matchKey(key), '')  # 如果时间相同，合并按键
     # 处理最后的累积按键
     if combined_keys:
-        result.append({"key": combined_keys, "delay": 0})  # 最后条目的延迟为0
+        result.append({"key": combined_keys, "delay": 0, 'duration':song_notes[len(song_notes) - 1]['duration'] if "duration" in note else 0})  # 最后条目的延迟为0
     GlobalVariable.music_sheet = result
 
 
-def convert_json_to_play(text):
-    song_notes = json.load(text)
+def convert_json_to_play(song_notes):
     result = []
     combined_keys = ""  # 按键累积
     combined_time = None  # 当前时间
@@ -58,13 +57,13 @@ def convert_json_to_play(text):
             if combined_keys:
                 next_time = song_notes[i]["time"] if i < len(song_notes) else current_time
                 delay = next_time - combined_time
-                result.append({"key": combined_keys, "delay": delay})
+                result.append({"key": combined_keys, "delay": delay, "duration": note["duration"]})
             combined_time = current_time
             combined_keys = GlobalVariable.keyMap.get(matchKey(key), '')  # 获取按键，默认空字符串
         else:
             combined_keys += GlobalVariable.keyMap.get(matchKey(key), '')  # 如果时间相同，合并按键
     if combined_keys:
-        result.append({"key": combined_keys, "delay": 0})  # 最后条目的延迟为0
+        result.append({"key": combined_keys, "delay": 0, "duration": song_notes[len(song_notes) - 1]['duration']})  # 最后条目的延迟为0
     GlobalVariable.music_sheet = result
 
 

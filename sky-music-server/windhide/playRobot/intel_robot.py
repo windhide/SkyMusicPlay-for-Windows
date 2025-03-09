@@ -20,45 +20,45 @@ WM_KEYDOWN = 0x100
 WM_KEYUP = 0x101
 pyautogui.FAILSAFE = False
 
-def send_single_key_to_window_task(key):
+def send_single_key_to_window_task(key, duration):
     """发送单个按键，减少延迟"""
     key_down(key)
-    time.sleep(GlobalVariable.duration)
+    time.sleep(duration/1000 + GlobalVariable.duration)
     key_up(key)
 
-def send_multiple_key_to_window_task(keys):
+def send_multiple_key_to_window_task(keys, duration):
     """发送组合按键，减少延迟"""
     for key in keys:
         key_down(key)
-    time.sleep(GlobalVariable.duration)
+    time.sleep(duration/1000 + GlobalVariable.duration)
     for key in keys:
         key_up(key)
 
-def send_single_key_to_window(key):
+def send_single_key_to_window(key, duration):
     """发送单个按键（单线程）"""
     if GlobalVariable.compatibility_mode:
-        send_single_key_to_window_follow(key)
+        send_single_key_to_window_follow(key, duration)
     else:
-        send_single_key_to_window_task(key)
+        send_single_key_to_window_task(key, duration)
 
-def send_multiple_key_to_window(keys):
+def send_multiple_key_to_window(keys, duration):
     """发送组合按键（单线程）"""
     if GlobalVariable.compatibility_mode:
-        send_multiple_key_to_window_follow(keys)
+        send_multiple_key_to_window_follow(keys, duration)
     else:
-        send_multiple_key_to_window_task(keys)
+        send_multiple_key_to_window_task(keys, duration)
 
-def send_single_key_to_window_follow(key):
+def send_single_key_to_window_follow(key, duration):
     """发送单个按键，减少延迟（单线程）"""
     keyboard.press(key)
-    time.sleep(GlobalVariable.duration)
+    time.sleep(duration/1000 + GlobalVariable.duration)
     keyboard.release(key)
 
-def send_multiple_key_to_window_follow(keys):
+def send_multiple_key_to_window_follow(keys, duration):
     """发送组合按键，减少延迟（单线程）"""
     for key in keys:
         keyboard.press(key)
-    time.sleep(GlobalVariable.duration)
+    time.sleep(duration/1000 + GlobalVariable.duration)
     for key in keys:
         keyboard.release(key)
 
