@@ -54,13 +54,13 @@
         长按间隔（ms）
       </n-gradient-text>
       <n-skeleton v-if="noSelectButton" :sharp="false" size="medium" style="flex-basis: 40%; margin-left: 28px;" />
-      <n-input-number v-else v-model:value="downDuration" style="flex-basis: 40%; margin-left: 28px;" :step="0.01"/>
+      <n-input-number v-else v-model:value="downDuration" style="flex-basis: 40%; margin-left: 28px;" :step="10"/>
       <div style="flex-basis: 100%;" />
       <n-gradient-text  gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))" style="margin-top: 5px;">
         列后等待延迟（ms）
       </n-gradient-text>
       <n-skeleton v-if="noSelectButton" :sharp="false" size="medium" style="flex-basis: 40%;" />
-      <n-input-number v-else v-model:value="columnAfterDuration" style="flex-basis: 40%;" :step="0.01" />
+      <n-input-number v-else v-model:value="columnAfterDuration" style="flex-basis: 40%;" :step="10" />
       <div style="flex-basis: 100%;" />
       <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))" style="margin-top: 5px;">
         歌曲名字
@@ -89,19 +89,13 @@ const noSelectButton = ref(true)
 
 function handleContextMenu(e: MouseEvent, buttonIdx){ 
   e.preventDefault(); 
-  downDuration.value = Number(durationNotes.value[progress.value -1][nowButton.value])
+  downDuration.value = Number(durationNotes.value[progress.value -1][buttonIdx])
   let row = Math.floor(buttonIdx / 5);
   let col = (buttonIdx) % 5;
   let item = keys.value[row][col]
-  const index = row + col * 5;
-  const progressIndex = progress.value - 1;
   if (item.active) {
-    notes.value[progressIndex].push(index + 1);
-    durationNotes.value[progressIndex][index] = item.duration ? item.duration : 0;
     noSelectButton.value = false
   } else {
-    notes.value[progressIndex] = notes.value[progressIndex].filter(res => res !== index + 1);
-    durationNotes.value[progressIndex][index] = 0;
     noSelectButton.value = true
   }
   nowButton.value = buttonIdx
@@ -129,16 +123,16 @@ const drawCanvas=()=>{ const canvas:any=midiCanvas.value; if (!canvas) return; c
 const previousColumn=()=>{ if (currentColumn.value >0){ currentColumn.value--; progress.value=currentColumn.value + 1; drawCanvas();}};
 const nextColumn=()=>{ if (currentColumn.value < notes.value.length - 1){ currentColumn.value++; progress.value=currentColumn.value + 1; drawCanvas();}};
 const playNowColumn = () => {
-  console.log("发送到游戏当中");
   const progressIndex = progress.value - 1;
   const currentNotes = notes.value[progressIndex];
   const noteCount = currentNotes.length;
-  const time = timeNotes[progressIndex];
+  const time = timeNotes.value[progressIndex];
   const songNote = currentNotes.map(element => ({
-    time,
+    time: Number(time),
     key: `${noteCount}Key${element - 1}`,
-    duration: `${durationNotes.value[progressIndex][element - 1] || 0}`
+    duration: Number(durationNotes.value[progressIndex][element - 1]) || 0
   }));
+  console.log(songNote)
 };
 const saveSheet = () =>{
   console.log("保存音乐文件")
@@ -169,7 +163,7 @@ async function handleUploadSheet(options: { file: any; fileList: UploadFileInfo[
         .split("Key")
         .map(part => {
           const keyIndex = parseInt(part, 10);
-          durationNote[keyIndex] = element.duration;
+          durationNote[keyIndex] = element.duration || 0;
           return keyIndex + 1;
         });
       newNotes.push(parsedKeys);
