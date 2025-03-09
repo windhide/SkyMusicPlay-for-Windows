@@ -29,6 +29,9 @@
     <n-button @click="saveSheet" quaternary circle style="font-size: 24px" color="#F2C9C4">
       <n-icon><Save20Filled /></n-icon>  
     </n-button>
+    <n-button @click="isPlaying ? pause() : reverse()" quaternary circle  style="font-size: 24px; transform: rotate(180deg);" color="#F2C9C4">
+      <n-icon><Pause24Filled v-if="isPlaying" /><Play24Filled v-else/></n-icon> 
+    </n-button>
     <n-upload ref="upload" action="#" :default-upload="false" accept=".txt" @change="handleUploadSheet" style="flex-basis: 1%;" :show-file-list="false">
       <n-button quaternary circle  style="font-size: 22px" color="#F2C9C4">
         <n-icon><ArrowUpload24Filled /></n-icon> 
@@ -154,8 +157,8 @@ const drawCanvas = () => {
         ctx.fillText(durationNotes.value[columnIndex], x + rectWidth / 2, y + rectHeight / 2); 
       } ctx.fillStyle = "#F2C9C4"; }); }); ctx.restore(); ctx.fillStyle = "rgba(155, 149, 201, 0.5)"; const highlightX = currentX > viewportCenter ? viewportCenter : currentX; ctx.fillRect(highlightX, 0, columnSize, canvasHeight); };
 
-const previousColumn=()=>{ if (currentColumn.value >0){ currentColumn.value--; progress.value=currentColumn.value + 1; drawCanvas();}};
-const nextColumn=()=>{ if (currentColumn.value < notes.value.length - 1){ currentColumn.value++; progress.value=currentColumn.value + 1; drawCanvas();}};
+const previousColumn=()=>{ if (currentColumn.value >0){ currentColumn.value--; progress.value=currentColumn.value + 1; drawCanvas();playNowColumn();}};
+const nextColumn=()=>{ if (currentColumn.value < notes.value.length - 1){ currentColumn.value++; progress.value=currentColumn.value + 1; drawCanvas();playNowColumn();}};
 const playNowColumn = () => {
   const progressIndex = progress.value - 1;
   const currentNotes = notes.value[progressIndex];
@@ -166,11 +169,11 @@ const playNowColumn = () => {
     key: `${noteCount}Key${element - 1}`,
     duration: Number(durationNotes.value[progressIndex]) || 0
   }));
-  console.log(songNote)
   sendData("play_operate",{
     operate: 'start',
     sheet:songNote
   })
+  return Number(time)
 };
 const saveSheet = () =>{
   console.log("保存音乐文件")
@@ -212,35 +215,86 @@ async function handleUploadSheet(options: { file: any; fileList: UploadFileInfo[
     durationNotes.value = newDurationNotes;
     timeNotes.value = newTimeNotes;
     progress.value = 1;
-    syncCanvasToKeysArea();
+    syncCanvasToKeysArea()
+    drawCanvas()
   } catch (error) {
     message.error("谱子加载失败");
     console.error(error);
   }
 }
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+// async function sleep(ms) {
+//     const start = performance.now();
+//     while (performance.now() - start < ms) {
+//         // 在这里进行非阻塞等待，可以考虑使用 Promise.resolve().then 来产生微任务
+//         await Promise.resolve().then;
+//     }
+// }
 
 const precessSongNotes=(song_notes:any)=>{ let result:any=[]; let combined_time=-1; let combined_keys=''; for (let i=0; i < song_notes.length; i++){ let note=song_notes[i]; let current_time=note.time; let key=note.key; let duration=note?.duration || 0; if (current_time !==combined_time){ if (combined_keys){ let next_time=(i < song_notes.length - 1) ? song_notes[i + 1].time : current_time; let delay=next_time - combined_time; result.push({ key: combined_keys, delay, duration});} combined_time=current_time; combined_keys=key.match(/(Key-?\d+)/)[0];} else{ combined_keys +=key.match(/(Key-?\d+)/)[0];}} if (combined_keys){ result.push({ key: combined_keys, delay: 0, duration: 0});} return result}
-const play=()=>{ 
-  if (intervalId.value) return; 
-  if (currentColumn.value >=notes.value.length){
-     currentColumn.value=0; progress.value=1;
+
+let isFirst = true
+const play = async () => { 
+  if (intervalId.value) return; // 避免重复启动
+  if (currentColumn.value >= notes.value.length) {
+    currentColumn.value = 0; 
+    progress.value = 1;
   } 
-  isPlaying.value=true; 
-  intervalId.value=setInterval(()=>{ 
-    progress.value=currentColumn.value + 1; 
-    currentColumn.value++; drawCanvas(); 
-    if (currentColumn.value >=notes.value.length){ 
-      clearInterval(intervalId.value); 
-      intervalId.value=null; 
-      isPlaying.value=false;
-  }}, 30);
-  };
-const pause=()=>{ 
-  if (intervalId.value){ 
-    clearInterval(intervalId.value); 
-    intervalId.value=null; 
-    isPlaying.value=false;
-  }};
+  isPlaying.value = true; 
+  intervalId.value = true; 
+  let inWhileColumn = currentColumn.value
+  while (inWhileColumn < notes.value.length && intervalId.value) {
+    const start = performance.now();
+    inWhileColumn++; 
+    if (isFirst){
+      playNowColumn()
+      isFirst = false;
+    }else{
+      nextColumn()
+    }
+    let shoudSleeptime = (timeNotes.value[progress.value - 1] - 10) < 0 ? 0 : timeNotes.value[progress.value - 1] - 10
+    shoudSleeptime = durationNotes.value[progress.value - 1] > shoudSleeptime ? durationNotes.value[progress.value - 1] : shoudSleeptime
+    await sleep(shoudSleeptime);
+    const end = performance.now();
+    console.log("应该sleep的时间",shoudSleeptime)
+    console.log(`实际sleep的时间",${(end - start).toFixed(3)} ms`)
+  }
+  intervalId.value = null;
+  isPlaying.value = false;
+  isFirst = true;
+};
+const pause = () => { 
+  intervalId.value = null; // 结束 while 循环
+  isPlaying.value = false;
+  isFirst = false;
+};
+const reverse = async () => { 
+  if (intervalId.value) return; // 避免重复启动
+
+  if (currentColumn.value >= notes.value.length) {
+    currentColumn.value = 0; 
+    progress.value = 1;
+  } 
+  isPlaying.value = true; 
+  intervalId.value = true; 
+  let inWhileColumn = currentColumn.value
+  while (inWhileColumn >= 0 && intervalId.value) {
+    inWhileColumn--; 
+    if (isFirst){
+      playNowColumn()
+      isFirst = false;
+    }else{
+      previousColumn()
+    }
+    await sleep((timeNotes.value[progress.value - 2] - 10) < 0 ? 0 : timeNotes.value[progress.value - 2] - 10);
+    console.log("sleep",(timeNotes.value[progress.value - 2] - 10) < 0 ? 0 : timeNotes.value[progress.value - 2] - 10)
+  }
+  intervalId.value = null;
+  isPlaying.value = false;
+  isFirst = true;
+};
 const deleteCurrentColumn=()=>{ notes.value.splice(currentColumn.value, 1); durationNotes.value.splice(currentColumn.value, 0); if (currentColumn.value >=notes.value.length){ currentColumn.value=notes.value.length - 1;} progress.value=currentColumn.value + 1; drawCanvas();};
 const insertEmptyColumn=()=>{ notes.value.splice(currentColumn.value, 0, []); durationNotes.value.splice(currentColumn.value, 0, 0); progress.value=currentColumn.value + 1; drawCanvas();};
 const updateProgress=()=>{ currentColumn.value=progress.value - 1; drawCanvas();};

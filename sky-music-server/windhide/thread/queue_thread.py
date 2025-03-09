@@ -1,9 +1,12 @@
+import time
+
 from windhide.playRobot import intel_robot, amd_robot
 from windhide.static.global_variable import GlobalVariable
 
 
 def music_start_tasks():
     while True:
+        start_time = time.time()
         request = GlobalVariable.task_queue.get()  # 从队列中取出任务
         try:
             if GlobalVariable.window["hWnd"] is None and GlobalVariable.compatibility_mode is False:
@@ -17,3 +20,5 @@ def music_start_tasks():
         except Exception as e:
             print(f"Error in processing task: {str(e)}")
         GlobalVariable.task_queue.task_done()  # 标记任务完成
+        end_time = time.time()
+        print("Time elapsed:", end_time - start_time)
