@@ -146,6 +146,7 @@ import dmcr from "../component/svg/dmcr.vue"
 import { NButton, UploadFileInfo, useMessage } from "naive-ui";
 import { getList, sendData } from "@renderer/utils/fetchUtils";
 import { RowData } from "naive-ui/es/data-table/src/interface";
+import { debounce } from "lodash-es";
 
 const midiCanvas = ref(null);
 const isPlaying = ref(false)
@@ -197,6 +198,13 @@ const tableColumns = [
   }
 ]
 let nowType = 'systemMusic'
+const fetchListData = debounce(() => {
+  getListData('myFavorite');
+  getListData('systemMusic');
+  getListData('myImport');
+  getListData('myTranslate');
+}, 200);
+watch(searchText, fetchListData)
 function rowClassName(row: RowData) {
   if (row?.position) {
     return 'table_position'
