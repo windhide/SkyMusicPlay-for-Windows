@@ -92,7 +92,7 @@ const keys=ref([ [ {key: "0", type:"dmcr", duration:0, active: false}, {key: "1"
 // 自定义显示文字
 const durationNotes = ref<number[]>([0]); // 长按表
 const notes = ref<number[][]>([[]]); // 谱表
-const timeNotes = ref<number[]>([0]); // 延迟表
+const timeNotes = ref<number[]>([10]); // 延迟表
 const progress = ref(1);
 const canvasWidth = 1200;
 const canvasHeight = 300;
@@ -341,8 +341,24 @@ const insertEmptyColumn = () => {
   console.log(notes.value,durationNotes.value,timeNotes.value)
 };const updateProgress=()=>{ currentColumn.value=progress.value - 1; drawCanvas();};
 watch(progress, syncCanvasToKeysArea)
-watch(columnAfterDuration, ()=>{ timeNotes.value[progress.value - 1] = columnAfterDuration.value })
-watch(columnDownDuration, ()=>{durationNotes.value[progress.value - 1] = columnDownDuration.value; drawCanvas() })
+watch(columnAfterDuration, (newValue, _oldValue) => {
+  if (columnDownDuration.value >= newValue) {
+    message.info("长按间隔需要小于列后等待延迟，已自动调整");
+    columnDownDuration.value = Math.max(newValue - 10, 0);
+  }
+  const finalValue = Math.max(newValue, 10);
+  columnAfterDuration.value = finalValue;
+  timeNotes.value[progress.value - 1] = finalValue;
+  drawCanvas();
+});
+watch(columnDownDuration, (newValue, _oldValue) => {
+  if (newValue >= columnAfterDuration.value) {
+    message.info("长按间隔需要小于等待间隔，已自动增加列后等待延迟");
+    columnAfterDuration.value = newValue + 10;
+  }
+  durationNotes.value[progress.value - 1] = newValue;
+  drawCanvas();
+});
 watch(nowButton, ()=>{
   columnDownDuration.value = Number(durationNotes.value[progress.value -1])
 })
