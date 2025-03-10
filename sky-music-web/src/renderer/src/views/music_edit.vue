@@ -156,10 +156,11 @@ import{ Search} from '@vicons/ionicons5'
 import cr from "../component/svg/cr.vue"
 import dm from "../component/svg/dm.vue"
 import dmcr from "../component/svg/dmcr.vue"
-import { NButton, UploadFileInfo, useMessage } from "naive-ui";
+import { NButton, UploadFileInfo, useDialog, useMessage } from "naive-ui";
 import { getList, sendData } from "@renderer/utils/fetchUtils";
 import { RowData } from "naive-ui/es/data-table/src/interface";
 import { debounce } from "lodash-es";
+import { onBeforeRouteLeave } from "vue-router";
 
 const midiCanvas = ref(null);
 const isPlaying = ref(false)
@@ -216,6 +217,7 @@ const cornerRadius = 5; // 圆角半径
 const intervalId:any = ref(null);
 const currentColumn = ref(0); // 当前列的索引
 const message = useMessage()
+const dialog = useDialog()
 
 const drawCanvas = () => {
   const canvas: any = midiCanvas.value;
@@ -557,6 +559,29 @@ function getSheetToMemory(startIdx) {
 
 onMounted(()=>{ window.api.window_size(774,1500); const canvas:any=midiCanvas.value; if (canvas){ canvas.width=canvasWidth; canvas.height=canvasHeight; drawCanvas(); getListData('systemMusic');syncCanvasToKeysArea();}});
 onUnmounted(()=>{ pause(); window.api.window_size(0,0);});
+
+onBeforeRouteLeave((_to, _from, next) => {
+  if (notes.value.length >= 3){
+    dialog.warning({
+      title: '一个来自开发者的温馨小提示⭐',
+      content: '确定要离开乐谱编辑页面吗？未保存的更改将丢失。',
+      positiveText: '就走就走',
+      negativeText: '不走了我先保存吧',
+      maskClosable: false,
+      onMaskClick: () => {
+        next(false); // 阻止离开
+      },
+      onPositiveClick: () =>{
+        next();
+      },
+      onNegativeClick: ()=>{
+        next(false); // 阻止离开
+      }
+    })
+  }else{
+    next();
+  }
+});
 </script>
 
 <style scoped>
