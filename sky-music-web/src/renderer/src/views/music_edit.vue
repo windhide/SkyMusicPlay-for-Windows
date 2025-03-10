@@ -227,13 +227,23 @@ const drawCanvas = () => {
   if (currentX > viewportCenter) {
     offsetX = viewportCenter - currentX;
   }
+
+  // 计算视口范围内的列
+  const visibleStartX = -offsetX;
+  const visibleEndX = canvasWidth - offsetX;
+  const startColumn = Math.max(0, Math.floor(visibleStartX / columnSize));
+  const endColumn = Math.min(notes.value.length, Math.ceil(visibleEndX / columnSize));
+
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
   ctx.save();
   ctx.translate(offsetX, 0);
-  ctx.strokeStyle = "rgba(85, 85, 85, 0)";
   
-  // 绘制网格
-  for (let x = 0; x < canvasWidth - offsetX; x += gridSize) {
+  // 绘制网格（仅在可见区域内）
+  ctx.strokeStyle = "rgba(85, 85, 85, 0)";
+  const startGridX = Math.floor(visibleStartX / gridSize) * gridSize;
+  const endGridX = Math.ceil(visibleEndX / gridSize) * gridSize;
+  
+  for (let x = startGridX; x <= endGridX; x += gridSize) {
     ctx.beginPath();
     ctx.moveTo(x, 0);
     ctx.lineTo(x, canvasHeight);
@@ -241,26 +251,41 @@ const drawCanvas = () => {
   }
   for (let y = 0; y < canvasHeight; y += gridSize) {
     ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(canvasWidth - offsetX, y);
+    ctx.moveTo(startGridX, y);
+    ctx.lineTo(endGridX, y);
     ctx.stroke();
   }
   
   // 绘制列线
   ctx.strokeStyle = "rgba(136, 136, 136, 0.7)";
   ctx.lineWidth = 2;
-  for (let x = 0; x < canvasWidth - offsetX; x += columnSize) {
-    ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x, canvasHeight);
-    ctx.stroke();
+  
+  // 如果视野内只有一列，绘制完整的分割线
+  if (endColumn - startColumn <= 1) {
+    for (let x = 0; x < canvasWidth - offsetX; x += columnSize) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, canvasHeight);
+      ctx.stroke();
+    }
+  } else {
+    // 否则只绘制可见区域的分割线
+    for (let x = startColumn * columnSize; x <= endColumn * columnSize; x += columnSize) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, canvasHeight);
+      ctx.stroke();
+    }
   }
   
   ctx.lineWidth = 1;
   ctx.fillStyle = "#F2C9C4";
   
-  // 绘制音符
-  notes.value.forEach((column, columnIndex) => {
+  // 只绘制视野内的音符
+  for (let columnIndex = startColumn; columnIndex < endColumn; columnIndex++) {
+    const column = notes.value[columnIndex];
+    if (!column) continue;
+    
     column.forEach(row => {
       const y = (row - 1) * (canvasHeight / 15);
       const x = columnIndex * columnSize + 1;
@@ -284,22 +309,17 @@ const drawCanvas = () => {
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
-      // 计算当前列应该显示的 durationNotes
       let textToDisplay = "";
       if (durationNotes.value.length === 1) {
-        // 只有一个值，应用到所有这一列的格子
-        textToDisplay = String(durationNotes.value[0]);  // 确保 0 也能正确显示
+        textToDisplay = String(durationNotes.value[0]);
       } else if (columnIndex < durationNotes.value.length) {
-        // 多个值时，按列索引显示
         textToDisplay = String(durationNotes.value[columnIndex]);
       }
 
-      // 在当前列的所有音符上显示相应的 durationNotes 值
       ctx.fillText(textToDisplay, x + rectWidth / 2, y + rectHeight / 2);
-
       ctx.fillStyle = "#F2C9C4";
     });
-  });
+  }
   
   ctx.restore();
   
