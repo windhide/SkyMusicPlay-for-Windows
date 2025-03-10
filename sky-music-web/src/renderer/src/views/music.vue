@@ -192,7 +192,7 @@
 import { getData, sendData, getList, setConfig } from '@renderer/utils/fetchUtils'
 
 import { DataTableInst, RowData } from 'naive-ui/es/data-table/src/interface'
-import { h, onUnmounted, reactive, ref, watch } from 'vue'
+import { h, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { NButton, useMessage, DrawerPlacement } from 'naive-ui'
 import {
   Search,
@@ -640,6 +640,7 @@ function deleteClick(name) {
 // 文件上传完成后的处理
 function handleFinish({ file: _file, event: _event }) {
   handleUpdateValue('myImport')
+  nowType = "myImport"
 }
 
 // 文件上传前处理
@@ -802,8 +803,6 @@ function initWebSocket() {
   }
 }
 
-handleUpdateValue('myFavorite')
-handleUpdateValue('systemMusic')
 sendData("config_operate",{
     "operate": "get",
     "name": "shortcutStruct"
@@ -811,6 +810,11 @@ sendData("config_operate",{
   shortcutKeys = res["music_key"]
 })
 initWebSocket()
+
+onMounted(async ()=>{
+  await handleUpdateValue('myFavorite')
+  await handleUpdateValue('systemMusic')
+})
 
 // ---------------------------------------------------
 // 组件销毁时的清理工作
