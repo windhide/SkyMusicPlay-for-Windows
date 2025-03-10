@@ -356,4 +356,7 @@ onMounted(() => {
   margin-bottom: 320px;
   background-color: rgba(242, 201, 196, 0);
 }
+.n-drawer-mask,.n-drawer{
+  border-radius: 26px !important;
+}
 </style>

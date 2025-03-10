@@ -32,6 +32,9 @@
     <n-button @click="isPlaying ? pause() : reverse()" quaternary circle  style="font-size: 24px; transform: rotate(180deg);" color="#F2C9C4">
       <n-icon><Pause24Filled v-if="isPlaying" /><Play24Filled v-else/></n-icon> 
     </n-button>
+    <n-button @click="musicActive = true" quaternary circle style="font-size: 24px" color="#F2C9C4">
+      <n-icon><AppsListDetail24Filled /></n-icon>  
+    </n-button>
     <n-upload ref="upload" action="#" :default-upload="false" accept=".txt" @change="handleUploadSheet" style="flex-basis: 1%;" :show-file-list="false">
       <n-button quaternary circle  style="font-size: 22px" color="#F2C9C4">
         <n-icon><ArrowUpload24Filled /></n-icon> 
@@ -69,24 +72,153 @@
       <n-input v-model:value="fileName" type="textarea" placeholder="歌曲名字/文件名字" style="flex-basis: 58%;" :autosize="{ minRows: 1, maxRows: 4 }"/>
     </n-flex>
   </div>
+    <n-drawer
+      v-model:show="musicActive"
+      :width="900"
+      placement="left"
+      :trap-focus="false"
+      :block-scroll="false"
+    >
+    <n-drawer-content>
+      <n-card style="margin-left: -16px; width: 860px;" :bordered="false">
+        <n-tabs type="bar" animated size="small" @update:value="handleUpdateValue" @before-leave="handleBeforeLeave" :value="tabsNumber">
+          <n-tab-pane name="systemMusic" tab="自带歌曲">
+            <n-data-table :columns="tableColumns" :data="music.systemMusic" :bordered="false" :min-row-height="48" ref="systemMusic"
+              :max-height="600" :virtual-scroll="music.systemMusic?.length > 7" :row-class-name="rowClassName" 
+              style="
+                --n-td-color: rgba(57, 57, 62, 0);
+                --n-th-color-hover: rgba(57, 57, 62, 0);
+                --n-th-color: rgba(57, 57, 62, 0);
+                --n-td-color-hover: rgba(0, 0, 0, 0.2);
+              "/>
+          </n-tab-pane>
+          <n-tab-pane name="myImport" tab="导入歌曲" ref="myImport">
+            <n-data-table :columns="tableColumns" :data="music.myImport" :bordered="false" :min-row-height="48" ref="myImport"
+            :max-height="600" :virtual-scroll="music.myImport?.length > 7"  :row-class-name="rowClassName"
+            style="
+                --n-td-color: rgba(57, 57, 62, 0);
+                --n-th-color-hover: rgba(57, 57, 62, 0);
+                --n-th-color: rgba(57, 57, 62, 0);
+                --n-td-color-hover: rgba(0, 0, 0, 0.2);
+              "/>
+          </n-tab-pane>
+          <n-tab-pane name="myTranslate" tab="转换歌曲" ref="myTranslate">
+            <n-data-table :columns="tableColumns" :data="music.myTranslate" :bordered="false" :min-row-height="48" ref="myTranslate"
+            :max-height="600" :virtual-scroll="music.myTranslate?.length > 7" :row-class-name="rowClassName" 
+            style="
+                --n-td-color: rgba(57, 57, 62, 0);
+                --n-th-color-hover: rgba(57, 57, 62, 0);
+                --n-th-color: rgba(57, 57, 62, 0);
+                --n-td-color-hover: rgba(0, 0, 0, 0.2);
+              "/>
+          </n-tab-pane>
+          <n-tab-pane name="myFavorite" tab="收藏" ref="myFavorite">
+            <n-data-table :columns="tableColumns" :data="music.myFavorite" :bordered="false" :min-row-height="48" ref="myFavorite"
+            :max-height="600" :virtual-scroll="music.myFavorite?.length > 7"  :row-class-name="rowClassName"
+            style="
+                --n-td-color: rgba(57, 57, 62, 0);
+                --n-th-color-hover: rgba(57, 57, 62, 0);
+                --n-th-color: rgba(57, 57, 62, 0);
+                --n-td-color-hover: rgba(0, 0, 0, 0.2);
+              "/>
+          </n-tab-pane>
+          <template #suffix>
+            <n-input v-model:value="searchText" round placeholder="搜索"
+              style="top:-3px;width: 25vh; margin-left: 5px">
+              <template #suffix>
+                <n-icon :component="Search" />
+              </template>
+            </n-input>
+          </template>
+        </n-tabs>
+      </n-card>
+    </n-drawer-content>
+  </n-drawer>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted, nextTick, CSSProperties, watch } from "vue";
-import{ ArrowPrevious24Filled, Pause24Filled, Play24Filled, ArrowNext24Filled, TableDeleteColumn24Filled, TableAdd24Filled, MusicNote120Filled, Save20Filled, ArrowUpload24Filled, CommunicationPerson20Filled} from '@vicons/fluent'
+import { ref, onMounted, onUnmounted, nextTick, CSSProperties, watch, reactive, h } from "vue";
+import{ ArrowPrevious24Filled, Pause24Filled, Play24Filled, ArrowNext24Filled, TableDeleteColumn24Filled, TableAdd24Filled, MusicNote120Filled, Save20Filled, ArrowUpload24Filled, AppsListDetail24Filled} from '@vicons/fluent'
+import{ Search} from '@vicons/ionicons5'
 import cr from "../component/svg/cr.vue"
 import dm from "../component/svg/dm.vue"
 import dmcr from "../component/svg/dmcr.vue"
-import { UploadFileInfo, useMessage } from "naive-ui";
-import { sendData } from "@renderer/utils/fetchUtils";
+import { NButton, UploadFileInfo, useMessage } from "naive-ui";
+import { getList, sendData } from "@renderer/utils/fetchUtils";
+import { RowData } from "naive-ui/es/data-table/src/interface";
 
 const midiCanvas = ref(null);
 const isPlaying = ref(false)
+const musicActive = ref(false)
 const fileName = ref("")
+const searchText = ref('')
 const columnAfterDuration = ref(0)
 const columnDownDuration = ref(0)
 const nowButton = ref(-1)
 
+const tableColumns = [
+  {
+    title: '歌名',
+    key: 'name',
+    resizable: true,
+    className: 'th_css',
+    ellipsis: {
+      tooltip: true
+    }
+  },
+  {
+    title: '操作',
+    key: 'operation',
+    width: 60,
+    className: 'th_css',
+    render(row) {
+      return h(
+        NButton,
+        {
+          size: 'medium',
+          text: true,
+          onClick: () => {
+            sendData("path",{
+              "type":nowType
+            }).then(res=>{
+              loadFile(`${res}\\${row.name}.txt`).then(()=>{
+                musicActive.value = false;
+              })
+            })
+          }
+        },
+        {
+          default: () => {
+            return '👈'
+          }
+        }
+      )
+    }
+  }
+]
+let nowType = 'systemMusic'
+function rowClassName(row: RowData) {
+  if (row?.position) {
+    return 'table_position'
+  }
+  return 'td_css'
+}
+// 处理抽屉切换前动作
+function handleBeforeLeave(name: string) {
+  nowType = name
+  return true
+}
+const tabsNumber = ref("systemMusic")
+function handleUpdateValue(value: string) {
+  tabsNumber.value = value
+  getListData(value)
+}
+async function getListData(value) {
+  await getList(value, searchText.value).then((_res) => {
+    eval('music.' + value + '=_res')
+  })
+}
+const music: any=reactive({ systemMusic: [], myImport: [], myTranslate: [], myFavorite: [], musicList: []})
 const keys=ref([ [ {key: "0", type:"dmcr", duration:0, active: false}, {key: "1", type:"dm", duration:0, active: false}, {key: "2", type:"cr", duration:0, active: false}, {key: "3", type:"dm", duration:0, active: false}, {key: "4", type:"cr", duration:0, active: false}, ], [ {key: "5", type:"cr", duration:0, active: false}, {key: "6", type:"dm", duration:0, active: false}, {key: "7", type:"dmcr", duration:0, active: false}, {key: "8", type:"dm", duration:0, active: false}, {key: "9", type:"cr", duration:0, active: false}, ], [ {key: "10", type:"cr", duration:0, active: false}, {key: "11", type:"dm", duration:0, active: false}, {key: "12", type:"cr", duration:0, active: false}, {key: "13", type:"dm", duration:0, active: false}, {key: "14", type:"dmcr", duration:0, active: false}, ]
 ])
 // 自定义显示文字
@@ -232,8 +364,12 @@ const saveSheet = () =>{
 
 const saveFile=(filename, content)=>{ const blob=new Blob([content],{ type: "text/plain"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=filename; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href);}
 async function handleUploadSheet(options: { file: any; fileList: UploadFileInfo[] }) {
+  loadFile(options.file.file.path)
+}
+
+async function loadFile(filePath){
   try {
-    const res = await window.api.readFile(options.file.file.path, true);
+    const res = await window.api.readFile(filePath, true);
     if (!res) {
       message.error("谱子加载失败");
       return;
@@ -270,8 +406,8 @@ async function handleUploadSheet(options: { file: any; fileList: UploadFileInfo[
     message.error("谱子加载失败");
     console.error(error);
   }
-  console.log(notes.value,durationNotes.value,timeNotes.value)
 }
+
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -408,7 +544,7 @@ function getSheetToMemory(startIdx) {
   return demoSongNotes
 }
 
-onMounted(()=>{ window.api.window_size(774,1500); const canvas:any=midiCanvas.value; if (canvas){ canvas.width=canvasWidth; canvas.height=canvasHeight; drawCanvas()}});
+onMounted(()=>{ window.api.window_size(774,1500); const canvas:any=midiCanvas.value; if (canvas){ canvas.width=canvasWidth; canvas.height=canvasHeight; drawCanvas(); getListData('systemMusic');}});
 onUnmounted(()=>{ pause(); window.api.window_size(0,0);});
 </script>
 
@@ -440,5 +576,23 @@ onUnmounted(()=>{ pause(); window.api.window_size(0,0);});
   --n-border-focus: 1px solid rgb(242,232,196)!important;
   --n-caret-color: rgb(242,232,196)!important;
   --n-color-focus: rgba(242,232,196,0.1)!important;
+}
+:deep(.n-tabs){
+    --n-tab-text-color-active: rgb(242,232,196)!important;
+    --n-tab-text-color-hover: rgb(242,232,196)!important;
+    --n-tab-text-color: rgb(221,242,196)!important;
+}
+:deep(.td_css td) {
+  color: rgb(242,232,196) !important;
+}
+:deep(.th_css){
+  color: rgb(221,242,196) !important;
+}
+
+:deep(.table_position td) {
+  background-color: rgba(242, 201, 196, 0.507) !important;
+}
+:deep(.n-tabs-bar){
+  --n-bar-color: rgb(242,232,196)!important;
 }
 </style>

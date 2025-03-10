@@ -166,6 +166,10 @@ def auto(request: dict):
         case 'shutdown':
             shutdown()
 
+@app.post("/path")
+def get_path(request: dict):
+    return getResourcesPath(request["type"])
+
 @app.post("/test")
 def test(request: dict):
     match request["operate"]:
