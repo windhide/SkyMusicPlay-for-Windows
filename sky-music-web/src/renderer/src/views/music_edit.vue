@@ -369,44 +369,54 @@ async function handleUploadSheet(options: { file: any; fileList: UploadFileInfo[
   loadFile(options.file.file.path)
 }
 
-async function loadFile(filePath){
+async function loadFile(filePath) {
   try {
     const res = await window.api.readFile(filePath, true);
-    if (!res) {
-      message.error("谱子加载失败");
-      return;
+    if (!res || !Array.isArray(res) || res.length === 0) {
+      throw new Error('谱子数据格式错误');
     }
-    message.success("谱子加载成功");
-    fileName.value = res[0]?.name || "未知文件";
-    const songNotes = res[0]?.songNotes || [];
+    const { name = '未知文件', songNotes = [] } = res[0];
+    fileName.value = name;
+    if (!Array.isArray(songNotes)) {
+      throw new Error('谱子音符数据格式错误');
+    }
     notes.value = [];
     durationNotes.value = [];
     timeNotes.value = [];
-    let groupDemo:any = Object.values(
-        songNotes.reduce((acc, note) => {
-            if (!acc[note.time]) {
-                acc[note.time] = { time: note.time, keys: [], duration:note.duration || 0 };
-            }
-            acc[note.time].keys.push(note.key);
-            return acc;
-        }, {})
-    )
-    groupDemo.forEach((item:any,index)=>{
-        let note:any = []
-        item.keys.forEach(key => {
-          note.push(Number(key.match(/(Key-?\d+)/)[0].replace("Key","")) + 1);
+    const timeGroupedNotes = new Map();
+    songNotes.forEach(note => {
+      if (!timeGroupedNotes.has(note.time)) {
+        timeGroupedNotes.set(note.time, {
+          time: note.time,
+          keys: [],
+          duration: note.duration || 0
         });
-        notes.value.push(note)
-        durationNotes.value.push(item.duration)
-        timeNotes.value.push(groupDemo[index + 1] ? groupDemo[index + 1].time - item.time : 0)
-    })
-    syncCanvasToKeysArea()
-    drawCanvas()
+      }
+      timeGroupedNotes.get(note.time).keys.push(note.key);
+    });
+    const sortedNotes = Array.from(timeGroupedNotes.values())
+      .sort((a, b) => a.time - b.time);
+    sortedNotes.forEach((item, index) => {
+      const keyNumbers = item.keys.map(key => {
+        const match = key.match(/(Key-?\d+)/);
+        return match ? Number(match[0].replace('Key', '')) + 1 : 0;
+      }).filter(num => num !== 0);
+      notes.value.push(keyNumbers);
+      durationNotes.value.push(item.duration);
+      timeNotes.value.push(
+        index < sortedNotes.length - 1 ? 
+        sortedNotes[index + 1].time - item.time : 
+        0
+      );
+    });
+    syncCanvasToKeysArea();
+    drawCanvas();
     currentColumn.value = 0;
     progress.value = 1;
+    message.success('谱子加载成功');
   } catch (error) {
-    message.error("谱子加载失败");
-    console.error(error);
+    message.error(`谱子加载失败: ${error.message}`);
+    console.error('加载谱子出错:', error);
   }
 }
 
