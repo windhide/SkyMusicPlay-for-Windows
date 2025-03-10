@@ -211,6 +211,7 @@ import {
   Location28Filled
 } from '@vicons/fluent'
 import { useStore } from 'vuex'
+import { debounce } from 'lodash-es'
 
 // ---------------------------------------------------
 // 响应式状态和常量定义
@@ -663,13 +664,13 @@ async function getListData(value) {
 // ---------------------------------------------------
 // 监听器（watch）
 // ---------------------------------------------------
-watch(searchText, () => {
-  getListData('myFavorite')
-  getListData('systemMusic')
-  getListData('myImport')
-  getListData('myTranslate')
-})
-
+const fetchListData = debounce(() => {
+  getListData('myFavorite');
+  getListData('systemMusic');
+  getListData('myImport');
+  getListData('myTranslate');
+}, 200);
+watch(searchText, fetchListData)
 let randomInterval: any = null
 watch(delayStatus, () => {
   switch (delayStatus.value) {

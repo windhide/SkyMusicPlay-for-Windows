@@ -106,6 +106,7 @@ import { RowData } from "naive-ui/es/data-table/src/interface";
 import { h, reactive, ref, watch } from "vue";
 import { useMessage, NButton } from "naive-ui";
 import { Search } from "@vicons/ionicons5";
+import { debounce } from "lodash-es";
 
 const message = useMessage();
 
@@ -266,12 +267,13 @@ function handleBeforeLeave(name: string) {
   return true;
 }
 
-watch(searchText, () => {
-  getListData("systemMusic");
-  getListData("myImport");
-  getListData("myTranslate");
-  getListData("myFavorite");
-});
+const fetchListData = debounce(() => {
+  getListData('myFavorite');
+  getListData('systemMusic');
+  getListData('myImport');
+  getListData('myTranslate');
+}, 200);
+watch(searchText, fetchListData)
 
 function followTutorial() {
   if (nowPlayMusic.value === "没有歌曲") {
