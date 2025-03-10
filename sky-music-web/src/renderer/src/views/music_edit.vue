@@ -170,7 +170,7 @@ const searchText = ref('')
 const columnAfterDuration = ref(0)
 const columnDownDuration = ref(0)
 const nowButton = ref(-1)
-const tableColumns=[ { title: '歌名', key: 'name', resizable: true, className: 'th_css', ellipsis:{ tooltip: true}}, { title: '操作', key: 'operation', width: 60, className: 'th_css', render(row){ return h( NButton, { size: 'medium', text: true, onClick: ()=>{ sendData("path",{ "type":nowType}).then(res=>{ loadFile(`${res}\\${row.name}.txt`).then(()=>{ musicActive.value=false;})})}}, { default: ()=>{ return '👈'}} )}}
+const tableColumns=[ { title: '歌名', key: 'name', resizable: true, className: 'th_css', ellipsis:{ tooltip: true}}, { title: '操作', key: 'operation', width: 60, className: 'th_css', render(row){ return h( NButton, { size: 'medium', text: true, onClick: ()=>{ pause();sendData("path",{ "type":nowType}).then(res=>{ loadFile(`${res}\\${row.name}.txt`).then(()=>{ musicActive.value=false;})})}}, { default: ()=>{ return '👈'}} )}}
 ]
 let nowType = 'systemMusic'
 const fetchListData = debounce(() => {
@@ -382,6 +382,7 @@ async function loadFile(filePath) {
     if (!Array.isArray(songNotes)) {
       throw new Error('谱子音符数据格式错误');
     }
+    pause()
     notes.value = [];
     durationNotes.value = [];
     timeNotes.value = [];

@@ -374,8 +374,8 @@ const musicListColumns = [
 
 const progress = ref(0.0) // 播放进度条
 const playSpeed = ref(1) // 播放速度
-const delaySpeed: any = ref(0.01) // 延迟设置
-const durationSpeed: any = ref(0.01) // 延音设置
+const delaySpeed: any = ref(0) // 延迟设置
+const durationSpeed: any = ref(0) // 延音设置
 const durationRandomStart: any = ref(0.5)
 const durationRandomEnd: any = ref(1.5)
 const delayRandomStart: any = ref(0.01)
@@ -695,7 +695,7 @@ let durationInterval: any = null
 watch(durationStatus, () => {
   switch (durationStatus.value) {
     case 'system':
-      durationSpeed.value = 0.01
+      durationSpeed.value = 0
       clearInterval(durationInterval)
       break
     case 'random':
