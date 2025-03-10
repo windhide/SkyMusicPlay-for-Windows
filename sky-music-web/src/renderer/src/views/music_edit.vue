@@ -415,8 +415,7 @@ async function loadFile(filePath) {
     progress.value = 1;
     message.success('谱子加载成功');
   } catch (error) {
-    message.error(`谱子加载失败: ${error.message}`);
-    console.error('加载谱子出错:', error);
+    message.error(`谱子加载失败: ${error}`);
   }
 }
 
