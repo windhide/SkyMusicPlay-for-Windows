@@ -331,8 +331,22 @@ const drawCanvas = () => {
   ctx.fillRect(highlightX, 0, columnSize, canvasHeight);
 };
 
-const previousColumn=()=>{ if (currentColumn.value >0){ currentColumn.value--; progress.value=currentColumn.value + 1; drawCanvas();playNowColumn();}};
-const nextColumn=()=>{ if (currentColumn.value < notes.value.length - 1){ currentColumn.value++; progress.value=currentColumn.value + 1; drawCanvas();playNowColumn();}};
+const previousColumn=()=>{ 
+  if (currentColumn.value >0){ c
+    urrentColumn.value--; 
+    progress.value=currentColumn.value + 1; 
+    drawCanvas();
+    playNowColumn();
+  }
+};
+const nextColumn=()=>{ 
+  if (currentColumn.value < notes.value.length - 1){ 
+    currentColumn.value++; 
+    progress.value=currentColumn.value + 1; 
+    drawCanvas();
+    playNowColumn();
+  }
+};
 const playNowColumn = () => {
   const progressIndex = progress.value - 1;
   const currentNotes = notes.value[progressIndex];
@@ -366,7 +380,16 @@ const saveSheet = () =>{
   saveFile(fileName.value,JSON.stringify(templateMusicFormat))
 }
 
-const saveFile=(filename, content)=>{ const blob=new Blob([content],{ type: "text/plain"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=filename; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href);}
+const saveFile=(filename, content)=>{ 
+  const blob=new Blob([content],{ type: "text/plain"}); 
+  const a=document.createElement("a"); 
+  a.href=URL.createObjectURL(blob); 
+  a.download=filename; 
+  document.body.appendChild(a); 
+  a.click(); 
+  document.body.removeChild(a); 
+  URL.revokeObjectURL(a.href);
+}
 async function handleUploadSheet(options: { file: any; fileList: UploadFileInfo[] }) {
   loadFile(options.file.file.path)
 }
@@ -480,7 +503,14 @@ const reverse = async () => {
   isPlaying.value = false;
   isFirst = true;
 };
-const deleteCurrentColumn=()=>{ notes.value.splice(currentColumn.value, 1); durationNotes.value.splice(currentColumn.value, 0); if (currentColumn.value >=notes.value.length){ currentColumn.value=notes.value.length - 1;} progress.value=currentColumn.value + 1; drawCanvas();};
+const deleteCurrentColumn=()=>{ 
+  notes.value.splice(currentColumn.value, 1); 
+  durationNotes.value.splice(currentColumn.value, 0); 
+  if (currentColumn.value >=notes.value.length){ 
+    currentColumn.value=notes.value.length - 1;
+  } progress.value=currentColumn.value + 1; 
+  drawCanvas();
+};
 const insertEmptyColumn = () => {
   const insertIndex = currentColumn.value + 1; // 计算插入位置
   notes.value.splice(insertIndex, 0, []); // 在光标后插入空列
@@ -558,8 +588,21 @@ function getSheetToMemory(startIdx) {
   return demoSongNotes
 }
 
-onMounted(()=>{ window.api.window_size(774,1500); const canvas:any=midiCanvas.value; if (canvas){ canvas.width=canvasWidth; canvas.height=canvasHeight; drawCanvas(); getListData('systemMusic');syncCanvasToKeysArea();}});
-onUnmounted(()=>{ pause(); window.api.window_size(0,0);});
+onMounted(()=>{ 
+  window.api.window_size(774,1500); 
+  const canvas:any=midiCanvas.value; 
+  if (canvas){ 
+    canvas.width=canvasWidth; 
+    canvas.height=canvasHeight; 
+    drawCanvas(); 
+    getListData('systemMusic');
+    syncCanvasToKeysArea();
+  }
+});
+onUnmounted(()=>{ 
+  pause(); 
+  window.api.window_size(0,0);
+});
 
 onBeforeRouteLeave((_to, _from, next) => {
   if (notes.value.length >= 3){
