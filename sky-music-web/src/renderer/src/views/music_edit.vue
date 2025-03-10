@@ -429,7 +429,7 @@ function sleep(ms) {
 let isFirst = true
 const play = async () => { 
   if (intervalId.value) return; // 避免重复启动
-  if (currentColumn.value >= notes.value.length) {
+  if (currentColumn.value >= notes.value.length - 1) {
     currentColumn.value = 0; 
     progress.value = 1;
   } 
@@ -458,10 +458,10 @@ const pause = () => {
 };
 const reverse = async () => { 
   if (intervalId.value) return; // 避免重复启动
-
-  if (currentColumn.value >= notes.value.length) {
-    currentColumn.value = 0; 
-    progress.value = 1;
+  console.log(currentColumn.value)
+  if (currentColumn.value == 0) {
+    currentColumn.value = notes.value.length
+    progress.value = notes.value.length
   } 
   isPlaying.value = true; 
   intervalId.value = true; 
