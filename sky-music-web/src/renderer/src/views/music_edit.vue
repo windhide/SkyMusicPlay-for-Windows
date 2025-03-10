@@ -57,6 +57,19 @@
   <div style="margin-left: 920px; margin-top: -260px; width: 415px; height: 200px;">
     <n-flex>
       <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))" style="margin-top: 5px;">
+        当列乐谱总时长：
+      </n-gradient-text>
+      <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))" style="margin-top: 5px; margin-left: 21px;">
+        {{ 
+          (() => {
+            const totalMilliseconds = timeNotes.reduce((acc, currentValue) => acc + currentValue, 0);
+            const minutes = Math.floor(totalMilliseconds / 60000);  // 60000毫秒 = 1分钟
+            const seconds = Math.floor((totalMilliseconds % 60000) / 1000);  // 剩余的秒数
+            return `${minutes}分 ${seconds}秒`;
+          })()
+        }}      </n-gradient-text>
+      <div style="flex-basis: 100%;" />
+      <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))" style="margin-top: 5px;">
         当列长按间隔（ms）
       </n-gradient-text>
       <n-input-number v-model:value="columnDownDuration" style="flex-basis: 40%;" :step="10" :min="0" />
@@ -156,46 +169,7 @@ const searchText = ref('')
 const columnAfterDuration = ref(0)
 const columnDownDuration = ref(0)
 const nowButton = ref(-1)
-
-const tableColumns = [
-  {
-    title: '歌名',
-    key: 'name',
-    resizable: true,
-    className: 'th_css',
-    ellipsis: {
-      tooltip: true
-    }
-  },
-  {
-    title: '操作',
-    key: 'operation',
-    width: 60,
-    className: 'th_css',
-    render(row) {
-      return h(
-        NButton,
-        {
-          size: 'medium',
-          text: true,
-          onClick: () => {
-            sendData("path",{
-              "type":nowType
-            }).then(res=>{
-              loadFile(`${res}\\${row.name}.txt`).then(()=>{
-                musicActive.value = false;
-              })
-            })
-          }
-        },
-        {
-          default: () => {
-            return '👈'
-          }
-        }
-      )
-    }
-  }
+const tableColumns=[ { title: '歌名', key: 'name', resizable: true, className: 'th_css', ellipsis:{ tooltip: true}}, { title: '操作', key: 'operation', width: 60, className: 'th_css', render(row){ return h( NButton, { size: 'medium', text: true, onClick: ()=>{ sendData("path",{ "type":nowType}).then(res=>{ loadFile(`${res}\\${row.name}.txt`).then(()=>{ musicActive.value=false;})})}}, { default: ()=>{ return '👈'}} )}}
 ]
 let nowType = 'systemMusic'
 const fetchListData = debounce(() => {
@@ -552,7 +526,7 @@ function getSheetToMemory(startIdx) {
   return demoSongNotes
 }
 
-onMounted(()=>{ window.api.window_size(774,1500); const canvas:any=midiCanvas.value; if (canvas){ canvas.width=canvasWidth; canvas.height=canvasHeight; drawCanvas(); getListData('systemMusic');}});
+onMounted(()=>{ window.api.window_size(774,1500); const canvas:any=midiCanvas.value; if (canvas){ canvas.width=canvasWidth; canvas.height=canvasHeight; drawCanvas(); getListData('systemMusic');syncCanvasToKeysArea();}});
 onUnmounted(()=>{ pause(); window.api.window_size(0,0);});
 </script>
 
