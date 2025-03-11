@@ -128,6 +128,12 @@ async function checkForUpdates(): Promise<void> {
         positiveText: cloudVersion.positiveText,
         negativeText: cloudVersion.negativeText,
         contentStyle: { whiteSpace: "pre-wrap" },
+        positiveButtonProps: {
+          color: '#F2C9C4'
+        },
+        negativeButtonProps:{
+          color: '#A3F6EC'
+        },
         onPositiveClick: () => {
           openUrl(cloudVersion.downloadUrl);
         },
