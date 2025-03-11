@@ -710,6 +710,7 @@ async function loadFile(filePath) {
     drawCanvas();
     currentColumn.value = 0;
     progress.value = 1;
+    isFirst = true
     message.success('谱子加载成功');
   } catch (error) {
     message.error(`谱子加载失败: ${error}`);
