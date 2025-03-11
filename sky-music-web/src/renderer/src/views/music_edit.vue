@@ -151,6 +151,11 @@
       新增的列后等待延迟（ms）
     </n-gradient-text>
     <n-input-number v-model:value="defaultAfterDuration" style="flex-basis: 40%;" :step="10" :min="0" />
+    <div style="flex-basis: 100%;" />
+    <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))" style="margin-top: 5px; flex-basis: 42%;">
+      过列发送按键到游戏
+    </n-gradient-text>
+    <n-switch v-model:value="sendToGame" size="medium" :round="false" style="margin-top: 5px;" :rail-style="railStyle" />
   </n-flex>
 </div>
 <n-drawer v-model:show="musicActive" :width="900" placement="left" :trap-focus="false" :block-scroll="false">
@@ -213,7 +218,7 @@
 
 <script lang="ts" setup>
 // 导入Vue核心功能
-import { ref, onMounted, onUnmounted, watch, reactive, h } from "vue";
+import { ref, onMounted, onUnmounted, watch, reactive, h, CSSProperties } from "vue";
 import { onBeforeRouteLeave } from "vue-router";
 
 // 导入UI组件和图标
@@ -252,6 +257,7 @@ const isPlaying = ref(false);
 const musicActive = ref(false);
 const fileName = ref("");
 const searchText = ref('');
+const sendToGame = ref(true)
 
 // 时间相关配置
 const columnAfterDuration = ref(0);
@@ -264,6 +270,22 @@ const defaultAddColumnCount = ref(1);
 const nowButton = ref(-1);
 const progress = ref(1);
 const currentColumn = ref(0);
+function railStyle({ focused, checked }){
+  const style: CSSProperties = {}
+  if (checked) {
+    style.background = '#F2C9C4'
+    if (focused) {
+      style.boxShadow = '0 0 0 2px #F2C9C440'
+    }
+  }
+  else {
+    if (focused) {
+      style.boxShadow = '0 0 0 2px #F2E8C440'
+    }
+  }
+  return style
+}
+
 
 // 表格配置
 const tableColumns = [
@@ -518,10 +540,12 @@ const songNote = currentNotes.map(element => ({
   key: `${noteCount}Key${element - 1}`,
   duration: Number(durationNotes.value[progressIndex]) || 0
 }));
-sendData("play_operate", {
+if (sendToGame.value){
+  sendData("play_operate", {
   operate: 'start',
   sheet: songNote
 })
+}
 return Number(time)
 };
 const saveSheet = () => {
@@ -961,8 +985,6 @@ onUnmounted(() => {
   pause();
   window.api.window_size(0, 0);
 });
-
-// 路由离开前的确认
 onBeforeRouteLeave((_to, _from, next) => {
   if (notes.value.length >= 3) {
     dialog.warning({
@@ -1038,5 +1060,11 @@ background-color: rgba(242, 201, 196, 0.507) !important;
 
 :deep(.n-tabs-bar) {
 --n-bar-color: rgb(242, 232, 196) !important;
+}
+:deep(.n-radio){
+  --n-box-shadow-active: inset 0 0 0 1px rgb(242,232,196)!important;
+  --n-box-shadow-focus: inset 0 0 0 1px rgb(242,232,196), 0 0 0 2px rgba(242,232,196, 0.3)!important;
+  --n-box-shadow-hover: inset 0 0 0 1px rgb(242,232,196)!important;
+  --n-dot-color-active: rgb(242,232,196)!important;
 }
 </style>
