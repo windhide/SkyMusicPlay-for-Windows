@@ -159,7 +159,16 @@
       </template>
       <span>保存谱子</span>
     </n-tooltip>
-
+    <n-tooltip trigger="hover" :disabled="!showTips">
+      <template #trigger>
+        <n-button @click="clearSheet" quaternary circle style="font-size: 24px" color="#F2C9C4">
+          <n-icon>
+            <DeleteDismiss20Filled />
+          </n-icon>
+        </n-button>
+      </template>
+      <span>清空当前工作区的谱子</span>
+    </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
         <n-upload ref="upload" action="#" :default-upload="false" accept=".txt" @change="handleUploadSheet"
@@ -322,7 +331,8 @@ import {
   PaddingRight24Filled,
   PaddingLeft24Filled,
   TableStackLeft24Filled,
-  TableStackRight24Filled
+  TableStackRight24Filled,
+  DeleteDismiss20Filled
 } from '@vicons/fluent'
 import { Search } from '@vicons/ionicons5'
 
@@ -651,6 +661,33 @@ const saveSheet = () => {
   saveFile(fileName.value, JSON.stringify(templateMusicFormat))
 }
 
+//  清空工作选区的谱子
+const clearSheet = () =>{
+    dialog.warning({
+      title: '一个来自开发者的温馨小提示⭐',
+      content: '确定要清空当前工作区域的所有谱子吗？未保存的更改将丢失。',
+      positiveText: '就清空就清空',
+      negativeText: '不清空了我先保存吧',
+      maskClosable: false,
+      showIcon: false,
+      positiveButtonProps: {
+        color: '#F2C9C4'
+      },
+      negativeButtonProps:{
+        color: '#A3F6EC'
+      },
+      onPositiveClick: () => {
+        notes.value = [];
+        durationNotes.value = [];
+        timeNotes.value = [];
+        currentColumn.value = 0;
+        progress.value = 1;
+        syncCanvasToKeysArea();
+        drawCanvas();
+      }
+    })
+}
+
 const saveFile = (filename, content) => {
   const blob = new Blob([content], { type: "text/plain" });
   const a = document.createElement("a");
@@ -744,10 +781,11 @@ const play = async () => {
     if (isFirst) {
       playNowColumn();
       isFirst = false;
+      await sleep(timeNotes.value[progress.value]);
     } else {
       nextColumn();
+      await sleep(timeNotes.value[progress.value - 1]);
     }
-    await sleep(timeNotes.value[progress.value - 1]);
   }
 
   // 播放结束，重置状态
@@ -1081,6 +1119,13 @@ onBeforeRouteLeave((_to, _from, next) => {
       positiveText: '就走就走',
       negativeText: '不走了我先保存吧',
       maskClosable: false,
+      showIcon: false,
+      positiveButtonProps: {
+        color: '#F2C9C4'
+      },
+      negativeButtonProps:{
+        color: '#A3F6EC'
+      },
       onMaskClick: () => {
         next(false); // 阻止离开
       },
