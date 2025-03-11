@@ -1,10 +1,8 @@
 <template>
+  <!-- 状态显示区域 -->
   <n-flex>
     <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))" style="margin-top: 5px;">
-      总列数：
-      {{
-        notes.length
-      }}
+      总列数：{{ notes.length }}
     </n-gradient-text>
     <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))" style="margin-top: 5px;">
       乐谱总时长：{{
@@ -194,31 +192,87 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted, nextTick, CSSProperties, watch, reactive, h } from "vue";
-import { ArrowPrevious24Filled, Pause24Filled, Play24Filled, ArrowNext24Filled, TableDeleteColumn24Filled, TableAdd24Filled, MusicNote120Filled, Save20Filled, ArrowUpload24Filled, AppsListDetail24Filled } from '@vicons/fluent'
+// 导入Vue核心功能
+import { ref, onMounted, onUnmounted, watch, reactive, h } from "vue";
+import { onBeforeRouteLeave } from "vue-router";
+
+// 导入UI组件和图标
+import { NButton, UploadFileInfo, useDialog, useMessage } from "naive-ui";
+import { 
+  ArrowPrevious24Filled, 
+  Pause24Filled, 
+  Play24Filled, 
+  ArrowNext24Filled, 
+  TableDeleteColumn24Filled, 
+  TableAdd24Filled, 
+  MusicNote120Filled, 
+  Save20Filled, 
+  ArrowUpload24Filled, 
+  AppsListDetail24Filled 
+} from '@vicons/fluent'
 import { Search } from '@vicons/ionicons5'
+
+// 导入自定义组件
 import cr from "../component/svg/cr.vue"
 import dm from "../component/svg/dm.vue"
 import dmcr from "../component/svg/dmcr.vue"
-import { NButton, UploadFileInfo, useDialog, useMessage } from "naive-ui";
-import { getList, sendData } from "@renderer/utils/fetchUtils";
-import { RowData } from "naive-ui/es/data-table/src/interface";
-import { debounce } from "lodash-es";
-import { onBeforeRouteLeave } from "vue-router";
 
+// 导入工具函数
+import { getList, sendData } from "@renderer/utils/fetchUtils";
+import { debounce } from "lodash-es";
+import { RowData } from "naive-ui/es/data-table/src/interface";
+
+// 状态管理
 const midiCanvas = ref(null);
-const isPlaying = ref(false)
-const musicActive = ref(false)
-const fileName = ref("")
-const searchText = ref('')
-const columnAfterDuration = ref(0)
-const columnDownDuration = ref(0)
-const defaultAfterDuration = ref(0)
-const defaultDownDuration = ref(0)
-const defaultAddColumnCount = ref(1)
-const nowButton = ref(-1)
-const tableColumns = [{ title: '歌名', key: 'name', resizable: true, className: 'th_css', ellipsis: { tooltip: true } }, { title: '操作', key: 'operation', width: 60, className: 'th_css', render(row) { return h(NButton, { size: 'medium', text: true, onClick: () => { pause(); sendData("path", { "type": nowType }).then(res => { loadFile(`${res}\\${row.name}.txt`).then(() => { musicActive.value = false; }) }) } }, { default: () => { return '👈' } }) } }
-]
+const isPlaying = ref(false);
+const musicActive = ref(false);
+const fileName = ref("");
+const searchText = ref('');
+
+// 时间相关配置
+const columnAfterDuration = ref(0);
+const columnDownDuration = ref(0);
+const defaultAfterDuration = ref(0);
+const defaultDownDuration = ref(0);
+const defaultAddColumnCount = ref(1);
+
+// 界面交互状态
+const nowButton = ref(-1);
+const progress = ref(1);
+const currentColumn = ref(0);
+
+// 表格配置
+const tableColumns = [
+  { 
+    title: '歌名', 
+    key: 'name', 
+    resizable: true, 
+    className: 'th_css', 
+    ellipsis: { tooltip: true } 
+  }, 
+  { 
+    title: '操作', 
+    key: 'operation', 
+    width: 60, 
+    className: 'th_css', 
+    render(row) { 
+      return h(NButton, { 
+        size: 'medium', 
+        text: true, 
+        onClick: () => { 
+          pause(); 
+          sendData("path", { "type": nowType }).then(res => { 
+            loadFile(`${res}\\${row.name}.txt`).then(() => { 
+              musicActive.value = false; 
+            }) 
+          }) 
+        } 
+      }, { 
+        default: () => '👈' 
+      }) 
+    } 
+  }
+];
 let nowType = 'systemMusic'
 const fetchListData = debounce(() => {
 getListData('myFavorite');
@@ -248,34 +302,70 @@ await getList(value, searchText.value).then((_res) => {
   eval('music.' + value + '=_res')
 })
 }
-const music: any = reactive({ systemMusic: [], myImport: [], myTranslate: [], myFavorite: [], musicList: [] })
-const keys = ref([[{ key: "0", type: "dmcr", duration: 0, active: false }, { key: "1", type: "dm", duration: 0, active: false }, { key: "2", type: "cr", duration: 0, active: false }, { key: "3", type: "dm", duration: 0, active: false }, { key: "4", type: "cr", duration: 0, active: false },], [{ key: "5", type: "cr", duration: 0, active: false }, { key: "6", type: "dm", duration: 0, active: false }, { key: "7", type: "dmcr", duration: 0, active: false }, { key: "8", type: "dm", duration: 0, active: false }, { key: "9", type: "cr", duration: 0, active: false },], [{ key: "10", type: "cr", duration: 0, active: false }, { key: "11", type: "dm", duration: 0, active: false }, { key: "12", type: "cr", duration: 0, active: false }, { key: "13", type: "dm", duration: 0, active: false }, { key: "14", type: "dmcr", duration: 0, active: false },]
-])
-// 自定义显示文字
+// 音乐数据管理
+const music: any = reactive({
+  systemMusic: [],
+  myImport: [],
+  myTranslate: [],
+  myFavorite: [],
+  musicList: []
+});
+
+// 键盘布局配置
+const keys = ref([
+  [
+    { key: "0", type: "dmcr", duration: 0, active: false },
+    { key: "1", type: "dm", duration: 0, active: false },
+    { key: "2", type: "cr", duration: 0, active: false },
+    { key: "3", type: "dm", duration: 0, active: false },
+    { key: "4", type: "cr", duration: 0, active: false },
+  ],
+  [
+    { key: "5", type: "cr", duration: 0, active: false },
+    { key: "6", type: "dm", duration: 0, active: false },
+    { key: "7", type: "dmcr", duration: 0, active: false },
+    { key: "8", type: "dm", duration: 0, active: false },
+    { key: "9", type: "cr", duration: 0, active: false },
+  ],
+  [
+    { key: "10", type: "cr", duration: 0, active: false },
+    { key: "11", type: "dm", duration: 0, active: false },
+    { key: "12", type: "cr", duration: 0, active: false },
+    { key: "13", type: "dm", duration: 0, active: false },
+    { key: "14", type: "dmcr", duration: 0, active: false },
+  ]
+]);
+
+// 乐谱数据
 const durationNotes = ref<number[]>([0]); // 长按表
 const notes = ref<number[][]>([[]]); // 谱表
 const timeNotes = ref<number[]>([10]); // 延迟表
-const progress = ref(1);
+// Canvas配置
 const canvasWidth = 1200;
 const canvasHeight = 300;
 const gridSize = 8; // 每个小块大小
 const columnSize = gridSize * 4; // 3个小块组成1大块
 const cornerRadius = 5; // 圆角半径
-const intervalId: any = ref(null);
-const currentColumn = ref(0); // 当前列的索引
-const message = useMessage()
-const dialog = useDialog()
 
+// 全局状态
+const intervalId: any = ref(null);
+const message = useMessage();
+const dialog = useDialog();
+
+// Canvas绘制函数
 const drawCanvas = () => {
-const canvas: any = midiCanvas.value;
-if (!canvas) return;
-const ctx = canvas.getContext("2d");
-const viewportCenter = canvasWidth / 2;
-const currentX = currentColumn.value * columnSize;
-let offsetX = 0;
-if (currentX > viewportCenter) {
-  offsetX = viewportCenter - currentX;
-}
+  const canvas: any = midiCanvas.value;
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext("2d");
+  const viewportCenter = canvasWidth / 2;
+  const currentX = currentColumn.value * columnSize;
+  let offsetX = 0;
+  
+  // 计算视口偏移
+  if (currentX > viewportCenter) {
+    offsetX = viewportCenter - currentX;
+  }
 
 // 计算视口范围内的列
 const visibleStartX = -offsetX;
@@ -497,29 +587,38 @@ return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 let isFirst = true
+// 播放控制函数
 const play = async () => {
-if (intervalId.value) return; // 避免重复启动
-if (currentColumn.value >= notes.value.length - 1) {
-  currentColumn.value = 0;
-  progress.value = 1;
-}
-isPlaying.value = true;
-intervalId.value = true;
-let inWhileColumn = currentColumn.value
-while (inWhileColumn < notes.value.length && intervalId.value) {
-  inWhileColumn++;
-  if (isFirst) {
-    playNowColumn()
-    isFirst = false;
-  } else {
-    nextColumn()
+  // 避免重复启动
+  if (intervalId.value) return;
+  
+  // 重置播放位置
+  if (currentColumn.value >= notes.value.length - 1) {
+    currentColumn.value = 0;
+    progress.value = 1;
   }
-  await sleep(timeNotes.value[progress.value - 1]);
-  const end = performance.now();
-}
-intervalId.value = null;
-isPlaying.value = false;
-isFirst = true;
+
+  // 开始播放
+  isPlaying.value = true;
+  intervalId.value = true;
+  let inWhileColumn = currentColumn.value;
+
+  // 播放循环
+  while (inWhileColumn < notes.value.length && intervalId.value) {
+    inWhileColumn++;
+    if (isFirst) {
+      playNowColumn();
+      isFirst = false;
+    } else {
+      nextColumn();
+    }
+    await sleep(timeNotes.value[progress.value - 1]);
+  }
+
+  // 播放结束，重置状态
+  intervalId.value = null;
+  isPlaying.value = false;
+  isFirst = true;
 };
 const pause = () => {
 intervalId.value = null; // 结束 while 循环
@@ -569,12 +668,15 @@ for (let i = 0; i < defaultAddColumnCount.value; i++) {
 drawCanvas(); // 重新绘制
 console.log(notes.value, durationNotes.value, timeNotes.value)
 }; const updateProgress = () => { currentColumn.value = progress.value - 1; drawCanvas(); };
-watch(progress, syncCanvasToKeysArea)
+// 监听器配置
+watch(progress, syncCanvasToKeysArea);
+
+// 监听列后等待延迟的变化
 watch(columnAfterDuration, (newValue, _oldValue) => {
-if (columnDownDuration.value >= newValue) {
-  message.info("长按间隔需要小于列后等待延迟，已自动调整(当下)");
-  columnDownDuration.value = Math.max(newValue - 10, 0);
-}
+  if (columnDownDuration.value >= newValue) {
+    message.info("长按间隔需要小于列后等待延迟，已自动调整(当下)");
+    columnDownDuration.value = Math.max(newValue - 10, 0);
+  }
 const finalValue = Math.max(newValue, 10);
 columnAfterDuration.value = finalValue;
 timeNotes.value[progress.value - 1] = finalValue;
@@ -653,14 +755,15 @@ for (let index = startIdx; index < notes.value.length; index++) {
 return demoSongNotes
 }
 
-// 添加鼠标事件处理
+// 鼠标事件状态
 let isDragging = false;
 let initialState = false;
 let lastProcessedCell = { row: -1, col: -1 };
 
+// 网格位置计算
 const getGridPosition = (x: number, y: number) => {
-const canvas: any = midiCanvas.value;
-if (!canvas) return null;
+  const canvas: any = midiCanvas.value;
+  if (!canvas) return null;
 
 const rect = canvas.getBoundingClientRect();
 const scaleX = canvas.width / rect.width;
@@ -722,15 +825,19 @@ if (position.col === progress.value - 1) {
 }
 };
 
+// 生命周期钩子
 onMounted(() => {
-window.api.window_size(774, 1500);
-const canvas: any = midiCanvas.value;
-if (canvas) {
-  canvas.width = canvasWidth;
-  canvas.height = canvasHeight;
-  drawCanvas();
-  getListData('systemMusic');
-  syncCanvasToKeysArea();
+  // 初始化窗口大小
+  window.api.window_size(774, 1500);
+  
+  // 初始化Canvas
+  const canvas: any = midiCanvas.value;
+  if (canvas) {
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    drawCanvas();
+    getListData('systemMusic');
+    syncCanvasToKeysArea();
 
   canvas.addEventListener('mousedown', (e: MouseEvent) => {
     const position = getGridPosition(e.clientX, e.clientY);
@@ -763,14 +870,16 @@ if (canvas) {
   });
 }
 });
+// 组件卸载时的清理工作
 onUnmounted(() => {
-pause();
-window.api.window_size(0, 0);
+  pause();
+  window.api.window_size(0, 0);
 });
 
+// 路由离开前的确认
 onBeforeRouteLeave((_to, _from, next) => {
-if (notes.value.length >= 3) {
-  dialog.warning({
+  if (notes.value.length >= 3) {
+    dialog.warning({
     title: '一个来自开发者的温馨小提示⭐',
     content: '确定要离开乐谱编辑页面吗？未保存的更改将丢失。',
     positiveText: '就走就走',
