@@ -50,16 +50,6 @@
       <TableDeleteColumn24Filled />
     </n-icon>
   </n-button>
-  <n-button @click="playNowColumn" quaternary circle style="font-size: 24px" color="#F2C9C4">
-    <n-icon>
-      <MusicNote120Filled />
-    </n-icon>
-  </n-button>
-  <n-button @click="saveSheet" quaternary circle style="font-size: 24px" color="#F2C9C4">
-    <n-icon>
-      <Save20Filled />
-    </n-icon>
-  </n-button>
   <n-button @click="isPlaying ? pause() : reverse()" quaternary circle
     style="font-size: 24px; transform: rotate(180deg);" color="#F2C9C4">
     <n-icon>
@@ -67,9 +57,39 @@
       <Play24Filled v-else />
     </n-icon>
   </n-button>
+  <n-button @click="playNowColumn" quaternary circle style="font-size: 24px" color="#F2C9C4">
+    <n-icon>
+      <MusicNote120Filled />
+    </n-icon>
+  </n-button>
+  <n-button @click="copyNowColumnToStart" quaternary circle style="font-size: 24px" color="#F2C9C4">
+    <n-icon>
+      <PaddingLeft24Filled/>
+    </n-icon>
+  </n-button>
+  <n-button @click="copyNowColumnToPre" quaternary circle style="font-size: 24px" color="#F2C9C4">
+    <n-icon>
+      <TableStackRight24Filled />
+    </n-icon>
+  </n-button>
+  <n-button @click="copyNowColumnToNext" quaternary circle style="font-size: 24px" color="#F2C9C4">
+    <n-icon>
+      <TableStackLeft24Filled />
+    </n-icon>
+  </n-button>
+  <n-button @click="copyNowColumnToEnd" quaternary circle style="font-size: 24px" color="#F2C9C4">
+    <n-icon>
+      <PaddingRight24Filled />
+    </n-icon>
+  </n-button>
   <n-button @click="musicActive = true" quaternary circle style="font-size: 24px" color="#F2C9C4">
     <n-icon>
       <AppsListDetail24Filled />
+    </n-icon>
+  </n-button>
+  <n-button @click="saveSheet" quaternary circle style="font-size: 24px" color="#F2C9C4">
+    <n-icon>
+      <Save20Filled />
     </n-icon>
   </n-button>
   <n-upload ref="upload" action="#" :default-upload="false" accept=".txt" @change="handleUploadSheet"
@@ -208,7 +228,11 @@ import {
   MusicNote120Filled, 
   Save20Filled, 
   ArrowUpload24Filled, 
-  AppsListDetail24Filled 
+  AppsListDetail24Filled,
+  PaddingRight24Filled,
+  PaddingLeft24Filled ,
+  TableStackLeft24Filled ,
+  TableStackRight24Filled
 } from '@vicons/fluent'
 import { Search } from '@vicons/ionicons5'
 
@@ -682,6 +706,68 @@ columnAfterDuration.value = finalValue;
 timeNotes.value[progress.value - 1] = finalValue;
 drawCanvas();
 });
+const copyNowColumnToStart = () => {
+  const currentNotes = notes.value[currentColumn.value];
+  const currentDuration = durationNotes.value[currentColumn.value];
+  const currentTime = timeNotes.value[currentColumn.value];
+  
+  notes.value.unshift([...currentNotes]);
+  durationNotes.value.unshift(currentDuration);
+  timeNotes.value.unshift(currentTime);
+  
+  currentColumn.value++;
+  progress.value = currentColumn.value + 1;
+  drawCanvas();
+  message.success("已复制到开头");
+};
+
+const copyNowColumnToPre = () => {
+  const currentNotes = notes.value[currentColumn.value];
+  const currentDuration = durationNotes.value[currentColumn.value];
+  const currentTime = timeNotes.value[currentColumn.value];
+  
+  notes.value.splice(currentColumn.value, 0, [...currentNotes]);
+  durationNotes.value.splice(currentColumn.value, 0, currentDuration);
+  timeNotes.value.splice(currentColumn.value, 0, currentTime);
+  
+  currentColumn.value++;
+  progress.value = currentColumn.value + 1;
+  drawCanvas();
+  message.success("已复制到上一列");
+};
+
+const copyNowColumnToNext = () => {
+  const currentNotes = notes.value[currentColumn.value];
+  const currentDuration = durationNotes.value[currentColumn.value];
+  const currentTime = timeNotes.value[currentColumn.value];
+  
+  notes.value.splice(currentColumn.value + 1, 0, [...currentNotes]);
+  durationNotes.value.splice(currentColumn.value + 1, 0, currentDuration);
+  timeNotes.value.splice(currentColumn.value + 1, 0, currentTime);
+  
+  // currentColumn.value++;
+  // progress.value = currentColumn.value + 1;
+  drawCanvas();
+  message.success("已复制到下一列");
+};
+
+const copyNowColumnToEnd = () => {
+  const currentNotes = notes.value[currentColumn.value];
+  const currentDuration = durationNotes.value[currentColumn.value];
+  const currentTime = timeNotes.value[currentColumn.value];
+  
+  notes.value.push([...currentNotes]);
+  durationNotes.value.push(currentDuration);
+  timeNotes.value.push(currentTime);
+  
+  // currentColumn.value = notes.value.length - 1;
+  // progress.value = currentColumn.value + 1;
+  // currentColumn.value++;
+  // progress.value = currentColumn.value + 1;
+  drawCanvas();
+  message.success("已复制到最后一列");
+};
+
 watch(columnDownDuration, (newValue, _oldValue) => {
 if (newValue >= columnAfterDuration.value) {
   message.info("长按间隔需要小于等待间隔，已自动增加列后等待延迟(当下)");
