@@ -58,12 +58,12 @@
               </n-radio-group>
             </n-col>
             <n-col v-show="delayStatus == 'custom'" :span="5" style="margin-left: -40px; margin-top: 25px;">
-              <n-input-number step="0.01" v-model:value="delaySpeed" size="tiny" :min="0" :max="2" placeholder="间隔" />
+              <n-input-number step="0.01" v-model:value="delaySpeed" size="tiny" :min="0" :max="2" placeholder="间隔" style="width: 150px;" />
             </n-col>
             <n-col v-show="delayStatus == 'random'" :span="11" style="margin-left: -40px; margin-top: 25px;">
-              <n-input-number step="0.01" v-model:value="delayRandomStart" size="tiny" :min="0" :max="2" placeholder="间隔" style="width: 80px; float: inline-start;" />
+              <n-input-number step="0.01" v-model:value="delayRandomStart" size="tiny" :min="0" :max="2" placeholder="间隔" style="width: 83px; float: inline-start;" />
               <span style="margin-left: 9px;">&nbsp;-&nbsp;</span>
-              <n-input-number step="0.01" v-model:value="delayRandomEnd" size="tiny" :min="0" :max="2" placeholder="间隔" style="width: 80px; float: inline-end;"/>
+              <n-input-number step="0.01" v-model:value="delayRandomEnd" size="tiny" :min="0" :max="2" placeholder="间隔" style="width: 83px; float: inline-end;"/>
             </n-col>
           </n-row>
           <n-row gutter="26">
@@ -78,18 +78,18 @@
               </n-radio-group>
             </n-col>
             <n-col v-show="durationStatus == 'custom'" :span="5" style="margin-left: -40px; margin-top: 25px;">
-              <n-input-number step="0.01" v-model:value="durationSpeed" size="tiny" :min="0" :max="2" placeholder="延音" />
+              <n-input-number step="0.01" v-model:value="durationSpeed" size="tiny" :min="0" :max="2" placeholder="延音" style="width: 150px;" />
             </n-col>
             <n-col v-show="durationStatus == 'random'" :span="11" style="margin-left: -40px; margin-top: 25px;">
-              <n-input-number step="0.01" v-model:value="durationRandomStart" size="tiny" :min="0" :max="2" placeholder="延音" style="width: 80px; float: inline-start;"  />
+              <n-input-number step="0.01" v-model:value="durationRandomStart" size="tiny" :min="0" :max="2" placeholder="延音" style="width: 83px; float: inline-start;"  />
               <span style="margin-left: 9px;">&nbsp;-&nbsp;</span>
-              <n-input-number step="0.01" v-model:value="durationRandomEnd" size="tiny" :min="0" :max="2" placeholder="延音" style="width: 80px; float: inline-end;"  />
+              <n-input-number step="0.01" v-model:value="durationRandomEnd" size="tiny" :min="0" :max="2" placeholder="延音" style="width: 83px; float: inline-end;"  />
             </n-col>
           </n-row>
           <n-row gutter="12">
             <n-col :span="5">
               <n-gradient-text type="info" :size="13" style="color: #F2C9C4; display: block;">倍速</n-gradient-text>
-              <n-input-number step="0.1" v-model:value="playSpeed" size="tiny" :min="0.25" :max="5" placeholder="倍速" style="margin-top: 5px;" />
+              <n-input-number step="0.1" v-model:value="playSpeed" size="tiny" :min="0.1" :max="5" placeholder="倍速" style="margin-top: 5px;" />
             </n-col>
           </n-row>
         </n-popover>
@@ -445,7 +445,6 @@ function clearPlayList() {
 // 播放条点击处理函数
 const playBarClickHandler = async (status: String, type: String) => {
   stopProgressTracking();
-
   if (status === 'resume') {
     if (nowState.value == 'stop') {
       message.info("双击歌曲播放！");
@@ -685,7 +684,7 @@ watch(delayStatus, () => {
       }, 1000)
       break
     case 'custom':
-      delaySpeed.value = 0.01
+      delaySpeed.value = 0
       clearInterval(randomInterval)
       break
   }
@@ -757,6 +756,7 @@ function initWebSocket() {
   }
   socket.onmessage = (event) => {
     const key = decodeURIComponent(event.data).trim() // 获取按下的按键
+    console.log("按下",key)
     if (key === shortcutKeys["start"]) {
       if (nowState.value != 'stop') {
         window.api.system_notification("🍎", "仅停止状态下允许开始")
@@ -794,6 +794,58 @@ function initWebSocket() {
       window.api.system_notification("⏩", "下一首")
       playBarClickHandler('next', '')
     }
+    if (key === shortcutKeys["add_duration"]){
+      if (delaySpeed.value == 2){
+        message.info("延音最高为2")
+      }else{
+      durationStatus.value = 'custom'
+      durationSpeed.value+=0.01
+      message.info("延音+0.01")
+      }
+    }
+    if (key === shortcutKeys["reduce_duration"]){
+      if (delaySpeed.value == 0){
+        message.info("延音最低为0")
+      }else{
+        durationStatus.value = 'custom'
+        durationSpeed.value -= 0.01
+        message.info("延音-0.01")
+      }
+    }
+    if (key === shortcutKeys["add_delay"]){
+      if (delaySpeed.value === 2){
+        message.info("间隔最高为2")
+      }else{
+        delayStatus.value = 'custom'
+        delaySpeed.value+=0.01
+        message.info("间隔+0.01")
+      }
+    }
+    if (key === shortcutKeys["reduce_delay"]){
+      if (delaySpeed.value == 0){
+        message.info("间隔最低为0")
+      }else{
+        delayStatus.value = 'custom'
+        delaySpeed.value-=0.01
+        message.info("间隔-0.01")
+      }
+    }
+    if (key === shortcutKeys["add_speed"]){
+      if (playSpeed.value === 5){
+        message.info("速度最高为5")
+      }else{
+        message.info("速度+0.1")
+        playSpeed.value+=0.1
+      }
+    }
+    if (key === shortcutKeys["reduce_speed"]){
+      if (playSpeed.value === 0.1){
+        message.info("速度最低为0.1")
+      }else{
+        playSpeed.value-=0.1
+        message.info("速度-0.1")
+      }
+    }
   }
   socket.onclose = () => {
     console.log('WebSocket 已断开')
@@ -808,6 +860,7 @@ sendData("config_operate",{
     "name": "shortcutStruct"
 }).then(res=>{
   shortcutKeys = res["music_key"]
+  console.log(shortcutKeys)
 })
 initWebSocket()
 

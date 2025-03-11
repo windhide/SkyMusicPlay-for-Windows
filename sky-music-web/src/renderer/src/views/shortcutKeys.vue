@@ -48,9 +48,9 @@ const message = useMessage()
 const headText = "快捷键为本次运行生效，重启软件需要重新设置，如不适应请尽快适应";
 const patterns = ["本次运行", "重新", "重启", "尽快适应"];
 
-const musicShortcut=[{ name: "播放", label: "start",},{ name: "继续", label: "resume",},{ name: "暂停", label: "pause",},{ name: "停止", label: "stop",},{ name: "下一首", label: "next",}]
+const musicShortcut=[{ name: "播放", label: "start",},{ name: "继续", label: "resume",},{ name: "暂停", label: "pause",},{ name: "停止", label: "stop",},{ name: "+ 延音", label: "add_duration"},{ name: "- 延音", label: "reduce_duration"},{ name: "+ 间隔", label: "add_delay"},{ name: "- 间隔", label: "reduce_delay"},{ name: "+ 倍速", label: "add_speed"},{ name: "- 倍速", label: "reduce_speed"},{ name: "下一首", label: "next",}]
 const followShortcut=[{ name: "重复", label: "repeat"},{ name: "重复并步过", label: "repeat_next"},{ name: "退出", label: "exit"},{ name: "重载按键", label: "resize"}]
-const shortcutKey=ref({ follow_key:{ tap_key: "", string: "", repeat: "", repeat_next: "", resize: "", exit: ""}, music_key:{ next: "", pause: "", resume: "", start: "", stop: "", string: "",}})
+const shortcutKey=ref({ follow_key:{ tap_key: "", string: "", repeat: "", repeat_next: "", resize: "", exit: ""}, music_key:{ next: "", pause: "", resume: "", start: "", stop: "", add_duration:"", reduce_duration: "", add_delay: "", reduce_delay:"", add_speed:"", reduce_speed:"", string: "",}})
 const keyMapStruct={ "ScrollLock": "scroll_lock", "Escape": "esc", "PageUp": "page_up", "PageDown": "page_down", "ArrowUp": "up", "ArrowDown": "down", "ArrowLeft": "left", "ArrowRight": "right", "ControlRight": "ctrl_r", "AltRight": "alt_gr", "ControlLeft": "ctrl_l", "AltLeft": "alt_l", "ShiftLeft": "shift", "Enter": "enter", "Backspace": "backspace", "CapsLock": "caps_lock"}
 
 
@@ -89,7 +89,7 @@ function setShortcutKeys() {
   const follow = shortcutKeyValues.follow_key;
   const music = shortcutKeyValues.music_key;
   const followString = (follow.repeat + follow.repeat_next + follow.resize);
-  const musicString = (music.next + music.pause + music.resume + music.start + music.stop);
+  const musicString = (music.next + music.pause + music.resume + music.start + music.stop + music.add_duration + music.reduce_duration + music.add_delay + music.reduce_delay + music.add_speed + music.reduce_speed);
   const followKey = {
     tap_key: "yuiophjkl;nm,./",
     repeat: follow.repeat.toLowerCase(),
@@ -105,7 +105,13 @@ function setShortcutKeys() {
     resume: music.resume.toLowerCase(),
     start: music.start.toLowerCase(),
     stop: music.stop.toLowerCase(),
-    string: musicString.toLowerCase()
+    string: musicString.toLowerCase(),
+    add_duration: music.add_duration.toLowerCase(),
+    reduce_duration: music.reduce_duration.toLowerCase(),
+    add_delay: music.add_delay.toLowerCase(),
+    reduce_delay: music.reduce_delay.toLowerCase(),
+    add_speed: music.add_speed.toLowerCase(),
+    reduce_speed: music.reduce_speed.toLowerCase(),
   };
   sendData("config_operate", {
     "operate": "set",
@@ -137,6 +143,12 @@ function getShortcutKeys() {
       resume: music.resume.toUpperCase(),
       start: music.start.toUpperCase(),
       stop: music.stop.toUpperCase(),
+      add_duration: music.add_duration.toUpperCase(),
+      reduce_duration: music.reduce_duration.toUpperCase(),
+      add_delay: music.add_delay.toUpperCase(),
+      reduce_delay: music.reduce_delay.toUpperCase(),
+      add_speed: music.add_speed.toUpperCase(),
+      reduce_speed: music.reduce_speed.toUpperCase(),
       string: music.string.toUpperCase()
     };
     shortcutKey.value.follow_key = followKey

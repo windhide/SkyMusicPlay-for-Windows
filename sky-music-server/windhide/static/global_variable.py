@@ -27,15 +27,21 @@ class GlobalVariable:
             "repeat": "-",
             "repeat_next": '=',
             "resize": "q",
-            "exit": "esc",
+            "exit": "esc"
         },
         "music_key":{
-            "string": "f2f5f6f7f8",
+            "string": "f2f5f6f7f8updownleftrightpage_uppage_down",
             "next": "f2",
             "start": "f5",
             "resume": "f6",
             "pause": "f7",
-            "stop": "f8"
+            "stop": "f8",
+            "add_duration": "up",
+            "reduce_duration": "down",
+            "add_delay": "right",
+            "reduce_delay": "left",
+            "add_speed": "page_up",
+            "reduce_speed": "page_down",
         }
     }
     # 线程相关
