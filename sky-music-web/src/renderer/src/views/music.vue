@@ -825,6 +825,9 @@ onUnmounted(async () => {
     socket = null
   }
   playBarClickHandler("stop", "")
+  setConfig('delay_interval', 0)
+  setConfig('duration', 0)
+  setConfig('play_speed', 1)
   clearPlayInfo()
 })
 </script>
