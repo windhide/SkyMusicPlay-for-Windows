@@ -29,7 +29,7 @@ nsis:
   allowToChangeInstallationDirectory: true  # 允许用户选择安装目录
   createDesktopShortcut: true  # 允许创建桌面快捷方式
   createStartMenuShortcut: true  # 允许创建开始菜单快捷方式
-  deleteAppDataOnUninstall: true
+  deleteAppDataOnUninstall: true # 卸载时删除软件缓存数据
 extraFiles:
   - from: ".\\backend_dist"
     to: ".\\backend_dist"
