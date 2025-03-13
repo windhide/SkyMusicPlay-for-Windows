@@ -59,7 +59,11 @@ def get_key_position(conf, threshold=10):
     print("开始检测按键布局")
     image = None
     try:
-        image = get_window_screenshot()
+        bgr_image = get_window_screenshot()
+        height, width = bgr_image.shape[:2]
+        crop_width = int(width * 0.15)  # 右边10%的宽度
+        crop_height = int(height * 0.1)  # 底部 10% 的高度
+        image = bgr_image[: -crop_height, : -crop_width]
     except Exception as e:
         print(e)
 
@@ -124,7 +128,11 @@ def test_key_model_position(conf):
     image = None
     time.sleep(1)
     try:
-        image = get_window_screenshot()
+        bgr_image = get_window_screenshot()
+        height, width = bgr_image.shape[:2]
+        crop_width = int(width * 0.15)  # 右边10%的宽度
+        crop_height = int(height * 0.1)  # 底部 10% 的高度
+        image = bgr_image[: -crop_height, : -crop_width]
     except Exception as e:
         print(e)
     model = load_key_model()
