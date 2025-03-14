@@ -549,6 +549,17 @@ const drawCanvas = () => {
     ctx.lineTo(x, canvasHeight);
     ctx.stroke();
   }
+
+  // 绘制水平参考线
+  const fifthGridY = (5 * canvasHeight) / 15 - 1;
+  const tenthGridY = (10 * canvasHeight) / 15 - 1;
+  ctx.beginPath();
+  ctx.moveTo(startGridX, fifthGridY);
+  ctx.lineTo(endGridX, fifthGridY);
+  ctx.moveTo(startGridX, tenthGridY);
+  ctx.lineTo(endGridX, tenthGridY);
+  ctx.stroke();
+
   ctx.lineWidth = 1;
   ctx.fillStyle = "#F2C9C4";
   // 只绘制视野内的音符
