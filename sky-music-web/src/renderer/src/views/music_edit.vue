@@ -1149,26 +1149,23 @@ onBeforeRouteLeave((_to, _from, next) => {
       content: '确定要离开乐谱编辑页面吗？未保存的更改将丢失。',
       positiveText: '就走就走',
       negativeText: '不走了我先保存吧',
-      maskClosable: false,
+      maskClosable: false, // 遮罩不可点击
       showIcon: false,
       positiveButtonProps: {
         color: '#F2C9C4'
       },
-      negativeButtonProps:{
+      negativeButtonProps: {
         color: '#F2E8C4'
       },
-      onMaskClick: () => {
-        next(false); // 阻止离开
-      },
       onPositiveClick: () => {
-        next();
+        next(); // 允许离开
       },
       onNegativeClick: () => {
         next(false); // 阻止离开
       }
-    })
+    });
   } else {
-    next();
+    next(); // 直接离开
   }
 });
 </script>
