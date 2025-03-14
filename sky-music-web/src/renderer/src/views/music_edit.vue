@@ -486,7 +486,7 @@ const durationNotes = ref<number[]>([0]); // 长按表
 const notes = ref<number[][]>([[]]); // 谱表
 const timeNotes = ref<number[]>([10]); // 延迟表
 // Canvas配置
-const canvasWidth = 1200;
+const canvasWidth = 1217;
 const canvasHeight = 300;
 const gridSize = 8; // 每个小块大小
 const columnSize = gridSize * 4; // 3个小块组成1大块
