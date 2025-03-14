@@ -1,5 +1,5 @@
 <template>
-  <div id="father">
+  <div id="headText">
     <n-highlight style="margin-bottom: 5px; color: #DDF2C4;" :text="headText" :patterns="patterns" :highlight-style="{
       padding: '0 6px',
       margin: '0 6px',
@@ -14,6 +14,8 @@
         重 置 弹 琴 映 射
     </n-button>
     <n-divider style="color: #F2C9C4;">琴键映射</n-divider>
+  </div>
+  <div id="father">
     <div v-for="key in customize_key">
       <n-input-group style="margin-top: 20px">
         <n-button type="primary" text style="width: 15px;" color="#FF6347" v-if="key.name.includes('C') || key.name.includes('c')">
@@ -164,10 +166,15 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-#father {
+#headText {
   margin-top: 30px;
   display: flex;
+  align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
+}
+#father {
+  display: flex;
   align-items: center;
   flex-wrap: wrap;
 }
