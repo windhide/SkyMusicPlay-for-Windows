@@ -23,7 +23,7 @@
     </n-layout>
   </div>
   <!-- 播放控制 -->
-  <n-flex justify="center">
+  <n-flex justify="center" style="margin-top:0px">
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
         <n-button @click="isPlaying ? pause() : play()" quaternary circle style="font-size: 24px" color="#F2C9C4">
@@ -252,6 +252,13 @@
         功能区提示
       </n-gradient-text>
       <n-switch v-model:value="showTips" size="medium" :round="false" style="margin-top: 5px;"
+        :rail-style="railStyle" />
+      <div style="flex-basis: 100%;" />
+      <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))"
+        style="margin-top: 5px; flex-basis: 42%;">
+        谱区交替色
+      </n-gradient-text>
+      <n-switch v-model:value="showRowSpaceColor" size="medium" :round="false" style="margin-top: 5px;"
         :rail-style="railStyle" />
     </n-flex>
   </div>
@@ -487,10 +494,11 @@ const notes = ref<number[][]>([[]]); // 谱表
 const timeNotes = ref<number[]>([10]); // 延迟表
 // Canvas配置
 const canvasWidth = 1217;
-const canvasHeight = 300;
+const canvasHeight = 330;
 const gridSize = 8; // 每个小块大小
 const columnSize = gridSize * 4; // 3个小块组成1大块
 const cornerRadius = 5; // 圆角半径
+const showRowSpaceColor = ref(false);
 
 // 全局状态
 const intervalId: any = ref(null);
@@ -522,6 +530,20 @@ const drawCanvas = () => {
   ctx.save();
   ctx.translate(offsetX, 0);
 
+  if(showRowSpaceColor.value){
+    // 绘制交替背景色
+    const startColumnGroup = Math.floor(startColumn / 5);
+    const endColumnGroup = Math.ceil(endColumn / 5);
+    
+    for (let group = startColumnGroup; group <= endColumnGroup; group++) {
+      const groupStartX = group * 5 * columnSize;
+      const groupEndX = Math.min((group + 1) * 5 * columnSize, endColumn * columnSize);
+
+      ctx.fillStyle = group % 2 === 0 ? "rgba(242, 232, 196, 0)" : "rgba(255,250,205, 0.25)";
+      ctx.fillRect(groupStartX, 0, groupEndX - groupStartX, canvasHeight);
+    }
+  }
+ 
   // 绘制网格（仅在可见区域内）
   ctx.strokeStyle = "rgba(85, 85, 85, 0)";
   const startGridX = Math.floor(visibleStartX / gridSize) * gridSize;
@@ -852,6 +874,7 @@ const insertEmptyColumn = () => {
 }; const updateProgress = () => { currentColumn.value = progress.value - 1; drawCanvas(); };
 // 监听器配置
 watch(progress, syncCanvasToKeysArea);
+watch(showRowSpaceColor, drawCanvas);
 
 // 监听列后等待延迟的变化
 watch(columnAfterDuration, (newValue, _oldValue) => {
