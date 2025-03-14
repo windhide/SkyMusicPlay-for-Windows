@@ -187,12 +187,15 @@
     style="margin-bottom: 8px;" />
   <n-flex v-for="(row, index) in keys" :key="index" justify="center">
     <div v-for="(item, idx) in row" :key="idx" style="margin-top: 8px;">
-      <n-button color="#F2C9C4" style="height:75px; width: 75px;" :dashed="!item.active"
-        @click="handleButtonClick(item, index, idx)">
+      <n-button v-if="item.type === 'dmcr'" color="#F2E8C4" style="height:75px; width: 75px;" :dashed="!item.active" @click="handleButtonClick(item, index, idx)">
+        <template #icon>
+          <n-icon :size="65" :component="dmcr" />
+        </template>
+      </n-button>
+      <n-button v-else color="#F2C9C4" style="height:75px; width: 75px;" :dashed="!item.active" @click="handleButtonClick(item, index, idx)">
         <template #icon>
           <n-icon v-if="item.type === 'cr'" :size="65" :component="cr" />
           <n-icon v-if="item.type === 'dm'" :size="65" :component="dm" />
-          <n-icon v-if="item.type === 'dmcr'" :size="65" :component="dmcr" />
         </template>
       </n-button>
     </div>
@@ -540,28 +543,14 @@ const drawCanvas = () => {
   // 绘制列线
   ctx.strokeStyle = "rgba(136, 136, 136, 0.7)";
   ctx.lineWidth = 2;
-
-  // // 如果视野内只有一列，绘制完整的分割线
-  // if (endColumn - startColumn <= 1) {
-  //   for (let x = 0; x < canvasWidth - offsetX; x += columnSize) {
-  //     ctx.beginPath();
-  //     ctx.moveTo(x, 0);
-  //     ctx.lineTo(x, canvasHeight);
-  //     ctx.stroke();
-  //   }
-  // } else {
-  // 否则只绘制可见区域的分割线
   for (let x = startColumn * columnSize; x <= endColumn * columnSize; x += columnSize) {
     ctx.beginPath();
     ctx.moveTo(x, 0);
     ctx.lineTo(x, canvasHeight);
     ctx.stroke();
   }
-  // }
-
   ctx.lineWidth = 1;
   ctx.fillStyle = "#F2C9C4";
-
   // 只绘制视野内的音符
   for (let columnIndex = startColumn; columnIndex < endColumn; columnIndex++) {
     const column = notes.value[columnIndex];
@@ -583,6 +572,14 @@ const drawCanvas = () => {
       ctx.quadraticCurveTo(x, y + rectHeight, x, y + rectHeight - cornerRadius);
       ctx.lineTo(x, y + cornerRadius);
       ctx.quadraticCurveTo(x, y, x + cornerRadius, y);
+      
+      // 根据行号设置不同的填充颜色
+      if (row === 1 || row === 8 || row === 15) {
+        ctx.fillStyle = "#F2E8C4";
+      } else {
+        ctx.fillStyle = "#F2C9C4";
+      }
+      
       ctx.fill();
 
       ctx.fillStyle = "#000000";
@@ -605,7 +602,7 @@ const drawCanvas = () => {
   ctx.restore();
 
   // 高亮当前列
-  ctx.fillStyle = "rgba(155, 149, 201, 0.5)";
+  ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
   const highlightX = currentX > viewportCenter ? viewportCenter : currentX;
   ctx.fillRect(highlightX, 0, columnSize, canvasHeight);
 };
@@ -674,7 +671,7 @@ const clearSheet = () =>{
         color: '#F2C9C4'
       },
       negativeButtonProps:{
-        color: '#A3F6EC'
+        color: '#F2E8C4'
       },
       onPositiveClick: () => {
         notes.value = [];
@@ -1124,7 +1121,7 @@ onBeforeRouteLeave((_to, _from, next) => {
         color: '#F2C9C4'
       },
       negativeButtonProps:{
-        color: '#A3F6EC'
+        color: '#F2E8C4'
       },
       onMaskClick: () => {
         next(false); // 阻止离开
