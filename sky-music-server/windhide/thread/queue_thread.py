@@ -1,13 +1,15 @@
 import queue
 
 import plyer
+
 from windhide.playRobot import intel_robot, amd_robot
 from windhide.static.global_variable import GlobalVariable
+
 
 def music_start_tasks():
     while True:
         try:
-            request = GlobalVariable.task_queue.get(block=False)  # 从队列中取出任务
+            request = GlobalVariable.task_queue.get(block=True, timeout=0.5)  # 最多等待1秒
         except queue.Empty:
             continue
         try:
@@ -15,7 +17,7 @@ def music_start_tasks():
                 plyer.notification.notify(
                     title='⚠️⚠️⚠️⚠️⚠️',
                     message='未检测到游戏窗口，请打开游戏或者去句柄页面进行指定！本次播放操作释放',
-                    timeout=3
+                    timeout=1
                 )
                 GlobalVariable.now_progress = 100
                 GlobalVariable.task_queue.task_done()
