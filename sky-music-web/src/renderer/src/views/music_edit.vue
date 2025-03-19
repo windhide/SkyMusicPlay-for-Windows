@@ -766,11 +766,11 @@ async function loadFile(filePath) {
         return match ? Number(match[0].replace('Key', '')) + 1 : 0;
       }).filter(num => num !== 0);
       notes.value.push(keyNumbers);
-      durationNotes.value.push(item.duration);
+      durationNotes.value.push(Number(item.duration) || 0);
       timeNotes.value.push(
         index < sortedNotes.length - 1 ?
-          sortedNotes[index + 1].time - item.time :
-          0
+          Math.max(Number(sortedNotes[index + 1].time - item.time) || 0, 10) :
+          10
       );
     });
     syncCanvasToKeysArea();
