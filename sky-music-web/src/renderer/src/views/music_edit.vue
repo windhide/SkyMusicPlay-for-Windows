@@ -235,14 +235,14 @@
   <div style="margin-left: 920px; margin-top: -260px; width: 415px; height: 200px;">
     <n-flex>
       <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))" style="margin-top: 5px;">
-        当列长按间隔（ms）
+        当列长按间隔
       </n-gradient-text>
-      <n-input-number v-model:value="columnDownDuration" style="flex-basis: 40%;" :step="10" :min="0" />
+      <n-input-number v-model:value="columnDownDuration" style="flex-basis: 51.3%;" :step="10" :min="0" />
       <div style="flex-basis: 100%;" />
       <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))" style="margin-top: 5px;">
-        列后等待延迟（ms）
+        列后等待延迟
       </n-gradient-text>
-      <n-input-number v-model:value="columnAfterDuration" style="flex-basis: 40%;" :step="10" :min="0" />
+      <n-input-number v-model:value="columnAfterDuration" style="flex-basis: 51.3%;" :step="10" :min="0" />
       <div style="flex-basis: 100%;" />
       <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))" style="margin-top: 5px;">
         歌曲名字
@@ -261,15 +261,33 @@
       <div style="flex-basis: 100%;" />
       <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))"
         style="margin-top: 5px; flex-basis: 42%;">
-        新增的长按间隔（ms）
+        新增的长按间隔
       </n-gradient-text>
       <n-input-number v-model:value="defaultDownDuration" style="flex-basis: 40%;" :step="10" :min="0" />
       <div style="flex-basis: 100%;" />
       <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))"
         style="margin-top: 5px; flex-basis: 42%;">
-        新增的列后等待延迟（ms）
+        新增的列后等待延迟
       </n-gradient-text>
       <n-input-number v-model:value="defaultAfterDuration" style="flex-basis: 40%;" :step="10" :min="0" />
+      <div style="flex-basis: 100%;" />
+      <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))"
+        style="margin-top: 5px; flex-basis: 25%;">
+        全局长按间隔
+      </n-gradient-text>
+      <n-input-number v-model:value="globalDemoDownDuration" style="flex-basis: 40%;" :step="10" :min="0" />
+      <n-button type="primary" ghost color="#F2E8C4" @click="setGlobalDemoDownDuration">
+        设置
+      </n-button>
+      <div style="flex-basis: 100%;" />
+      <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))"
+        style="margin-top: 5px; flex-basis: 25%;">
+        全局列后延迟
+      </n-gradient-text>
+      <n-input-number v-model:value="globalDemoAfterDuration" style="flex-basis: 40%;" :step="10" :min="0" />
+      <n-button type="primary" ghost  color="#F2E8C4" @click="setGloablAfterDuration">
+        设置
+      </n-button>
     </n-flex>
   </div>
   <n-drawer v-model:show="musicActive" :width="900" placement="left" :trap-focus="false" :block-scroll="false">
@@ -382,7 +400,18 @@ const columnDownDuration = ref(0);
 const defaultAfterDuration = ref(0);
 const defaultDownDuration = ref(0);
 const defaultAddColumnCount = ref(1);
+const globalDemoDownDuration = ref(0);
+const globalDemoAfterDuration = ref(0);
 
+const setGlobalDemoDownDuration = () =>{
+  durationNotes.value.fill(globalDemoDownDuration.value)
+  drawCanvas()
+}
+
+const setGloablAfterDuration = () =>{
+  timeNotes.value.fill(globalDemoAfterDuration.value)
+  drawCanvas()
+}
 // 界面交互状态
 const nowButton = ref(-1);
 const progress = ref(1);
