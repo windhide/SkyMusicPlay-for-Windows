@@ -182,6 +182,37 @@
       </template>
       <span>上传谱子编辑</span>
     </n-tooltip>
+    <n-tooltip trigger="click">
+      <template #trigger>
+        <n-button quaternary circle style="font-size: 23px" color="#F2C9C4">
+          <n-icon>
+            <Settings28Filled />
+          </n-icon>
+        </n-button>
+      </template>
+      <n-flex style="width: 200px;">
+        <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))"
+          style="margin-top: 5px; flex-basis: 12%;">
+          过列发送按键到游戏
+        </n-gradient-text>
+        <n-switch v-model:value="sendToGame" size="medium" :round="false" style="margin-top: 5px;"
+          :rail-style="railStyle" />
+        <div style="flex-basis: 100%;" />
+        <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))"
+          style="margin-top: 5px; flex-basis: 62.5%;">
+          功能区提示
+        </n-gradient-text>
+        <n-switch v-model:value="showTips" size="medium" :round="false" style="margin-top: 5px;"
+          :rail-style="railStyle" />
+        <div style="flex-basis: 100%;" />
+        <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))"
+          style="margin-top: 5px; flex-basis: 62.5%;">
+          谱区交替色
+        </n-gradient-text>
+        <n-switch v-model:value="showRowSpaceColor" size="medium" :round="false" style="margin-top: 5px;"
+          :rail-style="railStyle" />
+      </n-flex>
+    </n-tooltip>
   </n-flex>
   <n-slider v-model:value="progress" :step="1" @update:value="updateProgress" :min="1" :max="notes.length"
     style="margin-bottom: 8px;" />
@@ -239,27 +270,6 @@
         新增的列后等待延迟（ms）
       </n-gradient-text>
       <n-input-number v-model:value="defaultAfterDuration" style="flex-basis: 40%;" :step="10" :min="0" />
-      <div style="flex-basis: 100%;" />
-      <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))"
-        style="margin-top: 5px; flex-basis: 42%;">
-        过列发送按键到游戏
-      </n-gradient-text>
-      <n-switch v-model:value="sendToGame" size="medium" :round="false" style="margin-top: 5px;"
-        :rail-style="railStyle" />
-      <div style="flex-basis: 100%;" />
-      <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))"
-        style="margin-top: 5px; flex-basis: 42%;">
-        功能区提示
-      </n-gradient-text>
-      <n-switch v-model:value="showTips" size="medium" :round="false" style="margin-top: 5px;"
-        :rail-style="railStyle" />
-      <div style="flex-basis: 100%;" />
-      <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))"
-        style="margin-top: 5px; flex-basis: 42%;">
-        谱区交替色
-      </n-gradient-text>
-      <n-switch v-model:value="showRowSpaceColor" size="medium" :round="false" style="margin-top: 5px;"
-        :rail-style="railStyle" />
     </n-flex>
   </div>
   <n-drawer v-model:show="musicActive" :width="900" placement="left" :trap-focus="false" :block-scroll="false">
@@ -342,7 +352,8 @@ import {
   PaddingLeft24Filled,
   TableStackLeft24Filled,
   TableStackRight24Filled,
-  DeleteDismiss20Filled
+  DeleteDismiss20Filled,
+  Settings28Filled
 } from '@vicons/fluent'
 import { Search } from '@vicons/ionicons5'
 
