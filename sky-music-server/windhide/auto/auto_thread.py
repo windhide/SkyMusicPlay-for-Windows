@@ -9,9 +9,9 @@ from windhide.utils.ocr_heart_utils import get_friend_model_position
 from windhide.utils.ocr_normal_utils import resetGameFrame
 
 if GlobalVariable.cpu_type == 'Intel':
-    from windhide.playRobot.intel_robot import mouse_move_to, key_press, mouse_wheel_scroll
+    from windhide.playRobot.intel_robot import mouse_move_to, key_press
 else:
-    from windhide.playRobot.amd_robot import mouse_move_to, key_press, mouse_wheel_scroll
+    from windhide.playRobot.amd_robot import mouse_move_to, key_press
 
 keyboard = Controller()
 class HeartFireThread(threading.Thread):
