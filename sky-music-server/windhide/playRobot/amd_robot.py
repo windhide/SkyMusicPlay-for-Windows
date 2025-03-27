@@ -210,8 +210,12 @@ def set_us_keyboard_layout():
     user32.LoadKeyboardLayoutW("00000409", 1)  # 0409 是美国键盘布局标识符，1 表示激活
 
 special_keys = {
-    'space': (0x20, 0x39),  # 虚拟键码和扫描码
-    'tab': (0x09, 0x0F),
-    'esc': (0x1B, 0x01),
-    'shift': (0x10, 0x2A)  # 左 Shift 键
+    'space': (0x20, 0x39),  # 空格键
+    'tab': (0x09, 0x0F),    # Tab 键
+    'esc': (0x1B, 0x01),    # Escape 键
+    'shift': (0x10, 0x2A),  # 左 Shift 键
+    'right': (0x27, 0x4D),  # 方向键右
+    'left': (0x25, 0x4B),   # 方向键左
+    'up': (0x26, 0x48),     # 方向键上
+    'down': (0x28, 0x50)    # 方向键下
 }

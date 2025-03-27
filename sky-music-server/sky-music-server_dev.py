@@ -11,6 +11,7 @@ import uvicorn
 from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
+from windhide.crack.crackSheet import crack_skySheet
 from windhide.musicToSheet.process_audio import process_directory_with_progress
 from windhide.playRobot import amd_robot, intel_robot
 from windhide.static.global_variable import GlobalVariable
@@ -213,6 +214,11 @@ def test(request: dict):
                     amd_robot.key_down(request["key"])
                     time.sleep(0.01)
                     amd_robot.key_up(request["key"])
+
+@app.post("/crack_skySheet")
+async def crack(request: dict):
+    await crack_skySheet(request["bpm"],request["interval"], request["songName"])
+    return "ok"
 
 if __name__ == '__main__':
     GlobalVariable.isProd = False

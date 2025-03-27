@@ -122,13 +122,14 @@ import {
   Settings,
   PlanetSharp,
   ColorPaletteOutline,
-  PulseSharp
+  PulseSharp,
 } from '@vicons/ionicons5'
 import {
   Pin48Regular,
   Pin48Filled,
   Settings48Regular,
-  Compose24Filled
+  Compose24Filled,
+  LockOpen24Filled
 } from '@vicons/fluent'
 import router from '@renderer/router'
 
@@ -227,6 +228,11 @@ const menuOptions = [
   {
     key: "kube",
     type: "divider"
+  },
+  {
+    label: "破解",
+    key: "crack",
+    icon: renderIcon(LockOpen24Filled),
   },
   {
     label: "设置",
@@ -353,7 +359,7 @@ onMounted(() => {
   background-color: rgba(242, 201, 196, 0) !important;
 }
 .n-menu-divider {
-  margin-bottom: 320px;
+  margin-bottom: 280px;
   background-color: rgba(242, 201, 196, 0);
 }
 .n-drawer-mask,.n-drawer{
