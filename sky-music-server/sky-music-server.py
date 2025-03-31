@@ -87,6 +87,7 @@ async def create_upload_files(file: UploadFile):
 
 @app.post("/translate")
 def translate(request: dict):
+    from windhide.musicToSheet.process_audio import process_directory_with_progress
     match request["operate"]:
         case 'translate':
             process_directory_with_progress(request["value"])
@@ -221,6 +222,6 @@ if __name__ == '__main__':
 
     # 启动 FastAPI 服务
     try:
-        uvicorn.run(app, host="localhost", port=9899, log_level="debug")
+        uvicorn.run(app, host="localhost", port=9899, log_config=None)
     except Exception as e:
         logging.error(e)

@@ -12,7 +12,6 @@ from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from windhide.crack.crackSheet import crack_skySheet
-from windhide.musicToSheet.process_audio import process_directory_with_progress
 from windhide.playRobot import amd_robot, intel_robot
 from windhide.static.global_variable import GlobalVariable
 from windhide.thread.hwnd_check_thread import start_thread as hwnd_check_thread
@@ -105,6 +104,7 @@ async def create_upload_files(file: UploadFile):
 
 @app.post("/translate")
 def translate(request: dict):
+    from windhide.musicToSheet.process_audio import process_directory_with_progress
     match request["operate"]:
         case 'translate':
             try:
