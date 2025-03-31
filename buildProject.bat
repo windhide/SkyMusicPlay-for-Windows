@@ -15,9 +15,6 @@ if %errorlevel% neq 0 (
 :: 设置环境变量以支持延迟变量扩展
 setlocal enabledelayedexpansion
 
-:: 如果已是管理员权限，则继续执行脚本
-echo Script successfully running as administrator!
-
 :: 切换到脚本所在目录
 cd /d "%script_dir%"
 
@@ -25,20 +22,20 @@ cd /d "%script_dir%"
 echo Current script directory: %script_dir%
 
 :: 删除旧的 Electron 构建目录
-rmdir /S /Q "%script_dir%sky-music-web\dist"
-:: 删除python的构建目录
-rmdir /S /Q "%script_dir%sky-music-server\build"
-rmdir /S /Q "%script_dir%sky-music-web\backend_dist"
+rmdir /S /Q "%script_dir%\sky-music-web\dist"
+:: 删除 Python 的构建目录
+rmdir /S /Q "%script_dir%\sky-music-server\build"
+rmdir /S /Q "%script_dir%\sky-music-web\backend_dist"
 
 :: 构建 Python 服务器
-cd "%script_dir%sky-music-server"
-call .venv\Scripts\activate
-call pyinstaller --uac-admin -w sky-music-server.py --distpath "%script_dir%sky-music-web\backend_dist" --hidden-import=main --collect-all=sklearn --collect-all=basic_pitch
-call deactivate
+cd "%script_dir%\sky-music-server"
+call .venv\Scripts\python.exe -m PyInstaller --uac-admin -i icon.ico -w --upx-dir D:\Desktop\upx-4.2.2-win64\ sky-music-server.py --distpath "%script_dir%\sky-music-web\backend_dist" --hidden-import=main --collect-all=sklearn --collect-all=basic_pitch
 
-copy "%script_dir%ffmpeg.exe" "%script_dir%sky-music-web\backend_dist\sky-music-server\ffmpeg.exe"
+:: 复制 ffmpeg.exe
+copy "%script_dir%\ffmpeg.exe" "%script_dir%\sky-music-web\backend_dist\sky-music-server\ffmpeg.exe"
+
 :: 构建 Electron 应用
-cd "%script_dir%sky-music-web"
+cd "%script_dir%\sky-music-web"
 call npm run build:win
 
 :: 完成提示
