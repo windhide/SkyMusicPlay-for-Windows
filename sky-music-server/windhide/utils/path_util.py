@@ -87,11 +87,49 @@ def getTypeMusicList(type, searchStr=None):
     file_names = [
         file for file in os.listdir(resources_dir)
         if os.path.isfile(os.path.join(resources_dir, file)) and file != ".keep"
-    ]    # 如果 searchStr 不为空，过滤包含 searchStr 的文件名，忽略大小写
+    ]
+    # 如果 searchStr 不为空，过滤包含 searchStr 的文件名，忽略大小写
     if searchStr and searchStr.strip():
         file_names = [file for file in file_names if searchStr.lower() in file.lower()]
-    # 返回处理后的文件列表，去掉扩展名 .txt
-    return [{"name": file.replace(".txt", "")} for file in file_names]
+
+    # 定义一个函数来计算单个音乐文件的总时长
+    def calculate_total_duration(file_path):
+        with open(file_path, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+            song_notes = data[0]['songNotes']
+            # 计算总时长：最后一个音符的时间加上该音符的持续时间
+            if song_notes:
+                last_note = song_notes[-1]
+                total_duration = last_note['time'] + (last_note.get('duration', 0) or 0)
+            else:
+                total_duration = 0
+        return total_duration
+
+    def format_time(milliseconds):
+        """
+        将毫秒数格式化为时分秒格式（HH:MM:SS 或 MM:SS）
+        """
+        seconds = milliseconds / 1000
+        hours, remainder = divmod(seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+
+        if hours > 0:
+            return f"{int(hours):02}:{int(minutes):02}:{int(seconds):02}"
+        else:
+            return f"{int(minutes):02}:{int(seconds):02}"
+
+    # 构建返回的音乐列表，包含文件名和总时长
+    music_list = []
+    for file in file_names:
+        file_path = os.path.join(resources_dir, file)
+        total_duration = calculate_total_duration(file_path)
+        formatted_duration = format_time(total_duration)
+        music_list.append({
+            "name": file.replace(".txt", ""),
+            "total_duration": formatted_duration
+        })
+
+    return music_list
 
 def detect_encoding(file_path):
     with open(file_path, 'rb') as file:
