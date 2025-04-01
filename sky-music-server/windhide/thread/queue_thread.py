@@ -1,4 +1,5 @@
 import queue
+import re
 
 import plyer
 
@@ -22,7 +23,7 @@ def music_start_tasks():
                 GlobalVariable.now_progress = 100
                 GlobalVariable.task_queue.task_done()
                 continue
-            GlobalVariable.now_play_music = ("" if 'sheet' in request else request["fileName"])
+            GlobalVariable.now_play_music = ("" if 'sheet' in request else  re.sub(r"-#(\d+)(?=\.\w+)?", "", request["fileName"].replace(".txt", "")))
             match GlobalVariable.cpu_type:
                 case "Intel":
                     intel_robot.playMusic_edit(request["sheet"]) if 'sheet' in request else intel_robot.playMusic(request["fileName"], request["type"])

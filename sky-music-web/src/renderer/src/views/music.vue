@@ -235,6 +235,7 @@ const music: any = reactive({
 })
 
 const nowSelectMusic = ref('没有歌曲') // 当前选中歌曲
+let nowSelectMusicTruth = "" // 当前选中歌曲真实名称
 const nowPlayMusic = ref('没有歌曲') // 当前播放歌曲名称
 let nowType = 'systemMusic'
 let progressInterval: any = 0
@@ -297,12 +298,12 @@ const musicColumns = [
         {
           size: 'medium',
           text: true,
-          onClick: () => heartClick(row.name, true)
+          onClick: () => heartClick(row.truthName, true)
         },
         {
           default: () => {
             return music.myFavorite.filter((res) => {
-              return res.name.replaceAll('.mp3').includes(row.name)
+              return res.truthName.replaceAll('.mp3').includes(row.truthName)
             }).length == 0
               ? '❤'
               : null
@@ -345,7 +346,7 @@ const favoritColumns = [
         {
           size: 'medium',
           text: true,
-          onClick: () => heartClick(row.name, false)
+          onClick: () => heartClick(row.truthName, false)
         },
         {
           default: () => {
@@ -389,7 +390,7 @@ const myImportColumns = [
         {
           size: 'medium',
           text: true,
-          onClick: () => deleteClick(row.name)
+          onClick: () => deleteClick(row.truthName)
         },
         {
           default: () => {
@@ -437,6 +438,7 @@ const MusicSelect = (row: RowData) => {
         playBarClickHandler("start", "")
       } else {
         nowSelectMusic.value = row.name;
+        nowSelectMusicTruth = row.truthName;
         clickTimeout = setTimeout(() => {
           clickTimeout = null;
           store.commit('addPlayList', { 'name': row.name, 'type': nowType });
@@ -507,7 +509,7 @@ const playBarClickHandler = async (status: String, type: String) => {
   else if (status === 'start') {
     setTimeout(() => {
       sendData('play_operate', {
-        fileName: nowSelectMusic.value,
+        fileName: nowSelectMusicTruth,
         type: type != "" ? type : nowType,
         operate: "start"
       }).then(() => {
@@ -515,7 +517,7 @@ const playBarClickHandler = async (status: String, type: String) => {
         nowTotalTime.value = '00:00';
         nowCurrentTime.value = '00:00';
         cycleMusic = {
-          fileName: nowSelectMusic.value,
+          fileName: nowSelectMusicTruth,
           type: type != "" ? type : nowType,
         };
       });
@@ -593,7 +595,7 @@ async function getProgress() {
 
 // 随机播放
 function randomMusicPlay() {
-  nowSelectMusic.value = music.systemMusic[Math.floor(Math.random() * (music.systemMusic.length))].name
+  nowSelectMusicTruth = music.systemMusic[Math.floor(Math.random() * (music.systemMusic.length))].name
   playBarClickHandler("start", 'systemMusic')
 }
 
@@ -601,7 +603,7 @@ function randomMusicPlay() {
 async function orderMusicPlay() {
   let struct = store.getters.getNextPlayMusic
   if (struct != null && struct != undefined) {
-    nowSelectMusic.value = struct.name
+    nowSelectMusicTruth = struct.name
     let type = struct.type
     playBarClickHandler("start", type)
   } else {
@@ -615,7 +617,7 @@ async function orderMusicPlay() {
 
 // 循环播放
 function cycleMusicPlay() {
-  nowSelectMusic.value = cycleMusic?.fileName
+  nowSelectMusicTruth = cycleMusic?.fileName
   playBarClickHandler("start", cycleMusic?.type)
 }
 

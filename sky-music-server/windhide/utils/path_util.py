@@ -97,10 +97,10 @@ def getTypeMusicList(type, searchStr=None):
     # 构建返回的音乐列表，包含文件名和总时长
     music_list = []
     for file in file_names:
-        file_path = os.path.join(resources_dir, file)
         music_list.append({
             "name": re.sub(r"-#(\d+)(?=\.\w+)?", "", file.replace(".txt", "")),
-            "total_duration": format_time(int(re.search(r"-#(\d+)(?=\.\w+)?", file).group(1) if re.search(r"-#(\d+)(?=\.\w+)?", file) else "0"))
+            "total_duration": format_time(int(re.search(r"-#(\d+)(?=\.\w+)?", file).group(1) if re.search(r"-#(\d+)(?=\.\w+)?", file) else "0")),
+            "truthName": f"{file.replace('.txt', '')}"
         })
 
     return music_list
@@ -125,7 +125,6 @@ def process_sheet_rename_time():
 
     for file_path in all_file_paths:
         if re.search(r"-#(\d+)(?=\.\w+)?", file_path):
-            print(":")
             continue
         try:
             with open(file_path, 'r', encoding=detect_encoding(file_path)) as file:
