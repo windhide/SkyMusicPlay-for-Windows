@@ -56,6 +56,8 @@ class GlobalVariable:
     now_progress = 0  # 进度条
     set_progress = -0.01  # 进度条
     now_play_music = "没有正在播放的歌曲哦"
+    now_total_time = ""
+    now_current_time = ""
 
     # 音乐转换进度条
     overall_progress = 0  # 总体进度

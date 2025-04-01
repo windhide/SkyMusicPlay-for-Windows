@@ -23,7 +23,7 @@ from windhide.utils.hwnd_utils import get_running_apps, get_running_apps_by_stru
 from windhide.utils.ocr_follow_util import set_next_sheet, get_key_position, test_key_model_position, \
     open_follow
 from windhide.utils.ocr_heart_utils import get_friend_model_position
-from windhide.utils.path_util import getTypeMusicList, getResourcesPath
+from windhide.utils.path_util import getTypeMusicList, getResourcesPath, process_sheet_rename_time
 from windhide.utils.play_util import start, pause, stop, resume
 
 # 避开与光遇相同核心运行
@@ -241,6 +241,7 @@ if __name__ == '__main__':
     task_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
     task_thread.start()
 
+    process_sheet_rename_time()
     print("Now start service")
     # 启动 FastAPI 服务
     try:

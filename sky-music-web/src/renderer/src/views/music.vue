@@ -15,7 +15,10 @@
           </n-icon-wrapper>
         </template>
       </n-slider>
-      <div>{{nowCurrentTime}} / {{nowTotalTime}}</div>
+      <div></div>
+    <n-gradient-text :size="15" type="success" style="color:#F2E8C4; margin-top: -2px;">
+      {{nowCurrentTime}} / {{nowTotalTime}}
+    </n-gradient-text>
     </n-flex>
     <n-row gutter="12">
         <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('resume', '')" v-show="!isPlay" color="#F2C9C4">

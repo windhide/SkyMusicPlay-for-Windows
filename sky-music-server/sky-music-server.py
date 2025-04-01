@@ -13,7 +13,6 @@ from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from windhide.crack.crackSheet import crack_skySheet
-from windhide.musicToSheet.process_audio import process_directory_with_progress
 from windhide.playRobot import amd_robot, intel_robot
 from windhide.static.global_variable import GlobalVariable
 from windhide.thread.frame_alive_thread import monitor_process
@@ -26,7 +25,7 @@ from windhide.utils.hwnd_utils import get_running_apps, get_running_apps_by_stru
 from windhide.utils.ocr_follow_util import set_next_sheet, get_key_position, test_key_model_position, \
     open_follow
 from windhide.utils.ocr_heart_utils import get_friend_model_position
-from windhide.utils.path_util import getTypeMusicList, getResourcesPath
+from windhide.utils.path_util import getTypeMusicList, getResourcesPath, process_sheet_rename_time
 from windhide.utils.play_util import start, pause, resume, stop
 
 # 避开与光遇相同核心运行
@@ -94,8 +93,6 @@ def translate(request: dict):
         case 'translate':
             process_directory_with_progress(request["value"])
     return "ok"
-
-
 
 @app.post("/config_operate")
 def config_operate(request: dict):
@@ -222,6 +219,7 @@ if __name__ == '__main__':
     task_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出
     task_thread.start()
 
+    process_sheet_rename_time()
     # 启动 FastAPI 服务
     try:
         uvicorn.run(app, host="localhost", port=9899, log_config=None)

@@ -86,50 +86,75 @@ def getTypeMusicList(type, searchStr=None):
     # 获取目录下所有文件名
     file_names = [
         file for file in os.listdir(resources_dir)
-        if os.path.isfile(os.path.join(resources_dir, file)) and file != ".keep"
+        if os.path.isfile(os.path.join(resources_dir, file))
+           and file != ".keep"
+           and not re.search(r"-#\d+(?=\.\w+)?$", file)  # 排除匹配 -#数字 的文件
     ]
     # 如果 searchStr 不为空，过滤包含 searchStr 的文件名，忽略大小写
     if searchStr and searchStr.strip():
         file_names = [file for file in file_names if searchStr.lower() in file.lower()]
 
-    # 定义一个函数来计算单个音乐文件的总时长
-    def calculate_total_duration(file_path):
-        with open(file_path, 'r', encoding='utf-8') as file:
-            data = json.load(file)
-            song_notes = data[0]['songNotes']
-            # 计算总时长：最后一个音符的时间加上该音符的持续时间
-            if song_notes:
-                last_note = song_notes[-1]
-                total_duration = last_note['time'] + (last_note.get('duration', 0) or 0)
-            else:
-                total_duration = 0
-        return total_duration
-
-    def format_time(milliseconds):
-        """
-        将毫秒数格式化为时分秒格式（HH:MM:SS 或 MM:SS）
-        """
-        seconds = milliseconds / 1000
-        hours, remainder = divmod(seconds, 3600)
-        minutes, seconds = divmod(remainder, 60)
-
-        if hours > 0:
-            return f"{int(hours):02}:{int(minutes):02}:{int(seconds):02}"
-        else:
-            return f"{int(minutes):02}:{int(seconds):02}"
-
     # 构建返回的音乐列表，包含文件名和总时长
     music_list = []
     for file in file_names:
         file_path = os.path.join(resources_dir, file)
-        total_duration = calculate_total_duration(file_path)
-        formatted_duration = format_time(total_duration)
         music_list.append({
-            "name": file.replace(".txt", ""),
-            "total_duration": formatted_duration
+            "name": re.sub(r"-#(\d+)(?=\.\w+)?", "", file.replace(".txt", "")),
+            "total_duration": format_time(int(re.search(r"-#(\d+)(?=\.\w+)?", file).group(1) if re.search(r"-#(\d+)(?=\.\w+)?", file) else "0"))
         })
 
     return music_list
+
+def process_sheet_rename_time():
+    resource_dirs = [
+        os.path.join(getResourcesPath(None), "systemMusic"),
+        os.path.join(getResourcesPath(None), "myTranslate"),
+        os.path.join(getResourcesPath(None), "myImport"),
+        os.path.join(getResourcesPath(None), "myFavorite")
+    ]
+    all_file_paths = []
+    for resources_dir in resource_dirs:
+        if not os.path.exists(resources_dir):
+            continue
+        file_paths = [
+            os.path.abspath(os.path.join(resources_dir, file))
+            for file in os.listdir(resources_dir)
+            if os.path.isfile(os.path.join(resources_dir, file)) and file != ".keep"
+        ]
+        all_file_paths.extend(file_paths)
+
+    for file_path in all_file_paths:
+        if re.search(r"-#(\d+)(?=\.\w+)?", file_path):
+            print(":")
+            continue
+        try:
+            with open(file_path, 'r', encoding=detect_encoding(file_path)) as file:
+                data = json.load(file)
+            song_notes = data[0].get("songNotes", [])
+            if not song_notes:
+                continue
+            sumTime = int(song_notes[-1]["time"]) + int(song_notes[-1].get("duration", 0))
+            directory, filename = os.path.split(file_path)
+            name, ext = os.path.splitext(filename)
+            new_filename = f"{name}-#{sumTime}{ext}"
+            new_file_path = os.path.join(directory, new_filename)
+            # 重命名文件
+            os.rename(file_path, new_file_path)
+        except Exception as e:
+            continue
+
+def format_time(milliseconds):
+    """
+    将毫秒数格式化为时分秒格式（HH:MM:SS 或 MM:SS）
+    """
+    seconds = milliseconds / 1000
+    hours, remainder = divmod(seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    if hours > 0:
+        return f"{int(hours):02}:{int(minutes):02}:{int(seconds):02}"
+    else:
+        return f"{int(minutes):02}:{int(seconds):02}"
 
 def detect_encoding(file_path):
     with open(file_path, 'rb') as file:
