@@ -6,14 +6,17 @@
     <n-gradient-text :size="20" type="success" style="width: 100%; color:#F2E8C4">
       {{ '选&nbsp&nbsp&nbsp择: ' + nowSelectMusic + '' }}
     </n-gradient-text>
-      <n-slider v-model:value="progress" :step="0.1" style="max-width: 51.5%; display: inline-block; margin-left: 3px;" 
-        @dragend="drag_progress_end" @dragstart="drag_progress_start">
+    <n-flex style="width: 100%">
+      <n-slider v-model:value="progress" :step="0.1" style="max-width: 51.5%; display: inline-block; margin-left: 3px;"
+                @dragend="drag_progress_end" @dragstart="drag_progress_start">
         <template #thumb>
           <n-icon-wrapper :size="20" :border-radius="12" style="background-color:#F2E8C4">
             <n-icon :size="16" :component="PawSharp" />
           </n-icon-wrapper>
         </template>
       </n-slider>
+      <div>{{nowCurrentTime}} / {{nowTotalTime}}</div>
+    </n-flex>
     <n-row gutter="12">
         <n-button quaternary circle type="info" size="large" @click="playBarClickHandler('resume', '')" v-show="!isPlay" color="#F2C9C4">
           <template #icon>
@@ -130,7 +133,7 @@
     <n-tabs type="bar" animated size="small" @update:value="handleUpdateValue" @before-leave="handleBeforeLeave" :value="tabsNumber">
       <n-tab-pane name="systemMusic" tab="自带歌曲">
         <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :min-row-height="48" ref="systemMusic"
-          :max-height="430" :virtual-scroll="music.systemMusic?.length > 7" :row-props="MusicSelect" :row-class-name="rowClassName" 
+          :max-height="430" :virtual-scroll="music.systemMusic?.length > 7" :row-props="MusicSelect" :row-class-name="rowClassName"
           style="
             --n-td-color: rgba(57, 57, 62, 0);
             --n-th-color-hover: rgba(57, 57, 62, 0);
@@ -150,7 +153,7 @@
       </n-tab-pane>
       <n-tab-pane name="myTranslate" tab="转换歌曲" ref="myTranslate">
         <n-data-table :columns="musicColumns" :data="music.myTranslate" :bordered="false" :min-row-height="48" ref="myTranslate"
-        :max-height="430" :virtual-scroll="music.myTranslate?.length > 7" :row-props="MusicSelect" :row-class-name="rowClassName" 
+        :max-height="430" :virtual-scroll="music.myTranslate?.length > 7" :row-props="MusicSelect" :row-class-name="rowClassName"
         style="
             --n-td-color: rgba(57, 57, 62, 0);
             --n-th-color-hover: rgba(57, 57, 62, 0);
@@ -169,7 +172,7 @@
           "/>
       </n-tab-pane>
       <template #suffix>
-        <n-input v-model:value="searchText" round placeholder="搜索"
+        <n-input v-model:value="searchText" round placeholder="搜索" clearable
           style="top:-3px;width: 25vh; margin-left: 5px">
           <template #suffix>
             <n-icon :component="Search" />
@@ -270,6 +273,17 @@ const musicColumns = [
     }
   },
   {
+    title: '时长',
+    key: 'total_duration',
+    width: 100,
+    resizable: true,
+    align: 'center',
+    className: 'th_css',
+    ellipsis: {
+      tooltip: true
+    }
+  },
+  {
     title: '操作',
     key: 'operation',
     width: 60,
@@ -301,6 +315,17 @@ const favoritColumns = [
     title: '歌名',
     key: 'name',
     resizable: true,
+    className: 'th_css',
+    ellipsis: {
+      tooltip: true
+    }
+  },
+  {
+    title: '时长',
+    key: 'total_duration',
+    width: 100,
+    resizable: true,
+    align: 'center',
     className: 'th_css',
     ellipsis: {
       tooltip: true
@@ -340,6 +365,17 @@ const myImportColumns = [
     }
   },
   {
+    title: '时长',
+    key: 'total_duration',
+    width: 100,
+    resizable: true,
+    align: 'center',
+    className: 'th_css',
+    ellipsis: {
+      tooltip: true
+    }
+  },
+  {
     title: '操作',
     key: 'operation',
     width: 60,
@@ -373,6 +409,8 @@ const musicListColumns = [
 
 
 const progress = ref(0.0) // 播放进度条
+const nowTotalTime = ref<string>("00:00") // 播放总时间
+const nowCurrentTime = ref<string>("00:00") // 播放时间
 const playSpeed = ref(1) // 播放速度
 const delaySpeed: any = ref(0) // 延迟设置
 const durationSpeed: any = ref(0) // 延音设置
@@ -471,6 +509,8 @@ const playBarClickHandler = async (status: String, type: String) => {
         operate: "start"
       }).then(() => {
         progress.value = 0;
+        nowTotalTime.value = '00:00';
+        nowCurrentTime.value = '00:00';
         cycleMusic = {
           fileName: nowSelectMusic.value,
           type: type != "" ? type : nowType,
@@ -538,6 +578,8 @@ async function getProgress() {
         // 更新进度，转换为数字
         progress.value = Number(res.now_progress);
         nowPlayMusic.value = res.now_play_music || '未知歌曲';
+        nowTotalTime.value = res.now_total_time;
+        nowCurrentTime.value = res.now_current_time;
       }
     }
   } catch (error) {
@@ -594,6 +636,8 @@ function clearPlayInfo() {
   nowPlayMusic.value = '没有正在播放的歌曲哦';
   nowState.value = 'stop';
   progress.value = 0;
+  nowTotalTime.value = '00:00';
+  nowCurrentTime.value = '00:00';
   // 确保其他状态同步更新（如 statusbar，确保 statusbar 在当前上下文中有效）
   statusbar[0] = true;
   statusbar[1] = false;
@@ -657,6 +701,7 @@ function beforeFileUpload(file) {
 // 获取列表数据
 async function getListData(value) {
   await getList(value, searchText.value).then((_res) => {
+    console.log('list11',_res);
     eval('music.' + value + '=_res')
   })
 }
