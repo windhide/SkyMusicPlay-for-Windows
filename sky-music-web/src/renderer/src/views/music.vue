@@ -218,6 +218,7 @@ import {
 } from '@vicons/fluent'
 import { useStore } from 'vuex'
 import { debounce } from 'lodash-es'
+import configStore, { CONFIG_TYPE, CONFIG_STATUS_TYPE } from '@renderer/utils/configStore'
 
 // ---------------------------------------------------
 // 响应式状态和常量定义
@@ -721,14 +722,23 @@ const fetchListData = debounce(() => {
   getListData('myTranslate');
 }, 200);
 watch(searchText, fetchListData)
+
+let isConfigDelayStatus = false
 let randomInterval: any = null
 watch(delayStatus, () => {
+  if (isConfigDelayStatus) {
+    isConfigDelayStatus = false
+    return
+  }
+  configStore.setItem(CONFIG_TYPE.DELAY_STATUS, delayStatus.value)
   switch (delayStatus.value) {
     case 'system':
       delaySpeed.value = 0
       clearInterval(randomInterval)
       break
     case 'random':
+      delayRandomStart.value = 0.01
+      delayRandomEnd.value = 0.06
       randomInterval = setInterval(() => {
         delaySpeed.value = (Math.random() * (delayRandomEnd.value - delayRandomStart.value) + delayRandomStart.value).toFixed(3)
       }, 1000)
@@ -739,32 +749,61 @@ watch(delayStatus, () => {
       break
   }
 })
+watch(delayRandomStart, ()=>{
+  configStore.setItem(CONFIG_TYPE.DELAY_RANDOM_START, delayRandomStart.value)
+})
+watch(delayRandomEnd, ()=>{
+  configStore.setItem(CONFIG_TYPE.DELAY_RANDOM_END, delayRandomEnd.value)
+})
 
+let isConfigDurationStatus = false
 let durationInterval: any = null
 watch(durationStatus, () => {
+  if (isConfigDurationStatus) {
+    isConfigDurationStatus = false
+    return
+  }
+  configStore.setItem(CONFIG_TYPE.DURATION_STATUS, durationStatus.value)
   switch (durationStatus.value) {
     case 'system':
       durationSpeed.value = 0
       clearInterval(durationInterval)
       break
     case 'random':
+      durationRandomStart.value = 0.01
+      durationRandomEnd.value = 1.5
       durationInterval = setInterval(() => {
         durationSpeed.value = (Math.random() * (durationRandomEnd.value - durationRandomStart.value) + durationRandomStart.value).toFixed(3)
       }, 1000)
       break
     case 'custom':
+      durationSpeed.value = 0
       clearInterval(durationInterval)
       break
   }
 })
+watch(durationRandomStart, ()=>{
+  configStore.setItem(CONFIG_TYPE.DURATION_RANDOM_START, durationRandomStart.value)
+})
+watch(durationRandomEnd, ()=>{
+  configStore.setItem(CONFIG_TYPE.DURATION_RANDOM_END, durationRandomEnd.value)
+})
 
 watch(delaySpeed, () => {
+  if(delayStatus.value !== CONFIG_STATUS_TYPE.RANDOM){
+    configStore.setItem(CONFIG_TYPE.DELAY_SPEED, delaySpeed.value)
+  }
   setConfig('delay_interval', delaySpeed.value)
 })
 watch(durationSpeed, () => {
+  if(durationSpeed.value !== CONFIG_STATUS_TYPE.RANDOM){
+    configStore.setItem(CONFIG_TYPE.DURATION_SPEED, durationSpeed.value)
+  }
+  console.log('延音设置11durationSpeed',durationSpeed.value);
   setConfig('duration', durationSpeed.value)
 })
 watch(playSpeed, () => {
+  configStore.setItem(CONFIG_TYPE.PLAY_SPEED, playSpeed.value)
   setConfig('play_speed', playSpeed.value)
 })
 
@@ -914,9 +953,26 @@ sendData("config_operate",{
 })
 initWebSocket()
 
+
+const getConfigStore = () => {
+  isConfigDelayStatus = true
+  configStore.getItem(CONFIG_TYPE.DELAY_STATUS) && (delayStatus.value = configStore.getItem(CONFIG_TYPE.DELAY_STATUS))
+  configStore.getItem(CONFIG_TYPE.DELAY_SPEED) && (delaySpeed.value = configStore.getItem(CONFIG_TYPE.DELAY_SPEED))
+  configStore.getItem(CONFIG_TYPE.DELAY_RANDOM_START) && (delayRandomStart.value = configStore.getItem(CONFIG_TYPE.DELAY_RANDOM_START))
+  configStore.getItem(CONFIG_TYPE.DELAY_RANDOM_END) && (delayRandomEnd.value = configStore.getItem(CONFIG_TYPE.DELAY_RANDOM_END))
+  isConfigDurationStatus = true
+  configStore.getItem(CONFIG_TYPE.DURATION_STATUS) && (durationStatus.value = configStore.getItem(CONFIG_TYPE.DURATION_STATUS))
+  configStore.getItem(CONFIG_TYPE.DURATION_SPEED) && (durationSpeed.value = configStore.getItem(CONFIG_TYPE.DURATION_SPEED))
+  configStore.getItem(CONFIG_TYPE.DURATION_RANDOM_START) && (durationRandomStart.value = configStore.getItem(CONFIG_TYPE.DURATION_RANDOM_START))
+  configStore.getItem(CONFIG_TYPE.DURATION_RANDOM_END) && (durationRandomEnd.value = configStore.getItem(CONFIG_TYPE.DURATION_RANDOM_END))
+
+  configStore.getItem(CONFIG_TYPE.PLAY_SPEED) && (playSpeed.value = configStore.getItem(CONFIG_TYPE.PLAY_SPEED))
+}
+
 onMounted(async ()=>{
   await handleUpdateValue('myFavorite')
   await handleUpdateValue('systemMusic')
+  getConfigStore()
 })
 
 // ---------------------------------------------------

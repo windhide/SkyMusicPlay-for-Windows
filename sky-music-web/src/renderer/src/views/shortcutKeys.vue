@@ -19,7 +19,7 @@
         <n-button type="primary" text style="width: 100px;" color="#DDF2C4">
           {{ shortcut.name }}
         </n-button>
-        <n-input v-model:value="shortcutKey['music_key'][shortcut.label]" readonly @blur="handleBlur()" placeholder="" 
+        <n-input v-model:value="shortcutKey['music_key'][shortcut.label]" readonly @blur="handleBlur()" placeholder=""
           @focus="handleFocus('music_key', shortcut.label)" />
       </n-input-group>
     </div>
@@ -29,7 +29,7 @@
         <n-button type="primary" text style="width: 100px;" color="#DDF2C4">
           {{ shortcut.name }}
         </n-button>
-        <n-input v-model:value="shortcutKey['follow_key'][shortcut.label]" readonly @blur="handleBlur()" placeholder="" 
+        <n-input v-model:value="shortcutKey['follow_key'][shortcut.label]" readonly @blur="handleBlur()" placeholder=""
           @focus="handleFocus('follow_key', shortcut.label)" />
       </n-input-group>
     </div>
@@ -42,6 +42,7 @@ import { sendData } from "@renderer/utils/fetchUtils";
 import { useMessage } from 'naive-ui'
 import { onMounted, onUnmounted, ref } from 'vue'
 import hotkeys from 'hotkeys-js';
+import configStore, { CONFIG_TYPE } from '@renderer/utils/configStore'
 
 const themeVars = useThemeVars();
 const message = useMessage()
@@ -78,6 +79,7 @@ function handleFocus(type, label) {
       return
     } else {
       shortcutKey.value[type][label] = demoTranKey
+      configStore.setItem(CONFIG_TYPE.SHORTCUT_KEY, tempStruct)
       setShortcutKeys()
       message.success("已设置")
     }
@@ -123,36 +125,39 @@ function setShortcutKeys() {
   })
 }
 function getShortcutKeys() {
-  sendData("config_operate", {
-    "operate": "get",
-    "name": "shortcutStruct"
-  }).then(res => {
-    const follow = res.follow_key;
-    const music = res.music_key;
-    const followKey = {
-      tap_key: follow.tap_key.toUpperCase(),
-      repeat: follow.repeat.toUpperCase(),
-      repeat_next: follow.repeat_next.toUpperCase(),
-      resize: follow.resize.toUpperCase(),
-      exit: follow.exit.toUpperCase(),
-      string: follow.string.toUpperCase()
-    };
-    const musicKey = {
-      next: music.next.toUpperCase(),
-      pause: music.pause.toUpperCase(),
-      resume: music.resume.toUpperCase(),
-      start: music.start.toUpperCase(),
-      stop: music.stop.toUpperCase(),
-      add_duration: music.add_duration.toUpperCase(),
-      reduce_duration: music.reduce_duration.toUpperCase(),
-      add_delay: music.add_delay.toUpperCase(),
-      reduce_delay: music.reduce_delay.toUpperCase(),
-      add_speed: music.add_speed.toUpperCase(),
-      reduce_speed: music.reduce_speed.toUpperCase(),
-      string: music.string.toUpperCase()
-    };
-    shortcutKey.value.follow_key = followKey
-    shortcutKey.value.music_key = musicKey
+  return new Promise(resolve => {
+    sendData("config_operate", {
+      "operate": "get",
+      "name": "shortcutStruct"
+    }).then(res => {
+      const follow = res.follow_key;
+      const music = res.music_key;
+      const followKey = {
+        tap_key: follow.tap_key.toUpperCase(),
+        repeat: follow.repeat.toUpperCase(),
+        repeat_next: follow.repeat_next.toUpperCase(),
+        resize: follow.resize.toUpperCase(),
+        exit: follow.exit.toUpperCase(),
+        string: follow.string.toUpperCase()
+      };
+      const musicKey = {
+        next: music.next.toUpperCase(),
+        pause: music.pause.toUpperCase(),
+        resume: music.resume.toUpperCase(),
+        start: music.start.toUpperCase(),
+        stop: music.stop.toUpperCase(),
+        add_duration: music.add_duration.toUpperCase(),
+        reduce_duration: music.reduce_duration.toUpperCase(),
+        add_delay: music.add_delay.toUpperCase(),
+        reduce_delay: music.reduce_delay.toUpperCase(),
+        add_speed: music.add_speed.toUpperCase(),
+        reduce_speed: music.reduce_speed.toUpperCase(),
+        string: music.string.toUpperCase()
+      };
+      shortcutKey.value.follow_key = followKey
+      shortcutKey.value.music_key = musicKey
+      resolve(true)
+    })
   })
 }
 
@@ -170,17 +175,27 @@ function checkDuplicates(shortcutObj) {
   const uniqueKeys = new Set(keys);
   return uniqueKeys.size === keys.length;
 }
-
+// 默认快捷方式
+const defShortcutKey = {"follow_key":{"tap_key":"yuiophjkl;nm,./","string":"-=q","repeat":"-","repeat_next":'=',"resize":"q","exit":"esc"},"music_key":{"string":"f2f5f6f7f8updownleftrightpage_uppage_down","next":"f2","start":"f5","resume":"f6","pause":"f7","stop":"f8","add_duration":"up","reduce_duration":"down","add_delay":"right","reduce_delay":"left","add_speed":"page_up","reduce_speed":"page_down",}}
+// 重置快捷方式
 function resetKeyToDefault(){
-  sendData("config_operate", {"operate":"set","name":"shortcutStruct","value":{"follow_key":{"tap_key":"yuiophjkl;nm,./","string":"-=q","repeat":"-","repeat_next":'=',"resize":"q","exit":"esc"},"music_key":{"string":"f2f5f6f7f8updownleftrightpage_uppage_down","next":"f2","start":"f5","resume":"f6","pause":"f7","stop":"f8","add_duration":"up","reduce_duration":"down","add_delay":"right","reduce_delay":"left","add_speed":"page_up","reduce_speed":"page_down",}}
+  sendData("config_operate", {"operate":"set","name":"shortcutStruct","value": defShortcutKey
 }).then(()=>{
-    getShortcutKeys()
+    getShortcutKeys().then(() => {
+      const tempStruct = JSON.parse(JSON.stringify(shortcutKey.value));
+      configStore.setItem(CONFIG_TYPE.SHORTCUT_KEY, tempStruct)
+    })
     message.success("已重置快捷键")
   })
 }
 
 onMounted(() => {
-  getShortcutKeys()
+  if(configStore.getItem(CONFIG_TYPE.SHORTCUT_KEY)){
+    shortcutKey.value = configStore.getItem(CONFIG_TYPE.SHORTCUT_KEY)
+    setShortcutKeys()
+  }else{
+    getShortcutKeys()
+  }
 })
 onUnmounted(() => {
   hotkeys.unbind()
