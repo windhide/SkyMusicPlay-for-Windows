@@ -731,6 +731,8 @@ watch(delayStatus, () => {
       clearInterval(randomInterval)
       break
     case 'random':
+      delayRandomStart.value = 0.01
+      delayRandomEnd.value = 0.06
       randomInterval = setInterval(() => {
         delaySpeed.value = (Math.random() * (delayRandomEnd.value - delayRandomStart.value) + delayRandomStart.value).toFixed(3)
       }, 1000)
@@ -740,6 +742,12 @@ watch(delayStatus, () => {
       clearInterval(randomInterval)
       break
   }
+})
+watch(delayRandomStart, ()=>{
+  configStore.setItem(CONFIG_TYPE.DELAY_RANDOM_START, delayRandomStart.value)
+})
+watch(delayRandomEnd, ()=>{
+  configStore.setItem(CONFIG_TYPE.DELAY_RANDOM_END, delayRandomEnd.value)
 })
 
 let durationInterval: any = null
@@ -751,6 +759,8 @@ watch(durationStatus, () => {
       clearInterval(durationInterval)
       break
     case 'random':
+      durationRandomStart.value = 0.01
+      durationRandomEnd.value = 1.5
       durationInterval = setInterval(() => {
         durationSpeed.value = (Math.random() * (durationRandomEnd.value - durationRandomStart.value) + durationRandomStart.value).toFixed(3)
       }, 1000)
@@ -760,6 +770,12 @@ watch(durationStatus, () => {
       clearInterval(durationInterval)
       break
   }
+})
+watch(durationRandomStart, ()=>{
+  configStore.setItem(CONFIG_TYPE.DURATION_RANDOM_START, durationRandomStart.value)
+})
+watch(durationRandomEnd, ()=>{
+  configStore.setItem(CONFIG_TYPE.DURATION_RANDOM_END, durationRandomEnd.value)
 })
 
 watch(delaySpeed, () => {
