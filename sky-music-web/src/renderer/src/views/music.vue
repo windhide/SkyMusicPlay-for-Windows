@@ -722,8 +722,14 @@ const fetchListData = debounce(() => {
   getListData('myTranslate');
 }, 200);
 watch(searchText, fetchListData)
+
+let isConfigDelayStatus = false
 let randomInterval: any = null
 watch(delayStatus, () => {
+  if (isConfigDelayStatus) {
+    isConfigDelayStatus = false
+    return
+  }
   configStore.setItem(CONFIG_TYPE.DELAY_STATUS, delayStatus.value)
   switch (delayStatus.value) {
     case 'system':
@@ -750,8 +756,13 @@ watch(delayRandomEnd, ()=>{
   configStore.setItem(CONFIG_TYPE.DELAY_RANDOM_END, delayRandomEnd.value)
 })
 
+let isConfigDurationStatus = false
 let durationInterval: any = null
 watch(durationStatus, () => {
+  if (isConfigDurationStatus) {
+    isConfigDurationStatus = false
+    return
+  }
   configStore.setItem(CONFIG_TYPE.DURATION_STATUS, durationStatus.value)
   switch (durationStatus.value) {
     case 'system':
@@ -942,12 +953,14 @@ sendData("config_operate",{
 })
 initWebSocket()
 
+
 const getConfigStore = () => {
+  isConfigDelayStatus = true
   configStore.getItem(CONFIG_TYPE.DELAY_STATUS) && (delayStatus.value = configStore.getItem(CONFIG_TYPE.DELAY_STATUS))
   configStore.getItem(CONFIG_TYPE.DELAY_SPEED) && (delaySpeed.value = configStore.getItem(CONFIG_TYPE.DELAY_SPEED))
   configStore.getItem(CONFIG_TYPE.DELAY_RANDOM_START) && (delayRandomStart.value = configStore.getItem(CONFIG_TYPE.DELAY_RANDOM_START))
   configStore.getItem(CONFIG_TYPE.DELAY_RANDOM_END) && (delayRandomEnd.value = configStore.getItem(CONFIG_TYPE.DELAY_RANDOM_END))
-
+  isConfigDurationStatus = true
   configStore.getItem(CONFIG_TYPE.DURATION_STATUS) && (durationStatus.value = configStore.getItem(CONFIG_TYPE.DURATION_STATUS))
   configStore.getItem(CONFIG_TYPE.DURATION_SPEED) && (durationSpeed.value = configStore.getItem(CONFIG_TYPE.DURATION_SPEED))
   configStore.getItem(CONFIG_TYPE.DURATION_RANDOM_START) && (durationRandomStart.value = configStore.getItem(CONFIG_TYPE.DURATION_RANDOM_START))
@@ -960,8 +973,6 @@ onMounted(async ()=>{
   await handleUpdateValue('myFavorite')
   await handleUpdateValue('systemMusic')
   getConfigStore()
-  // configStore.setItem('config_delay_status','system')
-  console.log('默认配置config_delay_status',configStore.getItem('config_delay_status'));
 })
 
 // ---------------------------------------------------

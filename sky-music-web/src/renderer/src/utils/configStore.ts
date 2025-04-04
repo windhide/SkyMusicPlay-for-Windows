@@ -23,10 +23,12 @@ export enum CONFIG_STATUS_TYPE {
 
 const configStore = {
   setItem: (key, value) => {
+    // @ts-ignore (define in dts)
     window.elStore.setElStore(key, value)
   },
 
   getItem: (key) => {
+    // @ts-ignore (define in dts)
     const value = window.elStore.getElStore(key)
     return value
   }
