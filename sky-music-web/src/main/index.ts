@@ -3,11 +3,15 @@ import { join } from 'path'
 import { electronApp, is } from '@electron-toolkit/utils'
 import icon from '../../build/icon.png?asset'
 import { exec } from 'child_process'
+import Store from 'electron-store';
 const path = require('path')
 const fs = require('fs');
 const iconv = require('iconv-lite'); // 用于支持多种编码格式
 
 let mainWindow: BrowserWindow | null = null;
+
+Store.initRenderer()
+const elStore = new Store()
 
 app.commandLine.appendSwitch('no-sandbox');
 // 启动电源保护
@@ -59,7 +63,7 @@ function createWindow(): void {
   let offsetY = 0
   let nowHeight = 774
   let nowWidth = 800
-  
+
   ipcMain.on('mousedown', (_event, { }) => {
     console.log(_event)
     const cursorPoint = screen.getCursorScreenPoint()
@@ -118,12 +122,12 @@ function createWindow(): void {
     },1500)
   })
 
-  
+
   ipcMain.on('window_size', (_event, height:number, width: number) => {
     console.log(_event)
     let bounds:any = null
     bounds = mainWindow?.getBounds()
-    
+
     nowHeight = height === 0 ? 774 : height
     nowWidth = width === 0 ? 800 : width
     mainWindow?.setBounds({
@@ -133,7 +137,7 @@ function createWindow(): void {
       height:nowHeight
     })
   })
-  
+
   ipcMain.handle('read-file', async (_event, filePath:string, needData: boolean) => {
     try {
       let fileContent = await fs.promises.readFile(filePath, 'utf8');
@@ -163,6 +167,16 @@ function createWindow(): void {
   ipcMain.handle('getVersion', (_event) => {
     return app.getVersion()
   });
+
+  // console.log('当前缓存存储位置',app.getPath('userData'))
+  ipcMain.on('setElStore', (_event, key, value) => {
+    elStore.set(key, value)
+  })
+
+  ipcMain.on('getElStore', (event, key) => {
+    const result = elStore.get(key)
+    event.returnValue = result
+  })
 }
 
 app.on('window-all-closed', () => {

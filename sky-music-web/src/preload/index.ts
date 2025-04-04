@@ -19,22 +19,31 @@ if (process.contextIsolated) {
         ipcRenderer.send('window-min');
       },
       readFile: async (filePath: string, needData: boolean) => {
-        return await ipcRenderer.invoke('read-file', filePath, needData); 
+        return await ipcRenderer.invoke('read-file', filePath, needData);
       },
       getVersion: () => {
-        return ipcRenderer.invoke('getVersion'); 
+        return ipcRenderer.invoke('getVersion');
       },
       system_notification: async (title,body) => {
-        ipcRenderer.send('send_system_notification', title, body); 
+        ipcRenderer.send('send_system_notification', title, body);
       },
       window_size: (height:number, width: number) => {
-        ipcRenderer.send('window_size', height, width); 
+        ipcRenderer.send('window_size', height, width);
       },
     });// 用于向主进程发送拖动事件
     contextBridge.exposeInMainWorld('electron', {
       onMouseDown: (x, y) => ipcRenderer.send('mousedown', { x, y }),
       onMouseMove: (x, y) => ipcRenderer.send('mousemove', { x, y }),
       onMouseUp: () => ipcRenderer.send('mouseup')
+    })
+    // 用于数据持久化
+    contextBridge.exposeInMainWorld('elStore', {
+      setElStore:(key, value)=>{
+        ipcRenderer.send('setElStore', key, value);
+      },
+      getElStore:(key)=>{
+        return ipcRenderer.sendSync('getElStore', key);
+      }
     })
   } catch (error) {
     console.error(error)

@@ -218,6 +218,7 @@ import {
 } from '@vicons/fluent'
 import { useStore } from 'vuex'
 import { debounce } from 'lodash-es'
+import configStore, { CONFIG_TYPE, CONFIG_STATUS_TYPE } from '@renderer/utils/configStore'
 
 // ---------------------------------------------------
 // 响应式状态和常量定义
@@ -723,6 +724,7 @@ const fetchListData = debounce(() => {
 watch(searchText, fetchListData)
 let randomInterval: any = null
 watch(delayStatus, () => {
+  configStore.setItem(CONFIG_TYPE.DELAY_STATUS, delayStatus.value)
   switch (delayStatus.value) {
     case 'system':
       delaySpeed.value = 0
@@ -742,6 +744,7 @@ watch(delayStatus, () => {
 
 let durationInterval: any = null
 watch(durationStatus, () => {
+  configStore.setItem(CONFIG_TYPE.DURATION_STATUS, durationStatus.value)
   switch (durationStatus.value) {
     case 'system':
       durationSpeed.value = 0
@@ -753,18 +756,27 @@ watch(durationStatus, () => {
       }, 1000)
       break
     case 'custom':
+      durationSpeed.value = 0
       clearInterval(durationInterval)
       break
   }
 })
 
 watch(delaySpeed, () => {
+  if(delayStatus.value !== CONFIG_STATUS_TYPE.RANDOM){
+    configStore.setItem(CONFIG_TYPE.DELAY_SPEED, delaySpeed.value)
+  }
   setConfig('delay_interval', delaySpeed.value)
 })
 watch(durationSpeed, () => {
+  if(durationSpeed.value !== CONFIG_STATUS_TYPE.RANDOM){
+    configStore.setItem(CONFIG_TYPE.DURATION_SPEED, durationSpeed.value)
+  }
+  console.log('延音设置11durationSpeed',durationSpeed.value);
   setConfig('duration', durationSpeed.value)
 })
 watch(playSpeed, () => {
+  configStore.setItem(CONFIG_TYPE.PLAY_SPEED, playSpeed.value)
   setConfig('play_speed', playSpeed.value)
 })
 
@@ -914,9 +926,26 @@ sendData("config_operate",{
 })
 initWebSocket()
 
+const getConfigStore = () => {
+  configStore.getItem(CONFIG_TYPE.DELAY_STATUS) && (delayStatus.value = configStore.getItem(CONFIG_TYPE.DELAY_STATUS))
+  configStore.getItem(CONFIG_TYPE.DELAY_SPEED) && (delaySpeed.value = configStore.getItem(CONFIG_TYPE.DELAY_SPEED))
+  configStore.getItem(CONFIG_TYPE.DELAY_RANDOM_START) && (delayRandomStart.value = configStore.getItem(CONFIG_TYPE.DELAY_RANDOM_START))
+  configStore.getItem(CONFIG_TYPE.DELAY_RANDOM_END) && (delayRandomEnd.value = configStore.getItem(CONFIG_TYPE.DELAY_RANDOM_END))
+
+  configStore.getItem(CONFIG_TYPE.DURATION_STATUS) && (durationStatus.value = configStore.getItem(CONFIG_TYPE.DURATION_STATUS))
+  configStore.getItem(CONFIG_TYPE.DURATION_SPEED) && (durationSpeed.value = configStore.getItem(CONFIG_TYPE.DURATION_SPEED))
+  configStore.getItem(CONFIG_TYPE.DURATION_RANDOM_START) && (durationRandomStart.value = configStore.getItem(CONFIG_TYPE.DURATION_RANDOM_START))
+  configStore.getItem(CONFIG_TYPE.DURATION_RANDOM_END) && (durationRandomEnd.value = configStore.getItem(CONFIG_TYPE.DURATION_RANDOM_END))
+
+  configStore.getItem(CONFIG_TYPE.PLAY_SPEED) && (playSpeed.value = configStore.getItem(CONFIG_TYPE.PLAY_SPEED))
+}
+
 onMounted(async ()=>{
   await handleUpdateValue('myFavorite')
   await handleUpdateValue('systemMusic')
+  getConfigStore()
+  // configStore.setItem('config_delay_status','system')
+  console.log('默认配置config_delay_status',configStore.getItem('config_delay_status'));
 })
 
 // ---------------------------------------------------
