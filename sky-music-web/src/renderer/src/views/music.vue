@@ -884,20 +884,24 @@ function initWebSocket() {
       playBarClickHandler('next', '')
     }
     if (key === shortcutKeys["add_duration"]) {
-  if (delaySpeed.value * 100 === 200) {
+  if (durationSpeed.value * 100 === 200) {
     message.info("延音最高为2");
   } else {
     durationStatus.value = "custom";
-    durationSpeed.value = Math.round((durationSpeed.value + 0.01) * 100) / 100;
+    setTimeout(()=>{
+      durationSpeed.value = Math.round((durationSpeed.value + 0.01) * 100) / 100;
+    })
     message.info("延音+0.01");
   }
 }
 if (key === shortcutKeys["reduce_duration"]) {
-  if (delaySpeed.value * 100 === 0) {
+  if (durationSpeed.value * 100 === 0) {
     message.info("延音最低为0");
   } else {
     durationStatus.value = "custom";
-    durationSpeed.value = Math.round((durationSpeed.value - 0.01) * 100) / 100;
+    setTimeout(()=>{
+      durationSpeed.value = Math.round((durationSpeed.value - 0.01) * 100) / 100;
+    })
     message.info("延音-0.01");
   }
 }
@@ -906,7 +910,9 @@ if (key === shortcutKeys["add_delay"]) {
     message.info("间隔最高为2");
   } else {
     delayStatus.value = "custom";
-    delaySpeed.value = Math.round((delaySpeed.value + 0.01) * 100) / 100;
+    setTimeout(()=>{
+      delaySpeed.value = Math.round((delaySpeed.value + 0.01) * 100) / 100;
+    })
     message.info("间隔+0.01");
   }
 }
@@ -915,7 +921,9 @@ if (key === shortcutKeys["reduce_delay"]) {
     message.info("间隔最低为0");
   } else {
     delayStatus.value = "custom";
-    delaySpeed.value = Math.round((delaySpeed.value - 0.01) * 100) / 100;
+    setTimeout(()=>{
+      delaySpeed.value = Math.round((delaySpeed.value - 0.01) * 100) / 100;
+    })
     message.info("间隔-0.01");
   }
 }
