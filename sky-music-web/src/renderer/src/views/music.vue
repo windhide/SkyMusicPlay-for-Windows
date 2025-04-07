@@ -442,7 +442,7 @@ const MusicSelect = (row: RowData) => {
         nowSelectMusicTruth = row.truthName;
         clickTimeout = setTimeout(() => {
           clickTimeout = null;
-          store.commit('addPlayList', { 'name': row.name, 'type': nowType });
+          store.commit('addPlayList', { 'name': row.name, 'truthName': row.truthName, 'type': nowType });
         }, 300);
       }
     }
@@ -596,7 +596,7 @@ async function getProgress() {
 
 // 随机播放
 function randomMusicPlay() {
-  nowSelectMusicTruth = music.systemMusic[Math.floor(Math.random() * (music.systemMusic.length))].name
+  nowSelectMusicTruth = music.systemMusic[Math.floor(Math.random() * (music.systemMusic.length))].truthName
   playBarClickHandler("start", 'systemMusic')
 }
 
@@ -604,7 +604,7 @@ function randomMusicPlay() {
 async function orderMusicPlay() {
   let struct = store.getters.getNextPlayMusic
   if (struct != null && struct != undefined) {
-    nowSelectMusicTruth = struct.name
+    nowSelectMusicTruth = struct.truthName
     let type = struct.type
     playBarClickHandler("start", type)
   } else {
