@@ -126,6 +126,17 @@ const musicColumns = [
     title: "歌名",
     key: "name",
     className: "th_css",
+    resizable: true,
+  },
+  {
+    title: '时长',
+    key: 'total_duration',
+    width: 100,
+    align: 'center',
+    className: 'th_css',
+    ellipsis: {
+      tooltip: true
+    }
   },
 ]; // 音乐列
 
