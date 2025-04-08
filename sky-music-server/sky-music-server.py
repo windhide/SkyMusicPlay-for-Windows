@@ -80,10 +80,29 @@ async def create_upload_files(file: UploadFile):
 
 @app.post("/userMusicUpload")
 async def create_upload_files(file: UploadFile):
-    path = os.path.join(getResourcesPath("myImport"), f'{file.filename}')
+    # path = os.path.join(getResourcesPath("myImport"), f'{file.filename}')
+    # with open(path, 'wb') as f:
+    #     for chunk in iter(lambda: file.file.read(1024), b''):
+    #         f.write(chunk)
+    # 读取文件内容
+    file_content = await file.read()
+    data = json.loads(file_content)
+
+    # 提取 songNotes 并计算时间戳
+    song_notes = data[0].get("songNotes", [])
+    if not song_notes:
+        raise ValueError("No songNotes found in the file")
+
+    sum_time = int(song_notes[-1]["time"]) + int(song_notes[-1].get("duration", 0))
+
+    # 生成新的文件名
+    name, ext = os.path.splitext(file.filename)
+    new_filename = f"{name}-#{sum_time}{ext}"
+    path = os.path.join(getResourcesPath("myImport"), new_filename)
+
+    # 保存文件
     with open(path, 'wb') as f:
-        for chunk in iter(lambda: file.file.read(1024), b''):
-            f.write(chunk)
+        f.write(file_content)
     return "ok"
 
 @app.post("/translate")
