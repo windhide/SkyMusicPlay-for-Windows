@@ -118,6 +118,7 @@ const music: any = reactive({
   myFavorite: [],
 });
 const nowPlayMusic = ref("没有歌曲"); // 当前选中歌曲
+const nowSelectMusicTruth = ref('') // 当前选中歌曲真实名称
 let nowType = "systemMusic";
 const searchText = ref("");
 const musicColumns = [
@@ -143,7 +144,7 @@ const processFlag = ref(false)
 
   try {
     await sendData('config_operate', {
-      fileName: nowPlayMusic.value,
+      fileName: nowSelectMusicTruth.value,
       type: nowType,
       operate: 'convert_sheet'
     })
@@ -160,6 +161,17 @@ const musicSystemColumns = [
     title: '歌名',
     key: 'name',
     resizable: true,
+    className: 'th_css',
+    ellipsis: {
+      tooltip: true
+    }
+  },
+  {
+    title: '时长',
+    key: 'total_duration',
+    width: 100,
+    resizable: true,
+    align: 'center',
     className: 'th_css',
     ellipsis: {
       tooltip: true
@@ -197,6 +209,17 @@ const favoritColumns = [
     title: '歌名',
     key: 'name',
     resizable: true,
+    className: 'th_css',
+    ellipsis: {
+      tooltip: true
+    }
+  },
+  {
+    title: '时长',
+    key: 'total_duration',
+    width: 100,
+    resizable: true,
+    align: 'center',
     className: 'th_css',
     ellipsis: {
       tooltip: true
@@ -253,6 +276,7 @@ const MusicSelect = (row: RowData) => {
   return {
     onClick: () => {
       nowPlayMusic.value = row.name;
+      nowSelectMusicTruth.value = row.truthName;
     },
   };
 };
@@ -281,7 +305,7 @@ function followTutorial() {
     return;
   } else {
     sendData("follow", {
-      fileName: nowPlayMusic.value,
+      fileName: nowSelectMusicTruth.value,
       type: nowType,
       operate: "setSheet",
     }).then(() => {
