@@ -240,7 +240,7 @@ const translateColumns = [
         {
           size: "medium",
           text: true,
-          onClick: () => translateClick(row.name),
+          onClick: () => translateClick(row.truthName),
         },
         { default: () => "❌" }
       );

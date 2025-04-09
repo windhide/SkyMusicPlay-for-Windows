@@ -218,7 +218,7 @@ const musicSystemColumns = [
         {
           size: 'medium',
           text: true,
-          onClick: () => heartClick(row.name, true)
+          onClick: () => heartClick(row.truthName, true)
         },
         {
           default: () => {
@@ -265,7 +265,7 @@ const favoritColumns = [
         {
           size: 'medium',
           text: true,
-          onClick: () => heartClick(row.name, false)
+          onClick: () => heartClick(row.truthName, false)
         },
         {
           default: () => {
