@@ -29,7 +29,11 @@ rmdir /S /Q "%script_dir%\sky-music-web\backend_dist"
 
 :: 构建 Python 服务器
 cd "%script_dir%\sky-music-server"
-call .venv\Scripts\python.exe -m PyInstaller --uac-admin -i icon.ico -w --upx-dir D:\Desktop\upx-4.2.2-win64\ sky-music-server.py --distpath "%script_dir%\sky-music-web\backend_dist" --hidden-import=main --collect-all=sklearn --collect-all=basic_pitch
+call .venv\Scripts\python.exe -m PyInstaller --uac-admin -i icon.ico -w sky-music-server.py --distpath "%script_dir%\sky-music-web\backend_dist" --hidden-import=main --collect-all=sklearn --collect-all=basic_pitch
+
+:: 构建 跟弹服务
+cd "%script_dir%\draw-follow-window"
+call .venv\Scripts\python.exe -m pyinstaller --onefile --noconsole --clean --strip --name draw_server --distpath "%script_dir%\template-resources\systemTools\drawTool" draw_server.py
 
 :: 复制 ffmpeg.exe
 copy "%script_dir%\ffmpeg.exe" "%script_dir%\sky-music-web\backend_dist\sky-music-server\ffmpeg.exe"
