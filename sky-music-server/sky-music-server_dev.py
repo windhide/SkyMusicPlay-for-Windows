@@ -83,6 +83,7 @@ async def create_upload_files(file: UploadFile):
         with open(path, 'wb') as f:
             for chunk in iter(lambda: file.file.read(1024), b''):
                 f.write(chunk)
+        process_sheet_rename_time(isImportOrTranslate = True)
         return "ok"
     except Exception as e:
         print(f"Error in /fileUpload: {str(e)}")
@@ -129,6 +130,7 @@ def translate(request: dict):
         case 'translate':
             try:
                 process_directory_with_progress(request["value"])
+                process_sheet_rename_time(isImportOrTranslate=True)
                 return "ok"
             except Exception as e:
                 print(f"Error in /translate: {str(e)}")

@@ -105,13 +105,19 @@ def getTypeMusicList(type, searchStr=None):
 
     return music_list
 
-def process_sheet_rename_time():
-    resource_dirs = [
-        os.path.join(getResourcesPath(None), "systemMusic"),
-        os.path.join(getResourcesPath(None), "myTranslate"),
-        os.path.join(getResourcesPath(None), "myImport"),
-        os.path.join(getResourcesPath(None), "myFavorite")
-    ]
+def process_sheet_rename_time(isImportOrTranslate = False):
+    if isImportOrTranslate:
+        resource_dirs = [
+            os.path.join(getResourcesPath(None), "myImport"),
+            os.path.join(getResourcesPath(None), "myTranslate"),
+        ]
+    else:
+        resource_dirs = [
+            os.path.join(getResourcesPath(None), "systemMusic"),
+            os.path.join(getResourcesPath(None), "myTranslate"),
+            os.path.join(getResourcesPath(None), "myImport"),
+            os.path.join(getResourcesPath(None), "myFavorite")
+        ]
     all_file_paths = []
     for resources_dir in resource_dirs:
         if not os.path.exists(resources_dir):
