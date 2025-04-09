@@ -21,13 +21,13 @@ export default createStore({
     addPlayList(state:any, data) {
       let addFlag = true
       state.playList.forEach(element => {
-        if(element.name === data.name){
+        if(element.truthName === data.truthName){
           addFlag = false;
           return;
         }
       });
       if(addFlag)
-      state.playList.push({'name': data.name , 'type': data.type})
+      state.playList.push({'name': data.name ,'truthName':data.truthName, 'type': data.type})
     },
     removePlayList(state:any, index:number){
       console.log("删除下标",index)
