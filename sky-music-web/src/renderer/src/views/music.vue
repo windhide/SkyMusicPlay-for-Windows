@@ -280,13 +280,12 @@ const musicColumns = [
   {
     title: '时长',
     key: 'total_duration',
-    width: 100,
-    resizable: true,
-    align: 'center',
+    width: 80,
     className: 'th_css',
     ellipsis: {
       tooltip: true
-    }
+    },
+    sorter: (row1, row2) => timeToSeconds(row1.total_duration) - timeToSeconds(row2.total_duration)
   },
   {
     title: '操作',
@@ -328,13 +327,12 @@ const favoritColumns = [
   {
     title: '时长',
     key: 'total_duration',
-    width: 100,
-    resizable: true,
-    align: 'center',
+    width: 80,
     className: 'th_css',
     ellipsis: {
       tooltip: true
-    }
+    },
+    sorter: (row1, row2) => timeToSeconds(row1.total_duration) - timeToSeconds(row2.total_duration)
   },
   {
     title: '操作',
@@ -372,13 +370,12 @@ const myImportColumns = [
   {
     title: '时长',
     key: 'total_duration',
-    width: 100,
-    resizable: true,
-    align: 'center',
+    width: 80,
     className: 'th_css',
     ellipsis: {
       tooltip: true
-    }
+    },
+    sorter: (row1, row2) => timeToSeconds(row1.total_duration) - timeToSeconds(row2.total_duration)
   },
   {
     title: '操作',
@@ -412,6 +409,26 @@ const musicListColumns = [
   }
 ]
 
+function timeToSeconds(timeString) {
+    var splitTime = timeString.split(':');
+
+    // 如果是 HH:MM:SS 格式
+    if (splitTime.length === 3) {
+        var hours = parseInt(splitTime[0], 10);
+        var minutes = parseInt(splitTime[1], 10);
+        var seconds = parseInt(splitTime[2], 10);
+        return hours * 3600 + minutes * 60 + seconds;
+    }
+
+    // 如果是 MM:SS 格式
+    if (splitTime.length === 2) {
+        var minutes = parseInt(splitTime[0], 10);
+        var seconds = parseInt(splitTime[1], 10);
+        return minutes * 60 + seconds;
+    }
+
+    return 0; // 如果格式不正确，返回0
+}
 
 const progress = ref(0.0) // 播放进度条
 const nowTotalTime = ref<string>("00:00") // 播放总时间
