@@ -1,17 +1,16 @@
 import socket
 import time
 
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client.connect(("localhost", 12345))  # 连接到服务器
+
 
 def send_command(command):
     try:
-        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        client.connect(("localhost", 12345))  # 连接到服务器
         client.sendall(command.encode("utf-8"))  # 发送命令
         print(f"发送命令: {command}")
     except ConnectionRefusedError:
         print("无法连接到服务器，请确保服务端已启动。")
-    finally:
-        client.close()
 
 
 # 示例指令序列
@@ -38,6 +37,8 @@ time.sleep(2)  # 等待 2 秒
 send_command("delete box4\n")  # 删除第四个方框
 time.sleep(2)  # 等待 2 秒
 
+send_command("update\n")  # 删除第四个方框
+time.sleep(2)  # 等待 2 秒
 # 添加退出指令
 send_command("exit \n")  # 发送退出指令到服务器
 print("发送退出指令，客户端结束运行。")

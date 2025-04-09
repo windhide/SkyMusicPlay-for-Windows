@@ -77,10 +77,11 @@ def send_command(command):
         GlobalVariable.follow_client.send(command.encode("utf-8"))
         print(f"发送命令: {command}")
     except WindowsError as e:
-        GlobalVariable.exit_flag = False
+        GlobalVariable.exit_flag = True
         print("send Command错误", e.__doc__)
     except Exception as e:
         print("send Command错误", e.__doc__)
+        GlobalVariable.exit_flag = True
         # GlobalVariable.follow_client.shutdown(socket.SHUT_RDWR)  # 关闭套接字的读写
         # GlobalVariable.follow_client.close()
         # GlobalVariable.follow_client = None

@@ -16,18 +16,32 @@ if os.name == "nt":
 
 
 # 绘制和删除方框的 API
-def draw_box_api(canvas, width, height, position_x, position_y):
+def draw_box_api(canvas, width, height, position_x, position_y, box_id=None):
     # 在 Canvas 上绘制一个指定大小和位置的方框
-    return canvas.create_rectangle(
-        position_x, position_y,
-        position_x + width, position_y + height,
-        outline="#00ffff", width=3
-    )
+    if box_id is not None:
+        # 重用已有的方框对象
+        canvas.coords(box_id,
+            position_x, position_y,
+            position_x + width, position_y + height)
+        return box_id
+    else:
+        # 创建新的方框对象
+        return canvas.create_rectangle(
+            position_x, position_y,
+            position_x + width, position_y + height,
+            outline="#00ffff", width=3
+        )
 
 
-def delete_box_api(canvas, box_id):
+def delete_box_api(canvas, box_id, box_pool=None):
     # 从 Canvas 上删除指定 ID 的方框
-    canvas.delete(box_id)
+    if box_pool is not None and len(box_pool) < 100:
+        # 将方框对象添加到对象池中
+        canvas.itemconfig(box_id, state='hidden')
+        box_pool.append(box_id)
+    else:
+        # 对象池已满或未使用对象池，直接删除
+        canvas.delete(box_id)
 
 # 主窗口类
 class TransparentBoxWindow:
@@ -44,6 +58,9 @@ class TransparentBoxWindow:
 
         # 存储用户自定义 ID 与 Tkinter 方框 ID 的映射
         self.boxes = {}
+        # 对象池 - 存储可重用的方框对象
+        self.box_pool = []
+        self.max_pool_size = 100  # 对象池最大容量
 
         # 启动 Socket 服务器
         threading.Thread(target=self.start_server, daemon=True).start()
@@ -71,6 +88,7 @@ class TransparentBoxWindow:
     def handle_client(self, client):
         try:
             buffer = ""
+            command_batch = []
             while True:
                 data = client.recv(1024).decode("utf-8")
                 if not data:
@@ -78,73 +96,122 @@ class TransparentBoxWindow:
                 buffer += data
                 # 按换行符分割命令
                 commands = buffer.split("\n")
-                # 处理完整命令
-                for command in commands[:-1]:  # 最后一个可能是不完整的
+                # 收集完整命令到批处理列表
+                for command in commands[:-1]:
                     print(f"收到命令: {command}")
-                    self.process_command(command)
+                    command_batch.append(command)
+                    # 当积累了足够的命令或遇到特殊命令时执行批处理
+                    if len(command_batch) >= 30 or any(cmd.startswith(("resize", "exit", "update")) for cmd in command_batch):
+                        self.process_command_batch(command_batch)
+                        command_batch = []
                 # 将最后一个不完整的命令保留到下一次处理
                 buffer = commands[-1]
+            # 处理剩余的命令
+            if command_batch:
+                self.process_command_batch(command_batch)
         except ConnectionResetError:
             print("客户端断开连接")
         finally:
             client.close()
 
-    def process_command(self, command):
-        parts = command.split()
-        if parts[0] == "draw":
-            box_id = parts[1]
-            width = int(parts[2])
-            height = int(parts[3])
-            position_x = int(parts[4])
-            position_y = int(parts[5])
-            if box_id in self.boxes:
-                print(f"方框 ID {box_id} 已存在，跳过绘制。")
-            else:
-                tkinter_id = draw_box_api(self.canvas, width, height, position_x, position_y)
-                self.boxes[box_id] = tkinter_id
-        elif parts[0] == "delete":
-            box_id = parts[1]
+    def process_command_batch(self, commands):
+        # 创建命令分类字典
+        command_groups = {
+            "draw": [],
+            "delete": [],
+            "update": None,
+            "resize": None,
+            "exit": False
+        }
+        
+        # 对命令进行分类
+        for command in commands:
+            parts = command.split()
+            cmd_type = parts[0]
+            
+            if cmd_type == "draw":
+                command_groups["draw"].append({
+                    "id": parts[1],
+                    "width": int(parts[2]),
+                    "height": int(parts[3]),
+                    "x": int(parts[4]),
+                    "y": int(parts[5])
+                })
+            elif cmd_type == "delete":
+                command_groups["delete"].append(parts[1])
+            elif cmd_type == "update":
+                # 将update命令作为触发批处理的信号
+                command_groups["update"] = True
+            elif cmd_type == "resize":
+                command_groups["resize"] = {
+                    "width": int(parts[1]),
+                    "height": int(parts[2]),
+                    "x": int(parts[3]),
+                    "y": int(parts[4])
+                }
+            elif cmd_type == "exit":
+                command_groups["exit"] = True
+        
+        # 批量处理删除命令
+        for box_id in command_groups["delete"]:
             if box_id in self.boxes:
                 tkinter_id = self.boxes[box_id]
-                delete_box_api(self.canvas, tkinter_id)
+                delete_box_api(self.canvas, tkinter_id, self.box_pool)
                 del self.boxes[box_id]
-            else:
-                print(f"方框 ID {box_id} 不存在，无法删除。")
-        elif parts[0] == "resize":
-            new_width = int(parts[1])
-            new_height = int(parts[2])
-            new_x = int(parts[3])
-            new_y = int(parts[4])
-            self.change_window_geometry(new_width, new_height, new_x, new_y)
-        elif parts[0] == "exit":
+        
+        # 批量处理绘制命令
+        for box in command_groups["draw"]:
+            if box["id"] not in self.boxes:
+                # 尝试从对象池中获取方框对象
+                reused_box_id = None
+                if self.box_pool:
+                    reused_box_id = self.box_pool.pop()
+                    self.canvas.itemconfig(reused_box_id, state='normal')
+                
+                tkinter_id = draw_box_api(
+                    self.canvas,
+                    box["width"],
+                    box["height"],
+                    box["x"],
+                    box["y"],
+                    reused_box_id
+                )
+                self.boxes[box["id"]] = tkinter_id
+        
+        # 处理调整窗口大小命令
+        if command_groups["resize"]:
+            resize = command_groups["resize"]
+            self.change_window_geometry(
+                resize["width"],
+                resize["height"],
+                resize["x"],
+                resize["y"]
+            )
+        
+        # 处理退出命令
+        if command_groups["exit"]:
             print("接收到退出指令，正在退出程序...")
             self.exit_program()
+        
+        # 更新Canvas
+        self.root.update_idletasks()
 
     def change_window_geometry(self, width, height, position_x, position_y):
         print(f"更改窗口尺寸和位置为：{width}x{height}, 坐标: ({position_x}, {position_y})")
 
-        # 先清除所有已绘制的方框
+        # 隐藏所有方框而不是删除它们
         for tkinter_id in self.boxes.values():
-            self.canvas.delete(tkinter_id)
+            self.canvas.itemconfig(tkinter_id, state='hidden')
+            if len(self.box_pool) < self.max_pool_size:
+                self.box_pool.append(tkinter_id)
         self.boxes.clear()
 
-        # **第一步：仅修改窗口大小**
+        # 修改窗口和Canvas大小
         self.root.geometry(f"{width}x{height}+{position_x}+{position_y}")
-
-        # **确保 Tkinter 处理完窗口大小调整**
-        self.root.update_idletasks()
-        self.root.update()
-
-        # **第二步：修改 Canvas 大小**
         self.canvas.config(width=width, height=height)
 
-        # **清除旧的红色边框，重新绘制**
-        # self.canvas.delete("red_border")  # 删除之前的红色边框
-        # self.draw_red_border(width, height)
-
-        # **再一次刷新 Tkinter UI，确保所有变化生效**
+        # 一次性更新UI
         self.root.update_idletasks()
-        self.root.update()
 
         # 输出调整后的实际窗口大小
         actual_width = self.root.winfo_width()
