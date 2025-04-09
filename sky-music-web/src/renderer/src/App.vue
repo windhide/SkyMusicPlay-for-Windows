@@ -230,11 +230,6 @@ const menuOptions = [
     type: "divider"
   },
   {
-    label: "破解",
-    key: "crack",
-    icon: renderIcon(LockOpen24Filled),
-  },
-  {
     label: "设置",
     key: "setting",
     icon: renderIcon(Settings),
@@ -359,7 +354,7 @@ onMounted(() => {
   background-color: rgba(242, 201, 196, 0) !important;
 }
 .n-menu-divider {
-  margin-bottom: 280px;
+  margin-bottom: 325px;
   background-color: rgba(242, 201, 196, 0);
 }
 .n-drawer-mask,.n-drawer{
