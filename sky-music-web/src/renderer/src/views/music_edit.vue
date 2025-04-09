@@ -443,6 +443,17 @@ const tableColumns = [
     ellipsis: { tooltip: true }
   },
   {
+    title: '时长',
+    key: 'total_duration',
+    width: 100,
+    resizable: true,
+    align: 'center',
+    className: 'th_css',
+    ellipsis: {
+      tooltip: true
+    }
+  },
+  {
     title: '操作',
     key: 'operation',
     width: 60,
@@ -454,7 +465,7 @@ const tableColumns = [
         onClick: () => {
           pause();
           sendData("path", { "type": nowType }).then(res => {
-            loadFile(`${res}\\${row.name}.txt`).then(() => {
+            loadFile(`${res}\\${row.truthName}.txt`).then(() => {
               musicActive.value = false;
             })
           })
