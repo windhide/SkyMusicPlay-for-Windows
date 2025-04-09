@@ -46,7 +46,7 @@
     />
 
     <div style="flex-basis: 100%; margin-top: 20px;"  />
-    <n-button ghost color="#F2C9C4"  @click="openUrl('https://windhide.netlify.app')"  style="font-size: 18px;">
+    <n-button ghost color="#F2C9C4"  @click="openUrl('https://kdocs.cn/l/cpTkEdhxIRob')"  style="font-size: 18px;">
       看教程
     </n-button>
     <n-button ghost color="#A3F6EC"  @click="openUrl('https://qm.qq.com/q/KxkCQdS7OA')"  style="font-size: 18px; margin-left: 20px;">
