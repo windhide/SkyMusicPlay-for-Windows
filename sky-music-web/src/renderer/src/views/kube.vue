@@ -142,9 +142,6 @@ import { getData, sendData, getList, setConfig } from "@renderer/utils/fetchUtil
 import { h, onUnmounted, reactive, ref, watch, CSSProperties } from "vue";
 import { NButton, useMessage } from "naive-ui";
 import {
-  Sync
-} from '@vicons/ionicons5'
-import {
   CloudArrowUp32Filled,
   ArrowSync24Regular
 } from '@vicons/fluent'
@@ -205,7 +202,10 @@ const originalColumns = [
         {
           size: "medium",
           text: true,
-          onClick: () => originalClick(row.name),
+          onClick: () => {
+            originalClick(row.name)
+            window.api.sync_sheet_2_el()
+          }
         },
         { default: () => "❌" }
       );
@@ -240,7 +240,10 @@ const translateColumns = [
         {
           size: "medium",
           text: true,
-          onClick: () => translateClick(row.truthName),
+          onClick: () => {
+            translateClick(row.truthName)
+            window.api.sync_sheet_2_el()
+          }
         },
         { default: () => "❌" }
       );
@@ -398,6 +401,7 @@ async function handleStartTranslate() {
     console.error("转换失败:", error);
   } finally {
     processFlag.value = false;
+    window.api.sync_sheet_2_el()
   }
 }
 

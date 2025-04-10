@@ -40,12 +40,10 @@ app.add_middleware(
     allow_headers=["*"],  # 允许的 HTTP 请求头
 )
 
-
 @app.get("/")
 async def get_list(listName: str, searchStr: str):
     print(f"Fetching music list: {listName}, search: {searchStr}")
     return getTypeMusicList(listName, searchStr)
-
 
 @app.post("/play_operate")
 def play_operate(request: dict):
@@ -122,7 +120,6 @@ async def create_upload_files(file: UploadFile):
         print(f"Error in /userMusicUpload: {str(e)}")
         return "File upload failed"
 
-
 @app.post("/translate")
 def translate(request: dict):
     from windhide.musicToSheet.process_audio import process_directory_with_progress
@@ -135,8 +132,6 @@ def translate(request: dict):
             except Exception as e:
                 print(f"Error in /translate: {str(e)}")
                 return "Translation failed"
-
-
 
 @app.post("/config_operate")
 def config_operate(request: dict):

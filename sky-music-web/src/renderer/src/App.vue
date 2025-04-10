@@ -256,6 +256,7 @@ let checkInterval = setInterval(() => {
     show.value = !res
     clearInterval(checkInterval)
     LoadData()
+    window.api.sync_el_2_sheet()
     router.push({ name: 'home', query: { show: 1 } });
   });
 }, 500)

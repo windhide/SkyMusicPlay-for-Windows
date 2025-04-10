@@ -32,6 +32,12 @@ if (process.contextIsolated) {
       window_size: (height:number, width: number) => {
         ipcRenderer.send('window_size', height, width);
       },
+      sync_el_2_sheet:() => {
+        ipcRenderer.send('sync_el_2_sheet');
+      },
+      sync_sheet_2_el:() => {
+        ipcRenderer.send('sync_sheet_2_el');
+      }
     });// 用于向主进程发送拖动事件
     contextBridge.exposeInMainWorld('electron', {
       onMouseDown: (x, y) => ipcRenderer.send('mousedown', { x, y }),

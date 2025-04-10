@@ -218,7 +218,10 @@ const musicSystemColumns = [
         {
           size: 'medium',
           text: true,
-          onClick: () => heartClick(row.truthName, true)
+          onClick: () => {
+            heartClick(row.truthName, true)
+            window.api.sync_sheet_2_el()
+          }
         },
         {
           default: () => {
@@ -265,7 +268,10 @@ const favoritColumns = [
         {
           size: 'medium',
           text: true,
-          onClick: () => heartClick(row.truthName, false)
+          onClick: () => {
+            heartClick(row.truthName, false)
+            window.api.sync_sheet_2_el()
+          }
         },
         {
           default: () => {

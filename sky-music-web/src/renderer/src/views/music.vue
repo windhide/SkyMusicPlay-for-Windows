@@ -298,7 +298,10 @@ const musicColumns = [
         {
           size: 'medium',
           text: true,
-          onClick: () => heartClick(row.truthName, true)
+          onClick: () => {
+            heartClick(row.truthName, true)
+            window.api.sync_sheet_2_el()
+          }
         },
         {
           default: () => {
@@ -345,7 +348,10 @@ const favoritColumns = [
         {
           size: 'medium',
           text: true,
-          onClick: () => heartClick(row.truthName, false)
+          onClick: () => {
+            heartClick(row.truthName, false)
+            window.api.sync_sheet_2_el()
+          }
         },
         {
           default: () => {
@@ -388,7 +394,10 @@ const myImportColumns = [
         {
           size: 'medium',
           text: true,
-          onClick: () => deleteClick(row.truthName)
+          onClick: () => {
+            deleteClick(row.truthName)
+            window.api.sync_sheet_2_el()
+          }
         },
         {
           default: () => {
@@ -707,6 +716,7 @@ function deleteClick(name) {
 function handleFinish({ file: _file, event: _event }) {
   handleUpdateValue('myImport')
   nowType = "myImport"
+  window.api.sync_sheet_2_el()
 }
 
 // 文件上传前处理

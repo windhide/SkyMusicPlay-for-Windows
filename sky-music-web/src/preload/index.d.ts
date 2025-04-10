@@ -10,6 +10,9 @@ declare global {
       system_notification: (title,body) => void;
       getVersion: () => any;
       window_size: (height:number, width: number) => void;
+      syncElToSheetFiles
+      sync_el_2_sheet:() => void;
+      sync_sheet_2_el:() =>  void;
     };
     electron:{
       onMouseDown: (x, y) => void;

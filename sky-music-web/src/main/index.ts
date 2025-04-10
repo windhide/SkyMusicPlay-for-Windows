@@ -4,14 +4,16 @@ import { electronApp, is } from '@electron-toolkit/utils'
 import icon from '../../build/icon.png?asset'
 import { exec } from 'child_process'
 import Store from 'electron-store';
+import { DataArea20Regular } from '@vicons/fluent'
+Store.initRenderer()
 const path = require('path')
 const fs = require('fs');
+const pLimit = require('p-limit');
 const iconv = require('iconv-lite'); // 用于支持多种编码格式
-
-let mainWindow: BrowserWindow | null = null;
-
-Store.initRenderer()
 const elStore = new Store()
+const MAX_CONCURRENT_COPIES = 20; // 限制最大并行任务数
+const limit = pLimit(MAX_CONCURRENT_COPIES);
+let mainWindow: BrowserWindow | null = null;
 
 app.commandLine.appendSwitch('no-sandbox');
 // 启动电源保护
@@ -23,6 +25,7 @@ app.commandLine.appendSwitch('force-color-profile', 'srgb');  // 统一颜色配
 app.commandLine.appendSwitch('disable-background-timer-throttling'); // 关闭后台定时器节流
 // 允许 GPU 但在必要时自动回退到软件渲染
 app.commandLine.appendSwitch('disable-software-rasterizer');
+const syncFolders = ["myImport", "myTranslate", "myFavorite"]
 function createWindow(): void {
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -177,6 +180,117 @@ function createWindow(): void {
     const result = elStore.get(key)
     event.returnValue = result
   })
+
+  ipcMain.on('sync_sheet_2_el', async (_event,) =>{
+    let cachePath = elStore.path.replaceAll("\\config.json", "");
+      for (const folder of syncFolders) {
+        fetch("http://127.0.0.1:9899/path", {
+            method: 'POST', 
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              "type": folder
+            }), 
+          }).then(response => response.json())
+          .then(data =>{
+            copyFolderIncremental(data, path.join(cachePath, folder));
+          })
+          .catch(error => console.error(error))
+      }
+  })
+
+  ipcMain.on('sync_el_2_sheet', async (_event,) =>{
+    let cachePath = elStore.path.replaceAll("\\config.json", "");
+    for (const folder of syncFolders) {
+      fetch("http://127.0.0.1:9899/path", {
+        method: 'POST', 
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "type": folder
+        }), 
+      }).then(response => response.json()).then(data =>{ 
+        copyFolderIncremental(path.join(cachePath, folder), data);
+      }).catch(error => console.error(error))
+    }
+  })
+
+  async function copyFolderIncremental(source, target) {
+    try {
+        target = path.resolve(target);
+        source = path.resolve(source);
+        console.log("target=>", target);
+        console.log("source=>", source);
+        // 检查源文件夹是否存在
+        let sourceExists = true;
+        try {
+            await fs.promises.access(source, fs.constants.F_OK);
+        } catch (err) {
+            sourceExists = false;
+            await fs.promises.mkdir(source, { recursive: true });
+        }
+        // 检查目标文件夹是否存在
+        let targetExists = true;
+        try {
+            await fs.promises.access(target, fs.constants.F_OK);
+        } catch (err) {
+            targetExists = false;
+        }
+        // 如果源文件夹不存在且目标文件夹存在，删除目标文件夹
+        if (!sourceExists && targetExists) {
+            await fs.promises.rm(target, { recursive: true, force: true });
+        }
+        // 确保目标文件夹存在
+        await fs.promises.mkdir(target, { recursive: true });
+        // 获取源文件夹中的文件列表
+        const sourceFiles = await fs.promises.readdir(source);
+        const sourceFilesSet = new Set(sourceFiles);
+        // 如果目标文件夹存在，检查需要删除的文件
+        if (targetExists) {
+            const targetFiles = await fs.promises.readdir(target);
+            const deletePromises = targetFiles
+                .filter(file => !sourceFilesSet.has(file))
+                .map(file => {
+                    const targetPath = path.join(target, file);
+                    return fs.promises.rm(targetPath, { recursive: true, force: true });
+                });
+            await Promise.all(deletePromises);
+        }
+        // 复制或更新文件
+        const copyTasks = sourceFiles.map(file => limit(async () => {
+            try {
+                const sourcePath = path.join(source, file);
+                const targetPath = path.join(target, file);
+                const sourceStats = await fs.promises.stat(sourcePath);
+
+                if (sourceStats.isFile()) {
+                    let shouldCopy = true;
+                    try {
+                        const targetStats = await fs.promises.stat(targetPath);
+                        shouldCopy = targetStats.mtimeMs < sourceStats.mtimeMs;
+                    } catch (err) {
+                        // 目标文件不存在，需要复制
+                    }
+                    if (shouldCopy) {
+                        await fs.promises.copyFile(sourcePath, targetPath);
+                    }
+                } else if (sourceStats.isDirectory()) {
+                    await copyFolderIncremental(sourcePath, targetPath);
+                }
+            } catch (err) {
+                console.error(`Error processing file ${file}:`, err);
+            }
+        }));
+        await Promise.all(copyTasks);
+    } catch (err) {
+        console.error("Error copying folder:", err);
+        console.log("Continuing with other operations...");
+    }
+  }
+
+
 }
 
 app.on('window-all-closed', () => {
@@ -188,17 +302,26 @@ app.whenReady().then(() => {
   createWindow()
   let runPath = __dirname.replace("resources\\app.asar\\out\\main","")
   const serverPath = path.join(runPath, 'backend_dist/sky-music-server/sky-music-server.exe')
-  const command = `"${serverPath}"`;
-  exec(command, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error executing exe as admin: ${error.message}`);
-      return;
-    }
-    if (stderr) {
-      console.error(`stderr: ${stderr}`);
-      return;
-    }
-    console.log(`stdout: ${stdout}`);
-  })
+  
+  try {
+    const command = `"${serverPath}"`;
+    exec(command, {
+      encoding: 'utf8',
+      windowsHide: true,
+      env: { ...process.env, LANG: 'en_US.UTF-8' }
+    }, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error executing server: ${error.message}`);
+        return;
+      }
+      if (stderr) {
+        console.error(`Server stderr: ${stderr}`);
+        return;
+      }
+      console.log(`Server stdout: ${stdout}`);
+    });
+  } catch (err) {
+    console.error('Failed to start server:', err);
+  }
 })
 
