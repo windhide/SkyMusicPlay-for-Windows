@@ -6,7 +6,7 @@ from windhide.playRobot.amd_robot import send_multiple_key_press, send_multiple_
 from windhide.static.global_variable import GlobalVariable
 from windhide.utils import hook_util
 from windhide.utils.command_util import resize_and_reload_key, clear_window_key, add_window_key, \
-    quit_window
+    quit_window, update_key
 
 hook_util.sout_null()
 
@@ -111,6 +111,7 @@ def get_next_sheet_demo(operator):
             GlobalVariable.follow_sheet = GlobalVariable.follow_sheet[1:]
             for key in sheet:
                 add_window_key(key)
+            update_key()
             return sheet
         else:
             GlobalVariable.nowClientKey = GlobalVariable.follow_sheet[0]

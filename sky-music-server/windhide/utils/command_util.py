@@ -37,6 +37,9 @@ def clear_window_key(keys):
     for key in keys:
         send_command(f"delete {key} \n")
 
+def update_key():
+    send_command(f"update \n")
+
 def resize_and_reload_key():
     GlobalVariable.window["is_change"] = True
     position = get_game_position()
