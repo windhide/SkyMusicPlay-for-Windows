@@ -4,7 +4,6 @@ import { electronApp, is } from '@electron-toolkit/utils'
 import icon from '../../build/icon.png?asset'
 import { exec } from 'child_process'
 import Store from 'electron-store';
-import { DataArea20Regular } from '@vicons/fluent'
 Store.initRenderer()
 const path = require('path')
 const fs = require('fs');
