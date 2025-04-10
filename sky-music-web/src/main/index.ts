@@ -7,11 +7,14 @@ import Store from 'electron-store';
 Store.initRenderer()
 const path = require('path')
 const fs = require('fs');
-const pLimit = require('p-limit');
 const iconv = require('iconv-lite'); // 用于支持多种编码格式
 const elStore = new Store()
 const MAX_CONCURRENT_COPIES = 20; // 限制最大并行任务数
-const limit = pLimit(MAX_CONCURRENT_COPIES);
+let limit;
+(async () => {
+  const { default: pLimit } = await import('p-limit');
+  limit = pLimit(MAX_CONCURRENT_COPIES);
+})();
 let mainWindow: BrowserWindow | null = null;
 
 app.commandLine.appendSwitch('no-sandbox');
