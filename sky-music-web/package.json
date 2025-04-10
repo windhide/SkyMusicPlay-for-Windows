@@ -1,6 +1,6 @@
 {
   "name": "sky-music-web",
-  "version": "v2.5.5",
+  "version": "v2.5.6",
   "description": "WindHide",
   "main": "./out/main/index.js",
   "author": "WindHide",
@@ -29,6 +29,7 @@
     "lodash-es": "^4.17.21",
     "naive-ui": "^2.41.0",
     "node-cmd": "^5.0.0",
+    "p-limit": "^4.0.0",
     "vfonts": "^0.0.3",
     "vue-router": "^4.0.3",
     "vuex": "^4.0.0"
