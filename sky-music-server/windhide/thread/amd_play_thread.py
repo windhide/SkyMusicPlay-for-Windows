@@ -19,7 +19,7 @@ class ControlledThread:
             return
 
         local_music_sheet = GlobalVariable.music_sheet[:]
-        total_length = len(local_music_sheet) - 1
+        total_length = 1 if len(local_music_sheet) == 1 else len(local_music_sheet) - 1
         index = 0
 
         # 在播放开始时计算总时长（单位为毫秒）
