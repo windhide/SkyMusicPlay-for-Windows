@@ -990,19 +990,23 @@ initWebSocket()
 
 
 const getConfigStore = () => {
-  if(configStore.getItem(CONFIG_TYPE.DELAY_STATUS)&& configStore.getItem(CONFIG_TYPE.DELAY_STATUS) == 'system'){
-    isConfigDelayStatus = false
-  } else {
-    isConfigDelayStatus = true
+  if (configStore.getItem(CONFIG_TYPE.DELAY_STATUS)) {
+    if (configStore.getItem(CONFIG_TYPE.DELAY_STATUS) == 'system') {
+      isConfigDelayStatus = false
+    } else {
+      isConfigDelayStatus = true
+    }
   }
   configStore.getItem(CONFIG_TYPE.DELAY_STATUS) && (delayStatus.value = configStore.getItem(CONFIG_TYPE.DELAY_STATUS))
   configStore.getItem(CONFIG_TYPE.DELAY_SPEED) && (delaySpeed.value = configStore.getItem(CONFIG_TYPE.DELAY_SPEED))
   configStore.getItem(CONFIG_TYPE.DELAY_RANDOM_START) && (delayRandomStart.value = configStore.getItem(CONFIG_TYPE.DELAY_RANDOM_START))
   configStore.getItem(CONFIG_TYPE.DELAY_RANDOM_END) && (delayRandomEnd.value = configStore.getItem(CONFIG_TYPE.DELAY_RANDOM_END))
-  if(configStore.getItem(CONFIG_TYPE.DURATION_STATUS) && configStore.getItem(CONFIG_TYPE.DURATION_STATUS) == 'system'){
-    isConfigDurationStatus = false
-  } else {
-    isConfigDurationStatus = true
+  if (configStore.getItem(CONFIG_TYPE.DURATION_STATUS)){
+    if (configStore.getItem(CONFIG_TYPE.DURATION_STATUS) == 'system'){
+      isConfigDurationStatus = false
+    } else {
+      isConfigDurationStatus = true
+    }
   }
   configStore.getItem(CONFIG_TYPE.DURATION_STATUS) && (durationStatus.value = configStore.getItem(CONFIG_TYPE.DURATION_STATUS))
   configStore.getItem(CONFIG_TYPE.DURATION_SPEED) && (durationSpeed.value = configStore.getItem(CONFIG_TYPE.DURATION_SPEED))
