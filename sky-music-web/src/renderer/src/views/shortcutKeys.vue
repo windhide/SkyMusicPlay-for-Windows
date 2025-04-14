@@ -11,9 +11,9 @@
     }" />
     <div style="flex-basis: 100%;" />
     <n-button type="primary" color="#f58f98" style="margin-top: 20px;" ghost @click="resetKeyToDefault()">
-        重 置 快 捷 键
+        {{ t("shortcutKeys.title") }}
     </n-button>
-    <n-divider style="color: #F2C9C4;">音乐快捷键</n-divider>
+    <n-divider style="color: #F2C9C4;">{{ t("shortcutKeys.divider1") }}</n-divider>
     <div v-for="shortcut in musicShortcut" style="margin-right: auto;">
       <n-input-group style="margin-top: 20px">
         <n-button type="primary" text style="width: 100px;" color="#DDF2C4">
@@ -23,7 +23,7 @@
           @focus="handleFocus('music_key', shortcut.label)" />
       </n-input-group>
     </div>
-    <n-divider style="color: #F2C9C4;">跟弹快捷键</n-divider>
+    <n-divider style="color: #F2C9C4;">{{ t("shortcutKeys.divider2") }}</n-divider>
     <div v-for="shortcut in followShortcut" style="margin-right: auto;">
       <n-input-group style="margin-top: 20px">
         <n-button type="primary" text style="width: 100px;" color="#DDF2C4">
@@ -43,14 +43,15 @@ import { useMessage } from 'naive-ui'
 import { onMounted, onUnmounted, ref } from 'vue'
 import hotkeys from 'hotkeys-js';
 import configStore, { CONFIG_TYPE } from '@renderer/utils/configStore'
-
+import { useI18n } from "vue-i18n";
+const { t,tm } = useI18n();
 const themeVars = useThemeVars();
 const message = useMessage()
-const headText = "快捷键为本次运行生效，重启软件需要重新设置，如不适应请尽快适应";
-const patterns = ["本次运行", "重新", "重启", "尽快适应"];
+const headText = t("shortcutKeys.head_text");
+const patterns = tm("shortcutKeys.patterns");
 
-const musicShortcut=[{ name: "播放", label: "start",},{ name: "继续", label: "resume",},{ name: "暂停", label: "pause",},{ name: "停止", label: "stop",},{ name: "+ 延音", label: "add_duration"},{ name: "- 延音", label: "reduce_duration"},{ name: "+ 间隔", label: "add_delay"},{ name: "- 间隔", label: "reduce_delay"},{ name: "+ 倍速", label: "add_speed"},{ name: "- 倍速", label: "reduce_speed"},{ name: "下一首", label: "next",}]
-const followShortcut=[{ name: "重复", label: "repeat"},{ name: "重复并步过", label: "repeat_next"},{ name: "退出", label: "exit"},{ name: "重载按键", label: "resize"}]
+const musicShortcut=[{ name: t("shortcutKeys.button_title.start"), label: "start",},{ name: t("shortcutKeys.button_title.resume"), label: "resume",},{ name: t("shortcutKeys.button_title.pause"), label: "pause",},{ name: t("shortcutKeys.button_title.stop"), label: "stop",},{ name: t("shortcutKeys.button_title.add_duration"), label: "add_duration"},{ name: t("shortcutKeys.button_title.reduce_duration"), label: "reduce_duration"},{ name: t("shortcutKeys.button_title.add_delay"), label: "add_delay"},{ name: t("shortcutKeys.button_title.reduce_delay"), label: "reduce_delay"},{ name: t("shortcutKeys.button_title.add_speed"), label: "add_speed"},{ name: t("shortcutKeys.button_title.reduce_speed"), label: "reduce_speed"},{ name: t("shortcutKeys.button_title.next"), label: "next",}]
+const followShortcut=[{ name: t("shortcutKeys.button_title.repeat"), label: "repeat"},{ name: t("shortcutKeys.button_title.repeat_next"), label: "repeat_next"},{ name: t("shortcutKeys.button_title.exit"), label: "exit"},{ name: t("shortcutKeys.button_title.resize"), label: "resize"}]
 const shortcutKey=ref({ follow_key:{ tap_key: "", string: "", repeat: "", repeat_next: "", resize: "", exit: ""}, music_key:{ next: "", pause: "", resume: "", start: "", stop: "", add_duration:"", reduce_duration: "", add_delay: "", reduce_delay:"", add_speed:"", reduce_speed:"", string: "",}})
 const keyMapStruct={ "ScrollLock": "scroll_lock", "Escape": "esc", "PageUp": "page_up", "PageDown": "page_down", "ArrowUp": "up", "ArrowDown": "down", "ArrowLeft": "left", "ArrowRight": "right", "ControlRight": "ctrl_r", "AltRight": "alt_gr", "ControlLeft": "ctrl_l", "AltLeft": "alt_l", "ShiftLeft": "shift", "Enter": "enter", "Backspace": "backspace", "CapsLock": "caps_lock"}
 
@@ -75,13 +76,13 @@ function handleFocus(type, label) {
     let tempStruct = JSON.parse(JSON.stringify(shortcutKey.value));
     tempStruct[type][label] = demoTranKey
     if (!checkDuplicates(tempStruct)) {
-      message.error("存在重复的快捷键值，请检查配置。")
+      message.error(t("setting.repeat"))
       return
     } else {
       shortcutKey.value[type][label] = demoTranKey
       configStore.setItem(CONFIG_TYPE.SHORTCUT_KEY, tempStruct)
       setShortcutKeys()
-      message.success("已设置")
+      message.success(t("setting.ok"))
     }
   })
 }
@@ -185,7 +186,7 @@ function resetKeyToDefault(){
       const tempStruct = JSON.parse(JSON.stringify(shortcutKey.value));
       configStore.setItem(CONFIG_TYPE.SHORTCUT_KEY, tempStruct)
     })
-    message.success("已重置快捷键")
+    message.success(t("setting.clearAll"))
   })
 }
 

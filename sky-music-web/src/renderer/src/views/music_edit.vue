@@ -2,17 +2,10 @@
   <!-- 状态显示区域 -->
   <n-flex>
     <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))" style="margin-top: 5px;">
-      总列数：{{ notes.length }}
+      {{ t("music_edit.total_column", {length: notes.length}) }}
     </n-gradient-text>
     <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))" style="margin-top: 5px;">
-      乐谱总时长：{{
-        (() => {
-          const totalMilliseconds = timeNotes.reduce((acc, currentValue) => acc + currentValue, 0);
-          const minutes = Math.floor(totalMilliseconds / 60000); // 60000毫秒 = 1分钟
-          const seconds = Math.floor((totalMilliseconds % 60000) / 1000); // 剩余的秒数
-          return `${minutes}分 ${seconds}秒`;
-        })()
-      }}
+      {{ t("music_edit.total_time", {length: `${Math.floor(timeNotes.reduce((acc, currentValue) => acc + currentValue, 0) / 60000)}分 ${Math.floor((timeNotes.reduce((acc, currentValue) => acc + currentValue, 0) % 60000) / 1000)}秒`}) }}
     </n-gradient-text>
   </n-flex>
   <div class="midi-editor">
@@ -33,8 +26,8 @@
           </n-icon>
         </n-button>
       </template>
-      <span v-if="isPlaying">暂停</span>
-      <span v-else>播放</span>
+      <span v-if="isPlaying">{{ t("music_edit.tips.pause") }}</span>
+      <span v-else>{{ t("music_edit.tips.play") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -44,7 +37,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>上一列</span>
+      <span>{{ t("music_edit.tips.pre_column") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -54,7 +47,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>下一列</span>
+      <span>{{ t("music_edit.tips.next_column") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -64,7 +57,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>在当前高亮列后插入新列</span>
+      <span>{{ t("music_edit.tips.afer_add_column") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -74,7 +67,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>删除当前高亮列</span>
+      <span>{{ t("music_edit.tips.delete_now_column") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -86,8 +79,8 @@
           </n-icon>
         </n-button>
       </template>
-      <span v-if="isPlaying">暂停</span>
-      <span v-else>倒放</span>
+      <span v-if="isPlaying">{{ t("music_edit.tips.pause") }}</span>
+      <span v-else>{{ t("music_edit.tips.upend") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -97,7 +90,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>当前高亮列到游戏里面按下</span>
+      <span>{{ t("music_edit.tips.play_now_column") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -107,7 +100,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>当前高亮列复制一份到开头</span>
+      <span>{{ t("music_edit.tips.copy_now_to_head") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -117,7 +110,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>当前高亮列复制一份到上一列</span>
+      <span>{{ t("music_edit.tips.copy_now_to_pre") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -127,7 +120,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>当前高亮列复制一份到下一列</span>
+      <span>{{ t("music_edit.tips.copy_now_to_next") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -137,7 +130,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>当前高亮列复制一份到末尾</span>
+      <span>{{ t("music_edit.tips.copy_now_to_end") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -147,7 +140,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>从歌单里面选歌</span>
+      <span>{{ t("music_edit.tips.select_in_music") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -157,7 +150,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>保存谱子</span>
+      <span>{{ t("music_edit.tips.save_sheet") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -167,7 +160,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>清空当前工作区的谱子</span>
+      <span>{{ t("music_edit.tips.clear_sheet") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -180,7 +173,7 @@
           </n-button>
         </n-upload>
       </template>
-      <span>上传谱子编辑</span>
+      <span>{{ t("music_edit.tips.upload_sheet") }}</span>
     </n-tooltip>
     <n-tooltip trigger="click">
       <template #trigger>
@@ -193,21 +186,21 @@
       <n-flex style="width: 200px;">
         <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))"
           style="margin-top: 5px; flex-basis: 12%;">
-          过列发送按键到游戏
+          {{ t("music_edit.title.change_send_key_in_game") }}
         </n-gradient-text>
         <n-switch v-model:value="sendToGame" size="medium" :round="false" style="margin-top: 5px;"
           :rail-style="railStyle" />
         <div style="flex-basis: 100%;" />
         <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))"
           style="margin-top: 5px; flex-basis: 62.5%;">
-          功能区提示
+          {{ t("music_edit.title.func_area_tip") }}
         </n-gradient-text>
         <n-switch v-model:value="showTips" size="medium" :round="false" style="margin-top: 5px;"
           :rail-style="railStyle" />
         <div style="flex-basis: 100%;" />
         <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))"
           style="margin-top: 5px; flex-basis: 62.5%;">
-          谱区交替色
+          {{ t("music_edit.title.sheet_area_color") }}
         </n-gradient-text>
         <n-switch v-model:value="showRowSpaceColor" size="medium" :round="false" style="margin-top: 5px;"
           :rail-style="railStyle" />
@@ -235,19 +228,19 @@
   <div style="margin-left: 950px; margin-top: -260px; width: 415px; height: 200px;">
     <n-flex>
       <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))" style="margin-top: 5px;">
-        当列长按间隔
+        {{ t("music_edit.title.columnDownDuration") }}
       </n-gradient-text>
       <n-input-number v-model:value="columnDownDuration" style="flex-basis: 51.3%;" :step="10" :min="0" />
       <div style="flex-basis: 100%;" />
       <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))" style="margin-top: 5px;">
-        列后等待延迟
+        {{ t("music_edit.title.columnAfterDuration") }}
       </n-gradient-text>
       <n-input-number v-model:value="columnAfterDuration" style="flex-basis: 51.3%;" :step="10" :min="0" />
       <div style="flex-basis: 100%;" />
       <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))" style="margin-top: 5px;">
-        歌曲名字
+        {{ t("music_edit.title.sheet_name") }}
       </n-gradient-text>
-      <n-input v-model:value="fileName" type="textarea" placeholder="歌曲名字/文件名字" style="flex-basis: 58%;"
+      <n-input v-model:value="fileName" type="textarea" :placeholder="t('music_edit.title.sheet_name_placeholder')" style="flex-basis: 58%;"
         :autosize="{ minRows: 1, maxRows: 7 }" />
     </n-flex>
   </div>
@@ -255,38 +248,38 @@
     <n-flex>
       <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))"
         style="margin-top: 5px; flex-basis: 42%;">
-        新增列数量
+        {{ t("music_edit.title.add_new_count_column") }}
       </n-gradient-text>
       <n-input-number v-model:value="defaultAddColumnCount" style="flex-basis: 40%;" :step="1" :min="1" />
       <div style="flex-basis: 100%;" />
       <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))"
         style="margin-top: 5px; flex-basis: 42%;">
-        新增的长按间隔
+        {{ t("music_edit.title.add_new_druation_column") }}
       </n-gradient-text>
       <n-input-number v-model:value="defaultDownDuration" style="flex-basis: 40%;" :step="10" :min="0" />
       <div style="flex-basis: 100%;" />
       <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))"
         style="margin-top: 5px; flex-basis: 42%;">
-        新增的列后等待延迟
+        {{ t("music_edit.title.add_new_after_column") }}
       </n-gradient-text>
       <n-input-number v-model:value="defaultAfterDuration" style="flex-basis: 40%;" :step="10" :min="0" />
       <div style="flex-basis: 100%;" />
       <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))"
         style="margin-top: 5px; flex-basis: 25%;">
-        全局长按间隔
+        {{ t("music_edit.title.global_down") }}
       </n-gradient-text>
       <n-input-number v-model:value="globalDemoDownDuration" style="flex-basis: 40%;" :step="10" :min="0" />
       <n-button type="primary" ghost color="#F2E8C4" @click="setGlobalDemoDownDuration">
-        设置
+        {{ t("music_edit.title.set") }}
       </n-button>
       <div style="flex-basis: 100%;" />
       <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))"
         style="margin-top: 5px; flex-basis: 25%;">
-        全局列后延迟
+        {{ t("music_edit.title.global_after") }}
       </n-gradient-text>
       <n-input-number v-model:value="globalDemoAfterDuration" style="flex-basis: 40%;" :step="10" :min="0" />
       <n-button type="primary" ghost  color="#F2E8C4" @click="setGloablAfterDuration">
-        设置
+        {{ t("music_edit.title.set") }}
       </n-button>
     </n-flex>
   </div>
@@ -295,7 +288,7 @@
       <n-card style="margin-left: -16px; width: 965px;" :bordered="false">
         <n-tabs type="bar" animated size="small" @update:value="handleUpdateValue" @before-leave="handleBeforeLeave"
           :value="tabsNumber">
-          <n-tab-pane name="systemMusic" tab="自带歌曲">
+          <n-tab-pane name="systemMusic" :tab="t('tab.systemMusic')">
             <n-data-table :columns="tableColumns" :data="music.systemMusic" :bordered="false" :min-row-height="48"
               ref="systemMusic" :max-height="600" :virtual-scroll="music.systemMusic?.length > 7"
               :row-class-name="rowClassName" style="
@@ -305,7 +298,7 @@
               --n-td-color-hover: rgba(0, 0, 0, 0.2);
             " />
           </n-tab-pane>
-          <n-tab-pane name="myImport" tab="导入歌曲" ref="myImport">
+          <n-tab-pane name="myImport" :tab="t('tab.myImport')" ref="myImport">
             <n-data-table :columns="tableColumns" :data="music.myImport" :bordered="false" :min-row-height="48"
               ref="myImport" :max-height="600" :virtual-scroll="music.myImport?.length > 7"
               :row-class-name="rowClassName" style="
@@ -315,7 +308,7 @@
               --n-td-color-hover: rgba(0, 0, 0, 0.2);
             " />
           </n-tab-pane>
-          <n-tab-pane name="myTranslate" tab="转换歌曲" ref="myTranslate">
+          <n-tab-pane name="myTranslate" :tab="t('tab.myTranslate')" ref="myTranslate">
             <n-data-table :columns="tableColumns" :data="music.myTranslate" :bordered="false" :min-row-height="48"
               ref="myTranslate" :max-height="600" :virtual-scroll="music.myTranslate?.length > 7"
               :row-class-name="rowClassName" style="
@@ -325,7 +318,7 @@
               --n-td-color-hover: rgba(0, 0, 0, 0.2);
             " />
           </n-tab-pane>
-          <n-tab-pane name="myFavorite" tab="收藏" ref="myFavorite">
+          <n-tab-pane name="myFavorite" :tab="t('tab.myFavorite')" ref="myFavorite">
             <n-data-table :columns="tableColumns" :data="music.myFavorite" :bordered="false" :min-row-height="48"
               ref="myFavorite" :max-height="600" :virtual-scroll="music.myFavorite?.length > 7"
               :row-class-name="rowClassName" style="
@@ -336,7 +329,7 @@
             " />
           </n-tab-pane>
           <template #suffix>
-            <n-input v-model:value="searchText" round placeholder="搜索" style="top:-3px;width: 25vh; margin-left: 5px">
+            <n-input v-model:value="searchText" round :placeholder="t('tab.search')" style="top:-3px;width: 25vh; margin-left: 5px">
               <template #suffix>
                 <n-icon :component="Search" />
               </template>
@@ -384,7 +377,8 @@ import dmcr from "../component/svg/dmcr.vue"
 import { getList, sendData } from "@renderer/utils/fetchUtils";
 import { debounce } from "lodash-es";
 import { RowData } from "naive-ui/es/data-table/src/interface";
-
+import { useI18n } from "vue-i18n";
+const { t,tm } = useI18n();
 // 状态管理
 const midiCanvas = ref(null);
 const isPlaying = ref(false);
@@ -436,14 +430,14 @@ function railStyle({ focused, checked }) {
 // 表格配置
 const tableColumns = [
   {
-    title: '歌名',
+    title: t('columns.name'),
     key: 'name',
     resizable: true,
     className: 'th_css',
     ellipsis: { tooltip: true }
   },
   {
-    title: '时长',
+    title: t('columns.total_duration'),
     key: 'total_duration',
     width: 80,
     className: 'th_css',
@@ -453,7 +447,7 @@ const tableColumns = [
     sorter: (row1, row2) => timeToSeconds(row1.total_duration) - timeToSeconds(row2.total_duration)
   },
   {
-    title: '操作',
+    title: t('columns.operation'),
     key: 'operation',
     width: 60,
     className: 'th_css',
@@ -765,10 +759,10 @@ const saveSheet = () => {
 //  清空工作选区的谱子
 const clearSheet = () =>{
     dialog.warning({
-      title: '一个来自开发者的温馨小提示⭐',
-      content: '确定要清空当前工作区域的所有谱子吗？未保存的更改将丢失。',
-      positiveText: '就清空就清空',
-      negativeText: '不清空了我先保存吧',
+      title: t('music_edit.dialog.title'),
+      content: t('music_edit.dialog.content'),
+      positiveText: t('music_edit.dialog.positiveText'),
+      negativeText: t('music_edit.dialog.negativeText'),
       maskClosable: false,
       showIcon: false,
       positiveButtonProps: {
@@ -807,12 +801,12 @@ async function loadFile(filePath) {
   try {
     const res = await window.api.readFile(filePath, true);
     if (!res || !Array.isArray(res) || res.length === 0) {
-      throw new Error('谱子数据格式错误');
+      throw new Error(t('music_edit.sheet.error.sheet_data'),);
     }
     const { name = '未知文件', songNotes = [] } = res[0];
     fileName.value = name;
     if (!Array.isArray(songNotes)) {
-      throw new Error('谱子音符数据格式错误');
+      throw new Error(t('music_edit.sheet.error.data'),);
     }
     pause()
     notes.value = [];
@@ -849,9 +843,9 @@ async function loadFile(filePath) {
     currentColumn.value = 0;
     progress.value = 1;
     isFirst = true
-    message.success('谱子加载成功');
+    message.success(t('music_edit.sheet.load_success'));
   } catch (error) {
-    message.error(`谱子加载失败: ${error}`);
+    message.error(t('music_edit.sheet.load_fail') + "=>" + error);
   }
 }
 
@@ -950,7 +944,7 @@ watch(showRowSpaceColor, drawCanvas);
 // 监听列后等待延迟的变化
 watch(columnAfterDuration, (newValue, _oldValue) => {
   if (columnDownDuration.value >= newValue) {
-    message.info("长按间隔需要小于列后等待延迟，已自动调整(当下)");
+    message.info(t('music_edit.tips.tip1'));
     columnDownDuration.value = Math.max(newValue - 10, 0);
   }
   const finalValue = Math.max(newValue, 10);
@@ -970,7 +964,7 @@ const copyNowColumnToStart = () => {
   currentColumn.value++;
   progress.value = currentColumn.value + 1;
   drawCanvas();
-  message.success("已复制到开头");
+  message.success(t('music_edit.tips.tip2'));
 };
 
 const copyNowColumnToPre = () => {
@@ -985,7 +979,7 @@ const copyNowColumnToPre = () => {
   currentColumn.value++;
   progress.value = currentColumn.value + 1;
   drawCanvas();
-  message.success("已复制到上一列");
+  message.success(t('music_edit.tips.tip3'));
 };
 
 const copyNowColumnToNext = () => {
@@ -1000,7 +994,7 @@ const copyNowColumnToNext = () => {
   // currentColumn.value++;
   // progress.value = currentColumn.value + 1;
   drawCanvas();
-  message.success("已复制到下一列");
+  message.success(t('music_edit.tips.tip4'));
 };
 
 const copyNowColumnToEnd = () => {
@@ -1017,12 +1011,12 @@ const copyNowColumnToEnd = () => {
   // currentColumn.value++;
   // progress.value = currentColumn.value + 1;
   drawCanvas();
-  message.success("已复制到最后一列");
+  message.success(t('music_edit.tips.tip5'));
 };
 
 watch(columnDownDuration, (newValue, _oldValue) => {
   if (newValue >= columnAfterDuration.value) {
-    message.info("长按间隔需要小于等待间隔，已自动增加列后等待延迟(当下)");
+    message.info(t('music_edit.tips.tip6'));
     columnAfterDuration.value = newValue + 10;
   }
   durationNotes.value[progress.value - 1] = newValue;
@@ -1030,17 +1024,17 @@ watch(columnDownDuration, (newValue, _oldValue) => {
 });
 watch(defaultAfterDuration, (newValue, _oldValue) => {
   if (newValue < 10) {
-    message.info("列后等待延迟不能小于 10，已自动调整(全局新增)");
+    message.info(t('music_edit.tips.tip7'));
     defaultAfterDuration.value = 10;
   } else if (defaultDownDuration.value >= newValue - 10) {
-    message.info("长按间隔需要小于列后等待延迟 10ms，已自动调整(全局新增)");
+    message.info(t('music_edit.tips.tip8'));
     defaultDownDuration.value = newValue - 10;
   }
 });
 
 watch(defaultDownDuration, (newValue, _oldValue) => {
   if (newValue >= defaultAfterDuration.value - 10) {
-    message.info("长按间隔需要小于列后等待延迟 10ms，已自动调整(全局新增)");
+    message.info(t('music_edit.tips.tip8'));
     defaultAfterDuration.value = newValue + 10;
   }
 });
@@ -1216,10 +1210,10 @@ onUnmounted(() => {
 onBeforeRouteLeave((_to, _from, next) => {
   if (notes.value.length >= 3) {
     dialog.warning({
-      title: '一个来自开发者的温馨小提示⭐',
-      content: '确定要离开乐谱编辑页面吗？未保存的更改将丢失。',
-      positiveText: '就走就走',
-      negativeText: '不走了我先保存吧',
+      title: t('music_edit.dialog.title'),
+      content: t('music_edit.dialog.content2'),
+      positiveText: t('music_edit.dialog.positiveText2'),
+      negativeText: t('music_edit.dialog.negativeText2'),
       maskClosable: false, // 遮罩不可点击
       showIcon: false,
       positiveButtonProps: {

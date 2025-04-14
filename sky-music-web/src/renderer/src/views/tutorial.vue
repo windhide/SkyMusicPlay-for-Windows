@@ -1,12 +1,12 @@
 <template>
   <n-flex align="center">
     <n-gradient-text :size="20" type="success" style="width: 100%; color: #f2e8c4">
-      {{ "当前: " + nowPlayMusic + "" }}
+      {{ t('tutorial.now', { music:nowPlayMusic }) }}
     </n-gradient-text>
     <n-button type="primary" ghost @click="followTutorial" color="#F2C9C4">
-      开始跟弹
+      {{ t('tutorial.follow') }}
     </n-button>
-    <n-button type="primary" ghost :loading="processFlag" @click="transfer" color="#F2E8C4"> 保存可视化乐谱到桌面</n-button>
+    <n-button type="primary" ghost :loading="processFlag" @click="transfer" color="#F2E8C4">{{ t('tutorial.save') }}</n-button>
   </n-flex>
   <n-card  style="margin-left: -22px; width: 640px;" :bordered="false">
     <n-tabs
@@ -16,7 +16,7 @@
       @update:value="handleUpdateValue"
       @before-leave="handleBeforeLeave"
     >
-      <n-tab-pane name="systemMusic" tab="自带歌曲">
+      <n-tab-pane name="systemMusic" :tab="t('tab.systemMusic')">
         <n-data-table
           :columns="musicSystemColumns"
           :data="music.systemMusic"
@@ -33,7 +33,7 @@
             --n-td-color-hover: rgba(0, 0, 0, 0.2);
           "/>
       </n-tab-pane>
-      <n-tab-pane name="myImport" tab="导入歌曲">
+      <n-tab-pane name="myImport" :tab="t('tab.myImport')">
         <n-data-table
           :columns="musicColumns"
           :data="music.myImport"
@@ -50,7 +50,7 @@
             --n-td-color-hover: rgba(0, 0, 0, 0.2);
           "/>
       </n-tab-pane>
-      <n-tab-pane name="myTranslate" tab="转换歌曲">
+      <n-tab-pane name="myTranslate" :tab="t('tab.myTranslate')">
         <n-data-table
           :columns="musicColumns"
           :data="music.myTranslate"
@@ -67,7 +67,7 @@
             --n-td-color-hover: rgba(0, 0, 0, 0.2);
           "/>
       </n-tab-pane>
-      <n-tab-pane name="myFavorite" tab="收藏">
+      <n-tab-pane name="myFavorite" :tab="t('tab.myFavorite')">
         <n-data-table
           :columns="favoritColumns"
           :data="music.myFavorite"
@@ -88,7 +88,7 @@
         <n-input
           v-model:value="searchText"
           round
-          placeholder="搜索"
+          :placeholder="t('tab.search')"
           style="top: -4px; width: 25vh; margin-left: 5px"
         >
           <template #suffix>
@@ -107,7 +107,8 @@ import { h, reactive, ref, watch } from "vue";
 import { useMessage, NButton } from "naive-ui";
 import { Search } from "@vicons/ionicons5";
 import { debounce } from "lodash-es";
-
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const message = useMessage();
 
 const music: any = reactive({
@@ -117,19 +118,19 @@ const music: any = reactive({
   myTranslate: [], // 扒谱的音乐
   myFavorite: [],
 });
-const nowPlayMusic = ref("没有歌曲"); // 当前选中歌曲
+const nowPlayMusic = ref(t('tutorial.no_music')); // 当前选中歌曲
 const nowSelectMusicTruth = ref('') // 当前选中歌曲真实名称
 let nowType = "systemMusic";
 const searchText = ref("");
 const musicColumns = [
   {
-    title: "歌名",
+    title: t("columns.name"),
     key: "name",
     className: "th_css",
     resizable: true,
   },
   {
-    title: '时长',
+    title: t("columns.total_duration"),
     key: 'total_duration',
     width: 80,
     className: 'th_css',
@@ -168,8 +169,8 @@ const processFlag = ref(false)
  * 发送扒谱转换请求
  */
  async function transfer() {
-  if (nowPlayMusic.value === '没有歌曲') {
-    message.warning('请先选择一首歌曲')
+  if (nowPlayMusic.value === t("tutorial.no_music")) {
+    message.warning(t("tutorial.chose_music"))
     return
   }
 
@@ -179,17 +180,17 @@ const processFlag = ref(false)
       type: nowType,
       operate: 'convert_sheet'
     })
-    message.success('已保存在桌面')
+    message.success(t("tutorial.save_desktop"))
   } catch (error) {
-    console.error('转换失败:', error)
-    message.error('转换失败，请重试')
+    console.error(t("tutorial.error_console"), error)
+    message.error(t("tutorial.error"))
   }
 }
 
 
 const musicSystemColumns = [
   {
-    title: '歌名',
+    title: t("columns.name"),
     key: 'name',
     resizable: true,
     className: 'th_css',
@@ -198,7 +199,7 @@ const musicSystemColumns = [
     }
   },
   {
-    title: '时长',
+    title: t("columns.total_duration"),
     key: 'total_duration',
     width: 80,
     className: 'th_css',
@@ -208,7 +209,7 @@ const musicSystemColumns = [
     sorter: (row1, row2) => timeToSeconds(row1.total_duration) - timeToSeconds(row2.total_duration)
   },
   {
-    title: '操作',
+    title: t("columns.operation"),
     key: 'operation',
     width: 60,
     className: 'th_css',
@@ -239,7 +240,7 @@ const musicSystemColumns = [
 
 const favoritColumns = [
   {
-    title: '歌名',
+    title: t("columns.name"),
     key: 'name',
     resizable: true,
     className: 'th_css',
@@ -248,7 +249,7 @@ const favoritColumns = [
     }
   },
   {
-    title: '时长',
+    title: t("columns.total_duration"),
     key: 'total_duration',
     width: 80,
     className: 'th_css',
@@ -258,7 +259,7 @@ const favoritColumns = [
     sorter: (row1, row2) => timeToSeconds(row1.total_duration) - timeToSeconds(row2.total_duration)
   },
   {
-    title: '操作',
+    title: t("columns.operation"),
     key: 'operation',
     width: 60,
     className: 'th_css',
@@ -293,7 +294,7 @@ function heartClick(name, state) {
     }).then(() => {
       handleUpdateValue('myFavorite')
       handleUpdateValue(nowType)
-      message.success('收藏成功')
+      message.success(t("tab.love_success"))
     })
   } else {
     sendData('config_operate', {
@@ -302,7 +303,7 @@ function heartClick(name, state) {
       operate: "drop_file"
     }).then(() => {
       handleUpdateValue('myFavorite')
-      message.success('移除成功')
+      message.success(t("tab.remove_success"))
     })
   }
 }
@@ -335,8 +336,8 @@ const fetchListData = debounce(() => {
 watch(searchText, fetchListData)
 
 function followTutorial() {
-  if (nowPlayMusic.value === "没有歌曲") {
-    message.error("选个歌再跟弹吧靓仔");
+  if (nowPlayMusic.value === t("tutorial.no_music")) {
+    message.error(t("messeage.choose_plz"));
     return;
   } else {
     sendData("follow", {

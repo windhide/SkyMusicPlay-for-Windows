@@ -47,13 +47,13 @@
 
     <div style="flex-basis: 100%; margin-top: 20px;"  />
     <n-button ghost color="#F2C9C4"  @click="openUrl('https://kdocs.cn/l/cpTkEdhxIRob')"  style="font-size: 18px;">
-      看教程
+      {{ t("home.tutorial") }}
     </n-button>
     <n-button ghost color="#A3F6EC"  @click="openUrl('https://qm.qq.com/q/KxkCQdS7OA')"  style="font-size: 18px; margin-left: 20px;">
-      加Q群
+      {{ t("home.qq") }}
     </n-button>
     <n-button ghost color="#D0BDF4"  @click="openUrl('https://pd.qq.com/s/9boevqcwu')"  style="font-size: 18px; margin-left: 20px;">
-      加频道
+      {{ t("home.qq_sb") }}
     </n-button>
     <div style="flex-basis: 100%; margin-top: 20px;" />
     <n-button type="info" color="#F2C9C4" text  @click="openUrl('https://github.com/windhide/SkyMusicPlay-for-Windows/pulls')"  style="font-size: 30px">
@@ -87,14 +87,15 @@ import { useMessage } from 'naive-ui'
 import { useRoute } from 'vue-router';
 import { onMounted } from 'vue'
 import { setConfigShortcutKey } from '@renderer/utils/configStore'
-
+import { useI18n } from "vue-i18n";
+const { t,tm } = useI18n();
 const route = useRoute();
 const themeVars = useThemeVars();
 const dialog = useDialog();
 const message = useMessage()
-const headText = "如果您觉得好用可以赏我一杯咖啡☕";
-const text = "欢迎使用本软件，本软件完全免费，如果您是买的本软件就是被骗了";
-const patterns = ["完全免费", "被骗了", "咖啡☕"];
+const headText = t("home.head_text");
+const text = t("home.text");
+const patterns = tm("home.patterns");
 
 /**
  * 打开指定链接
@@ -116,7 +117,7 @@ async function checkForUpdates(): Promise<void> {
     const cloudVersionNum = Number(cloudVersion.version.match(/\d/g)?.join("") || 0);
 
     if (cloudVersionNum === 404) {
-      message.info("无法检测软件新版本，尝试下修复网络呢");
+      message.info(t("home.update_info"));
       return;
     }
 
@@ -142,10 +143,10 @@ async function checkForUpdates(): Promise<void> {
         }
       });
     }else{
-      message.success("当前已经是最新版了");
+      message.success(t("home.update"));
     }
   } catch (error) {
-    message.info("更新检测错误");
+    message.info(t("home.update_error"));
   }
 }
 

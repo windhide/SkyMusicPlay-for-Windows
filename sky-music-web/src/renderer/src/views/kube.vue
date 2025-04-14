@@ -1,7 +1,7 @@
 <template>
   <n-flex align="center">
     <n-gradient-text :size="24" type="success" style="width: 100%; color:#F2E8C4">
-      转换歌曲
+      {{ t("kube.title") }} 
     </n-gradient-text>
     <n-upload
       action="http://localhost:9899/fileUpload"
@@ -11,14 +11,14 @@
       :show-file-list="false"
       @finish="handleFinish"
     >
-    <n-button type="info" ghost color="#F2C9C4"> 选择音乐 
+    <n-button type="info" ghost color="#F2C9C4"> {{ t("kube.chose_music") }} 
       <template #icon>
         <n-icon size="25px"><CloudArrowUp32Filled /></n-icon>
       </template>
     </n-button>
     </n-upload>
     <n-button type="primary" ghost :loading="processFlag" @click="handleStartTranslate" style="margin-left: 7px;" color="#F2E8C4">
-      开始转换
+      {{ t("kube.star_transfer") }} 
       <template #icon>
         <n-icon size="25px"><ArrowSync24Regular /></n-icon>
       </template>
@@ -31,10 +31,10 @@
           🧐
         </template>
         <template #checked>
-          <p style="color: rgba(94, 104, 81, 1);">单数键</p>
+          <p style="color: rgba(94, 104, 81, 1);">{{ t("kube.odd") }} </p>
         </template>
         <template #unchecked>
-          <p style="color: rgba(94, 104, 81, 1);">双数键</p>
+          <p style="color: rgba(94, 104, 81, 1);">{{ t("kube.dual") }} </p>
         </template>
     </n-switch>
     <n-switch size="medium" v-model:value="semitone_switch" @update:value="semitoneChange" :rail-style="railStyle" :round="false"> 
@@ -45,10 +45,10 @@
           🧐
         </template>
         <template #checked>
-          <p style="color: rgba(94, 104, 81, 1);">含半音转换</p>
+          <p style="color: rgba(94, 104, 81, 1);">{{ t("kube.half_t") }}</p>
         </template>
         <template #unchecked>
-          <p style="color: rgba(94, 104, 81, 1);">仅全音转换</p>
+          <p style="color: rgba(94, 104, 81, 1);">{{ t("kube.all_t") }}</p>
         </template>
     </n-switch>
     <n-switch size="medium" v-model:value="detail_switch" @update:value="detailChange" :rail-style="railStyle" :round="false"> 
@@ -59,20 +59,20 @@
           🧐
         </template>
         <template #checked>
-          <p style="color: rgba(94, 104, 81, 1);">超3音变调</p>
+          <p style="color: rgba(94, 104, 81, 1);">{{ t("kube.other_key") }}</p>
         </template>
         <template #unchecked>
-          <p style="color: rgba(94, 104, 81, 1);">仅范围转换</p>
+          <p style="color: rgba(94, 104, 81, 1);">{{ t("kube.range_key") }}</p>
         </template>
     </n-switch>
     <div style="flex-basis: 100%;" />
     <n-gradient-text  gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))">
-      力度过滤(低于毫秒)：
+      {{ t("kube.Streng_filter") }}
     </n-gradient-text>
     <n-input-number v-model:value="velocity_filter" style="flex-basis: 20%;" />
     <div style="flex-basis: 100%;" />
     <n-gradient-text  gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))">
-      动态合并阈值范围划分（动态取决于bmp计算）
+      {{ t("kube.dynamic_merge") }}
     </n-gradient-text>
     <n-input-number v-model:value="merge_min" style="flex-basis: 20%;"/>
     <n-gradient-text  gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))">
@@ -81,16 +81,16 @@
     <n-input-number v-model:value="merge_max" style="flex-basis: 20%;"/>
     <n-checkbox-group v-model:value="chooseType" style="margin-left: 1px; margin-top: 5px;">
         <n-space item-style="display: flex;">
-          <n-checkbox value="2" label="光遇范围_2组音阶" />
-          <n-checkbox value="3" label="3组音阶" />
-          <n-checkbox value="4" label="4组音阶" />
-          <n-checkbox value="5" label="5组音阶" />
-          <n-checkbox value="6" label="6组音阶" />
+          <n-checkbox value="2" :label="t('kube.scale.scale2')" />
+          <n-checkbox value="3" :label="t('kube.scale.scale3')" />
+          <n-checkbox value="4" :label="t('kube.scale.scale4')" />
+          <n-checkbox value="5" :label="t('kube.scale.scale5')" />
+          <n-checkbox value="6" :label="t('kube.scale.scale6')" />
         </n-space>
     </n-checkbox-group>
     <n-divider style="margin:0px"/>
     <div style="flex-basis: 100%;" />
-    <n-gradient-text type="info" style="color: #F2C9C4; flex-basis: 10%"> 转换进度 </n-gradient-text>
+    <n-gradient-text type="info" style="color: #F2C9C4; flex-basis: 10%"> {{ t("kube.transfer_progress") }} </n-gradient-text>
     <n-progress
       color="#F2C9C4"
       style="flex-basis: 80%"
@@ -103,7 +103,7 @@
 
   <n-card style="margin-left: -22px; width: 640px;" :bordered="false">
     <n-tabs type="line" animated @update:value="handleUpdateValue">
-      <n-tab-pane name="translateOriginalMusic" tab="未转换歌曲">
+      <n-tab-pane name="translateOriginalMusic" :tab="t('tab.translateOriginalMusic')">
         <n-data-table
           :columns="originalColumns"
           :data="music.translateOriginalMusic"
@@ -118,7 +118,7 @@
             --n-td-color-hover: rgba(0, 0, 0, 0.2);
           "/>
       </n-tab-pane>
-      <n-tab-pane name="myTranslate" tab="已转换歌曲">
+      <n-tab-pane name="myTranslate" :tab="t('tab.myTranslate')">
         <n-data-table
           :columns="translateColumns"
           :data="music.myTranslate"
@@ -145,7 +145,8 @@ import {
   CloudArrowUp32Filled,
   ArrowSync24Regular
 } from '@vicons/fluent'
-
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const message = useMessage();
 const processFlag = ref(false);
 let progressInterval:any = null
@@ -187,12 +188,12 @@ const now_translate_text = reactive({
 
 const originalColumns = [
   {
-    title: "歌名",
+    title: t('columns.name'),
     key: "name",
     className: "th_css",
   },
   {
-    title: "操作",
+    title: t('columns.operation'),
     key: "operation",
     width: 100,
     className: "th_css",
@@ -215,12 +216,12 @@ const originalColumns = [
 
 const translateColumns = [
   {
-    title: "歌名",
+    title: t('columns.name'),
     key: "name",
     className: "th_css",
   },
   {
-    title: '时长',
+    title: t('columns.total_duration'),
     key: 'total_duration',
     width: 80,
     className: 'th_css',
@@ -230,7 +231,7 @@ const translateColumns = [
     sorter: (row1, row2) => timeToSeconds(row1.total_duration) - timeToSeconds(row2.total_duration)
   },
   {
-    title: "操作",
+    title: t('columns.operation'),
     key: "operation",
     width: 100,
     className: "th_css",
@@ -335,9 +336,9 @@ async function originalClick(name: string) {
     });
 
     handleUpdateValue("translateOriginalMusic");
-    message.success("移除成功");
+    message.success(t('messeage.remove_success'));
   } catch (error) {
-    console.error("删除失败:", error);
+    console.error(t('messeage.remove_fail'), error);
   }
 }
 
@@ -354,9 +355,9 @@ async function translateClick(name: string) {
 
     handleUpdateValue("translateOriginalMusic");
     handleUpdateValue("myTranslate");
-    message.success("移除成功");
+    message.success(t('messeage.remove_success'));
   } catch (error) {
-    console.error("删除失败:", error);
+    console.error(t('messeage.remove_fail'), error);
   }
 }
 
@@ -377,7 +378,7 @@ async function getProgress() {
       }
     }
   } catch (error) {
-    console.error("获取进度失败:", error);
+    console.error(t('messeage.progress_fail'), error);
   }
 }
 
@@ -387,7 +388,7 @@ async function getProgress() {
 async function handleStartTranslate() {
   if (processFlag.value) return;
   processFlag.value = true;
-  message.success("开始转换");
+  message.success(t('kube.star_transfer'));
 
   if (!progressInterval) {
     progressInterval = setInterval(getProgress, 1000) as unknown as number;
@@ -396,9 +397,9 @@ async function handleStartTranslate() {
   try {
     await sendData("translate", { operate: "translate", value: chooseType.value.join() });
     reloadTable();
-    message.success("转换完成");
+    message.success(t('kube.transfer_success'));
   } catch (error) {
-    console.error("转换失败:", error);
+    console.error(t('kube.transfer_fail'), error);
   } finally {
     processFlag.value = false;
     window.api.sync_sheet_2_el()
@@ -433,7 +434,7 @@ async function handleUpdateValue(value: keyof typeof music) {
     const res = await getList(value, "");
     music[value] = res;
   } catch (error) {
-    console.error(`获取 ${value} 失败:`, error);
+    console.error(t('kube.get_fail', {value}), error);
   }
 }
 

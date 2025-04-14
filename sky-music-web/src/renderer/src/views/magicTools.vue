@@ -71,11 +71,11 @@
         <n-select v-model:value="selectValue" :options="options" style="width: 15%;" />
         <n-input-number v-model:value="mathValue" clearable step="0.01" style=" margin-left: 20px; width: 20%;" />
         <n-button type="error" dashed style="margin-left: 20px;" @click="checkFile">
-          Check
+          {{ t('magic_tools.buttons.check') }}
         </n-button>
         <n-input-number style="margin-left: 10px !important; width: 30%;" v-model:value="QCount" />
         <n-button type="primary" @click="run('alwaysQ')" dashed >
-          狠狠的叫
+          {{ t('magic_tools.buttons.abaaba') }}
         </n-button>
       </n-input-group>
       <n-input-group  style="flex: 0 0 100%; margin-top: 10px;" class="father">
@@ -95,37 +95,39 @@
 import { sendData } from "@renderer/utils/fetchUtils";
 import { useThemeVars } from "naive-ui";
 import { ref } from "vue";
+import { useI18n } from "vue-i18n";
+const { t,tm } = useI18n();
 const themeVars = useThemeVars();
-const headText = "此处是测试版功能请谨慎使用🌶，不涉及内存修改🌶。";
-const headText2 = "此处功能仅供学习交流，严禁用于商业用途，请于24小时内删除";
-const headText3 = "🚫模拟器玩家禁止使用下面的所有功能🚫";
-const patterns = ["谨慎使用🌶", "不涉及内存修改🌶", "此处功能仅供学习交流，严禁用于商业用途，请于24小时内删除", "🚫模拟器玩家禁止使用下面的所有功能🚫"];
+const headText = t("magic_tools.head_text");
+const headText2 = t("magic_tools.head_text2");
+const headText3 = t("magic_tools.head_text3");
+const patterns = tm("magic_tools.patterns")
 let mathValue = ref(0.5)
 let selectValue = ref("image")
 const QCount = ref(300)
 const options = [
   {
-    label: '心火',
+    label: t('magic_tools.buttons.heart_fire'),
     value: 'image'
   },
   {
-    label: '按键',
+    label: t('magic_tools.buttons.key'),
     value: 'key'
   }
 ]
 const buttons = [
   {
     color:"#F2C97D",
-    context:"自动点火",
+    context:t('magic_tools.buttons.autoFire'),
     value: "autoFire"
   },
   {
     color:"#fe6673",
-    context:"开发者自定义",
+    context:t('magic_tools.buttons.developer'),
     value: "developer"
   },{
     color:"#ff0000",
-    context:"终止线程",
+    context:t('magic_tools.buttons.shutdown'),
     value: "shutdown"
   },
 ]
@@ -133,27 +135,27 @@ const buttons = [
 const fileButtons = [
   {
     color:"#afdfe4",
-    context:"系统的音乐",
+    context:t('magic_tools.fileButtons.systemMusic'),
     value: "systemMusic"
   },
   {
     color:"#45b97c",
-    context:"导入的音乐",
+    context:t('magic_tools.fileButtons.myImport'),
     value: "myImport"
   },
   {
     color:"#ea66a6",
-    context:"转换的音乐",
+    context:t('magic_tools.fileButtons.myTranslate'),
     value: "myTranslate"
   },
   {
     color:"#ef4136",
-    context:"收藏的音乐",
+    context:t('magic_tools.fileButtons.myFavorite'),
     value: "myFavorite"
   },
   {
     color:"#9b95c9",
-    context:"转谱的MIDI",
+    context:t('magic_tools.fileButtons.translateMID'),
     value: "translateMID"
   }
 ]
@@ -190,14 +192,14 @@ function keypress(key){
 }
 
 function autoClickFire(){
-  window.api.system_notification("🔧🔧🔧🔧🔧", "现在开始自动点击心火")
+  window.api.system_notification("🔧🔧🔧🔧🔧", t('magic_tools.messeage.start'))
   sendData("auto", {
     "operate":"click_fire"
   })
 }
 
 function shutdown(){
-  window.api.system_notification("⛔⛔⛔⛔⛔", "终止！！！！！")
+  window.api.system_notification("⛔⛔⛔⛔⛔", t('magic_tools.messeage.stop'))
   sendData("auto", {
     "operate":"shutdown"
   })

@@ -39,11 +39,12 @@
 
 <script setup lang="ts">
 import { useThemeVars } from "naive-ui";
-
+import { useI18n } from "vue-i18n";
+const { t,tm } = useI18n();
 const themeVars = useThemeVars();
-const headText = "如果您觉得好用可以赏我一杯咖啡☕";
-const text = "欢迎使用本软件，本软件完全免费，如果您是买的本软件就是被骗了";
-const patterns = ["完全免费", "被骗了", "咖啡☕"];
+const headText = t("home.head_text");
+const text = t("home.text");
+const patterns = tm("home.patterns");
 </script>
 
 <style scoped>

@@ -16,7 +16,7 @@ def music_start_tasks():
         try:
             if GlobalVariable.window["hWnd"] is None and GlobalVariable.compatibility_mode is False:
                 plyer.notification.notify(
-                    title='⚠️⚠️⚠️⚠️⚠️',
+                    title='🔥🔥🔥🔥🔥',
                     message='未检测到游戏窗口，请打开游戏或者去句柄页面进行指定！本次播放操作释放',
                     timeout=1
                 )

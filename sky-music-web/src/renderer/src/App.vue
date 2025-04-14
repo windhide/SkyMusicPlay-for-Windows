@@ -9,9 +9,9 @@
             </n-icon> 
           </n-button>
         </template>
-        <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))">透明度 </n-gradient-text>
+        <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))">{{ t('main.transparency') }}</n-gradient-text>
         <n-slider v-model:value="transparency_number" :step="0.01" :max="1" :min="0" style="width: 200px;"/>
-        <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))">背景颜色 </n-gradient-text>
+        <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))">{{ t('main.color') }}</n-gradient-text>
         <n-color-picker :show-alpha="false" v-model:value="colorPick"/>
       </n-popover>
       <n-popover style="border-radius: 17px; --n-color: rgba(47,47,55,1)" trigger="click">
@@ -24,28 +24,28 @@
         </template>
         <n-switch size="small" v-model:value="is_compatibility_mode" @update:value="CompatibilityModeChange" :rail-style="railStyle" :round="false"> 
             <template #checked>
-              <p style="color: rgba(94, 104, 81, 0.75);">兼容模式</p>
+              <p style="color: rgba(94, 104, 81, 0.75);">{{ t('main.compatible') }}</p>
             </template>
             <template #unchecked>
-              <p style="color: rgba(94, 104, 81, 0.75);">后台模式</p>
+              <p style="color: rgba(94, 104, 81, 0.75);">{{ t('main.backend') }}</p>
             </template>
           </n-switch> 
           <br>
           <n-switch size="small" v-model:value="isPostW" @update:value="PostWChange" :rail-style="railStyle" v-show="is_compatibility_mode != true" :round="false"> 
               <template #checked>
-                <p style="color: rgba(94, 104, 81, 0.75);">队列模式</p>
+                <p style="color: rgba(94, 104, 81, 0.75);">{{ t('main.queue') }}</p>
               </template>
               <template #unchecked>
-                <p style="color: rgba(94, 104, 81, 0.75);">插队模式</p>
+                <p style="color: rgba(94, 104, 81, 0.75);">{{ t('main.cut') }}</p>
               </template>
           </n-switch>
           <br>
           <n-switch size="small" v-model:value="isRunnable" @update:value="RunnableChange" :rail-style="railStyle" v-show="is_compatibility_mode != true" :round="false"> 
               <template #checked>
-                <p style="color: rgba(94, 104, 81, 0.75);">多核模式</p>
+                <p style="color: rgba(94, 104, 81, 0.75);">{{ t('main.multi_core') }}</p>
               </template>
               <template #unchecked>
-                <p style="color: rgba(94, 104, 81, 0.75);">单核模式</p>
+                <p style="color: rgba(94, 104, 81, 0.75);">{{ t('main.single_core') }}</p>
               </template>
           </n-switch>
       </n-popover>
@@ -100,7 +100,7 @@
           </n-space>
         </n-dialog-provider>
       </n-message-provider>
-      <template #description> <div style="color: #F2E8C4;">🍉应用加载中，请稍等~</div> </template>
+      <template #description> <div style="color: #F2E8C4;">{{ t('main.loading') }}</div> </template>
     </n-spin>
   </n-config-provider>
 </template>
@@ -134,6 +134,8 @@ import {
 import router from '@renderer/router'
 
 import { useRoute } from 'vue-router'
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const route = useRoute()
 const collapsed = ref(false)
 const is_compatibility_mode = ref(false)

@@ -29,10 +29,10 @@
     }" />
     <div style="flex-basis: 100%; margin-top: 8px;" />
     <n-button type="primary" color="#A3F6EC" ghost @click="getHwndMesseage()">
-        刷新列表
+        {{t("hwnd_handle.refresh")}}
     </n-button>
     <n-button type="primary" color="#f58f98" ghost @click="resetKeyToDefault()" style="margin-left: 10px;">
-        重置为光遇窗口
+        {{t("hwnd_handle.reset_sky")}}
     </n-button>
     <div style="flex-basis: 100%; margin-top: 8px;" />
     <n-gradient-text
@@ -42,7 +42,7 @@
         }"
         id="hwnd"
       >
-      Now Hwnd > {{ nowHwnd == null ? 'Nothing' : nowHwnd }}
+      {{t("hwnd_handle.now_hwnd")}} {{ nowHwnd == null ? 'Nothing' : nowHwnd }}
     </n-gradient-text>
     <n-data-table :columns="hwndColumns" :data="hwndColumnsList" :bordered="false" :min-row-height="48" ref="systemMusic"
           :max-height="475" :virtual-scroll="hwndColumnsList?.length > 7" row-class-name="td_css"
@@ -60,17 +60,18 @@ import { NButton, useThemeVars } from "naive-ui";
 import { sendData } from "@renderer/utils/fetchUtils";
 import { useMessage } from 'naive-ui'
 import { h, onMounted, onUnmounted, ref } from 'vue'
-
+import { useI18n } from "vue-i18n";
+const { t,tm } = useI18n();
 const themeVars = useThemeVars();
 const message = useMessage()
-const headText = "此处为更改后台发送的目标，除了光遇以外的游戏均未测试，不会进行修复";
-const headText2 = "因为此功能导致其他游戏被封号，不要找我。取决于游戏的反作弊机制";
-const patterns = ["更改后台发送的目标", "光遇", "未测试", "不会", "不要找我", "导致", "封号", "反作弊机制"];
+const headText = t("hwnd_handle.head_text");
+const headText2 = t("hwnd_handle.head_text2");
+const patterns = tm("hwnd_handle.patterns");
 const hwndColumnsList = ref([])
 const nowHwnd = ref("")
 const hwndColumns = [
   {
-    title: '软件标题',
+    title: t("hwnd_handle.columns.title"),
     key: 'title',
     resizable: true,
     className: 'th_css',
@@ -78,7 +79,7 @@ const hwndColumns = [
       tooltip: true
     }
   },{
-    title: '进程名字',
+    title: t("hwnd_handle.columns.exe_name"),
     key: 'exe_name',
     resizable: true,
     className: 'th_css',
@@ -86,7 +87,7 @@ const hwndColumns = [
       tooltip: true
     }
   },{
-    title: 'PID',
+    title: t("hwnd_handle.columns.pid"),
     key: 'pid',
     resizable: true,
     className: 'th_css',
@@ -94,7 +95,7 @@ const hwndColumns = [
       tooltip: true
     }
   },{
-    title: '句柄',
+    title: t("hwnd_handle.columns.hwnd"),
     key: 'hwnd',
     resizable: true,
     className: 'th_css',
@@ -103,7 +104,7 @@ const hwndColumns = [
     }
   },
   {
-    title: '选定',
+    title: t("hwnd_handle.columns.operation"),
     key: 'operation',
     width: 60,
     className: 'th_css',
@@ -128,7 +129,7 @@ const hwndColumns = [
 
 function resetKeyToDefault(){
   setHwndMesseage('reset')
-  message.success("重置")
+  message.success(t("hwnd_handle.reset"))
 }
 
 function getHwndMesseage(){

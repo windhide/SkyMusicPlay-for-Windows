@@ -11,9 +11,9 @@
     }" />
     <div style="flex-basis: 100%;" />
     <n-button type="primary" color="#f58f98" style="margin-top: 20px;" ghost @click="resetKeyToDefault()">
-        重 置 弹 琴 映 射
+        {{t('setting.reset_map')}}
     </n-button>
-    <n-divider style="color: #F2C9C4;">琴键映射</n-divider>
+    <n-divider style="color: #F2C9C4;">{{t('setting.key_map')}}</n-divider>
   </div>
   <div id="father">
     <div v-for="key in customize_key">
@@ -36,12 +36,13 @@ import { sendData } from "@renderer/utils/fetchUtils";
 import { useMessage } from 'naive-ui'
 import { onMounted, onUnmounted, ref } from 'vue'
 import hotkeys from 'hotkeys-js';
-
+import { useI18n } from "vue-i18n";
+const { t,tm } = useI18n();
 const themeVars = useThemeVars();
 const message = useMessage()
 const customize_key:any = ref([])
-const headText = "弹琴映射为本次运行生效，重启软件需要重新设置，如不适应请尽快适应";
-const patterns = ["本次运行", "重新", "重启", "尽快适应"];
+const headText = t('setting.head_text');
+const patterns = tm('setting.patterns');
 const keyMapStruct={ "ScrollLock": "scroll_lock", "Escape": "esc", "PageUp": "page_up", "PageDown": "page_down", "ArrowUp": "up", "ArrowDown": "down", "ArrowLeft": "left", "ArrowRight": "right", "ControlRight": "ctrl_r", "AltRight": "alt_gr", "ControlLeft": "ctrl_l", "AltLeft": "alt_l", "ShiftLeft": "shift", "Enter": "enter", "Backspace": "backspace", "CapsLock": "caps_lock"}
 
 function handleBlur() {
@@ -63,12 +64,12 @@ function handleFocus(label) {
     let tempArray = JSON.parse(JSON.stringify(customize_key.value))
     tempArray[tempIndex]["value"] = demoTranKey
     if (hasDuplicateValues(tempArray)) {
-      message.error("存在重复的快捷键值，请检查配置。")
+      message.error(t('setting.repeat'))
       return
     } else {
       customize_key.value[tempIndex]["value"] = demoTranKey
       set_customize_key()
-      message.success("已设置")
+      message.success(t('setting.ok'))
     }
   })
 }
@@ -77,7 +78,7 @@ function handleClear(label) {
     let tempIndex = customize_key.value.findIndex(item => item.label === label);
     customize_key.value[tempIndex]["value"] = ''
     set_customize_key()
-    message.success("已清除本键")
+    message.success(t('setting.clear_now'))
 }
 
 function set_customize_key() {
@@ -153,7 +154,7 @@ function hasDuplicateValues(dataArray) {
 function resetKeyToDefault(){
   sendData("config_operate",{ "operate": "set", "name": "keyMap", "value":{ 'Key-14': '', 'Key-13': '', 'Key-12': '', 'Key-11': '', 'Key-10': '', 'Key-9': '', 'Key-8': '', 'Key-7': '', 'Key-6': '', 'Key-5': '', 'Key-4': '', 'Key-3': '', 'Key-2': '', 'Key-1': '', 'Key0': 'y', 'Key1': 'u', 'Key2': 'i', 'Key3': 'o', 'Key4': 'p', 'Key5': 'h', 'Key6': 'j', 'Key7': 'k', 'Key8': 'l', 'Key9': ';', 'Key10': 'n', 'Key11': 'm', 'Key12': ',', 'Key13': '.', 'Key14': '/', 'Key15': '', 'Key16': '', 'Key17': '', 'Key18': '', 'Key19': '', 'Key20': '', 'Key21': '', 'Key22': '', 'Key23': '', 'Key24': '', 'Key25': '', 'Key26': '', 'Key27': '', 'Key28': ''}}).then(()=>{
     get_customize_key()
-    message.success("已重置快捷键")
+    message.success(t('setting.clearAll'))
   })
 }
 
