@@ -8,7 +8,7 @@
     </n-button>
     <n-button type="primary" ghost :loading="processFlag" @click="transfer" color="#F2E8C4"> 保存可视化乐谱到桌面</n-button>
   </n-flex>
-  <n-card  style="margin-left: -22px;" :bordered="false">
+  <n-card  style="margin-left: -22px; width: 640px;" :bordered="false">
     <n-tabs
       type="bar"
       animated

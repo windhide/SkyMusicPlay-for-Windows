@@ -232,7 +232,7 @@
     </div>
     <div style="flex-basis: 100%;" />
   </n-flex>
-  <div style="margin-left: 920px; margin-top: -260px; width: 415px; height: 200px;">
+  <div style="margin-left: 950px; margin-top: -260px; width: 415px; height: 200px;">
     <n-flex>
       <n-gradient-text gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))" style="margin-top: 5px;">
         当列长按间隔
@@ -290,9 +290,9 @@
       </n-button>
     </n-flex>
   </div>
-  <n-drawer v-model:show="musicActive" :width="900" placement="left" :trap-focus="false" :block-scroll="false">
+  <n-drawer v-model:show="musicActive" :width="1000" placement="left" :trap-focus="false" :block-scroll="false">
     <n-drawer-content>
-      <n-card style="margin-left: -16px; width: 860px;" :bordered="false">
+      <n-card style="margin-left: -16px; width: 965px;" :bordered="false">
         <n-tabs type="bar" animated size="small" @update:value="handleUpdateValue" @before-leave="handleBeforeLeave"
           :value="tabsNumber">
           <n-tab-pane name="systemMusic" tab="自带歌曲">

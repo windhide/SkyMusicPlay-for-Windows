@@ -11,7 +11,7 @@
       :show-file-list="false"
       @finish="handleFinish"
     >
-    <n-button type="info" ghost  color="#F2C9C4"> 选择音乐 
+    <n-button type="info" ghost color="#F2C9C4"> 选择音乐 
       <template #icon>
         <n-icon size="25px"><CloudArrowUp32Filled /></n-icon>
       </template>
@@ -101,7 +101,7 @@
     />
   </n-flex>
 
-  <n-card style="margin-left: -22px;" :bordered="false">
+  <n-card style="margin-left: -22px; width: 640px;" :bordered="false">
     <n-tabs type="line" animated @update:value="handleUpdateValue">
       <n-tab-pane name="translateOriginalMusic" tab="未转换歌曲">
         <n-data-table

@@ -132,7 +132,7 @@
         </n-button>
     </n-row>
   </n-flex>
-  <n-card style="margin-left: -16px;" :bordered="false">
+  <n-card style="margin-left: -16px; width: 640px;" :bordered="false">
     <n-tabs type="bar" animated size="small" @update:value="handleUpdateValue" @before-leave="handleBeforeLeave" :value="tabsNumber">
       <n-tab-pane name="systemMusic" tab="自带歌曲">
         <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :min-row-height="48" ref="systemMusic"

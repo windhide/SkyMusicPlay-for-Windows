@@ -89,7 +89,7 @@
                 </n-layout-sider>
                   <n-layout 
                   :style="{
-                    padding: '30px 25px 0px 25px',
+                    padding: '30px 20px 0px 20px',
                     backgroundColor: colorPick+' !important'
                   }"
                   >
