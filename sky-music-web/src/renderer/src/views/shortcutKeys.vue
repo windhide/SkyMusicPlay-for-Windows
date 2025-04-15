@@ -44,11 +44,11 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import hotkeys from 'hotkeys-js';
 import configStore, { CONFIG_TYPE } from '@renderer/utils/configStore'
 import { useI18n } from "vue-i18n";
-const { t,tm } = useI18n();
+const { t } = useI18n();
 const themeVars = useThemeVars();
 const message = useMessage()
 const headText = t("shortcutKeys.head_text");
-const patterns = tm("shortcutKeys.patterns");
+const patterns = [t("shortcutKeys.patterns1"),t("shortcutKeys.patterns2"),t("shortcutKeys.patterns3")];
 
 const musicShortcut=[{ name: t("shortcutKeys.button_title.start"), label: "start",},{ name: t("shortcutKeys.button_title.resume"), label: "resume",},{ name: t("shortcutKeys.button_title.pause"), label: "pause",},{ name: t("shortcutKeys.button_title.stop"), label: "stop",},{ name: t("shortcutKeys.button_title.add_duration"), label: "add_duration"},{ name: t("shortcutKeys.button_title.reduce_duration"), label: "reduce_duration"},{ name: t("shortcutKeys.button_title.add_delay"), label: "add_delay"},{ name: t("shortcutKeys.button_title.reduce_delay"), label: "reduce_delay"},{ name: t("shortcutKeys.button_title.add_speed"), label: "add_speed"},{ name: t("shortcutKeys.button_title.reduce_speed"), label: "reduce_speed"},{ name: t("shortcutKeys.button_title.next"), label: "next",}]
 const followShortcut=[{ name: t("shortcutKeys.button_title.repeat"), label: "repeat"},{ name: t("shortcutKeys.button_title.repeat_next"), label: "repeat_next"},{ name: t("shortcutKeys.button_title.exit"), label: "exit"},{ name: t("shortcutKeys.button_title.resize"), label: "resize"}]

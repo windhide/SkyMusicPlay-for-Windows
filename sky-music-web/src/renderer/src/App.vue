@@ -1,6 +1,13 @@
 <template>
   <n-config-provider :theme="darkTheme" :style="{ opacity : transparency_number}" >
     <n-flex id="drag-area" justify="end" style="position: fixed; z-index: 200; right: 18px" :style="{ width: collapsed ? '90%' : '80%'}">
+      <n-popselect v-model:value="nowLang" :options="options" trigger="click">
+          <n-button text size="large" color="#A3F6EC" style="margin-top: 12px; font-size: 20px;" :round="false"> 
+            <n-icon size="25px">
+              <Language />
+            </n-icon> 
+          </n-button>
+      </n-popselect>
       <n-popover style="border-radius: 17px; --n-color: rgba(47,47,55,1)" trigger="click">
         <template #trigger>
           <n-button text size="large" color="#A3F6EC" style="margin-top: 12px; font-size: 20px;" :round="false"> 
@@ -123,13 +130,13 @@ import {
   PlanetSharp,
   ColorPaletteOutline,
   PulseSharp,
+  Language
 } from '@vicons/ionicons5'
 import {
   Pin48Regular,
   Pin48Filled,
   Settings48Regular,
-  Compose24Filled,
-  LockOpen24Filled
+  Compose24Filled
 } from '@vicons/fluent'
 import router from '@renderer/router'
 
@@ -143,7 +150,45 @@ const isPostW = ref(true)
 const isRunnable = ref(true)
 const transparency_number = ref(1.00)
 const colorPick = ref("#101014")
-
+const nowLang = ref('zh-CN')
+const options = [
+  {
+    label: '简体中文',
+    value: 'zh-CN'
+  },
+  {
+    label: '繁體中文',
+    value: 'zh-TW'
+  },
+  {
+    label: '文言文',
+    value: 'zh-classical'
+  },
+  {
+    label: 'Deutsch',
+    value: 'de-DE'
+  },
+  {
+    label: 'Español',
+    value: 'es-ES'
+  },
+  {
+    label: 'Français',
+    value: 'fr-FR'
+  },
+  {
+    label: '日本語',
+    value: 'ja-JP'
+  },
+  {
+    label: '한국어',
+    value: 'ko-KR'
+  },
+  {
+    label: 'Русский',
+    value: 'ru-RU'
+  }
+]
 
 function fixHandle() {
   if (fixDashed.value) {
@@ -198,32 +243,32 @@ let show = ref(true)
 let fixDashed = ref(true)
 const menuOptions = [
   {
-    label: "介绍",
+    label: t('main.menu.home'),
     key: "home",
     icon: renderIcon(Home),
   },
   {
-    label: "演奏",
+    label: t('main.menu.music'),
     key: "music",
     icon: renderIcon(MusicalNotes),
   },
   {
-    label: "跟弹",
+    label: t('main.menu.tutorial'),
     key: "tutorial",
     icon: renderIcon(GameController),
   },
   {
-    label: "扒谱",
+    label: t('main.menu.kube'),
     key: "kube",
     icon: renderIcon(CubeSharp),
   },
   {
-    label: "快捷键",
+    label: t('main.menu.shortcut'),
     key: "shortcut",
     icon: renderIcon(PlanetSharp),
   },
   {
-    label: "乐谱编辑",
+    label: t('main.menu.musicEdit'),
     key: "musicEdit",
     icon: renderIcon(Compose24Filled),
   },
@@ -232,17 +277,17 @@ const menuOptions = [
     type: "divider"
   },
   {
-    label: "设置",
+    label: t('main.menu.setting'),
     key: "setting",
     icon: renderIcon(Settings),
   },
   {
-    label: "句柄",
+    label: t('main.menu.hwndHandle'),
     key: "hwndHandle",
     icon: renderIcon(PulseSharp),
   },
   {
-    label: "开发者",
+    label: t('main.menu.magicTools'),
     key: "magicTools",
     icon: renderIcon(Flask),
   },

@@ -40,11 +40,11 @@
 <script setup lang="ts">
 import { useThemeVars } from "naive-ui";
 import { useI18n } from "vue-i18n";
-const { t,tm } = useI18n();
+const { t } = useI18n();
 const themeVars = useThemeVars();
 const headText = t("home.head_text");
 const text = t("home.text");
-const patterns = tm("home.patterns");
+const patterns = [t("home.patterns1"),t("home.patterns2")];
 </script>
 
 <style scoped>

@@ -37,12 +37,12 @@ import { useMessage } from 'naive-ui'
 import { onMounted, onUnmounted, ref } from 'vue'
 import hotkeys from 'hotkeys-js';
 import { useI18n } from "vue-i18n";
-const { t,tm } = useI18n();
+const { t } = useI18n();
 const themeVars = useThemeVars();
 const message = useMessage()
 const customize_key:any = ref([])
 const headText = t('setting.head_text');
-const patterns = tm('setting.patterns');
+const patterns = [t('setting.patterns1'),t('setting.patterns2'),t('setting.patterns3')];
 const keyMapStruct={ "ScrollLock": "scroll_lock", "Escape": "esc", "PageUp": "page_up", "PageDown": "page_down", "ArrowUp": "up", "ArrowDown": "down", "ArrowLeft": "left", "ArrowRight": "right", "ControlRight": "ctrl_r", "AltRight": "alt_gr", "ControlLeft": "ctrl_l", "AltLeft": "alt_l", "ShiftLeft": "shift", "Enter": "enter", "Backspace": "backspace", "CapsLock": "caps_lock"}
 
 function handleBlur() {
@@ -78,7 +78,7 @@ function handleClear(label) {
     let tempIndex = customize_key.value.findIndex(item => item.label === label);
     customize_key.value[tempIndex]["value"] = ''
     set_customize_key()
-    message.success(t('setting.clear_now'))
+    message.success(t('setting.clearNow'))
 }
 
 function set_customize_key() {

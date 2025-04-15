@@ -88,14 +88,14 @@ import { useRoute } from 'vue-router';
 import { onMounted } from 'vue'
 import { setConfigShortcutKey } from '@renderer/utils/configStore'
 import { useI18n } from "vue-i18n";
-const { t,tm } = useI18n();
+const { t } = useI18n();
 const route = useRoute();
 const themeVars = useThemeVars();
 const dialog = useDialog();
 const message = useMessage()
 const headText = t("home.head_text");
 const text = t("home.text");
-const patterns = tm("home.patterns");
+const patterns = [t("home.patterns0"),t("home.patterns1"),t("home.patterns2")];
 
 /**
  * 打开指定链接

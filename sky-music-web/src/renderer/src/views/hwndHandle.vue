@@ -61,12 +61,12 @@ import { sendData } from "@renderer/utils/fetchUtils";
 import { useMessage } from 'naive-ui'
 import { h, onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from "vue-i18n";
-const { t,tm } = useI18n();
+const { t } = useI18n();
 const themeVars = useThemeVars();
 const message = useMessage()
 const headText = t("hwnd_handle.head_text");
 const headText2 = t("hwnd_handle.head_text2");
-const patterns = tm("hwnd_handle.patterns");
+const patterns = [t("hwnd_handle.patterns0"),t("hwnd_handle.patterns1"),t("hwnd_handle.patterns2"),t("hwnd_handle.patterns3"),t("hwnd_handle.patterns4"),t("hwnd_handle.patterns5"),t("hwnd_handle.patterns6"),t("hwnd_handle.patterns7")];
 const hwndColumnsList = ref([])
 const nowHwnd = ref("")
 const hwndColumns = [

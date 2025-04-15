@@ -378,7 +378,7 @@ import { getList, sendData } from "@renderer/utils/fetchUtils";
 import { debounce } from "lodash-es";
 import { RowData } from "naive-ui/es/data-table/src/interface";
 import { useI18n } from "vue-i18n";
-const { t,tm } = useI18n();
+const { t } = useI18n();
 // 状态管理
 const midiCanvas = ref(null);
 const isPlaying = ref(false);

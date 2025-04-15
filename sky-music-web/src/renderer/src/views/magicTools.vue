@@ -96,12 +96,12 @@ import { sendData } from "@renderer/utils/fetchUtils";
 import { useThemeVars } from "naive-ui";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
-const { t,tm } = useI18n();
+const { t } = useI18n();
 const themeVars = useThemeVars();
 const headText = t("magic_tools.head_text");
 const headText2 = t("magic_tools.head_text2");
 const headText3 = t("magic_tools.head_text3");
-const patterns = tm("magic_tools.patterns")
+const patterns = [t("magic_tools.patterns1"),t("magic_tools.patterns2"),t("magic_tools.patterns3")]
 let mathValue = ref(0.5)
 let selectValue = ref("image")
 const QCount = ref(300)
