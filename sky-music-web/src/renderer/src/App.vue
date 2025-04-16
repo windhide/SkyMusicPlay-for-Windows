@@ -91,7 +91,7 @@
                     backgroundColor: colorPick+ ' !important'
                   }"
                   >
-                  <n-menu :collapsed-width="64" :collapsed-icon-size="25" :options="menuOptions"
+                  <n-menu :collapsed-width="64" :collapsed-icon-size="0" :options="menuOptions"
                     @update:value="clickMenu" />
                 </n-layout-sider>
                   <n-layout 
@@ -324,10 +324,8 @@ function changeLang(value: string) {
   // 更新locale值并保存到localStorage
   locale.value = value
   localStorage.setItem('sky-music-language', value)
-  
-  // 使用nextTick确保DOM更新后再重新渲染菜单
+  show.value = true
   nextTick(async () => {
-    // 更新菜单选项
     const newMenuOptions = [
       {
         label: t('main.menu.home'),
@@ -379,18 +377,14 @@ function changeLang(value: string) {
         icon: renderIcon(Flask),
       }
     ]
-    
-    // 使用Object.assign保持引用不变，避免不必要的重渲染
     Object.assign(menuOptions, newMenuOptions)
-    
-    // 如果在首页，先切换到设置页面再返回以触发同步
     const currentRoute = route.name
-    if (currentRoute === 'home') {
-      await router.push({ name: 'setting' })
-      await router.push({ name: 'home' })
-    } else if (currentRoute) {
-      router.replace({ name: currentRoute })
-    }
+    // 跳转到设置页再跳回原页面，切换过程中显示Loading
+    let target = currentRoute
+    await router.push({ name: 'setting' })
+    await nextTick()
+    await router.push({ name: target })
+    show.value = false
   })
 }
 

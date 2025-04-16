@@ -43,7 +43,7 @@
   "kube": {
     "Streng_filter": "강제 필터링 (밀리 초 미만)",
     "all_t": "완전한 사운드 변환 만",
-    "chose_music": "음악을 선택하십시오",
+    "chose_music": "파일 선택",
     "dual": "열쇠조차도",
     "dynamic_merge": "동적 병합 임계 값 범위 부서 (BMP 계산에 대한 동적 의존성)",
     "get_fail": "{value}를 얻지 못했습니다.",
@@ -58,7 +58,7 @@
       "scale5": "5 세트의 저울",
       "scale6": "6 개의 스케일 세트"
     },
-    "star_transfer": "변환을 시작하십시오",
+    "star_transfer": "변환 시작",
     "title": "노래를 변환합니다",
     "transfer_fail": "변환이 실패했습니다",
     "transfer_progress": "전환 진행",
@@ -66,7 +66,7 @@
   },
   "magic_tools": {
     "buttons": {
-      "abaaba": "치열하게 비명을 지르고 있습니다",
+      "abaaba": "외치다",
       "autoFire": "자동 점화",
       "check": "조사하다",
       "developer": "개발자 사용자 정의",
@@ -102,13 +102,13 @@
     "menu": {
       "home": "소개하다",
       "hwndHandle": "핸들",
-      "kube": "점수를 가져 오십시오",
+      "kube": "비틀기",
       "magicTools": "개발자",
       "music": "성능",
-      "musicEdit": "음악 점수 편집",
+      "musicEdit": "편집",
       "setting": "설정",
-      "shortcut": "바로 가기 키",
-      "tutorial": "총알을 따르십시오"
+      "shortcut": "단축키",
+      "tutorial": "추종탄"
     },
     "multi_core": "멀티 코어 모드",
     "queue": "대기열 모드",
@@ -200,7 +200,7 @@
       "add_new_druation_column": "새로운 긴 프레스 간격",
       "change_send_key_in_game": "열을 통해 키를 게임에 보내십시오",
       "columnAfterDuration": "열 후 대기 지연",
-      "columnDownDuration": "길이가 길면 열을 누릅니다",
+      "columnDownDuration": "길이가",
       "func_area_tip": "리본 프롬프트",
       "global_after": "글로벌 칼럼 후 지연",
       "global_down": "전체 지역을 길게 누릅니다",
@@ -259,7 +259,7 @@
     "myTranslate": "변환 된 노래",
     "remove_success": "성공적으로 제거",
     "search": "찾다",
-    "systemMusic": "나만의 노래를 가져 오십시오",
+    "systemMusic": "시스템 노래",
     "translateOriginalMusic": "비 변환되지 않은 노래",
     "clear": "분명한",
     "title": "재생 목록"
