@@ -1,0 +1,299 @@
+{
+  "columns": {
+    "name": "노래 제목",
+    "operation": "작동하다",
+    "total_duration": "지속"
+  },
+  "home": {
+    "head_text": "사용하기 쉽다고 생각되면 커피 한 잔을 즐길 수 있습니다.",
+    "patterns0": "완전히 무료",
+    "patterns1": "속임수",
+    "patterns2": "커피 ☕",
+    "qq": "Q 그룹을 추가하십시오",
+    "qq_sb": "채널을 추가하십시오",
+    "text": "이 소프트웨어 사용에 오신 것을 환영합니다. 이 소프트웨어는 완전히 무료입니다. 이 소프트웨어를 구입하면 속임수를 썼습니다.",
+    "tutorial": "튜토리얼을 참조하십시오",
+    "update": "최신 버전입니다",
+    "update_error": "감지 오류 업데이트",
+    "update_info": "새 버전의 소프트웨어를 감지 할 수없고 네트워크를 수리하십시오."
+  },
+  "hwnd_handle": {
+    "columns": {
+      "exe_name": "프로세스 이름",
+      "hwnd": "핸들",
+      "operation": "선택하다",
+      "pid": "PID",
+      "title": "소프트웨어 제목"
+    },
+    "head_text": "다음은 배경에서 보낸 대상입니다. 가벼운 만남을 제외한 게임은 테스트되지 않았으며 수리되지 않습니다.",
+    "head_text2": "이 기능으로 인해 다른 게임이 차단되었으며 나를 찾지 마십시오. 게임의 체쇄 방지 메커니즘에 따라 다릅니다",
+    "now_hwnd": "이제 처리>",
+    "patterns0": "백그라운드에서 보낸 목적지를 변경하십시오",
+    "patterns1": "가벼운 만남",
+    "patterns2": "테스트되지 않았습니다",
+    "patterns3": "습관",
+    "patterns4": "나를 찾지 마세요",
+    "patterns5": "이어",
+    "patterns6": "제목",
+    "patterns7": "방지 메커니즘",
+    "refresh": "목록을 새로 고치십시오",
+    "reset": "다시 놓기",
+    "reset_sky": "라이트 만남 창으로 재설정하십시오"
+  },
+  "kube": {
+    "Streng_filter": "강제 필터링 (밀리 초 미만)",
+    "all_t": "완전한 사운드 변환 만",
+    "chose_music": "음악을 선택하십시오",
+    "dual": "열쇠조차도",
+    "dynamic_merge": "동적 병합 임계 값 범위 부서 (BMP 계산에 대한 동적 의존성)",
+    "get_fail": "{value}를 얻지 못했습니다.",
+    "half_t": "Semitone을 변환합니다",
+    "odd": "단일 키",
+    "other_key": "슈퍼 3 톤 변경",
+    "range_key": "범위 변환 만",
+    "scale": {
+      "scale2": "빛이 발생합니다 range_2 스케일 세트",
+      "scale3": "3 개의 스케일 세트",
+      "scale4": "4 개의 스케일 세트",
+      "scale5": "5 세트의 저울",
+      "scale6": "6 개의 스케일 세트"
+    },
+    "star_transfer": "변환을 시작하십시오",
+    "title": "노래를 변환합니다",
+    "transfer_fail": "변환이 실패했습니다",
+    "transfer_progress": "전환 진행",
+    "transfer_success": "성공적으로 변환"
+  },
+  "magic_tools": {
+    "buttons": {
+      "abaaba": "치열하게 비명을 지르고 있습니다",
+      "autoFire": "자동 점화",
+      "check": "조사하다",
+      "developer": "개발자 사용자 정의",
+      "heart_fire": "심장 불",
+      "key": "단추",
+      "shutdown": "스레드 종료"
+    },
+    "fileButtons": {
+      "myFavorite": "음악 모음",
+      "myImport": "수입 된 음악",
+      "myTranslate": "개조 된 음악",
+      "systemMusic": "시스템 음악",
+      "translateMID": "스펙트럼의 미디"
+    },
+    "head_text": "여기 베타 함수는 다음과 같습니다.주의해서 사용하십시오. 메모리 수정은 관련이 없습니다.",
+    "head_text2": "이 기능은 학습과 의사 소통을위한 것이며 상업적 목적으로 엄격하게 금지됩니다. 24 시간 이내에 삭제하십시오",
+    "head_text3": "simulator 플레이어는 다음 모든 기능을 사용하지 않습니다.",
+    "messeage": {
+      "start": "이제 Heart Fire를 자동으로 클릭하십시오",
+      "stop": "종료! ! ! ! !"
+    },
+    "patterns0": "주의해서 사용하십시오",
+    "patterns1": "메모리 수정과 관련이 없습니다",
+    "patterns2": "이 기능은 학습과 의사 소통을위한 것이며 상업적 목적으로 엄격하게 금지됩니다. 24 시간 이내에 삭제하십시오",
+    "patterns3": "simulator 플레이어는 다음 모든 기능을 사용하지 않습니다."
+  },
+  "main": {
+    "backend": "배경 모드",
+    "color": "배경색",
+    "compatible": "호환성 모드",
+    "cut": "컷 인 모드",
+    "loading": "Application이로드 중입니다. 기다려주세요 ~",
+    "menu": {
+      "home": "소개하다",
+      "hwndHandle": "핸들",
+      "kube": "점수를 가져 오십시오",
+      "magicTools": "개발자",
+      "music": "성능",
+      "musicEdit": "음악 점수 편집",
+      "setting": "설정",
+      "shortcut": "바로 가기 키",
+      "tutorial": "총알을 따르십시오"
+    },
+    "multi_core": "멀티 코어 모드",
+    "queue": "대기열 모드",
+    "single_core": "단일 코어 모드",
+    "transparency": "투명도"
+  },
+  "messeage": {
+    "choose_plz": "노래를 선택하고 잘 생긴 남자와 함께 연주하십시오.",
+    "progress_fail": "진전을 얻지 못했습니다",
+    "remove_fail": "삭제가 실패했습니다",
+    "remove_success": "성공적으로 제거",
+    "double_click": "노래를 두 번 클릭하십시오!",
+    "msg1": "시작 만 허용합니다",
+    "msg10": "최대 지속 사운드는 2입니다",
+    "msg11": "0.01을 유지하십시오",
+    "msg12": "가장 낮은 지속 사운드는 0입니다",
+    "msg13": "지속 -0.01",
+    "msg14": "최대 간격은 2입니다",
+    "msg15": "간격 0.01",
+    "msg16": "최소 간격은 0입니다",
+    "msg17": "간격 -0.01",
+    "msg18": "최대 속도는 5입니다",
+    "msg19": "속도 0.1",
+    "msg2": "노래를 선택하고 재생하십시오. 아름다운",
+    "msg20": "가장 낮은 속도는 0.1입니다",
+    "msg21": "속도 -0.1",
+    "msg3": "시작",
+    "msg4": "계속하다",
+    "msg5": "계속할 수 있습니다",
+    "msg6": "정지시키다",
+    "msg7": "일시 중지는 재생 중일 때만 허용됩니다",
+    "msg8": "멈추다",
+    "msg9": "다음",
+    "no_import": "가져 오기 실패",
+    "no_music": "노래가 재생되지 않습니다",
+    "no_now": "아무것도, 아이, 정말 아무것도,, 다른 범주를 시도하십시오",
+    "ok_import": "수입을 완료하십시오",
+    "order_ok": "목록의 노래가 완성되었습니다",
+    "sheet": "스코어 👉",
+    "unknow_music": "알 수없는 노래"
+  },
+  "music_edit": {
+    "dialog": {
+      "content": "현재 작업 영역의 모든 점수를 지우고 싶습니까? 구축되지 않은 변경 사항이 손실됩니다.",
+      "content2": "점수 편집 페이지를 남겨두고 싶습니까? 구축되지 않은 변경 사항이 손실됩니다.",
+      "negativeText": "내가 명확하지 않으면 먼저 저장하겠습니다",
+      "negativeText2": "떠나지 않으면 먼저 저장하겠습니다",
+      "positiveText": "그냥 지우십시오",
+      "positiveText2": "그냥 떠나십시오",
+      "title": "개발자의 따뜻한 팁 ⭐"
+    },
+    "sheet": {
+      "error": {
+        "data": "스펙트럼 데이터 형식의 오류",
+        "sheet_data": "스펙트럼 참고 데이터 형식 오류"
+      },
+      "load_fail": "스펙트럼 로딩이 실패했습니다",
+      "load_success": "점수가 성공적으로로드되었습니다"
+    },
+    "tips": {
+      "afer_add_column": "현재 강조 표시된 열에 새 열을 삽입하십시오",
+      "clear_sheet": "현재 작업 공간의 점수를 지우십시오",
+      "copy_now_to_end": "현재 강조 표시된 열의 끝에 사본을 복사하십시오.",
+      "copy_now_to_head": "현재 강조 표시된 열의 시작 부분에 사본을 복사합니다.",
+      "copy_now_to_next": "현재 강조 표시된 열의 사본을 다음 열에 복사합니다.",
+      "copy_now_to_pre": "현재 강조 표시된 열의 사본을 이전 열에 복사합니다.",
+      "delete_now_column": "현재 강조 표시된 열을 삭제하십시오",
+      "next_column": "다음 열",
+      "pause": "정지시키다",
+      "play": "놀다",
+      "play_now_column": "강조 표시된 열은 게임에 있습니다",
+      "pre_column": "이전 열",
+      "save_sheet": "스펙트럼을 저장하십시오",
+      "select_in_music": "노래 목록에서 노래를 선택하십시오",
+      "tip1": "긴 프레스 간격은 열보다 작고 지연을 기다려야하며 자동으로 조정되었습니다 (현재)",
+      "tip2": "처음에 복사하십시오",
+      "tip3": "이전 열로 복사되었습니다",
+      "tip4": "다음 열에 복사되었습니다",
+      "tip5": "마지막 열에 복사되었습니다",
+      "tip6": "긴 프레스 간격은 대기 간격보다 작아야하며 열이 자동으로 증가한 후 대기 지연 (현재)",
+      "tip7": "열 후 대기 지연은 10 미만일 수 없으며 자동으로 조정되었습니다 (새로운 글로벌)",
+      "tip8": "긴 압박 후 대기 지연은 10ms 컬럼보다 작습니다.",
+      "upend": "거꾸로 두십시오",
+      "upload_sheet": "업로드 점수 편집"
+    },
+    "title": {
+      "add_new_after_column": "추가 열 후 대기 지연",
+      "add_new_count_column": "새 열의 수",
+      "add_new_druation_column": "새로운 긴 프레스 간격",
+      "change_send_key_in_game": "열을 통해 키를 게임에 보내십시오",
+      "columnAfterDuration": "열 후 대기 지연",
+      "columnDownDuration": "길이가 길면 열을 누릅니다",
+      "func_area_tip": "리본 프롬프트",
+      "global_after": "글로벌 칼럼 후 지연",
+      "global_down": "전체 지역을 길게 누릅니다",
+      "set": "설정",
+      "sheet_area_color": "스펙트럼 영역의 교대 색상",
+      "sheet_name": "노래 이름",
+      "sheet_name_placeholder": "노래 이름/파일 이름"
+    },
+    "total_column": "총 열 수 : {길이}",
+    "total_time": "음악 점수의 총 길이 : {길이}"
+  },
+  "setting": {
+    "clearAll": "바로 가기 키를 재설정하십시오",
+    "clearNow": "이 키가 지워졌습니다",
+    "head_text": "피아노지도는이 작업에 적용됩니다. 소프트웨어를 다시 시작하려면 재설정이 필요합니다. 적응하지 않으면 가능한 빨리 적응하십시오.",
+    "key_map": "키 매핑",
+    "ok": "세트",
+    "patterns0": "이 실행",
+    "patterns1": "다시",
+    "patterns2": "다시 시작하십시오",
+    "patterns3": "가능한 빨리 적응하십시오",
+    "repeat": "중복 단축키 키 값이 있습니다. 구성을 확인하십시오.",
+    "reset_map": "피아노 촬영을 재설정하십시오"
+  },
+  "shortcutKeys": {
+    "button_title": {
+      "add_delay": "간격",
+      "add_duration": "사운드 유지",
+      "add_speed": "속도의 두 배",
+      "exit": "그만두다",
+      "next": "다음",
+      "pause": "정지시키다",
+      "reduce_delay": "- 간격",
+      "reduce_duration": "- 보류",
+      "reduce_speed": "- 이중 속도",
+      "repeat": "반복하다",
+      "repeat_next": "단계별로 반복하고",
+      "resize": "키를 다시로드하십시오",
+      "resume": "계속하다",
+      "start": "놀다",
+      "stop": "멈추다"
+    },
+    "divider1": "음악 바로 가기 키",
+    "divider2": "바로 가기 키를 따르십시오",
+    "head_text": "바로 가기 키는이 작업에 효과적입니다. 소프트웨어를 다시 시작하려면 재설정이 필요합니다. 적응하지 않으면 가능한 빨리 적응하십시오.",
+    "patterns0": "이 실행",
+    "patterns1": "다시",
+    "patterns2": "다시 시작하십시오",
+    "patterns3": "가능한 빨리 적응하십시오",
+    "title": "바로 가기 키를 재설정합니다"
+  },
+  "tab": {
+    "love_success": "성공적으로 수집되었습니다",
+    "myFavorite": "모으다",
+    "myImport": "노래 가져 오기",
+    "myTranslate": "변환 된 노래",
+    "remove_success": "성공적으로 제거",
+    "search": "찾다",
+    "systemMusic": "나만의 노래를 가져 오십시오",
+    "translateOriginalMusic": "비 변환되지 않은 노래",
+    "clear": "분명한",
+    "title": "재생 목록"
+  },
+  "tutorial": {
+    "chose_music": "먼저 노래를 선택하십시오",
+    "error": "변환이 실패했습니다. 다시 시도하십시오",
+    "error_console": "변환이 실패했습니다",
+    "follow": "총알을 따라 가기 시작하십시오",
+    "no_music": "노래가 없습니다",
+    "now": "현재 : {music}",
+    "save": "비주얼 점수를 데스크탑에 저장하십시오",
+    "save_desktop": "데스크탑에 저장"
+  },
+  "controller": {
+    "no_music": "노래가 없습니다"
+  },
+  "music": {
+    "chose": "놀다:",
+    "placeholder1": "간격",
+    "placeholder2": "사운드 유지",
+    "play": "선택하다:",
+    "space": {
+      "chose0": "시스템과 함께 제공됩니다",
+      "chose1": "무작위의",
+      "chose2": "사용자 정의하십시오",
+      "mult_speed": "속도의 두 배",
+      "title": "간격 지연",
+      "title1": "설정 설정을 유지하십시오"
+    }
+  },
+  "rule": {
+    "cycle": "주기",
+    "order": "주문하다",
+    "random": "무작위의"
+  }
+}

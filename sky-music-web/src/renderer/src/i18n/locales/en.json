@@ -1,0 +1,299 @@
+{
+  "columns": {
+    "name": "Song title",
+    "operation": "operate",
+    "total_duration": "Duration"
+  },
+  "home": {
+    "head_text": "If you think it's easy to use, you can enjoy a cup of coffee☕",
+    "patterns0": "Completely free",
+    "patterns1": "Being cheated",
+    "patterns2": "Coffee☕",
+    "qq": "Add Q group",
+    "qq_sb": "Add channel",
+    "text": "Welcome to use this software. This software is completely free. If you bought this software, you have been cheated.",
+    "tutorial": "See the tutorial",
+    "update": "It's the latest version",
+    "update_error": "Update detection error",
+    "update_info": "Can't detect the new version of the software, try to repair the network"
+  },
+  "hwnd_handle": {
+    "columns": {
+      "exe_name": "Process name",
+      "hwnd": "Handle",
+      "operation": "Select",
+      "pid": "PID",
+      "title": "Software title"
+    },
+    "head_text": "Here is the target sent by the background. No games except light encounters have been tested and will not be repaired.",
+    "head_text2": "Because of this function, other games have been blocked, don’t look for me. \nDepend on the game's anti-cheating mechanism",
+    "now_hwnd": "Now handle >",
+    "patterns0": "Change the destination sent in the background",
+    "patterns1": "Light encounter",
+    "patterns2": "Not tested",
+    "patterns3": "Won't",
+    "patterns4": "Don't look for me",
+    "patterns5": "lead to",
+    "patterns6": "title",
+    "patterns7": "Anti-cheating mechanism",
+    "refresh": "Refresh the list",
+    "reset": "Reset",
+    "reset_sky": "Reset to light encounter window"
+  },
+  "kube": {
+    "Streng_filter": "Force filtering (less than milliseconds)",
+    "all_t": "Full sound conversion only",
+    "chose_music": "Select",
+    "dual": "Even keys",
+    "dynamic_merge": "Dynamic merge threshold range division (dynamic dependence on bmp calculation)",
+    "get_fail": "Failed to get {value}",
+    "half_t": "Convert semitone",
+    "odd": "Singular keys",
+    "other_key": "Super 3 tone change",
+    "range_key": "Range conversion only",
+    "scale": {
+      "scale2": "Light encounter range_2 sets of scales",
+      "scale3": "3 sets of scales",
+      "scale4": "4 sets of scales",
+      "scale5": "5 sets of scales",
+      "scale6": "6 sets of scales"
+    },
+    "star_transfer": "conversion",
+    "title": "Convert songs",
+    "transfer_fail": "Conversion failed",
+    "transfer_progress": "Conversion progress",
+    "transfer_success": "Conversion successfully"
+  },
+  "magic_tools": {
+    "buttons": {
+      "abaaba": "Screaming fiercely",
+      "autoFire": "Automatic ignition",
+      "check": "examine",
+      "developer": "Developer customization",
+      "heart_fire": "Heart fire",
+      "key": "button",
+      "shutdown": "Terminate thread"
+    },
+    "fileButtons": {
+      "myFavorite": "Collection of music",
+      "myImport": "Imported music",
+      "myTranslate": "Converted music",
+      "systemMusic": "System music",
+      "translateMID": "MIDI of spectrum"
+    },
+    "head_text": "Here is the beta function, please use it with caution, no memory modification is involved.",
+    "head_text2": "This function is for learning and communication only and is strictly prohibited for commercial purposes. Please delete it within 24 hours",
+    "head_text3": "🚫Simulator players are prohibited from using all the following functions🚫",
+    "messeage": {
+      "start": "Now start automatically clicking on Heart Fire",
+      "stop": "termination! \n! \n! \n! \n!"
+    },
+    "patterns0": "Use with caution 🌶",
+    "patterns1": "No memory modification involved 🌶",
+    "patterns2": "This function is for learning and communication only and is strictly prohibited for commercial purposes. Please delete it within 24 hours",
+    "patterns3": "🚫Simulator players are prohibited from using all the following functions🚫"
+  },
+  "main": {
+    "backend": "Background mode",
+    "color": "Background color",
+    "compatible": "Compatibility mode",
+    "cut": "Cut-in mode",
+    "loading": "🍉Application is loading, please wait~",
+    "menu": {
+      "home": "introduce",
+      "hwndHandle": "Handle",
+      "kube": "Bring the score",
+      "magicTools": "Developer",
+      "music": "Performance",
+      "musicEdit": "Music score editing",
+      "setting": "set up",
+      "shortcut": "shortcut key",
+      "tutorial": "Follow the bullet"
+    },
+    "multi_core": "Multi-core mode",
+    "queue": "Queue mode",
+    "single_core": "Single-core mode",
+    "transparency": "transparency"
+  },
+  "messeage": {
+    "choose_plz": "Choose a song and play it with the handsome guy",
+    "progress_fail": "Failed to obtain progress",
+    "remove_fail": "Deletion failed",
+    "remove_success": "Removal successfully",
+    "double_click": "Double-click the song to play!",
+    "msg1": "Only allow start",
+    "msg10": "The maximum sustain sound is 2",
+    "msg11": "Sustain 0.01",
+    "msg12": "The lowest sustain sound is 0",
+    "msg13": "Sustain -0.01",
+    "msg14": "The maximum interval is 2",
+    "msg15": "Interval 0.01",
+    "msg16": "The minimum interval is 0",
+    "msg17": "Interval-0.01",
+    "msg18": "The maximum speed is 5",
+    "msg19": "Speed ​​0.1",
+    "msg2": "Choose a song and play it. Beautiful",
+    "msg20": "The lowest speed is 0.1",
+    "msg21": "Speed ​​-0.1",
+    "msg3": "start",
+    "msg4": "continue",
+    "msg5": "Only allow for continued",
+    "msg6": "pause",
+    "msg7": "Pause is allowed only when it is playing",
+    "msg8": "stop",
+    "msg9": "Next",
+    "no_import": "Import failed",
+    "no_music": "There are no songs playing",
+    "no_now": "Nothing, kid, really nothing 😭, try another category",
+    "ok_import": "Complete the import",
+    "order_ok": "The song on the list is finished",
+    "sheet": "Score👉",
+    "unknow_music": "Unknown songs"
+  },
+  "music_edit": {
+    "dialog": {
+      "content": "Are you sure you want to clear all scores in the current work area? \nUnsaved changes will be lost.",
+      "content2": "Are you sure you want to leave the score editing page? \nUnsaved changes will be lost.",
+      "negativeText": "If I don't clear, I'll save it first",
+      "negativeText2": "I'll save it first if I don't leave",
+      "positiveText": "Just clear it, clear it",
+      "positiveText2": "Just leave",
+      "title": "A warm tip from the developer ⭐"
+    },
+    "sheet": {
+      "error": {
+        "data": "Error in spectral data format",
+        "sheet_data": "Spectral Note Data Format Error"
+      },
+      "load_fail": "Spectrum loading failed",
+      "load_success": "The score loaded successfully"
+    },
+    "tips": {
+      "afer_add_column": "Insert a new column after the current highlighted column",
+      "clear_sheet": "Clear the score of the current workspace",
+      "copy_now_to_end": "Copy a copy to the end of the current highlighted column",
+      "copy_now_to_head": "Copy a copy to the beginning of the current highlighted column",
+      "copy_now_to_next": "Copy a copy of the current highlighted column to the next column",
+      "copy_now_to_pre": "Copy a copy of the current highlighted column to the previous column",
+      "delete_now_column": "Delete the current highlighted column",
+      "next_column": "Next column",
+      "pause": "pause",
+      "play": "Play",
+      "play_now_column": "The highlighted column is in the game and press",
+      "pre_column": "Previous column",
+      "save_sheet": "Save the spectrum",
+      "select_in_music": "Select songs from the song list",
+      "tip1": "The long press interval needs to be less than the column and wait for the delay, and it has been automatically adjusted (currently)",
+      "tip2": "Copy to the beginning",
+      "tip3": "Copyed to previous column",
+      "tip4": "Copyed to the next column",
+      "tip5": "Copyed to the last column",
+      "tip6": "The long press interval needs to be less than the waiting interval, and the waiting delay after the column has been automatically increased (currently)",
+      "tip7": "The waiting delay after column cannot be less than 10, and has been automatically adjusted (new globally)",
+      "tip8": "The waiting delay after long pressing is less than the column, 10ms, has been automatically adjusted (new globally)",
+      "upend": "Put it upside down",
+      "upload_sheet": "Upload score edit"
+    },
+    "title": {
+      "add_new_after_column": "Waiting delay after added column",
+      "add_new_count_column": "Number of new columns",
+      "add_new_druation_column": "New long press interval",
+      "change_send_key_in_game": "Send keys to the game via column",
+      "columnAfterDuration": "Waiting delay after column",
+      "columnDownDuration": "When long press the column",
+      "func_area_tip": "Ribbon prompts",
+      "global_after": "Delay after global column",
+      "global_down": "Long press the entire area",
+      "set": "set up",
+      "sheet_area_color": "Alternating colors in the spectrum area",
+      "sheet_name": "Song name",
+      "sheet_name_placeholder": "Song Name/File Name"
+    },
+    "total_column": "Total column count: {length}",
+    "total_time": "Total length of music score: {length}"
+  },
+  "setting": {
+    "clearAll": "Shortcut keys have been reset",
+    "clearNow": "This key has been cleared",
+    "head_text": "The piano map takes effect for this operation. Restarting the software requires reset. If you do not adapt, please adapt as soon as possible.",
+    "key_map": "Key Mapping",
+    "ok": "Set",
+    "patterns0": "This run",
+    "patterns1": "again",
+    "patterns2": "Restart",
+    "patterns3": "Adapt to it as soon as possible",
+    "repeat": "There are duplicate shortcut key values, please check the configuration.",
+    "reset_map": "Reset piano shooting"
+  },
+  "shortcutKeys": {
+    "button_title": {
+      "add_delay": "interval",
+      "add_duration": "Sustaining sound",
+      "add_speed": "Double the speed",
+      "exit": "quit",
+      "next": "Next",
+      "pause": "pause",
+      "reduce_delay": "- Interval",
+      "reduce_duration": "- Suspension",
+      "reduce_speed": "- Double speed",
+      "repeat": "repeat",
+      "repeat_next": "Repeat and step by step",
+      "resize": "Reload keys",
+      "resume": "continue",
+      "start": "Play",
+      "stop": "stop"
+    },
+    "divider1": "Music shortcut keys",
+    "divider2": "Follow the shortcut key",
+    "head_text": "The shortcut keys are effective for this operation. Restarting the software requires reset. If you do not adapt, please adapt as soon as possible.",
+    "patterns0": "This run",
+    "patterns1": "again",
+    "patterns2": "Restart",
+    "patterns3": "Adapt to it as soon as possible",
+    "title": "Reset shortcut key"
+  },
+  "tab": {
+    "love_success": "Successfully collected",
+    "myFavorite": "collect",
+    "myImport": "Import songs",
+    "myTranslate": "Converted songs",
+    "remove_success": "Removal successfully",
+    "search": "search",
+    "systemMusic": "Bring your own song",
+    "translateOriginalMusic": "Unconverted songs",
+    "clear": "Clear",
+    "title": "Playlist"
+  },
+  "tutorial": {
+    "chose_music": "Please select a song first",
+    "error": "The conversion failed, please try again",
+    "error_console": "Conversion failed",
+    "follow": "Start following the bullet",
+    "no_music": "No songs",
+    "now": "Current: {music}",
+    "save": "Save visual scores to desktop",
+    "save_desktop": "Saved on desktop"
+  },
+  "controller": {
+    "no_music": "No songs"
+  },
+  "music": {
+    "chose": "Play:",
+    "placeholder1": "interval",
+    "placeholder2": "Sustaining sound",
+    "play": "choose:",
+    "space": {
+      "chose0": "System comes with",
+      "chose1": "random",
+      "chose2": "Customize",
+      "mult_speed": "Double the speed",
+      "title": "Interval delay",
+      "title1": "Sustain Settings"
+    }
+  },
+  "rule": {
+    "cycle": "cycle",
+    "order": "order",
+    "random": "random"
+  }
+}

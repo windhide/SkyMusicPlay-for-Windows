@@ -1,10 +1,10 @@
 <template>
   <n-flex align="center" style="margin-left: 6px;">
     <n-gradient-text :size="20" type="success" style="width: 100%; color:#F2C9C4">
-      {{ '播&nbsp&nbsp&nbsp放: ' + nowPlayMusic + '' }}
+      {{ t("music.play") + nowPlayMusic + '' }}
     </n-gradient-text>
     <n-gradient-text :size="20" type="success" style="width: 100%; color:#F2E8C4">
-      {{ '选&nbsp&nbsp&nbsp择: ' + nowSelectMusic + '' }}
+      {{ t("music.chose") + nowSelectMusic + '' }}
     </n-gradient-text>
     <n-flex style="width: 100%">
       <n-slider v-model:value="progress" :step="0.1" style="max-width: 51.5%; display: inline-block; margin-left: 3px;"
@@ -54,48 +54,48 @@
           </template>
           <n-row gutter="26">
             <n-col :span="15">
-              <n-gradient-text type="info" :size="13" style="color: #F2C9C4; display: block;">间隔延迟</n-gradient-text>
+              <n-gradient-text type="info" :size="13" style="color: #F2C9C4; display: block;">{{t("music.space.title") }}</n-gradient-text>
               <n-radio-group v-model:value="delayStatus" name="radiogroup" style="margin-top: 5px; margin-bottom: 5px">
                 <n-space>
-                  <n-radio key="system" value="system" style="color: red;">系统自带</n-radio>
-                  <n-radio key="random" value="random">随机</n-radio>
-                  <n-radio key="custom" value="custom">自定义</n-radio>
+                  <n-radio key="system" value="system" style="color: red;">{{t("music.space.chose0") }}</n-radio>
+                  <n-radio key="random" value="random">{{t("music.space.chose1") }}</n-radio>
+                  <n-radio key="custom" value="custom">{{t("music.space.chose2") }}</n-radio>
                 </n-space>
               </n-radio-group>
             </n-col>
             <n-col v-show="delayStatus == 'custom'" :span="5" style="margin-left: -40px; margin-top: 25px;">
-              <n-input-number step="0.01" v-model:value="delaySpeed" size="tiny" :min="0" :max="2" placeholder="间隔" style="width: 150px;" />
+              <n-input-number step="0.01" v-model:value="delaySpeed" size="tiny" :min="0" :max="2" :placeholder="t('music.placeholder1')" style="width: 150px;" />
             </n-col>
             <n-col v-show="delayStatus == 'random'" :span="11" style="margin-left: -40px; margin-top: 25px;">
-              <n-input-number step="0.01" v-model:value="delayRandomStart" size="tiny" :min="0" :max="2" placeholder="间隔" style="width: 83px; float: inline-start;" />
+              <n-input-number step="0.01" v-model:value="delayRandomStart" size="tiny" :min="0" :max="2" :placeholder="t('music.placeholder1')" style="width: 83px; float: inline-start;" />
               <span style="margin-left: 9px;">&nbsp;-&nbsp;</span>
-              <n-input-number step="0.01" v-model:value="delayRandomEnd" size="tiny" :min="0" :max="2" placeholder="间隔" style="width: 83px; float: inline-end;"/>
+              <n-input-number step="0.01" v-model:value="delayRandomEnd" size="tiny" :min="0" :max="2" :placeholder="t('music.placeholder1')" style="width: 83px; float: inline-end;"/>
             </n-col>
           </n-row>
           <n-row gutter="26">
             <n-col :span="15">
-              <n-gradient-text type="info" :size="13" style="color: #F2C9C4; display: block;">延音设置</n-gradient-text>
+              <n-gradient-text type="info" :size="13" style="color: #F2C9C4; display: block;">{{t("music.space.title1") }}</n-gradient-text>
               <n-radio-group v-model:value="durationStatus" name="radiogroup" style="margin-top: 5px; margin-bottom: 5px">
                 <n-space>
-                  <n-radio key="system" value="system">系统自带</n-radio>
-                  <n-radio key="random" value="random">随机</n-radio>
-                  <n-radio key="custom" value="custom">自定义</n-radio>
+                  <n-radio key="system" value="system">{{t("music.space.chose0") }}</n-radio>
+                  <n-radio key="random" value="random">{{t("music.space.chose1") }}</n-radio>
+                  <n-radio key="custom" value="custom">{{t("music.space.chose2") }}</n-radio>
                 </n-space>
               </n-radio-group>
             </n-col>
             <n-col v-show="durationStatus == 'custom'" :span="5" style="margin-left: -40px; margin-top: 25px;">
-              <n-input-number step="0.01" v-model:value="durationSpeed" size="tiny" :min="0" :max="2" placeholder="延音" style="width: 150px;" />
+              <n-input-number step="0.01" v-model:value="durationSpeed" size="tiny" :min="0" :max="2" :placeholder="t('music.placeholder2')" style="width: 150px;" />
             </n-col>
             <n-col v-show="durationStatus == 'random'" :span="11" style="margin-left: -40px; margin-top: 25px;">
-              <n-input-number step="0.01" v-model:value="durationRandomStart" size="tiny" :min="0" :max="2" placeholder="延音" style="width: 83px; float: inline-start;"  />
+              <n-input-number step="0.01" v-model:value="durationRandomStart" size="tiny" :min="0" :max="2" :placeholder="t('music.placeholder2')" style="width: 83px; float: inline-start;"  />
               <span style="margin-left: 9px;">&nbsp;-&nbsp;</span>
-              <n-input-number step="0.01" v-model:value="durationRandomEnd" size="tiny" :min="0" :max="2" placeholder="延音" style="width: 83px; float: inline-end;"  />
+              <n-input-number step="0.01" v-model:value="durationRandomEnd" size="tiny" :min="0" :max="2" :placeholder="t('music.placeholder2')" style="width: 83px; float: inline-end;"  />
             </n-col>
           </n-row>
           <n-row gutter="12">
             <n-col :span="5">
-              <n-gradient-text type="info" :size="13" style="color: #F2C9C4; display: block;">倍速</n-gradient-text>
-              <n-input-number step="0.1" v-model:value="playSpeed" size="tiny" :min="0.1" :max="5" placeholder="倍速" style="margin-top: 5px;" />
+              <n-gradient-text type="info" :size="13" style="color: #F2C9C4; display: block;">{{t("music.space.mult_speed") }}</n-gradient-text>
+              <n-input-number step="0.1" v-model:value="playSpeed" size="tiny" :min="0.1" :max="5" :placeholder="t('music.space.mult_speed')" style="margin-top: 5px;" />
             </n-col>
           </n-row>
         </n-popover>
@@ -134,7 +134,7 @@
   </n-flex>
   <n-card style="margin-left: -16px; width: 640px;" :bordered="false">
     <n-tabs type="bar" animated size="small" @update:value="handleUpdateValue" @before-leave="handleBeforeLeave" :value="tabsNumber">
-      <n-tab-pane name="systemMusic" tab="自带歌曲">
+      <n-tab-pane name="systemMusic" :tab="t('tab.systemMusic')">
         <n-data-table :columns="musicColumns" :data="music.systemMusic" :bordered="false" :min-row-height="48" ref="systemMusic"
           :max-height="430" :virtual-scroll="music.systemMusic?.length > 7" :row-props="MusicSelect" :row-class-name="rowClassName"
           style="
@@ -144,7 +144,7 @@
             --n-td-color-hover: rgba(0, 0, 0, 0.2);
           "/>
       </n-tab-pane>
-      <n-tab-pane name="myImport" tab="导入歌曲" ref="myImport">
+      <n-tab-pane name="myImport" :tab="t('tab.myImport')" ref="myImport">
         <n-data-table :columns="myImportColumns" :data="music.myImport" :bordered="false" :min-row-height="48" ref="myImport"
         :max-height="430" :virtual-scroll="music.myImport?.length > 7" :row-props="MusicSelect"  :row-class-name="rowClassName"
         style="
@@ -154,7 +154,7 @@
             --n-td-color-hover: rgba(0, 0, 0, 0.2);
           "/>
       </n-tab-pane>
-      <n-tab-pane name="myTranslate" tab="转换歌曲" ref="myTranslate">
+      <n-tab-pane name="myTranslate" :tab="t('tab.myTranslate')" ref="myTranslate">
         <n-data-table :columns="musicColumns" :data="music.myTranslate" :bordered="false" :min-row-height="48" ref="myTranslate"
         :max-height="430" :virtual-scroll="music.myTranslate?.length > 7" :row-props="MusicSelect" :row-class-name="rowClassName"
         style="
@@ -164,7 +164,7 @@
             --n-td-color-hover: rgba(0, 0, 0, 0.2);
           "/>
       </n-tab-pane>
-      <n-tab-pane name="myFavorite" tab="收藏" ref="myFavorite">
+      <n-tab-pane name="myFavorite" :tab="t('tab.myFavorite')" ref="myFavorite">
         <n-data-table :columns="favoritColumns" :data="music.myFavorite" :bordered="false" :min-row-height="48" ref="myFavorite"
         :max-height="430" :virtual-scroll="music.myFavorite?.length > 7" :row-props="MusicSelect"  :row-class-name="rowClassName"
         style="
@@ -185,8 +185,8 @@
     </n-tabs>
   </n-card>
   <n-drawer v-model:show="active" :width="400" :placement="placement" style="border-radius: 30px;">
-    <n-drawer-content title="播放列表">
-      <n-button type="info" ghost style="margin-bottom: 10px;" @click="clearPlayList" color="#F2C9C4"> 清空 </n-button>
+    <n-drawer-content :title="t('tab.title')">
+      <n-button type="info" ghost style="margin-bottom: 10px;" @click="clearPlayList" color="#F2C9C4"> {{t('tab.clear')}} </n-button>
       <n-data-table :columns="musicListColumns" :max-height="570" :data="music.musicList" :bordered="false"
         :height-for-row="1" :virtual-scroll="music.systemMusic?.length > 7" :row-props="musicListSelect" />
     </n-drawer-content>
@@ -219,7 +219,8 @@ import {
 import { useStore } from 'vuex'
 import { debounce } from 'lodash-es'
 import configStore, { CONFIG_TYPE, CONFIG_STATUS_TYPE } from '@renderer/utils/configStore'
-
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 // ---------------------------------------------------
 // 响应式状态和常量定义
 // ---------------------------------------------------
@@ -235,9 +236,9 @@ const music: any = reactive({
   musicList: [] // 我的最爱
 })
 
-const nowSelectMusic = ref('没有歌曲') // 当前选中歌曲
+const nowSelectMusic = ref(t('controller.no_music')) // 当前选中歌曲
 let nowSelectMusicTruth = "" // 当前选中歌曲真实名称
-const nowPlayMusic = ref('没有歌曲') // 当前播放歌曲名称
+const nowPlayMusic = ref(t('controller.no_music')) // 当前播放歌曲名称
 let nowType = 'systemMusic'
 let progressInterval: any = 0
 let socket
@@ -254,22 +255,22 @@ let shortcutKeys = {} // 快捷键按键
 
 const modeColumns = [
   {
-    label: '顺序',
+    label: t('rule.order'),
     value: 'order'
   },
   {
-    label: '随机',
+    label: t('rule.random'),
     value: 'random'
   },
   {
-    label: '循环',
+    label: t('rule.cycle'),
     value: 'cycle'
   }
 ]
 
 const musicColumns = [
   {
-    title: '歌名',
+    title: t('columns.name'),
     key: 'name',
     resizable: true,
     className: 'th_css',
@@ -278,7 +279,7 @@ const musicColumns = [
     }
   },
   {
-    title: '时长',
+    title: t('columns.total_duration'),
     key: 'total_duration',
     width: 80,
     className: 'th_css',
@@ -288,7 +289,7 @@ const musicColumns = [
     sorter: (row1, row2) => timeToSeconds(row1.total_duration) - timeToSeconds(row2.total_duration)
   },
   {
-    title: '操作',
+    title: t('columns.operation'),
     key: 'operation',
     width: 60,
     className: 'th_css',
@@ -319,7 +320,7 @@ const musicColumns = [
 
 const favoritColumns = [
   {
-    title: '歌名',
+    title: t('columns.name'),
     key: 'name',
     resizable: true,
     className: 'th_css',
@@ -328,7 +329,7 @@ const favoritColumns = [
     }
   },
   {
-    title: '时长',
+    title: t('columns.total_duration'),
     key: 'total_duration',
     width: 80,
     className: 'th_css',
@@ -338,7 +339,7 @@ const favoritColumns = [
     sorter: (row1, row2) => timeToSeconds(row1.total_duration) - timeToSeconds(row2.total_duration)
   },
   {
-    title: '操作',
+    title: t('columns.operation'),
     key: 'operation',
     width: 60,
     className: 'th_css',
@@ -365,7 +366,7 @@ const favoritColumns = [
 
 const myImportColumns = [
   {
-    title: '歌名',
+    title: t('columns.name'),
     key: 'name',
     resizable: true,
     className: 'th_css',
@@ -374,7 +375,7 @@ const myImportColumns = [
     }
   },
   {
-    title: '时长',
+    title: t('columns.total_duration'),
     key: 'total_duration',
     width: 80,
     className: 'th_css',
@@ -384,7 +385,7 @@ const myImportColumns = [
     sorter: (row1, row2) => timeToSeconds(row1.total_duration) - timeToSeconds(row2.total_duration)
   },
   {
-    title: '操作',
+    title: t('columns.operation'),
     key: 'operation',
     width: 60,
     className: 'th_css',
@@ -411,7 +412,7 @@ const myImportColumns = [
 
 const musicListColumns = [
   {
-    title: '歌名',
+    title: t('columns.name'),
     key: 'name',
     resizable: true,
     className: 'th_css'
@@ -517,7 +518,7 @@ const playBarClickHandler = async (status: String, type: String) => {
   stopProgressTracking();
   if (status === 'resume') {
     if (nowState.value == 'stop') {
-      message.info("双击歌曲播放！");
+      message.info(t('messeage.double_click'));
       return;
     }
     sendData('play_operate', { "operate": "resume" });
@@ -609,7 +610,7 @@ async function getProgress() {
       if (res && res.now_progress !== undefined) {
         // 更新进度，转换为数字
         progress.value = Number(res.now_progress);
-        nowPlayMusic.value = res.now_play_music || '未知歌曲';
+        nowPlayMusic.value = res.now_play_music || t('messeage.unknow_music');
         nowTotalTime.value = res.now_total_time;
         nowCurrentTime.value = res.now_current_time;
       }
@@ -637,8 +638,8 @@ async function orderMusicPlay() {
     clearInterval(progressInterval)
     playBarClickHandler("stop","")
     console.log("叽里呱啦")
-    setTimeout(()=>{window.api.system_notification("😳", "列表的歌放完咯")},1000)
-    nowPlayMusic.value = "没有正在播放的歌曲哦"
+    setTimeout(()=>{window.api.system_notification("😳", t('messeage.order_ok'))},1000)
+    nowPlayMusic.value = t('messeage.no_music')
   }
 }
 
@@ -664,8 +665,8 @@ function handleBeforeLeave(name: string) {
 function clearPlayInfo() {
   // 先清除轮询定时器
   stopProgressTracking();
-  nowSelectMusic.value = '没有歌曲';
-  nowPlayMusic.value = '没有正在播放的歌曲哦';
+  nowSelectMusic.value = t('controller.no_music');
+  nowPlayMusic.value = t('messeage.no_music');
   nowState.value = 'stop';
   progress.value = 0;
   nowTotalTime.value = '00:00';
@@ -686,7 +687,7 @@ function heartClick(name, state) {
     }).then(() => {
       handleUpdateValue('myFavorite')
       handleUpdateValue(nowType)
-      message.success('收藏成功')
+      message.success(t('tab.love_success'))
     })
   } else {
     sendData('config_operate', {
@@ -695,7 +696,7 @@ function heartClick(name, state) {
       operate: "drop_file"
     }).then(() => {
       handleUpdateValue('myFavorite')
-      message.success('移除成功')
+      message.success(t('tab.remove_success'))
     })
   }
 }
@@ -708,7 +709,7 @@ function deleteClick(name) {
     operate: "drop_file"
   }).then(() => {
     handleUpdateValue('myImport')
-    message.success('删除成功')
+    message.success(t('tab.remove_success'))
   })
 }
 
@@ -723,9 +724,9 @@ function handleFinish({ file: _file, event: _event }) {
 function beforeFileUpload(file) {
   return window.api.readFile(file.file.file.path, false).then(res => {
     if (res) {
-      message.success("谱子👉" + file.file.file.name + "完成导入")
+      message.success(t('messeage.sheet') + file.file.file.name + t('messeage.ok_import') )
     } else {
-      message.error("谱子👉" + file.file.file.name + "导入失败")
+      message.error(t('messeage.sheet') + file.file.file.name + t('messeage.no_import') )
     }
     return res;
   })
@@ -844,7 +845,7 @@ function locationNowPlayMusic(){
   Promise.all([getListData('myFavorite'), getListData('systemMusic'), getListData('myImport'), getListData('myTranslate')]).then(function(){
     let index = eval("music." + tabsNumber.value + ".findIndex(item => item.name === nowPlayMusic.value)")
     if (index === -1){
-      message.error("没得啊孩子，真的没得😭，切别的分类再试试吧")
+      message.error(t('messeage.no_now') )
       return
     }
     eval(`music.${tabsNumber.value}[${index}].position = true`)
@@ -875,99 +876,99 @@ function initWebSocket() {
     console.log("按下",key)
     if (key === shortcutKeys["start"]) {
       if (nowState.value != 'stop') {
-        window.api.system_notification("🍎", "仅停止状态下允许开始")
+        window.api.system_notification("🍎", t('messeage.msg1'))
       } else {
         console.log("else")
-        if (nowSelectMusic.value === '没有歌曲') {
-          window.api.system_notification("😭", "选个歌再播放吧靓仔")
+        if (nowSelectMusic.value === t('controller.no_music')) {
+          window.api.system_notification("😭", t('messeage.msg2'))
         } else {
-          window.api.system_notification("✔", "开始")
+          window.api.system_notification("✔", t('messeage.msg3'))
           playBarClickHandler('start', '')
         }
       }
     }
     if (key === shortcutKeys["resume"]) {
       if (nowState.value === 'pause') {
-        window.api.system_notification("▶", "继续")
+        window.api.system_notification("▶", t('messeage.msg4'))
         playBarClickHandler('resume', '')
       } else {
-        window.api.system_notification("🍎", "仅暂停状态下允许继续")
+        window.api.system_notification("🍎", t('messeage.msg5'))
       }
     }
     if (key === shortcutKeys["pause"]) {
       if (isPlay.value) {
-        window.api.system_notification("⏸", "暂停")
+        window.api.system_notification("⏸", t('messeage.msg6'))
         playBarClickHandler('pause', '')
       } else {
-        window.api.system_notification("🍎", "仅正在播放时允许暂停")
+        window.api.system_notification("🍎", t('messeage.msg7'))
       }
     }
     if (key === shortcutKeys["stop"]) {
-      window.api.system_notification("🛑", "停止")
+      window.api.system_notification("🛑", t('messeage.msg8'))
       playBarClickHandler('stop', '')
     }
     if (key === shortcutKeys["next"]) {
-      window.api.system_notification("⏩", "下一首")
+      window.api.system_notification("⏩", t('messeage.msg9'))
       playBarClickHandler('next', '')
     }
     if (key === shortcutKeys["add_duration"]) {
   if (durationSpeed.value * 100 === 200) {
-    message.info("延音最高为2");
+    message.info(t('messeage.msg10'));
   } else {
     durationStatus.value = "custom";
     setTimeout(()=>{
       durationSpeed.value = Math.round((durationSpeed.value + 0.01) * 100) / 100;
     })
-    message.info("延音+0.01");
+    message.info(t('messeage.msg11'));
   }
 }
 if (key === shortcutKeys["reduce_duration"]) {
   if (durationSpeed.value * 100 === 0) {
-    message.info("延音最低为0");
+    message.info(t('messeage.msg12'));
   } else {
     durationStatus.value = "custom";
     setTimeout(()=>{
       durationSpeed.value = Math.round((durationSpeed.value - 0.01) * 100) / 100;
     })
-    message.info("延音-0.01");
+    message.info(t('messeage.msg13'));
   }
 }
 if (key === shortcutKeys["add_delay"]) {
   if (delaySpeed.value * 100 === 200) {
-    message.info("间隔最高为2");
+    message.info(t('messeage.msg14'));
   } else {
     delayStatus.value = "custom";
     setTimeout(()=>{
       delaySpeed.value = Math.round((delaySpeed.value + 0.01) * 100) / 100;
     })
-    message.info("间隔+0.01");
+    message.info(t('messeage.msg15'));
   }
 }
 if (key === shortcutKeys["reduce_delay"]) {
   if (delaySpeed.value * 100 === 0) {
-    message.info("间隔最低为0");
+    message.info(t('messeage.msg16'));
   } else {
     delayStatus.value = "custom";
     setTimeout(()=>{
       delaySpeed.value = Math.round((delaySpeed.value - 0.01) * 100) / 100;
     })
-    message.info("间隔-0.01");
+    message.info(t('messeage.msg17'));
   }
 }
 if (key === shortcutKeys["add_speed"]) {
   if (playSpeed.value * 10 === 50) {
-    message.info("速度最高为5");
+    message.info(t('messeage.msg18'));
   } else {
-    message.info("速度+0.1");
+    message.info(t('messeage.msg19'));
     playSpeed.value = Math.round((playSpeed.value + 0.1) * 10) / 10;
   }
 }
 if (key === shortcutKeys["reduce_speed"]) {
   if (playSpeed.value * 10 === 1) {
-    message.info("速度最低为0.1");
+    message.info(t('messeage.msg20'));
   } else {
     playSpeed.value = Math.round((playSpeed.value - 0.1) * 10) / 10;
-    message.info("速度-0.1");
+    message.info(t('messeage.msg21'));
   }
 }
   }

@@ -1,7 +1,7 @@
 <template>
   <n-config-provider :theme="darkTheme" :style="{ opacity : transparency_number}" >
     <n-flex id="drag-area" justify="end" style="position: fixed; z-index: 200; right: 18px" :style="{ width: collapsed ? '90%' : '80%'}">
-      <n-popselect v-model:value="nowLang" :options="options" trigger="click">
+      <n-popselect v-model:value="nowLang" :options="options" trigger="click" @update:value="changeLang" scrollable>
           <n-button text size="large" color="#A3F6EC" style="margin-top: 12px; font-size: 20px;" :round="false"> 
             <n-icon size="25px">
               <Language />
@@ -114,7 +114,7 @@
 
 <script lang="ts" setup>
 import type { Component, CSSProperties } from 'vue'
-import { h, onMounted, ref } from 'vue'
+import { h, onMounted, ref, nextTick, computed } from 'vue'
 import { NIcon, darkTheme, NMessageProvider } from 'naive-ui'
 import { getData, sendData } from '@renderer/utils/fetchUtils'
 import {
@@ -142,7 +142,7 @@ import router from '@renderer/router'
 
 import { useRoute } from 'vue-router'
 import { useI18n } from "vue-i18n";
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const route = useRoute()
 const collapsed = ref(false)
 const is_compatibility_mode = ref(false)
@@ -150,45 +150,33 @@ const isPostW = ref(true)
 const isRunnable = ref(true)
 const transparency_number = ref(1.00)
 const colorPick = ref("#101014")
-const nowLang = ref('zh-CN')
+const nowLang = ref('zh_cn')
 const options = [
   {
-    label: '简体中文',
-    value: 'zh-CN'
+    label: "简体中文",
+    value: "zh_cn"
   },
   {
-    label: '繁體中文',
-    value: 'zh-TW'
+    label: "文言文",
+    value: "zh_classical"
   },
   {
-    label: '文言文',
-    value: 'zh-classical'
+    label: "繁體中文",
+    value: "zh_tw"
   },
   {
-    label: 'Deutsch',
-    value: 'de-DE'
+    label: "English",
+    value: "en"
   },
   {
-    label: 'Español',
-    value: 'es-ES'
+    label: "日本語",
+    value: "jp"
   },
   {
-    label: 'Français',
-    value: 'fr-FR'
-  },
-  {
-    label: '日本語',
-    value: 'ja-JP'
-  },
-  {
-    label: '한국어',
-    value: 'ko-KR'
-  },
-  {
-    label: 'Русский',
-    value: 'ru-RU'
+    label: "한국어",
+    value: "ko"
   }
-]
+];
 
 function fixHandle() {
   if (fixDashed.value) {
@@ -241,7 +229,7 @@ const collapsedHandle = (isCoolapsed: boolean) => {
 
 let show = ref(true)
 let fixDashed = ref(true)
-const menuOptions = [
+const menuOptions = computed(() => [
   {
     label: t('main.menu.home'),
     key: "home",
@@ -291,7 +279,7 @@ const menuOptions = [
     key: "magicTools",
     icon: renderIcon(Flask),
   },
-];
+]);
 
 const clickMenu = (key: string) => {
   router.push({ name: key });
@@ -331,6 +319,81 @@ function RunnableChange(value: boolean){
     value
   })
 }
+
+function changeLang(value: string) {
+  // 更新locale值并保存到localStorage
+  locale.value = value
+  localStorage.setItem('sky-music-language', value)
+  
+  // 使用nextTick确保DOM更新后再重新渲染菜单
+  nextTick(async () => {
+    // 更新菜单选项
+    const newMenuOptions = [
+      {
+        label: t('main.menu.home'),
+        key: "home",
+        icon: renderIcon(Home),
+      },
+      {
+        label: t('main.menu.music'),
+        key: "music",
+        icon: renderIcon(MusicalNotes),
+      },
+      {
+        label: t('main.menu.tutorial'),
+        key: "tutorial",
+        icon: renderIcon(GameController),
+      },
+      {
+        label: t('main.menu.kube'),
+        key: "kube",
+        icon: renderIcon(CubeSharp),
+      },
+      {
+        label: t('main.menu.shortcut'),
+        key: "shortcut",
+        icon: renderIcon(PlanetSharp),
+      },
+      {
+        label: t('main.menu.musicEdit'),
+        key: "musicEdit",
+        icon: renderIcon(Compose24Filled),
+      },
+      {
+        key: "kube",
+        type: "divider"
+      },
+      {
+        label: t('main.menu.setting'),
+        key: "setting",
+        icon: renderIcon(Settings),
+      },
+      {
+        label: t('main.menu.hwndHandle'),
+        key: "hwndHandle",
+        icon: renderIcon(PulseSharp),
+      },
+      {
+        label: t('main.menu.magicTools'),
+        key: "magicTools",
+        icon: renderIcon(Flask),
+      }
+    ]
+    
+    // 使用Object.assign保持引用不变，避免不必要的重渲染
+    Object.assign(menuOptions, newMenuOptions)
+    
+    // 如果在首页，先切换到设置页面再返回以触发同步
+    const currentRoute = route.name
+    if (currentRoute === 'home') {
+      await router.push({ name: 'setting' })
+      await router.push({ name: 'home' })
+    } else if (currentRoute) {
+      router.replace({ name: currentRoute })
+    }
+  })
+}
+
 function LoadData(){
   sendData("config_operate",{
     operate: "cpu_type" 
@@ -340,6 +403,13 @@ function LoadData(){
 }
 
 onMounted(() => {
+  // 从localStorage获取保存的语言设置，初始化当前语言
+  const savedLanguage = localStorage.getItem('sky-music-language')
+  if (savedLanguage) {
+    nowLang.value = savedLanguage
+    locale.value = savedLanguage
+  }
+
   const dragArea = document.getElementById('drag-area')
   if (dragArea) {
     let startX, startY
