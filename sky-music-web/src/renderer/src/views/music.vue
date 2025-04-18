@@ -991,28 +991,49 @@ initWebSocket()
 
 
 const getConfigStore = () => {
-  if (configStore.getItem(CONFIG_TYPE.DELAY_STATUS)) {
-    if (configStore.getItem(CONFIG_TYPE.DELAY_STATUS) == 'system') {
-      isConfigDelayStatus = false
+  // 处理延迟状态配置
+  const savedDelayStatus = configStore.getItem(CONFIG_TYPE.DELAY_STATUS)
+  if (savedDelayStatus) {
+    isConfigDelayStatus = true
+    delayStatus.value = savedDelayStatus
+    if (savedDelayStatus === 'random') {
+      delayRandomStart.value = configStore.getItem(CONFIG_TYPE.DELAY_RANDOM_START) || 0.01
+      delayRandomEnd.value = configStore.getItem(CONFIG_TYPE.DELAY_RANDOM_END) || 0.06
+      clearInterval(randomInterval)
+      randomInterval = setInterval(() => {
+        delaySpeed.value = (Math.random() * (delayRandomEnd.value - delayRandomStart.value) + delayRandomStart.value).toFixed(3)
+      }, 1000)
+    } else if (savedDelayStatus === 'custom') {
+      delaySpeed.value = configStore.getItem(CONFIG_TYPE.DELAY_SPEED) || 0
+      clearInterval(randomInterval)
     } else {
-      isConfigDelayStatus = true
+      delaySpeed.value = 0
+      clearInterval(randomInterval)
     }
   }
-  configStore.getItem(CONFIG_TYPE.DELAY_STATUS) && (delayStatus.value = configStore.getItem(CONFIG_TYPE.DELAY_STATUS))
-  configStore.getItem(CONFIG_TYPE.DELAY_SPEED) && (delaySpeed.value = configStore.getItem(CONFIG_TYPE.DELAY_SPEED))
-  configStore.getItem(CONFIG_TYPE.DELAY_RANDOM_START) && (delayRandomStart.value = configStore.getItem(CONFIG_TYPE.DELAY_RANDOM_START))
-  configStore.getItem(CONFIG_TYPE.DELAY_RANDOM_END) && (delayRandomEnd.value = configStore.getItem(CONFIG_TYPE.DELAY_RANDOM_END))
-  if (configStore.getItem(CONFIG_TYPE.DURATION_STATUS)){
-    if (configStore.getItem(CONFIG_TYPE.DURATION_STATUS) == 'system'){
-      isConfigDurationStatus = false
+
+  // 处理延音状态配置
+  const savedDurationStatus = configStore.getItem(CONFIG_TYPE.DURATION_STATUS)
+  if (savedDurationStatus) {
+    isConfigDurationStatus = true
+    durationStatus.value = savedDurationStatus
+    if (savedDurationStatus === 'random') {
+      durationRandomStart.value = configStore.getItem(CONFIG_TYPE.DURATION_RANDOM_START) || 0.5
+      durationRandomEnd.value = configStore.getItem(CONFIG_TYPE.DURATION_RANDOM_END) || 1.5
+      clearInterval(durationInterval)
+      durationInterval = setInterval(() => {
+        durationSpeed.value = (Math.random() * (durationRandomEnd.value - durationRandomStart.value) + durationRandomStart.value).toFixed(3)
+      }, 1000)
+    } else if (savedDurationStatus === 'custom') {
+      durationSpeed.value = configStore.getItem(CONFIG_TYPE.DURATION_SPEED) || 0
+      clearInterval(durationInterval)
     } else {
-      isConfigDurationStatus = true
+      durationSpeed.value = 0
+      clearInterval(durationInterval)
     }
   }
-  configStore.getItem(CONFIG_TYPE.DURATION_STATUS) && (durationStatus.value = configStore.getItem(CONFIG_TYPE.DURATION_STATUS))
-  configStore.getItem(CONFIG_TYPE.DURATION_SPEED) && (durationSpeed.value = configStore.getItem(CONFIG_TYPE.DURATION_SPEED))
-  configStore.getItem(CONFIG_TYPE.DURATION_RANDOM_START) && (durationRandomStart.value = configStore.getItem(CONFIG_TYPE.DURATION_RANDOM_START))
-  configStore.getItem(CONFIG_TYPE.DURATION_RANDOM_END) && (durationRandomEnd.value = configStore.getItem(CONFIG_TYPE.DURATION_RANDOM_END))
+
+  // 设置播放速度
   configStore.getItem(CONFIG_TYPE.PLAY_SPEED) && (playSpeed.value = configStore.getItem(CONFIG_TYPE.PLAY_SPEED))
 }
 
