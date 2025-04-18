@@ -55,11 +55,11 @@
           <n-row gutter="26">
             <n-col :span="15">
               <n-gradient-text type="info" :size="13" style="color: #F2C9C4; display: block;">{{t("music.space.title") }}</n-gradient-text>
-              <n-radio-group v-model:value="delayStatus" name="radiogroup" style="margin-top: 5px; margin-bottom: 5px">
+              <n-radio-group v-model:value="delayStatus" name="radiogroup" style="margin-top: 5px; margin-bottom: 5px" @keydown.stop.prevent>
                 <n-space>
-                  <n-radio key="system" value="system" style="color: red;">{{t("music.space.chose0") }}</n-radio>
-                  <n-radio key="random" value="random">{{t("music.space.chose1") }}</n-radio>
-                  <n-radio key="custom" value="custom">{{t("music.space.chose2") }}</n-radio>
+                  <n-radio key="system" value="system" style="color: red;" @keydown.stop.prevent>{{t("music.space.chose0") }}</n-radio>
+                  <n-radio key="random" value="random" @keydown.stop.prevent>{{t("music.space.chose1") }}</n-radio>
+                  <n-radio key="custom" value="custom" @keydown.stop.prevent>{{t("music.space.chose2") }}</n-radio>
                 </n-space>
               </n-radio-group>
             </n-col>
@@ -75,11 +75,11 @@
           <n-row gutter="26">
             <n-col :span="15">
               <n-gradient-text type="info" :size="13" style="color: #F2C9C4; display: block;">{{t("music.space.title1") }}</n-gradient-text>
-              <n-radio-group v-model:value="durationStatus" name="radiogroup" style="margin-top: 5px; margin-bottom: 5px">
+              <n-radio-group v-model:value="durationStatus" name="radiogroup" style="margin-top: 5px; margin-bottom: 5px" @keydown.stop.prevent>
                 <n-space>
-                  <n-radio key="system" value="system">{{t("music.space.chose0") }}</n-radio>
-                  <n-radio key="random" value="random">{{t("music.space.chose1") }}</n-radio>
-                  <n-radio key="custom" value="custom">{{t("music.space.chose2") }}</n-radio>
+                  <n-radio key="system" value="system" @keydown.stop.prevent>{{t("music.space.chose0") }}</n-radio>
+                  <n-radio key="random" value="random" @keydown.stop.prevent>{{t("music.space.chose1") }}</n-radio>
+                  <n-radio key="custom" value="custom" @keydown.stop.prevent>{{t("music.space.chose2") }}</n-radio>
                 </n-space>
               </n-radio-group>
             </n-col>
@@ -926,8 +926,8 @@ if (key === shortcutKeys["reduce_duration"]) {
   if (durationSpeed.value * 100 === 0) {
     message.info(t('messeage.msg12'));
   } else {
-    durationStatus.value = "custom";
     setTimeout(()=>{
+      durationStatus.value = "custom";
       durationSpeed.value = Math.round((durationSpeed.value - 0.01) * 100) / 100;
     })
     message.info(t('messeage.msg13'));
@@ -1013,7 +1013,6 @@ const getConfigStore = () => {
   configStore.getItem(CONFIG_TYPE.DURATION_SPEED) && (durationSpeed.value = configStore.getItem(CONFIG_TYPE.DURATION_SPEED))
   configStore.getItem(CONFIG_TYPE.DURATION_RANDOM_START) && (durationRandomStart.value = configStore.getItem(CONFIG_TYPE.DURATION_RANDOM_START))
   configStore.getItem(CONFIG_TYPE.DURATION_RANDOM_END) && (durationRandomEnd.value = configStore.getItem(CONFIG_TYPE.DURATION_RANDOM_END))
-
   configStore.getItem(CONFIG_TYPE.PLAY_SPEED) && (playSpeed.value = configStore.getItem(CONFIG_TYPE.PLAY_SPEED))
 }
 
