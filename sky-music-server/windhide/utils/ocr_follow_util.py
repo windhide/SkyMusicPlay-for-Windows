@@ -122,6 +122,8 @@ def get_key_position(conf, threshold=10):
         for key_name, box in zip(keys, group_boxes):
             final_result[key_name] = box  # 使用键名作为最终结果的 key
     GlobalVariable.window["key_position"] = final_result
+    if len(final_result) == 15:
+        GlobalVariable.window["is_change"] = False
     return final_result
 
 def test_key_model_position(conf):

@@ -24,8 +24,8 @@ def add_window_key(key):
         position_x = GlobalVariable.window['key_position'][key]['position_x'] - GlobalVariable.window_offset_x
         position_y = GlobalVariable.window['key_position'][key]['position_y'] - GlobalVariable.window_offset_y
         send_command(f"draw {key} {width} {height} {position_x} {position_y} \n")  # 绘制
-    except KeyError:
-        print("按键识别不完全，重新调用")
+    except KeyError as e:
+        print("按键识别不完全，重新调用 => ", e, e.__doc__)
         GlobalVariable.window["is_change"] = True
         time.sleep(2)
         resize_and_reload_key()
@@ -49,6 +49,7 @@ def resize_and_reload_key():
     clear_window_key(GlobalVariable.nowClientKey)
     for key in GlobalVariable.nowClientKey:
         add_window_key(key)
+    update_key()
 
 def quit_window():
     send_command(f"exit\n")
