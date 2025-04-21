@@ -1,10 +1,12 @@
 import queue
 import re
+from os import path
 
 import plyer
 
 from windhide.playRobot import intel_robot, amd_robot
 from windhide.static.global_variable import GlobalVariable
+from windhide.utils.path_util import getResourcesPath
 
 
 def music_start_tasks():
@@ -16,6 +18,8 @@ def music_start_tasks():
         try:
             if GlobalVariable.window["hWnd"] is None and GlobalVariable.compatibility_mode is False:
                 plyer.notification.notify(
+                    app_name='小星弹琴软件',
+                    app_icon=path.join(getResourcesPath("systemTools"),"icon.ico"),
                     title='🔥🔥🔥🔥🔥',
                     message='未检测到游戏窗口，请打开游戏或者去句柄页面进行指定！本次播放操作释放',
                     timeout=1

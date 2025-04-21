@@ -1,4 +1,6 @@
 import threading
+from os import path
+
 import time
 
 import plyer
@@ -7,6 +9,7 @@ from pynput.keyboard import Controller, Key
 from windhide.static.global_variable import GlobalVariable
 from windhide.utils.ocr_heart_utils import get_friend_model_position
 from windhide.utils.ocr_normal_utils import resetGameFrame
+from windhide.utils.path_util import getResourcesPath
 
 if GlobalVariable.cpu_type == 'Intel':
     from windhide.playRobot.intel_robot import mouse_move_to, key_press
@@ -70,6 +73,8 @@ class HeartFireThread(threading.Thread):
                     time.sleep(3)
                 else:
                     plyer.notification.notify(
+                        app_name='小星弹琴软件',
+                        app_icon=path.join(getResourcesPath("systemTools"), "icon.ico"),
                         title='🔥🔥🔥🔥🔥🔥🔥🔥',
                         message='点火结束🔥🔥🔥🔥🔥',
                         timeout=1
