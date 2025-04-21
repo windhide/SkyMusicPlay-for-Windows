@@ -16,7 +16,8 @@ class GlobalVariable:
         "position_x": 0,
         "position_y": 0,
         "is_change": False,
-        "key_position": None
+        "key_position": None,
+        "wait": False
     }
 
     # 快捷键相关

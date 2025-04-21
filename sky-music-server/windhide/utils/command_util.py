@@ -1,10 +1,15 @@
 import socket
 import threading
 import time
+from os import path
+from time import sleep
+
+import plyer
 
 from windhide.static.global_variable import GlobalVariable
 from windhide.thread.follow_process_thread import run_follow_process, stop_follow_process
 from windhide.utils.ocr_normal_utils import get_game_position
+from windhide.utils.path_util import getResourcesPath
 
 # 全局变量，存储客户端连接对象
 GlobalVariable.follow_client = None
@@ -41,15 +46,36 @@ def update_key():
     send_command(f"update \n")
 
 def resize_and_reload_key():
-    GlobalVariable.window["is_change"] = True
-    position = get_game_position()
-    position_x, position_y = position[0], position[1]
-    width, height = position[2] - position[0], position[3] - position[1]
-    send_command(f"resize {width} {height} {position_x} {position_y} \n")
-    clear_window_key(GlobalVariable.nowClientKey)
-    for key in GlobalVariable.nowClientKey:
-        add_window_key(key)
-    update_key()
+    if GlobalVariable.window["wait"] is not True:
+        GlobalVariable.window["is_change"] = True
+        GlobalVariable.window["wait"] = True
+    plyer.notification.notify(
+        app_name='小星弹琴软件',
+        app_icon=path.join(getResourcesPath("systemTools"), "icon.ico"),
+        title='已经在很努力的检测了',
+        message='如果长时间未检测完成请换个位置打开琴键',
+        timeout=0.3
+    )
+    while True:
+        sleep(1)
+        if len(GlobalVariable.window['key_position']) == 15 and GlobalVariable.window["wait"] == False:
+            GlobalVariable.window["wait"] = False
+            position = get_game_position()
+            position_x, position_y = position[0], position[1]
+            width, height = position[2] - position[0], position[3] - position[1]
+            send_command(f"resize {width} {height} {position_x} {position_y} \n")
+            clear_window_key(GlobalVariable.nowClientKey)
+            for key in GlobalVariable.nowClientKey:
+                add_window_key(key)
+            update_key()
+            break
+    plyer.notification.notify(
+        app_name='小星弹琴软件',
+        app_icon=path.join(getResourcesPath("systemTools"), "icon.ico"),
+        title='检测完毕',
+        message='OK',
+        timeout=1
+    )
 
 def quit_window():
     send_command(f"exit\n")

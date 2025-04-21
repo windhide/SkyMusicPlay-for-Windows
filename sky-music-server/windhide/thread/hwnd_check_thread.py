@@ -72,7 +72,7 @@ def update_window_handle():
             ]):
                 window["is_change"] = True
             GlobalVariable.hwnd_title = get_exe_name_from_hwnd(hwnd)
-            get_key_position(0.60)
+            get_key_position(0.88)
         else:
             GlobalVariable.window["hWnd"] = None
     else:

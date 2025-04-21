@@ -1,5 +1,7 @@
 import time
+from os import path
 
+import plyer
 from pynput import keyboard
 
 from windhide.playRobot.amd_robot import send_multiple_key_press, send_multiple_key_release
@@ -7,6 +9,7 @@ from windhide.static.global_variable import GlobalVariable
 from windhide.utils import hook_util
 from windhide.utils.command_util import resize_and_reload_key, clear_window_key, add_window_key, \
     quit_window, update_key
+from windhide.utils.path_util import getResourcesPath
 
 hook_util.sout_null()
 
@@ -83,7 +86,11 @@ def key_release(key):
                             pressedKeys.add(key)
                         if len(pressedKeys) == len(originalKeys):
                             pressedKeys.clear()
-                            originalKeys = set(get_next_sheet_demo("ok"))
+                            maybe_next_key = get_next_sheet_demo("ok")
+                            if not maybe_next_key:
+                                return
+                            else:
+                                originalKeys = set(maybe_next_key)
         except Exception as e:
             print(f"发生错误: {e.__doc__} , 开始重新加载")
 
@@ -109,6 +116,19 @@ def get_next_sheet_demo(operator):
             sheet = GlobalVariable.follow_sheet[0]
             GlobalVariable.nowClientKey = sheet
             GlobalVariable.follow_sheet = GlobalVariable.follow_sheet[1:]
+            if len(GlobalVariable.follow_sheet) == 0:
+                GlobalVariable.exit_flag = True  # 设置全局标志
+                quit_window()
+                plyer.notification.notify(
+                    app_name='小星弹琴软件',
+                    app_icon=path.join(getResourcesPath("systemTools"), "icon.ico"),
+                    title='已经结束啦',
+                    message='这首歌已经弹完了哦',
+                    timeout=1
+                )
+                send_multiple_key_press("z")
+                send_multiple_key_release("z")
+                return False
             for key in sheet:
                 add_window_key(key)
             update_key()

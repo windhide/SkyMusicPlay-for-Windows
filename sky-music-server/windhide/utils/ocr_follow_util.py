@@ -57,6 +57,7 @@ def get_key_position(conf, threshold=10):
         if len(GlobalVariable.window["key_position"]) == 15 and not GlobalVariable.window["is_change"]:
             return GlobalVariable.window["key_position"]
     print("开始检测按键布局")
+    GlobalVariable.window["key_position"] = None
     image = None
     try:
         bgr_image = get_window_screenshot()
@@ -124,6 +125,7 @@ def get_key_position(conf, threshold=10):
     GlobalVariable.window["key_position"] = final_result
     if len(final_result) == 15:
         GlobalVariable.window["is_change"] = False
+        GlobalVariable.window["wait"] = False
     return final_result
 
 def test_key_model_position(conf):

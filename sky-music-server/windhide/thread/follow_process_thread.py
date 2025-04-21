@@ -11,7 +11,6 @@ GlobalVariable.draw_process = None  # 进程对象
 
 
 def run_follow_process():
-    """启动 draw_server.exe 并存储进程对象"""
     try:
         x1, y1, x2, y2 = get_game_position()
         width, height = x2 - x1, y2 - y1
@@ -28,7 +27,6 @@ def run_follow_process():
         )
     except (FileNotFoundError, subprocess.SubprocessError):
         pass  # 直接忽略异常，避免冗余输出
-
 
 def stop_follow_process():
     """彻底终止 draw_server.exe 及其所有子进程"""
