@@ -44,7 +44,6 @@ def on_press(key):
                         send_multiple_key_press(GlobalVariable.nowClientKey)
         except Exception as e:
             print(f"发生错误: {e.__doc__} , 开始重新加载")
-
     # 处理 Esc 退出监听
     if key == keyboard.Key.esc:
         print("检测到 Esc 键，退出监听...")
@@ -54,6 +53,7 @@ def on_press(key):
         except Exception as e:
             return False
         return False  # 停止监听
+    return None
 
 
 def key_release(key):
@@ -96,6 +96,8 @@ def key_release(key):
         except Exception as e:
             return False
         return False  # 停止监听
+    return None
+
 
 def get_next_sheet_demo(operator):
     if len(GlobalVariable.follow_sheet) == 0:
@@ -124,6 +126,10 @@ def get_next_sheet_demo(operator):
 def startThread():
     global originalKeys, pressedKeys
     time.sleep(2)
+    try:
+        quit_window()
+    except Exception as e:
+        print("嗯？")
     originalKeys = set(get_next_sheet_demo("load"))
     pressedKeys = set()
     GlobalVariable.exit_flag = False  # 确保每次启动时标志位重置
