@@ -1,7 +1,10 @@
 import logging
 import os
 import threading
+
+import keyboard
 import time
+from tensorflow.python.data.experimental.ops.testing import sleep
 
 from ultralytics import YOLO
 
@@ -10,6 +13,10 @@ from windhide.thread.follow_thread import startThread as follow_thread_demo
 from windhide.utils.command_util import start_process
 from windhide.utils.ocr_normal_utils import get_window_screenshot
 from windhide.utils.path_util import getResourcesPath, convert_notes_to_delayed_format
+if GlobalVariable.cpu_type == 'Intel':
+    from windhide.playRobot.intel_robot import mouse_move_to, key_press
+else:
+    from windhide.playRobot.amd_robot import mouse_move_to, key_press
 
 global_button_model = None
 
@@ -147,6 +154,11 @@ def test_key_model_position(conf):
     results[0].show()
 
 def open_follow():
+    if GlobalVariable.exit_flag == False:
+        keyboard.press('left alt')
+        sleep(0.05)
+        keyboard.press('left alt')
+        sleep(1.3)
     start_process()
     GlobalVariable.follow_thread = threading.Thread(target=follow_thread_demo)
     GlobalVariable.follow_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出

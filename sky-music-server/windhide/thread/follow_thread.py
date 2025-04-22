@@ -49,7 +49,7 @@ def on_press(key):
             print(f"发生错误: {e.__doc__} , 开始重新加载")
 
     # 处理 Esc 退出监听
-    if key == keyboard.Key.esc:
+    if key == GlobalVariable.shortcutStruct["follow_key"]["exit"] or  key == "alt_l":
         print("检测到 Esc 键，退出监听...")
         GlobalVariable.exit_flag = True  # 设置全局标志
         try:
@@ -95,7 +95,7 @@ def key_release(key):
             print(f"发生错误: {e.__doc__} , 开始重新加载")
 
     # 处理 Esc 退出监听
-    if key == GlobalVariable.shortcutStruct["follow_key"]["exit"]:
+    if key == GlobalVariable.shortcutStruct["follow_key"]["exit"] or  key == "alt_l":
         print("检测到 Esc 键，退出监听...")
         GlobalVariable.exit_flag = True  # 设置全局标志
         try:
