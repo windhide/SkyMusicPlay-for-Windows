@@ -126,6 +126,9 @@ def get_key_position(conf, threshold=10):
     if len(final_result) == 15:
         GlobalVariable.window["is_change"] = False
         GlobalVariable.window["wait"] = False
+
+    print("final_result",final_result)
+    print("final_result len =>",len(final_result))
     return final_result
 
 def test_key_model_position(conf):

@@ -63,11 +63,21 @@ def resize_and_reload_key():
             position = get_game_position()
             position_x, position_y = position[0], position[1]
             width, height = position[2] - position[0], position[3] - position[1]
+            # 检查窗口大小是否发生变化
+            if width != GlobalVariable.window.get('width', 0) or height != GlobalVariable.window.get('height', 0):
+                GlobalVariable.window['width'] = width
+                GlobalVariable.window['height'] = height
+                # 重新计算按键位置
+                from windhide.utils.ocr_follow_util import get_key_position
+                get_key_position(None)  # 重新获取按键位置
             send_command(f"resize {width} {height} {position_x} {position_y} \n")
             clear_window_key(GlobalVariable.nowClientKey)
-            for key in GlobalVariable.nowClientKey:
-                add_window_key(key)
-            update_key()
+            # 重新获取新的15个按键
+            if len(GlobalVariable.follow_sheet) > 0:
+                GlobalVariable.nowClientKey = GlobalVariable.follow_sheet[0]
+                for key in GlobalVariable.nowClientKey:
+                    add_window_key(key)
+                update_key()
             break
     plyer.notification.notify(
         app_name='小星弹琴软件',
