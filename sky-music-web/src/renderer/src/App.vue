@@ -91,7 +91,7 @@
                     backgroundColor: colorPick+ ' !important'
                   }"
                   >
-                  <n-menu :collapsed-width="64" :collapsed-icon-size="0" :options="menuOptions"
+                  <n-menu :collapsed-width="64" :collapsed-icon-size="23" :options="menuOptions"
                     @update:value="clickMenu" />
                 </n-layout-sider>
                   <n-layout 
