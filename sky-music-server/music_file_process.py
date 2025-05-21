@@ -36,14 +36,6 @@ def process_file(file_path, normal_output_folder, encrypted_folder, keyword="1Ke
             print(f"❌ 无效的 JSON 结构: {file_path}")
             return
 
-        # **检查是否包含 isEncrypted: true**
-        for item in json_data:
-            if isinstance(item, dict) and item.get("isEncrypted") is True:
-                # **直接移动文件到加密文件夹**
-                shutil.move(file_path, os.path.join(encrypted_folder, os.path.basename(file_path)))
-                print(f"✅ 文件 {os.path.basename(file_path)} 已移动到 {encrypted_folder}")
-                return
-
         # **检查是否包含关键词 "1Key"**
         if keyword in content:
             first_name = json_data[0].get('name', '未命名文件')
@@ -64,6 +56,14 @@ def process_file(file_path, normal_output_folder, encrypted_folder, keyword="1Ke
 
             print(f"✅ 文件 {os.path.basename(file_path)} 已重命名并保存到 {normal_output_folder}")
             return
+
+        # **检查是否包含 isEncrypted: true**
+        for item in json_data:
+            if isinstance(item, dict) and item.get("isEncrypted") is True:
+                # **直接移动文件到加密文件夹**
+                shutil.move(file_path, os.path.join(encrypted_folder, os.path.basename(file_path)))
+                print(f"✅ 文件 {os.path.basename(file_path)} 已移动到 {encrypted_folder}")
+                return
 
         # **如果既不是加密文件，也不包含关键词 "1Key"，则跳过**
         print(f"⚠️ 文件 {os.path.basename(file_path)} 不包含 'isEncrypted': true 或 '{keyword}'，跳过处理")
@@ -89,8 +89,8 @@ def process_files(input_folder, normal_output_folder, encrypted_folder, keyword=
 
 if __name__ == '__main__':
     # **文件夹路径**
-    input_folder = "D:\\Desktop\\music\\original"  # 输入文件夹路径
-    normal_output_folder = "D:\\Desktop\\music\\after"  # 处理后正常输出路径
-    encrypted_folder = "D:\\Desktop\\music\\encrypted"  # 加密文件存放路径
+    input_folder = "D:\\Desktop\\WuHaoYe\\crack sheet\\original"  # 输入文件夹路径
+    normal_output_folder = "D:\\Desktop\\WuHaoYe\\crack sheet\\crack"  # 处理后正常输出路径
+    encrypted_folder = "D:\\Desktop\\WuHaoYe\\crack sheet\\encrypted"  # 加密文件存放路径
 
     process_files(input_folder, normal_output_folder, encrypted_folder)

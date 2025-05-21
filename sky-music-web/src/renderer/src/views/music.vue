@@ -1032,9 +1032,13 @@ const getConfigStore = () => {
       clearInterval(durationInterval)
     }
   }
-
   // 设置播放速度
   configStore.getItem(CONFIG_TYPE.PLAY_SPEED) && (playSpeed.value = configStore.getItem(CONFIG_TYPE.PLAY_SPEED))
+  if (configStore.getItem(CONFIG_TYPE.DURATION_SPEED) == 0 || configStore.getItem(CONFIG_TYPE.DURATION_SPEED) == undefined){
+      durationStatus.value = 'custom'
+      durationSpeed.value = 0.03
+      console.log("拨正")
+  }
 }
 
 onMounted(async ()=>{
