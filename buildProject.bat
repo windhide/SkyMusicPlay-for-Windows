@@ -29,7 +29,7 @@ rmdir /S /Q "%script_dir%\sky-music-web\backend_dist"
 
 :: 构建 Python 服务器
 cd "%script_dir%\sky-music-server"
-call .venv\Scripts\python.exe -m PyInstaller --uac-admin -i icon.ico sky-music-server.py --distpath "%script_dir%\sky-music-web\backend_dist" --version-file=%script_dir%\sky-music-server\version.txt --hidden-import=main --collect-all=sklearn --collect-all=basic_pitch --collect-all=plyer
+call .venv\Scripts\python.exe -m PyInstaller -i icon.ico sky-music-server.py --distpath "%script_dir%\sky-music-web\backend_dist" --version-file=%script_dir%\sky-music-server\version.txt --hidden-import=main --collect-all=sklearn --collect-all=basic_pitch --collect-all=plyer
 
 :: 构建 跟弹服务
 :: cd "%script_dir%\draw-follow-window"

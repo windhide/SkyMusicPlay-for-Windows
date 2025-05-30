@@ -16,7 +16,7 @@ files:
 win:
   executableName: Sky_Music
   icon: build/icon.ico
-  requestedExecutionLevel: 'requireAdministrator'
+  requestedExecutionLevel: requireAdministrator
 nsis:
   artifactName: 小星弹琴软件v${version}_x64_windows.${ext}
   shortcutName: "小星弹琴软件"
