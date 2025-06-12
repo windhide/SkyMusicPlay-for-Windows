@@ -1009,6 +1009,7 @@ onUnmounted(async () => {
 .n-input{
   background-color: rgba(24, 24, 28, 0) !important;
   border: 1px solid rgba(242,232,196,0.5);
+  --n-text-color: rgb(242,232,196) !important;
 }
 :deep(.td_css td) {
   color: rgb(242,232,196) !important;

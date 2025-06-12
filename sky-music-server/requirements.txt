@@ -9,7 +9,7 @@ PyAutoGUI==0.9.54
 scikit-learn==1.5.1
 psutil==6.1.1
 keyboard==0.13.5
-Jinja2==3.1.5
+Jinja2==3.1.6
 platformdirs==4.3.6
 requests==2.32.3
 uvicorn==0.34.0
@@ -31,3 +31,5 @@ basic-pitch[tf]
 basic-pitch[onnx]
 coremltools
 scikit-learn==1.5.1
+protobuf==4.25.6
+openai==1.85.0

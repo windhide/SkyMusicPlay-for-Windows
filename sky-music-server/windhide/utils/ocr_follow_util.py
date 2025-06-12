@@ -4,7 +4,7 @@ import threading
 
 import keyboard
 import time
-from tensorflow.python.data.experimental.ops.testing import sleep
+
 
 from ultralytics import YOLO
 
@@ -156,9 +156,9 @@ def test_key_model_position(conf):
 def open_follow():
     if GlobalVariable.exit_flag == False:
         keyboard.press('left alt')
-        sleep(0.05)
+        time.sleep(0.05)
         keyboard.press('left alt')
-        sleep(1.3)
+        time.sleep(1.3)
     start_process()
     GlobalVariable.follow_thread = threading.Thread(target=follow_thread_demo)
     GlobalVariable.follow_thread.daemon = True  # 设置为守护线程，主线程退出时自动退出

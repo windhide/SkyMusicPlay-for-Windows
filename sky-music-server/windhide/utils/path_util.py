@@ -3,6 +3,7 @@ import os
 import re
 
 import chardet
+import plyer
 
 from windhide.static.global_variable import GlobalVariable
 
@@ -106,6 +107,13 @@ def getTypeMusicList(type, searchStr=None):
     return music_list
 
 def process_sheet_rename_time(isImportOrTranslate = False):
+    plyer.notification.notify(
+        app_name='小星弹琴软件',
+        app_icon=os.path.join(getResourcesPath("systemTools"), "icon.ico"),
+        title='开始同步乐谱时长操作',
+        message='时间可能会比较长，耐心等待，执行过程中可能会影响正常演奏。',
+        timeout=1
+    )
     if isImportOrTranslate:
         resource_dirs = [
             os.path.join(getResourcesPath(None), "myImport"),
@@ -147,6 +155,13 @@ def process_sheet_rename_time(isImportOrTranslate = False):
             os.rename(file_path, new_file_path)
         except Exception as e:
             continue
+    plyer.notification.notify(
+        app_name='小星弹琴软件',
+        app_icon=os.path.join(getResourcesPath("systemTools"), "icon.ico"),
+        title='开始同步乐谱时长操作',
+        message='操作完成',
+        timeout=1
+    )
 
 def format_time(milliseconds):
     """

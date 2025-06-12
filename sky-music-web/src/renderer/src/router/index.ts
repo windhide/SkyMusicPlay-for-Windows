@@ -50,6 +50,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/musicEdit',
     name: 'musicEdit',
     component: () => import('../views/music_edit.vue')
+  },
+  {
+    path: "/aiSetting",
+    name: "aiSetting",
+    component: () => import('../views/ai_setting.vue')
   }
 ]
 

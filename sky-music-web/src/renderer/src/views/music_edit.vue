@@ -26,8 +26,8 @@
           </n-icon>
         </n-button>
       </template>
-      <span v-if="isPlaying">{{ t("music_edit.tips.pause") }}</span>
-      <span v-else>{{ t("music_edit.tips.play") }}</span>
+      <span style="color:#F2C9C4" v-if="isPlaying">{{ t("music_edit.tips.pause") }}</span>
+      <span style="color:#F2C9C4" v-else>{{ t("music_edit.tips.play") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -37,7 +37,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>{{ t("music_edit.tips.pre_column") }}</span>
+      <span style="color:#F2C9C4">{{ t("music_edit.tips.pre_column") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -47,7 +47,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>{{ t("music_edit.tips.next_column") }}</span>
+      <span style="color:#F2C9C4">{{ t("music_edit.tips.next_column") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -57,7 +57,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>{{ t("music_edit.tips.afer_add_column") }}</span>
+      <span style="color:#F2C9C4">{{ t("music_edit.tips.afer_add_column") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -67,7 +67,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>{{ t("music_edit.tips.delete_now_column") }}</span>
+      <span style="color:#F2C9C4">{{ t("music_edit.tips.delete_now_column") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -79,8 +79,8 @@
           </n-icon>
         </n-button>
       </template>
-      <span v-if="isPlaying">{{ t("music_edit.tips.pause") }}</span>
-      <span v-else>{{ t("music_edit.tips.upend") }}</span>
+      <span style="color:#F2C9C4" v-if="isPlaying">{{ t("music_edit.tips.pause") }}</span>
+      <span style="color:#F2C9C4" v-else>{{ t("music_edit.tips.upend") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -90,7 +90,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>{{ t("music_edit.tips.play_now_column") }}</span>
+      <span style="color:#F2C9C4">{{ t("music_edit.tips.play_now_column") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -100,7 +100,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>{{ t("music_edit.tips.copy_now_to_head") }}</span>
+      <span style="color:#F2C9C4">{{ t("music_edit.tips.copy_now_to_head") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -110,7 +110,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>{{ t("music_edit.tips.copy_now_to_pre") }}</span>
+      <span style="color:#F2C9C4">{{ t("music_edit.tips.copy_now_to_pre") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -120,7 +120,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>{{ t("music_edit.tips.copy_now_to_next") }}</span>
+      <span style="color:#F2C9C4">{{ t("music_edit.tips.copy_now_to_next") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -130,7 +130,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>{{ t("music_edit.tips.copy_now_to_end") }}</span>
+      <span style="color:#F2C9C4">{{ t("music_edit.tips.copy_now_to_end") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -140,7 +140,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>{{ t("music_edit.tips.select_in_music") }}</span>
+      <span style="color:#F2C9C4">{{ t("music_edit.tips.select_in_music") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -150,7 +150,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>{{ t("music_edit.tips.save_sheet") }}</span>
+      <span style="color:#F2C9C4">{{ t("music_edit.tips.save_sheet") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -160,7 +160,7 @@
           </n-icon>
         </n-button>
       </template>
-      <span>{{ t("music_edit.tips.clear_sheet") }}</span>
+      <span style="color:#F2C9C4">{{ t("music_edit.tips.clear_sheet") }}</span>
     </n-tooltip>
     <n-tooltip trigger="hover" :disabled="!showTips">
       <template #trigger>
@@ -173,7 +173,7 @@
           </n-button>
         </n-upload>
       </template>
-      <span>{{ t("music_edit.tips.upload_sheet") }}</span>
+      <span style="color:#F2C9C4">{{ t("music_edit.tips.upload_sheet") }}</span>
     </n-tooltip>
     <n-tooltip trigger="click">
       <template #trigger>
@@ -1264,6 +1264,7 @@ onBeforeRouteLeave((_to, _from, next) => {
   --n-border-focus: 1px solid rgb(242, 232, 196) !important;
   --n-caret-color: rgb(242, 232, 196) !important;
   --n-color-focus: rgba(242, 232, 196, 0.1) !important;
+  --n-text-color: rgb(242,232,196) !important;
 }
 
 :deep(.n-tabs) {

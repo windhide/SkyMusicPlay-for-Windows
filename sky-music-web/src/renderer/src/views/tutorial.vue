@@ -379,6 +379,7 @@ function getListData(value) {
   --n-border-focus: 1px solid rgb(242,232,196)!important;
   --n-caret-color: rgb(242,232,196)!important;
   --n-color-focus: rgba(242,232,196,0.1)!important;
+  --n-text-color: rgb(242,232,196) !important;
 }
 :deep(.td_css td) {
   color: rgb(242, 232, 196) !important;

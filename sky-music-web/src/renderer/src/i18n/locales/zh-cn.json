@@ -18,7 +18,8 @@
       "musicEdit": "乐谱编辑",
       "setting": "设置",
       "hwndHandle": "句柄",
-      "magicTools": "开发者"
+      "magicTools": "开发者",
+      "aisetting": "AI设置"
     }
   },
   "shortcutKeys": {
@@ -295,5 +296,12 @@
     "order": "顺序",
     "random": "随机",
     "cycle": "循环"
+  },
+  "ai_setting": {
+    "head_text": "此处功能测试中",
+    "patterns1": "此处功能测试中",
+    "buttons": {
+      "set_token": "保存"
+    }
   }
 }

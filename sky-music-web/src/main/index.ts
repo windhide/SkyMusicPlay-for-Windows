@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, ipcMain, screen, Notification, powerSaveBloc
 import { join } from 'path'
 import { electronApp, is } from '@electron-toolkit/utils'
 import icon from '../../build/icon.png?asset'
-import { exec } from 'child_process'
+import { spawn, execSync } from 'child_process'
 import Store from 'electron-store';
 Store.initRenderer()
 const path = require('path')
@@ -106,7 +106,6 @@ function createWindow(): void {
 
   ipcMain.on('window-close', (event) => {
     console.log(event)
-    exec("taskkill /f /im Sky_Music.exe")
     ipcMain.removeAllListeners('mousedown')
     ipcMain.removeAllListeners('mousemove')
     ipcMain.removeAllListeners('mouseup')
@@ -299,31 +298,46 @@ app.on('window-all-closed', () => {
   app.quit();
 })
 
+function launchBackend() {
+  const exeName = 'sky-music-server.exe'
+  let runPath = __dirname.replace("resources\\app.asar\\out\\main","")
+  const exePath = path.join(runPath, 'backend_dist/sky-music-server/sky-music-server.exe')
+
+  if (!fs.existsSync(exePath)) {
+    console.error('[server] server File not found:', exePath)
+    return
+  }
+
+  if (isBackendRunning(exeName)) {
+    console.log('[server] is running, do Nothiong')
+    return
+  }
+
+  console.log('[server] starting:', exePath)
+
+  const subprocess = spawn(exePath, [], {
+    detached: true,
+    stdio: 'ignore',
+    windowsHide: true
+  })
+
+  subprocess.unref() // 让它在主进程退出后仍能运行
+}
+
+function isBackendRunning(processName: string): boolean {
+  try {
+    const stdout = execSync('tasklist', { encoding: 'utf-8' })
+    return stdout.toLowerCase().includes(processName.toLowerCase())
+  } catch (err) {
+    console.error('[check server] faild:', err)
+    return false
+  }
+}
+
+
 app.whenReady().then(() => {
   electronApp.setAppUserModelId('com.windhide')
   createWindow()
-  let runPath = __dirname.replace("resources\\app.asar\\out\\main","")
-  const serverPath = path.join(runPath, 'backend_dist/sky-music-server/sky-music-server.exe')
-  
-  try {
-    const command = `"${serverPath}"`;
-    exec(command, {
-      encoding: 'utf8',
-      windowsHide: true,
-      env: { ...process.env, LANG: 'en_US.UTF-8' }
-    }, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Error executing server: ${error.message}`);
-        return;
-      }
-      if (stderr) {
-        console.error(`Server stderr: ${stderr}`);
-        return;
-      }
-      console.log(`Server stdout: ${stdout}`);
-    });
-  } catch (err) {
-    console.error('Failed to start server:', err);
-  }
+  launchBackend()
 })
 

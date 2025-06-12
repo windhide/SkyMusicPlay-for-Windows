@@ -23,9 +23,7 @@ def get_key_string(key):
 # 键盘按键事件处理
 def on_press(key):
     key = get_key_string(key)
-    print("key",key)
     if key in GlobalVariable.shortcutStruct["music_key"]["string"]:
-        print(f"按键 {key} 被触发")
         try:
             server.send_message_to_all(urllib.parse.quote(key))
         except Exception as e:

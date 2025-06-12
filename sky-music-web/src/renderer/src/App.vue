@@ -1,6 +1,11 @@
 <template>
   <n-config-provider :theme="darkTheme" :style="{ opacity : transparency_number}" >
     <n-flex id="drag-area" justify="end" style="position: fixed; z-index: 200; right: 18px" :style="{ width: collapsed ? '90%' : '80%'}">
+      <n-button text type="warning" size="large" style="margin-top: 12px; font-size: 20px;" @click="syncSheetName">
+        <n-icon size="25px">
+          <ArrowSync16Filled />
+        </n-icon>
+      </n-button>
       <n-popselect v-model:value="nowLang" :options="options" trigger="click" @update:value="changeLang" scrollable>
           <n-button text size="large" color="#A3F6EC" style="margin-top: 12px; font-size: 20px;" :round="false"> 
             <n-icon size="25px">
@@ -130,16 +135,17 @@ import {
   PlanetSharp,
   ColorPaletteOutline,
   PulseSharp,
-  Language
+  Language,
+  LogoGoogle
 } from '@vicons/ionicons5'
 import {
   Pin48Regular,
   Pin48Filled,
   Settings48Regular,
-  Compose24Filled
+  Compose24Filled,
+  ArrowSync16Filled
 } from '@vicons/fluent'
 import router from '@renderer/router'
-
 import { useRoute } from 'vue-router'
 import { useI18n } from "vue-i18n";
 const { t, locale } = useI18n();
@@ -211,6 +217,10 @@ function openFileHandle() {
   })
 }
 
+function syncSheetName() {
+  getData('syncSheetName')
+}
+
 function miniHandle() {
   window.api.mini()
 }
@@ -263,6 +273,11 @@ const menuOptions = computed(() => [
   {
     key: "kube",
     type: "divider"
+  },
+  {
+    label: t("main.menu.aisetting"),
+    key: "aiSetting",
+    icon: renderIcon(LogoGoogle)
   },
   {
     label: t('main.menu.setting'),
@@ -360,6 +375,11 @@ function changeLang(value: string) {
       {
         key: "kube",
         type: "divider"
+      },
+      {
+        label: t("main.menu.aisetting"),
+        key: "aiSetting",
+        icon: renderIcon(LogoGoogle)
       },
       {
         label: t('main.menu.setting'),
@@ -466,7 +486,7 @@ onMounted(() => {
   background-color: rgba(242, 201, 196, 0) !important;
 }
 .n-menu-divider {
-  margin-bottom: 325px;
+  margin-bottom: 275px;
   background-color: rgba(242, 201, 196, 0);
 }
 .n-drawer-mask,.n-drawer{

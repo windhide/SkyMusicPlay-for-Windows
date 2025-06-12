@@ -1,10 +1,9 @@
-from basic_pitch import ICASSP_2022_MODEL_PATH
-from basic_pitch.inference import predict_and_save
-
 from windhide.utils.path_util import getResourcesPath
 
 
 def inference(input_path):
+    from basic_pitch import ICASSP_2022_MODEL_PATH
+    from basic_pitch.inference import predict_and_save
     output_midi_path = getResourcesPath("translateMID")
     try:
         predict_and_save([  input_path ],

@@ -38,6 +38,12 @@ def set_config(request: dict):
             GlobalVariable.semitone_switch = request["value"]
         case 'detail_switch':
             GlobalVariable.detail_switch = request["value"]
+        case 'ai_token':
+            GlobalVariable.ai_token[request["value"]["type"]] = request["value"]["token"]
+        case 'translate_prompt':
+            GlobalVariable.translate_prompt = request["value"]
+        case 'duration_prompt':
+            GlobalVariable.duration_prompt = request["value"]
 
 def get_config(request: dict):
     configValue = eval("GlobalVariable." + request["name"])
