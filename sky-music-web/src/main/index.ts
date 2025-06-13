@@ -299,9 +299,9 @@ app.on('window-all-closed', () => {
 })
 
 function launchBackend() {
-  const exeName = 'sky-music-server.exe'
+  const exeName = 'sky_music_server.exe'
   let runPath = __dirname.replace("resources\\app.asar\\out\\main","")
-  const exePath = path.join(runPath, 'backend_dist/sky-music-server/sky-music-server.exe')
+  const exePath = path.join(runPath, 'backend_dist/sky_music_server/sky_music_server.exe')
 
   if (!fs.existsSync(exePath)) {
     console.error('[server] server File not found:', exePath)
