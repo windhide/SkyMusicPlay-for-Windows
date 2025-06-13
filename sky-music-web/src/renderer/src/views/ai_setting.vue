@@ -12,13 +12,23 @@
       </n-gradient-text>
     </n-divider>
     <div class="father">
-      <n-radio-group v-model:value="aigcValue" name="radiogroup">
+      <!-- <n-radio-group v-model:value="aigcValue" name="radiogroup">
         <n-space>
           <n-radio v-for="option in options" :key="option.value" :value="option.value">
             <span style="color:#F2C9C4">{{ option.label }}</span>
           </n-radio>
         </n-space>
-      </n-radio-group>
+      </n-radio-group> -->
+    <n-highlight style="margin-bottom: 5px; color: #DDF2C4;" :text="headText" :patterns="patterns" :highlight-style="{
+      padding: '0 6px',
+      margin: '0 6px',
+      borderRadius: themeVars.borderRadius,
+      display: 'inline-block',
+      color: 'black',
+      background: '#F2C9C4',
+      transition: `all .3s ${themeVars.cubicBezierEaseInOut}`,
+    }" />
+    <div style="flex-basis: 100%;" />
       <div style="flex-basis: 100%; margin-bottom: 20px;" />
       <n-input-group style="width:450px">
         <n-input type="text" size="large" v-model:value="token"/>
@@ -124,10 +134,11 @@
 import { getList, sendData } from "@renderer/utils/fetchUtils";
 import { h, onMounted, onUnmounted, reactive, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { MessageReactive, NButton, useMessage } from 'naive-ui'
+import { MessageReactive, NButton, useMessage, useThemeVars } from 'naive-ui'
 import { RowData } from "naive-ui/es/data-table/src/interface";
 import { Search } from '@vicons/ionicons5'
 import { debounce } from "lodash-es";
+const themeVars = useThemeVars();
 const { t } = useI18n();
 const message = useMessage()
 let messageReactive: MessageReactive | null = null
@@ -139,19 +150,21 @@ const tabsNumber = ref("systemMusic")
 const searchText = ref('');
 let aigcValue = ref("DeepSeek")
 const QCount = ref(300)
+const headText = "音乐时间过长，需要等待的时间也就越长。频繁失败代表api没钱了，aigc出来的效果未必很好，请不要抱有太大期望，api没钱了可以去DeepSeek官网申请自行在下方保存"
+const patterns = ["没钱了","等待","越长","效果未必很好", "期望", "没钱了", "DeepSeek", "申请", "保存"]
 const options = [
   {
-    label: "DeepSeek",
+    label: "DeepSeek（AI也会犯错效果不会那么好）",
     value: 'DeepSeek'
   },
-  {
-    label: "Kimi",
-    value: 'Kimi'
-  },
-  {
-    label: "Qwen",
-    value: 'Qwen'
-  }
+  // {
+  //   label: "Kimi",
+  //   value: 'Kimi'
+  // },
+  // {
+  //   label: "Qwen",
+  //   value: 'Qwen'
+  // }
 ]
 let nowType = 'systemMusic'
 // 音乐数据管理
