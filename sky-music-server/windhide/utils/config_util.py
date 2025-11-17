@@ -44,6 +44,8 @@ def set_config(request: dict):
             GlobalVariable.translate_prompt = request["value"]
         case 'duration_prompt':
             GlobalVariable.duration_prompt = request["value"]
+        case 'sheld':
+            GlobalVariable.sheld = float(request["value"])
 
 def get_config(request: dict):
     configValue = eval("GlobalVariable." + request["name"])

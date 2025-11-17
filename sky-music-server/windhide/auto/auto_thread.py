@@ -33,7 +33,7 @@ class HeartFireThread(threading.Thread):
         time.sleep(2)
         # 先判断是不是第一页
         while self._running:
-            friend_button = get_friend_model_position(0.5)["button"]
+            friend_button = get_friend_model_position(GlobalVariable.sheld)["button"]
             if len(friend_button) >= 2:
                 break
             else:
@@ -46,7 +46,7 @@ class HeartFireThread(threading.Thread):
         while True:
             if not self._running:
                 break
-            results = get_friend_model_position(0.5)
+            results = get_friend_model_position(GlobalVariable.sheld)
             button = results["button"]
             friend = results["friend"]
             if len(friend) != 0:

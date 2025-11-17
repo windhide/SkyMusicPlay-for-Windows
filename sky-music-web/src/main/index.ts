@@ -299,6 +299,7 @@ app.on('window-all-closed', () => {
 })
 
 function launchBackend() {
+  const args = ['--prod']
   const exeName = 'sky_music_server.exe'
   let runPath = __dirname.replace("resources\\app.asar\\out\\main","")
   const exePath = path.join(runPath, 'backend_dist/sky_music_server/sky_music_server.exe')
@@ -315,7 +316,7 @@ function launchBackend() {
 
   console.log('[server] starting:', exePath)
 
-  const subprocess = spawn(exePath, [], {
+  const subprocess = spawn(exePath, args, {
     detached: true,
     stdio: 'ignore',
     windowsHide: true

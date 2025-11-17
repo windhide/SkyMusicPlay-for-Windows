@@ -229,7 +229,7 @@ class GlobalVariable:
     window_offset_x = 0
     window_offset_y = 0
     follow_process = None
-
+    sheld = 0.7
     # 乐谱映射
     keyMap = {
         'Key-14': '', 'Key-13': '', 'Key-12': '', 'Key-11': '', 'Key-10': '', 'Key-9': '', 'Key-8': '',

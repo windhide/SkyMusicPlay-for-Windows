@@ -81,6 +81,10 @@
       <n-input-group  style="flex: 0 0 100%; margin-top: 10px;" class="father">
       </n-input-group>
     </div>
+        <n-input-number style="margin-left: 10px !important; width: 30%;" v-model:value="sheld" step="0.01" max="1" min="0.3"/>
+        <n-button type="primary" @click="setConfig('sheld', sheld)" dashed >
+          置信度变更
+        </n-button>
     <n-divider />
     <div class="father" v-for="button in fileButtons">
         <n-button dashed :color=button.color @click="openFileHandle(button.value)"
@@ -92,7 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import { sendData } from "@renderer/utils/fetchUtils";
+import { sendData, setConfig } from "@renderer/utils/fetchUtils";
 import { useThemeVars } from "naive-ui";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
@@ -105,6 +109,7 @@ const patterns = [t("magic_tools.patterns1"),t("magic_tools.patterns2"),t("magic
 let mathValue = ref(0.5)
 let selectValue = ref("image")
 const QCount = ref(300)
+const sheld = ref(0.7)
 const options = [
   {
     label: t('magic_tools.buttons.heart_fire'),
