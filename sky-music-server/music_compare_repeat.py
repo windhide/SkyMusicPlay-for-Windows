@@ -26,23 +26,34 @@ def find_similar_files(input_folder, threshold=0.8):
     """查找相似文件并标记需要删除的文件"""
     files = [os.path.join(input_folder, f) for f in os.listdir(input_folder) if
              os.path.isfile(os.path.join(input_folder, f))]
-    file_hashes = defaultdict(list)
 
-    # 按哈希值归类文件
+    # 用哈希分组
+    hash_groups = defaultdict(list)
+
     for file in files:
         file_hash = get_file_hash(file)
-        file_hashes[file_hash].append(file)
+        hash_groups[file_hash].append(file)
 
     to_delete = set()
     checked_pairs = set()
 
-    # 进行文件内容对比
-    for hash_group in file_hashes.values():
-        for i, file1 in enumerate(hash_group):
-            for file2 in hash_group[i + 1:]:
-                if (file1, file2) in checked_pairs or (file2, file1) in checked_pairs:
+    for group in hash_groups.values():
+        # 如果 MD5 相同的文件超过 1 个，则这些都属于重复文件
+        if len(group) > 1:
+            # 保留最大（或最老）的一个，其余删除
+            group_sorted = sorted(group, key=lambda f: os.path.getsize(f), reverse=True)
+            keep = group_sorted[0]
+            duplicates = group_sorted[1:]
+            to_delete.update(duplicates)
+            continue
+
+        # 其它情况下才继续相似度比对（不同 hash）
+        for i, file1 in enumerate(group):
+            for file2 in group[i + 1:]:
+                if (file1, file2) in checked_pairs:
                     continue
                 checked_pairs.add((file1, file2))
+
                 similarity = get_file_similarity(file1, file2)
 
                 if similarity >= threshold:
@@ -76,6 +87,6 @@ def process_files(input_folder, output_folder, threshold=0.8):
 
 
 if __name__ == "__main__":
-    input_folder = "D:\\Desktop\\music\\original"  # 输入文件夹路径
-    output_folder = "D:\\Desktop\\music\\after"  # 处理后正常输出路径
+    input_folder = r"D:\Desktop\处理好的"  # 输入文件夹路径
+    output_folder = r"D:\Desktop\二次处理的"  # 处理后正常输出路径
     process_files(input_folder, output_folder)

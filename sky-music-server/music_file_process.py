@@ -89,8 +89,8 @@ def process_files(input_folder, normal_output_folder, encrypted_folder, keyword=
 
 if __name__ == '__main__':
     # **文件夹路径**
-    input_folder = "D:\\Desktop\\WuHaoYe\\crack sheet\\original"  # 输入文件夹路径
-    normal_output_folder = "D:\\Desktop\\WuHaoYe\\crack sheet\\crack"  # 处理后正常输出路径
-    encrypted_folder = "D:\\Desktop\\WuHaoYe\\crack sheet\\encrypted"  # 加密文件存放路径
+    input_folder = r"D:\SoftWareStorage\Tencent Download\额外的谱子_倒卖死妈_一辈子都是垃圾"  # 输入文件夹路径
+    normal_output_folder = r"D:\Desktop\处理好的"  # 处理后正常输出路径
+    encrypted_folder = r"D:\Desktop\加密的"  # 加密文件存放路径
 
     process_files(input_folder, normal_output_folder, encrypted_folder)
