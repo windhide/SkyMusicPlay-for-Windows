@@ -1,10 +1,10 @@
 <template>
   <n-flex align="center" style="margin-left: 6px;">
     <n-gradient-text :size="20" type="success" style="width: 100%; color:#F2C9C4">
-      {{ t("music.play") + nowPlayMusic + '' }}
+      {{ t("music.chose") + nowPlayMusic + '' }}
     </n-gradient-text>
     <n-gradient-text :size="20" type="success" style="width: 100%; color:#F2E8C4">
-      {{ t("music.chose") + nowSelectMusic + '' }}
+      {{ t("music.play") + nowSelectMusic + '' }}
     </n-gradient-text>
     <n-flex style="width: 100%">
       <n-slider v-model:value="progress" :step="0.1" style="max-width: 51.5%; display: inline-block; margin-left: 3px;"
