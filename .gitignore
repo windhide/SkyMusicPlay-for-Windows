@@ -40,3 +40,5 @@ web2/
 **/__pycache__/**
 resources/
 *.spec
+ffmpeg.exe
+template-resources/systemMusic/**
