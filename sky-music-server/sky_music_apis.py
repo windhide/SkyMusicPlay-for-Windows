@@ -20,6 +20,7 @@ from windhide.utils.ocr_follow_util import set_next_sheet, get_key_position, tes
 from windhide.utils.ocr_heart_utils import get_friend_model_position
 from windhide.utils.path_util import getTypeMusicList, getResourcesPath, process_sheet_rename_time
 from windhide.utils.play_util import start, pause, resume, stop
+from windhide.utils.sheet_decrypt_util import decrypt_sheet
 
 # 避开与光遇相同核心运行
 process = psutil.Process(os.getpid())
@@ -72,6 +73,9 @@ async def create_upload_files_user(file: UploadFile):
     file_content = await file.read()
     data = json.loads(file_content)
 
+    if data[0]['isEncrypted'] is True:
+        data = decrypt_sheet(data)
+
     # 提取 songNotes 并计算时间戳
     song_notes = data[0].get("songNotes", [])
     if not song_notes:
@@ -86,7 +90,7 @@ async def create_upload_files_user(file: UploadFile):
 
     # 保存文件
     with open(path, 'wb') as f:
-        f.write(file_content)
+        f.write(json.dumps(data).encode())
     return "ok"
 
 def translate(request: dict):
