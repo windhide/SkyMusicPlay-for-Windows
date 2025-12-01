@@ -8,7 +8,6 @@ import requests
 from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
-# from windhide.musicToSheet.aigc_handler_sheet import gemini_ai, general_ai
 from windhide.musicToSheet.aigc_handler_sheet import general_ai
 from windhide.playRobot import amd_robot, intel_robot
 from windhide.static.global_variable import GlobalVariable
