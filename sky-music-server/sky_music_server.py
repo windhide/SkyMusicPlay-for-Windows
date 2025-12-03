@@ -20,8 +20,12 @@ from windhide.thread.shortcut_thread import startThread as shortcut_thread
 # 设置 CPU 亲和性，避开与光遇相同核心运行
 process = psutil.Process(os.getpid())
 all_cores = list(range(psutil.cpu_count()))
-cores_to_use = [core for core in all_cores if core != 0]
+# 避开光遇核心（假设是 0）和系统核心（可选避开 1）
+available_cores = [core for core in all_cores if core not in [0, 1]]
+# 选择前两个空闲核心
+cores_to_use = available_cores[:2]
 process.cpu_affinity(cores_to_use)
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

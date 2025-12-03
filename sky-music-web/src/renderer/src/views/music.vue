@@ -960,6 +960,7 @@ onMounted(async ()=>{
   await handleUpdateValue('systemMusic')
   durationStatus.value = 'custom'
   durationSpeed.value = 0.03
+  setConfig('duration', 0.03)
 })
 
 // ---------------------------------------------------
@@ -972,7 +973,7 @@ onUnmounted(async () => {
   }
   playBarClickHandler("stop", "")
   setConfig('delay_interval', 0)
-  setConfig('duration', 0)
+  setConfig('duration', 0.03)
   setConfig('play_speed', 1)
   clearPlayInfo()
 })
