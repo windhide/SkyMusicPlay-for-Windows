@@ -10,8 +10,11 @@
       transition: `all .3s ${themeVars.cubicBezierEaseInOut}`,
     }" />
     <div style="flex-basis: 100%;" />
-    <n-button type="primary" color="#f58f98" style="margin-top: 20px;" ghost @click="resetKeyToDefault()">
+    <n-button type="primary" color="#A3F6EC" style="margin-top: 20px;" ghost @click="resetKeyToDefault()">
         {{t('setting.reset_map')}}
+    </n-button>
+    <n-button type="primary" color="#f58f98" style="margin-top: 20px; margin-left: 20px;" ghost @click="resetKey()">
+        {{"清空所有映射"}}
     </n-button>
     <n-divider style="color: #F2C9C4;">{{t('setting.key_map')}}</n-divider>
   </div>
@@ -153,6 +156,13 @@ function hasDuplicateValues(dataArray) {
 
 function resetKeyToDefault(){
   sendData("config_operate",{ "operate": "set", "name": "keyMap", "value":{ 'Key-14': '', 'Key-13': '', 'Key-12': '', 'Key-11': '', 'Key-10': '', 'Key-9': '', 'Key-8': '', 'Key-7': '', 'Key-6': '', 'Key-5': '', 'Key-4': '', 'Key-3': '', 'Key-2': '', 'Key-1': '', 'Key0': 'y', 'Key1': 'u', 'Key2': 'i', 'Key3': 'o', 'Key4': 'p', 'Key5': 'h', 'Key6': 'j', 'Key7': 'k', 'Key8': 'l', 'Key9': ';', 'Key10': 'n', 'Key11': 'm', 'Key12': ',', 'Key13': '.', 'Key14': '/', 'Key15': '', 'Key16': '', 'Key17': '', 'Key18': '', 'Key19': '', 'Key20': '', 'Key21': '', 'Key22': '', 'Key23': '', 'Key24': '', 'Key25': '', 'Key26': '', 'Key27': '', 'Key28': ''}}).then(()=>{
+    get_customize_key()
+    message.success(t('setting.clearAll'))
+  })
+}
+
+function resetKey(){
+  sendData("config_operate",{ "operate": "set", "name": "keyMap", "value":{ 'Key-14': '', 'Key-13': '', 'Key-12': '', 'Key-11': '', 'Key-10': '', 'Key-9': '', 'Key-8': '', 'Key-7': '', 'Key-6': '', 'Key-5': '', 'Key-4': '', 'Key-3': '', 'Key-2': '', 'Key-1': '', 'Key0': '', 'Key1': '', 'Key2': '', 'Key3': '', 'Key4': '', 'Key5': '', 'Key6': '', 'Key7': '', 'Key8': '', 'Key9': '', 'Key10': '', 'Key11': '', 'Key12': '', 'Key13': '', 'Key14': '', 'Key15': '', 'Key16': '', 'Key17': '', 'Key18': '', 'Key19': '', 'Key20': '', 'Key21': '', 'Key22': '', 'Key23': '', 'Key24': '', 'Key25': '', 'Key26': '', 'Key27': '', 'Key28': ''}}).then(()=>{
     get_customize_key()
     message.success(t('setting.clearAll'))
   })
