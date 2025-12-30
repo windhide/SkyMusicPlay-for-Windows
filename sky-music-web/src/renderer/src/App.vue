@@ -218,7 +218,10 @@ function openFileHandle() {
 }
 
 function syncSheetName() {
-  getData('syncSheetName')
+  getData('syncSheetName').then(_res=>{
+    window.api.sync_sheet_2_el()
+  })
+  
 }
 
 function miniHandle() {

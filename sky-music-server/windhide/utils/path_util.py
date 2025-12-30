@@ -162,6 +162,7 @@ def process_sheet_rename_time(isImportOrTranslate = False):
         message='操作完成',
         timeout=1
     )
+    return "ok"
 
 def format_time(milliseconds):
     """
