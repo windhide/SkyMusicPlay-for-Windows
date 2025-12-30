@@ -155,14 +155,98 @@
           "/>
       </n-tab-pane>
       <n-tab-pane name="myTranslate" :tab="t('tab.myTranslate')" ref="myTranslate">
-        <n-data-table :columns="musicColumns" :data="music.myTranslate" :bordered="false" :min-row-height="48" ref="myTranslate"
-        :max-height="430" :virtual-scroll="music.myTranslate?.length > 7" :row-props="MusicSelect" :row-class-name="rowClassName"
-        style="
-            --n-td-color: rgba(57, 57, 62, 0);
-            --n-th-color-hover: rgba(57, 57, 62, 0);
-            --n-th-color: rgba(57, 57, 62, 0);
-            --n-td-color-hover: rgba(0, 0, 0, 0.2);
-          "/>
+        <n-tabs type="line" animated placement="left" style="height: 500px">
+          <n-tab-pane name="all" tab="所有"> 
+            <n-data-table :columns="musicColumns" :data="music.myTranslate" :bordered="false" :min-row-height="48" ref="myTranslate"
+            :max-height="430" :virtual-scroll="music.myTranslate?.length > 7" :row-props="MusicSelect" :row-class-name="rowClassName"
+            style="
+                --n-td-color: rgba(57, 57, 62, 0);
+                --n-th-color-hover: rgba(57, 57, 62, 0);
+                --n-th-color: rgba(57, 57, 62, 0);
+                --n-td-color-hover: rgba(0, 0, 0, 0.2);
+              "/>
+          </n-tab-pane>
+          <n-tab-pane name="translateOriginal" tab="原曲"> 
+            <n-data-table :columns="musicColumns" :data="music.myTranslate.filter((res: any) => res['name'].indexOf('_vocals') === -1 && res['name'].indexOf('_beat') === -1)" :bordered="false" :min-row-height="48" ref="myTranslate"
+            :max-height="430" :virtual-scroll="music.myTranslate?.length > 7" :row-props="MusicSelect" :row-class-name="rowClassName"
+            style="
+                --n-td-color: rgba(57, 57, 62, 0);
+                --n-th-color-hover: rgba(57, 57, 62, 0);
+                --n-th-color: rgba(57, 57, 62, 0);
+                --n-td-color-hover: rgba(0, 0, 0, 0.2);
+              "/>
+          </n-tab-pane>
+          <n-tab-pane name="vocals" tab="人声"> 
+            <n-data-table :columns="musicColumns" :data="music.myTranslate.filter((res: any) => res['name'].indexOf('_vocals') !== -1)" :bordered="false" :min-row-height="48" ref="myTranslate"
+            :max-height="430" :virtual-scroll="music.myTranslate?.length > 7" :row-props="MusicSelect" :row-class-name="rowClassName"
+            style="
+                --n-td-color: rgba(57, 57, 62, 0);
+                --n-th-color-hover: rgba(57, 57, 62, 0);
+                --n-th-color: rgba(57, 57, 62, 0);
+                --n-td-color-hover: rgba(0, 0, 0, 0.2);
+              "/>
+          </n-tab-pane>
+          <n-tab-pane name="beat" tab="伴奏"> 
+            <n-data-table :columns="musicColumns" :data="music.myTranslate.filter((res: any) => res['name'].indexOf('_beat') !== -1)" :bordered="false" :min-row-height="48" ref="myTranslate"
+            :max-height="430" :virtual-scroll="music.myTranslate?.length > 7" :row-props="MusicSelect" :row-class-name="rowClassName"
+            style="
+                --n-td-color: rgba(57, 57, 62, 0);
+                --n-th-color-hover: rgba(57, 57, 62, 0);
+                --n-th-color: rgba(57, 57, 62, 0);
+                --n-td-color-hover: rgba(0, 0, 0, 0.2);
+              "/>
+          </n-tab-pane>
+          <n-tab-pane name="C_c¹" tab="C_c¹"> 
+            <n-data-table :columns="musicColumns" :data="music.myTranslate.filter((res: any) => res['name'].indexOf('C_c¹') !== -1)" :bordered="false" :min-row-height="48" ref="myTranslate"
+            :max-height="430" :virtual-scroll="music.myTranslate?.length > 7" :row-props="MusicSelect" :row-class-name="rowClassName"
+            style="
+                --n-td-color: rgba(57, 57, 62, 0);
+                --n-th-color-hover: rgba(57, 57, 62, 0);
+                --n-th-color: rgba(57, 57, 62, 0);
+                --n-td-color-hover: rgba(0, 0, 0, 0.2);
+              "/>
+          </n-tab-pane>
+          <n-tab-pane name="c_c2" tab="c_c²"> 
+            <n-data-table :columns="musicColumns" :data="music.myTranslate.filter((res: any) => res['name'].indexOf('c_c²') !== -1)" :bordered="false" :min-row-height="48" ref="myTranslate"
+            :max-height="430" :virtual-scroll="music.myTranslate?.length > 7" :row-props="MusicSelect" :row-class-name="rowClassName"
+            style="
+                --n-td-color: rgba(57, 57, 62, 0);
+                --n-th-color-hover: rgba(57, 57, 62, 0);
+                --n-th-color: rgba(57, 57, 62, 0);
+                --n-td-color-hover: rgba(0, 0, 0, 0.2);
+              "/>
+          </n-tab-pane>
+          <n-tab-pane name="c¹_c³" tab="c¹_c³"> 
+            <n-data-table :columns="musicColumns" :data="music.myTranslate.filter((res: any) => res['name'].indexOf('c¹_c³') !== -1)" :bordered="false" :min-row-height="48" ref="myTranslate"
+            :max-height="430" :virtual-scroll="music.myTranslate?.length > 7" :row-props="MusicSelect" :row-class-name="rowClassName"
+            style="
+                --n-td-color: rgba(57, 57, 62, 0);
+                --n-th-color-hover: rgba(57, 57, 62, 0);
+                --n-th-color: rgba(57, 57, 62, 0);
+                --n-td-color-hover: rgba(0, 0, 0, 0.2);
+              "/>
+          </n-tab-pane>
+          <n-tab-pane name="c²_c⁴" tab="c²_c⁴"> 
+            <n-data-table :columns="musicColumns" :data="music.myTranslate.filter((res: any) => res['name'].indexOf('c²_c⁴') !== -1)" :bordered="false" :min-row-height="48" ref="myTranslate"
+            :max-height="430" :virtual-scroll="music.myTranslate?.length > 7" :row-props="MusicSelect" :row-class-name="rowClassName"
+            style="
+                --n-td-color: rgba(57, 57, 62, 0);
+                --n-th-color-hover: rgba(57, 57, 62, 0);
+                --n-th-color: rgba(57, 57, 62, 0);
+                --n-td-color-hover: rgba(0, 0, 0, 0.2);
+              "/>
+          </n-tab-pane>
+          <n-tab-pane name="c³_c⁵" tab="c³_c⁵"> 
+            <n-data-table :columns="musicColumns" :data="music.myTranslate.filter((res: any) => res['name'].indexOf('c³_c⁵') !== -1)" :bordered="false" :min-row-height="48" ref="myTranslate"
+            :max-height="430" :virtual-scroll="music.myTranslate?.length > 7" :row-props="MusicSelect" :row-class-name="rowClassName"
+            style="
+                --n-td-color: rgba(57, 57, 62, 0);
+                --n-th-color-hover: rgba(57, 57, 62, 0);
+                --n-th-color: rgba(57, 57, 62, 0);
+                --n-td-color-hover: rgba(0, 0, 0, 0.2);
+              "/>
+          </n-tab-pane>
+        </n-tabs>
       </n-tab-pane>
       <n-tab-pane name="myFavorite" :tab="t('tab.myFavorite')" ref="myFavorite">
         <n-data-table :columns="favoritColumns" :data="music.myFavorite" :bordered="false" :min-row-height="48" ref="myFavorite"
