@@ -30,3 +30,4 @@ coremltools
 scikit-learn==1.5.1
 protobuf==4.25.6
 openai==1.85.0
+demucs==4.0.1
