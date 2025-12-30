@@ -83,6 +83,16 @@
         </n-space>
     </n-checkbox-group>
     <n-divider style="margin:0px"/>
+    <n-gradient-text type="info" style="color: #F2C9C4; flex-basis: 10%"> {{ t("kube.transfer_progress") }} </n-gradient-text>
+    <n-progress
+      color="#F2C9C4"
+      style="flex-basis: 80%"
+      type="line"
+      :percentage="progress.overall_progress"
+      indicator-placement="inside"
+      processing
+    />
+    <div style="flex-basis: 100%;" />
     <n-upload
       action="http://localhost:9899/fileUpload"
       multiple
@@ -103,16 +113,6 @@
         <n-icon size="25px"><ArrowSync24Regular /></n-icon>
       </template>
     </n-button>
-    <div style="flex-basis: 100%;" />
-    <n-gradient-text type="info" style="color: #F2C9C4; flex-basis: 10%"> {{ t("kube.transfer_progress") }} </n-gradient-text>
-    <n-progress
-      color="#F2C9C4"
-      style="flex-basis: 80%"
-      type="line"
-      :percentage="progress.overall_progress"
-      indicator-placement="inside"
-      processing
-    />
   </n-flex>
   <n-card style="margin-left: -24px; width: 640px; margin-top: -15px;" :bordered="false">
     <n-tabs type="line" animated @update:value="handleUpdateValue">
