@@ -1,29 +1,6 @@
 <template>
-  <n-flex align="center">
-    <n-gradient-text :size="24" type="success" style="width: 100%; color:#F2E8C4">
-      {{ t("kube.title") }} 
-    </n-gradient-text>
-    <n-upload
-      action="http://localhost:9899/fileUpload"
-      multiple
-      style="width: 100px; height: 34px"
-      accept=".mp3,.flac,.wav,.m4a,.ogg,.mid"
-      :show-file-list="false"
-      @finish="handleFinish"
-    >
-    <n-button type="info" ghost color="#F2C9C4"> {{ t("kube.chose_music") }} 
-      <template #icon>
-        <n-icon size="25px"><CloudArrowUp32Filled /></n-icon>
-      </template>
-    </n-button>
-    </n-upload>
-    <n-button type="primary" ghost :loading="processFlag" @click="handleStartTranslate" style="margin-left: 7px;" color="#F2E8C4">
-      {{ t("kube.star_transfer") }} 
-      <template #icon>
-        <n-icon size="25px"><ArrowSync24Regular /></n-icon>
-      </template>
-    </n-button>
-    <n-switch size="medium" v-model:value="isSingular" @update:value="singularChange" :rail-style="railStyle" :round="false"> 
+  <n-flex align="center" style="margin-top: 15px;">
+    <n-switch size="medium" v-model:value="is_singular" @update:value="singularChange" :rail-style="railStyle" :round="false"> 
         <template #checked-icon>
           🤔
         </template>
@@ -65,6 +42,23 @@
           <p style="color: rgba(94, 104, 81, 1);">{{ t("kube.range_key") }}</p>
         </template>
     </n-switch>
+    <n-switch size="medium" v-model:value="split_switch" @update:value="splitChange" :rail-style="railStyle" :round="false"> 
+        <template #checked-icon>
+          🤔
+        </template>
+        <template #unchecked-icon>
+          🧐
+        </template>
+        <template #checked>
+          <p style="color: rgba(94, 104, 81, 1);">人声分离</p>
+        </template>
+        <template #unchecked>
+          <p style="color: rgba(94, 104, 81, 1);">原版转换</p>
+        </template>
+    </n-switch>
+    <n-gradient-text  gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))">
+      Tips:人声分离速度会很慢
+    </n-gradient-text>
     <div style="flex-basis: 100%;" />
     <n-gradient-text  gradient="linear-gradient(90deg, rgb(242,201,196), rgb(221,242,196))">
       {{ t("kube.Streng_filter") }}
@@ -89,6 +83,26 @@
         </n-space>
     </n-checkbox-group>
     <n-divider style="margin:0px"/>
+    <n-upload
+      action="http://localhost:9899/fileUpload"
+      multiple
+      style="width: 100px; height: 34px"
+      accept=".mp3,.flac,.wav,.m4a,.ogg,.mid"
+      :show-file-list="false"
+      @finish="handleFinish"
+    >
+    <n-button type="info" ghost color="#F2C9C4"> {{ t("kube.chose_music") }} 
+      <template #icon>
+        <n-icon size="25px"><CloudArrowUp32Filled /></n-icon>
+      </template>
+    </n-button>
+    </n-upload>
+    <n-button type="primary" ghost :loading="processFlag" @click="handleStartTranslate" style="margin-left: 7px;" color="#F2E8C4">
+      {{ t("kube.star_transfer") }} 
+      <template #icon>
+        <n-icon size="25px"><ArrowSync24Regular /></n-icon>
+      </template>
+    </n-button>
     <div style="flex-basis: 100%;" />
     <n-gradient-text type="info" style="color: #F2C9C4; flex-basis: 10%"> {{ t("kube.transfer_progress") }} </n-gradient-text>
     <n-progress
@@ -100,15 +114,14 @@
       processing
     />
   </n-flex>
-
-  <n-card style="margin-left: -22px; width: 640px;" :bordered="false">
+  <n-card style="margin-left: -24px; width: 640px; margin-top: -15px;" :bordered="false">
     <n-tabs type="line" animated @update:value="handleUpdateValue">
       <n-tab-pane name="translateOriginalMusic" :tab="t('tab.translateOriginalMusic')">
         <n-data-table
           :columns="originalColumns"
           :data="music.translateOriginalMusic"
           :bordered="false"
-          :max-height="290"
+          :max-height="350"
           :scroll-x="100"
           row-class-name="td_css"
           style="
@@ -123,7 +136,7 @@
           :columns="translateColumns"
           :data="music.myTranslate"
           :bordered="false"
-          :max-height="290"
+          :max-height="350"
           :scroll-x="100"
           row-class-name="td_css"
           style="
@@ -151,9 +164,10 @@ const message = useMessage();
 const processFlag = ref(false);
 let progressInterval:any = null
 let chooseType:any = ref(['2'])
-let isSingular = ref(true)
+let is_singular = ref(true)
 let semitone_switch = ref(true)
 let detail_switch = ref(true)
+let split_switch = ref(false)
 
 let merge_min = ref(20)
 let merge_max = ref(30)
@@ -306,6 +320,14 @@ function detailChange(value: boolean){
     value
   })
 }
+function splitChange(value: boolean){
+  sendData("config_operate",{
+    operate: "set",
+    name: "split_switch",
+    value
+  })
+}
+
 function semitoneChange(value: boolean){
   sendData("config_operate",{
     operate: "set",
@@ -440,8 +462,10 @@ async function handleUpdateValue(value: keyof typeof music) {
 
 reloadTable();
 
+sendData("config_operate",{ operate: "get", name: "is_singular"}).then(res=>{ is_singular.value=res})
 sendData("config_operate",{ operate: "get", name: "detail_switch"}).then(res=>{ detail_switch.value=res})
 sendData("config_operate",{ operate: "get", name: "semitone_switch"}).then(res=>{ semitone_switch.value=res})
+sendData("config_operate",{ operate: "get", name: "split_switch"}).then(res=>{ split_switch.value=res})
 sendData("config_operate",{ operate: "get", name: "velocity_filter"}).then(res=>{ velocity_filter.value=res})
 sendData("config_operate",{ operate: "get", name: "merge_max"}).then(res=>{ merge_max.value=res})
 sendData("config_operate",{ operate: "get", name: "merge_min"}).then(res=>{ merge_min.value=res})

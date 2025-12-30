@@ -38,6 +38,8 @@ def set_config(request: dict):
             GlobalVariable.semitone_switch = request["value"]
         case 'detail_switch':
             GlobalVariable.detail_switch = request["value"]
+        case 'split_switch':
+            GlobalVariable.split_switch = request["value"]
         case 'ai_token':
             GlobalVariable.ai_token[request["value"]["type"]] = request["value"]["token"]
         case 'translate_prompt':

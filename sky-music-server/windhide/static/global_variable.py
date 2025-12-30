@@ -210,6 +210,7 @@ class GlobalVariable:
     is_singular = True
     semitone_switch = True # 半音转换开关
     detail_switch = True # 超3音转换开关
+    split_switch = False # 人声分离开关
 
     # 演奏相关
     play_speed = 1  # 倍速

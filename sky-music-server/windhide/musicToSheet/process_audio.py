@@ -4,6 +4,7 @@ import os
 import pretty_midi
 
 from windhide.musicToSheet.transfer_MID import inference
+from windhide.musicToSheet.vocals_split import split_vocals
 from windhide.static.global_variable import GlobalVariable
 from windhide.utils.path_util import getResourcesPath
 
@@ -84,6 +85,7 @@ def process_directory_with_progress(typeStr, output_dir=getResourcesPath("myTran
     os.makedirs(output_dir, exist_ok=True)
     files_to_process = [f for f in os.listdir(getResourcesPath("translateOriginalMusic"))
                         if f.endswith(('.mp3', '.ogg', '.wav', '.flac', '.mid', '.m4a'))]
+
     total_files = len(files_to_process)
     tranMap = []
     if GlobalVariable.is_singular:
@@ -110,6 +112,15 @@ def process_directory_with_progress(typeStr, output_dir=getResourcesPath("myTran
     if not total_files:
         print("没有找到需要处理的文件")
         return
+
+    if GlobalVariable.split_switch:
+        for idx, file in enumerate(files_to_process):
+            if "_ok" in file or "_vocals.flac" in file or "_beat.flac" in file:
+                continue
+            musicFilePath = os.path.join(getResourcesPath("translateOriginalMusic"), file)
+            split_vocals(musicFilePath)  # 处理人声分离
+        files_to_process = [f for f in os.listdir(getResourcesPath("translateOriginalMusic"))
+                            if f.endswith(('.mp3', '.ogg', '.wav', '.flac', '.mid', '.m4a'))]
 
     for idx, file in enumerate(files_to_process):
         if "_ok" in file:
