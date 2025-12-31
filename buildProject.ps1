@@ -56,6 +56,12 @@ Set-Location "$ScriptDir\sky-music-server"
     --collect-all sklearn `
     --collect-all basic_pitch `
     --collect-all plyer `
+	--collect-all torch `
+	--collect-all torchvision `
+	--hidden-import=torch `
+	--hidden-import demucs `
+	--collect-all demucs `
+	--hidden-import=torchvision `
     --uac-admin
 
 if ($LASTEXITCODE -ne 0) {
