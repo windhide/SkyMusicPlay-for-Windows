@@ -16,7 +16,7 @@ from windhide.thread.frame_alive_thread import monitor_process
 from windhide.thread.hwnd_check_thread import start_thread as hwnd_check_thread
 from windhide.thread.queue_thread import music_start_tasks
 from windhide.thread.shortcut_thread import startThread as shortcut_thread
-
+os.environ["TORCHAUDIO_USE_TORCHCODEC"] = "0"
 # 设置 CPU 亲和性，避开与光遇相同核心运行
 process = psutil.Process(os.getpid())
 all_cores = list(range(psutil.cpu_count()))
