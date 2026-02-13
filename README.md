@@ -19,10 +19,6 @@
 >
 > ✨如果需要相关创意功能欢迎在issues中提出✨
 >
-
-## 丨反馈渠道
-
-- QQ群号：[1007672060](https://qm.qq.com/q/VFnq60fugu)
 </details>
 
 
@@ -54,3 +50,4 @@
 ## 致谢
 - [pianotrans](https://github.com/azuwis/pianotrans) 音乐转钢琴谱
 - [basic-pitch](https://github.com/spotify/) 音乐转MIDI
+
