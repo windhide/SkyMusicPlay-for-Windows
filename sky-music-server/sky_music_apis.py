@@ -70,7 +70,12 @@ async def create_upload_files(file: UploadFile):
 async def create_upload_files_user(file: UploadFile):
     # 读取文件内容
     file_content = await file.read()
-    data = json.loads(file_content)
+    import chardet
+    detected = chardet.detect(file_content)
+    encoding = detected.get('encoding', 'utf-8')
+    text_content = file_content.decode(encoding)
+    data = json.loads(text_content)
+
     is_encrypted = data[0].get("isEncrypted", False)
     if  is_encrypted:
         print("解密触发")
